@@ -152,6 +152,7 @@ export class FindingService {
             url: true,
             caption: true,
             mimeType: true,
+            fileSize: true,
             createdAt: true,
           },
         },
@@ -175,6 +176,55 @@ export class FindingService {
         incidenceTypes: true,
       },
     })
+  }
+
+  /**
+   * Get finding with fresh signed URLs for evidence
+   * (Call this in GET endpoint instead of getFinding)
+   */
+  static async getFindingWithSignedUrls(id: string) {
+    const finding = await this.getFinding(id)
+
+    if (!finding || !finding.evidence) {
+      return finding
+    }
+
+    // Regenerate signed URLs for all evidence files
+    const { StorageService } = await import('@/lib/services/storage-service')
+
+    const evidenceWithUrls = await Promise.all(
+      finding.evidence.map(async (ev) => {
+        try {
+          const withUrl = await StorageService.getEvidenceWithUrl(ev.id)
+          return {
+            id: withUrl.id,
+            originalFilename: withUrl.originalFilename,
+            url: withUrl.url,
+            urlExpiresAt: withUrl.urlExpiresAt,
+            caption: withUrl.caption,
+            mimeType: withUrl.mimeType,
+            fileSize: withUrl.fileSize,
+            uploadedAt: withUrl.uploadedAt,
+          }
+        } catch {
+          // If URL generation fails, return evidence as-is
+          return {
+            id: ev.id,
+            originalFilename: ev.originalFilename,
+            url: ev.url,
+            caption: ev.caption,
+            mimeType: ev.mimeType,
+            fileSize: ev.fileSize,
+            uploadedAt: ev.createdAt,
+          }
+        }
+      }),
+    )
+
+    return {
+      ...finding,
+      evidence: evidenceWithUrls,
+    }
   }
 
   /**

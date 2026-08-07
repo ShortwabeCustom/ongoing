@@ -17,7 +17,7 @@ export async function GET(
       throw new ApiError('INVALID_ID', 'Invalid finding ID format', undefined, 400)
     }
 
-    const finding = await FindingService.getFinding(id)
+    const finding = await FindingService.getFindingWithSignedUrls(id)
 
     if (!finding) {
       throw new ApiError('NOT_FOUND', 'Finding not found', undefined, 404)
