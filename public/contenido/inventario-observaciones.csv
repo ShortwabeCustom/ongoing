@@ -1,0 +1,222 @@
+﻿"ID","Ronda","Fila fuente","Observación","Ajuste","Comentarios","Estatus","Área","Etapa","Evidencias"
+"1","Pruebas 30 de julio","2","Punto final en el segundo slide","","","Completado","Copy","Etapa 1","image4.png"
+"2","Pruebas 30 de julio","3","Degadadado de fondo: background: var(--Color-Fill-Gradient-Button, linear-gradient(92deg, var(--Semantic-Colors-Fill-Button-Button-Gradient-Strong, #10553D) 3.93%, var(--Semantic-Colors-Fill-Button-Button-Gradient-Light, #14875A) 98.12%));","","","Completado","UI","Etapa 2","image3.png"
+"3","Pruebas 30 de julio","4","Mantener la proporción entre REMS","","","Completado","UI","Etapa 2","image1.png"
+"4","Pruebas 30 de julio","5","La tipografía de las categorías se muestra en 14 pt y debe de estár en 16 pts","","","Completado","UI","Etapa 2","image1.png"
+"5","Pruebas 30 de julio","6","Paddings entre categorías debe de ser de 16 px y agregar shadows","","","Completado","UI","Etapa 2","image1.png"
+"6","Pruebas 30 de julio","7","La imagen está en una proporción de 40x40px","","","Completado","UI","Etapa 2","image2.png"
+"7","Pruebas 30 de julio","8","La profundidad de la caja de subcategoría esta en 80 px y la tenemos en 68 px","","","Completado","UI","Etapa 2","image1.png | image5.png"
+"8","Pruebas 30 de julio","9","Se repite la categoría de ""Efectivo"" se debe de ocultar","","Ese se lo lleva back","Pendiente","Backend","Etapa 2",""
+"9","Pruebas 30 de julio","10","Darle un salto de parrafo a la dirección","","","Completado","UI","Etapa 2","image6.png"
+"10","Pruebas 30 de julio","11","La URL debe quedar del mismo tono de la tipografía","","","Completado","UI","Etapa 2","image6.png"
+"11","Pruebas 30 de julio","12","""Ver información legal"" debe ir en tipografía regular, sin el subrayado y la palabra ""Legal"" va en minúscula","","","Completado","Copy","Etapa 1","image6.png"
+"12","Pruebas 30 de julio","13","""Crédito sujeto aprobación"" no va subrayado","","","Completado","UI","Etapa 2","image7.png | image8.png"
+"13","Pruebas 30 de julio","14","Se va a cambiar la tipografía de títulos y subtítulos por Sora y Satoshi","","","Completado","UI","Etapa 2",""
+"14","Pruebas 30 de julio","15","Agregar el padding entre ""Lo soñaste"" y ""Ahora cuéntanos..."" de 12 px","","","Completado","UI","Etapa 2","image9.png"
+"15","Pruebas 30 de julio","16","Ahora cuéntanos, ¿cuánto dinero necesitas? el ""cuánto"" va en minúsculas","","","Completado","Copy","Etapa 1","image9.png"
+"16","Pruebas 30 de julio","17","Mascará en el blur del button sheet logo de Banco Azteca - semanalidades (estilo general)","","","Completado","UI","Etapa 2","image10.png | image11.png"
+"17","Pruebas 30 de julio","18","Tipografía del catalogo de semanalidades","","","Completado","UI","Etapa 2",""
+"18","Pruebas 30 de julio","19","Ordenar las semanas de mayor a menor, de 128 semanas a 4 semanas","","","Pendiente","UI","Etapa 2","image11.png"
+"19","Pruebas 30 de julio","20","Revisar el padding del selector de semanalidad debe de estár en 12 px","","","Completado","UI","Etapa 2","image12.png"
+"20","Pruebas 30 de julio","21","Tipografía del título debe de estár en 24 px en Sora","","","Completado","UI","Etapa 2","image13.png"
+"21","Pruebas 30 de julio","22","Ajusar el tamaño de 48 px a 54 px en la cifra del cotizador","","","Completado","UI","Etapa 2","image14.png"
+"22","Pruebas 30 de julio","23","Agregar el punto final a ""Ingresa los datos para iniciar tu solicitud.""","","","Completado","Copy","Etapa 1","image15.png"
+"23","Pruebas 30 de julio","24","Gap entre título y subtítulo de 12 px","","","Completado","UI","Etapa 2",""
+"24","Pruebas 30 de julio","25","Cambiar el hexadecimal del verde en los avisos legales por #106949","","","Completado","UI","Etapa 2","image16.png | image17.png"
+"25","Pruebas 30 de julio","26","Labels quedan como Body2 en Satoshi","","","Completado","UI","Etapa 2",""
+"26","Pruebas 30 de julio","27","Input Body1 en Satoshi","","","Completado","UI","Etapa 2","image17.png"
+"27","Pruebas 30 de julio","28","Los errores no llevan punto final","","","Completado","Copy","Etapa 1","image18.png | image21.png"
+"28","Pruebas 30 de julio","29","Se omite el autocomplete del la pantalla de nickname","","","Pendiente","Funcionalidad","Etapa 2","image19.png | image20.png"
+"29","Pruebas 30 de julio","30","Falta agregar la URL de Información laboral y separar el texto","","Ya se separo el texto solo falta la URL que negocio nos compartirá","Completado","Negocio","Etapa 2",""
+"30","Pruebas 30 de julio","31","Ajustar el icono del lapiz","","","Pendiente","Backend","Etapa 2","image22.png"
+"31","Pruebas 30 de julio","32","Revisar paddings y gaps en figma tenemos 32px. Revisar la funcionalidad para que el keyboard ""suba"" y se vean los números que ingresa al usuario del OTP","","","Completado","Funcionalidad","Etapa 2","image23.png"
+"32","Pruebas 30 de julio","33","Agregar el stroke de 1px","","","Pendiente","UI","Etapa 2","image24.png"
+"33","Pruebas 30 de julio","34","Revisar los paddigns de los inputs (estilo general)","","","Completado","UI","Etapa 2","image25.png | image26.png"
+"34","Pruebas 30 de julio","35","Revisar el estilo de la tipografía en el número telefonico en figma la tenemos en H3 (24/30)","","","Completado","UI","Etapa 2",""
+"35","Pruebas 30 de julio","36","Revisar la validación cuando un numero telefonico es editado, no esta haciendo la redirección de mensaje SMS al nuevo número ingresado","","","Pendiente","Funcionalidad","Etapa 2","image27.png"
+"36","Pruebas 30 de julio","37","agregar el Swipe-to-Dismiss del bottom sheet","","","Pendiente","Funcionalidad","Etapa 2","image28.png"
+"37","Pruebas 30 de julio","38","Revisar el peso de la tipografía del CTA esta en 700 y debe ser 500 (cambio general)","","","Completado","UI","Etapa 2","image29.png"
+"38","Pruebas 30 de julio","39","Revisar escenario de numero de intentos para que redirija a la pantalla correcta y no al error general","","","Completado","Funcionalidad","Etapa 2",""
+"39","Pruebas 30 de julio","40","Dejar las imagenes en un tamaño estandar de 250x250px y generar un tamaño proporcional para responsive. Crear un contenedor con padding de 16px por lado","","","Completado","UI","Etapa 2","image30.png"
+"40","Pruebas 30 de julio","41","El componente de radio button queda sin fondo y se va a crear una variante de este componente para tener con y sin background","","","Completado","UI","Etapa 2","image31.png"
+"41","Pruebas 30 de julio","42","Centrar el text label del input, también aplica en el escenario de error","","","Completado","UI","Etapa 2","image32.png"
+"42","Pruebas 30 de julio","43","El placeholder debe ser una cifra númerica como en el figma tenemos ""123456789""","","","Completado","UI","Etapa 2","image32.png"
+"43","Pruebas 30 de julio","44","Revisar la validación en el escenario cuando un usuario regresa al input de número de empleado. Verificar que se vuelva a validar y el CTA quede deshabilitado","","","Completado","Funcionalidad","Etapa 2","image33.png"
+"44","Pruebas 30 de julio","45","Ajustar el tamaño del icono a 24 px","","","Completado","UI","Etapa 2","image34.png"
+"45","Pruebas 30 de julio","46","Ajustar el bullet al top (ajuste general)","","","Completado","UI","Etapa 2","image35.png"
+"46","Pruebas 30 de julio","47","Se quita el scroll de la card y se ajusta el contenido al contenedor. Solo queda un scroll general","aqui","","Completado","UI","Etapa 2","image36.png"
+"47","Pruebas 30 de julio","48","Quitar la s a ""gorras"" dejarlo en singular","","","Completado","Copy","Etapa 1","image36.png"
+"48","Pruebas 30 de julio","49","Ajustar el corner radius de la card a 24px","","","Completado","UI","Etapa 2","image37.png"
+"49","Pruebas 30 de julio","50","Se elimina el pading entre la card y la imagen solo queda el padding del contenedor de la imagen","","","Completado","UI","Etapa 2","image38.png"
+"50","Pruebas 30 de julio","51","Cambiar el estilo de la tipografía del loader, debe ser Diaplay 48/59","","","Completado","Funcionalidad","Etapa 2","image39.png"
+"51","Pruebas 30 de julio","52","Cambiar el peso de la tipo 500","","","Pendiente","UI","Etapa 2","image40.png | image41.png"
+"52","Pruebas 30 de julio","53","Agregar la línea antes del signo de interrogación","","","Pendiente","UI","Etapa 2","image41.png"
+"53","Pruebas 30 de julio","54","Agregar el copy de la justificación de la respuesta de la trivia","","","Pendiente","Copy","Etapa 1",""
+"54","Pruebas 30 de julio","55","Capitalizar los textos para que los nombres queden siempre en mayúsculas y minúsculas","","","Completado","Backend","Etapa 2","image42.png"
+"55","Pruebas 30 de julio","56","""Edítala"" falta acento en la í","","","Completado","Copy","Etapa 1","image43.png"
+"56","Pruebas 30 de julio","57","Eliminar stroke y agregar sombreado en la card de domicilio, revisar el color de los textos y capitalizar los nombres","","","Completado","Backend","Etapa 2","image44.png"
+"57","Pruebas 30 de julio","58","En la card de edición debe respetarse el diseño de en cuanto a la caja del container con fondo blanco, los inputs deben de estár prellenados con la información del usuarios","","","Completado","UI","Etapa 2","image45.png"
+"58","Pruebas 30 de julio","59","Cambiar por componente correcto - Solo ajustar la alineación a la izquierda, la tipografía y el color del label","","","Completado","UI","Etapa 2","image46.png"
+"59","Pruebas 30 de julio","60","Revisar el estilo del button sheet, revisar paddigs, estilo de la tipografía del título  ""Selecciona un estado civil"" y agregar en todos el drag handle","","","Completado","UI","Etapa 2","image47.png"
+"60","Pruebas 30 de julio","61","El CTA debe de permanecer deshabilitado hasta que el usuario seleccione la opción","","","Pendiente","Funcionalidad","Etapa 2","image47.png"
+"61","Pruebas 30 de julio","62","Revisar paddings de este componente","","","Completado","UI","Etapa 2","image48.png"
+"62","Pruebas 30 de julio","63","Revisar el estilo del button sheet, revisar paddigs, estilo de la tipografía del título ""Selecciona una ocupación"" y agregar en todos el drag handle","","","Pendiente","UI","Etapa 2","image49.png"
+"63","Pruebas 30 de julio","64","El CTA debe de permanecer deshabilitado hasta que el usuario seleccione la opción","","","Pendiente","Funcionalidad","Etapa 2","image49.png | image50.png"
+"64","Pruebas 30 de julio","65","Ordenar alfabeticamente todos los catálogos (cambio general). Validar si va con back o frontend","","","Pendiente","Backend","Etapa 2",""
+"65","Pruebas 30 de julio","66","Ajustar tipografía que debe ser Display 48/59 y verifacir padding entre logo y texto","","","Completado","Copy","Etapa 1","image51.png | image52.png"
+"66","Pruebas 30 de julio","68","Ajustar el stepper al ancho del contenedor y revisar sombra","","","Completado","UI","Etapa 2",""
+"67","Pruebas 30 de julio","69","Capitalizar nombre del usuario","","","Completado","Backend","Etapa 2","image54.png | image55.png"
+"68","Pruebas 30 de julio","70","Ajustar el estilo del radio button con el circulo al centro blanco. Se ajusta por componente correcto","","","Pendiente","UI","Etapa 2",""
+"69","Pruebas 30 de julio","71","Ajuste general de inputs, peso y tipografía","","","Completado","UI","Etapa 2","image56.png"
+"70","Pruebas 30 de julio","72","Agregar ""opcional"" en el número interior","","","Pendiente","UI","Etapa 2","image57.png"
+"71","Pruebas 30 de julio","73","Ajustar validación de datos incompletos en pantalla","","","Pendiente","Funcionalidad","Etapa 2","image58.png"
+"72","Pruebas 30 de julio","74","Ajustar stepper al ancho del contenedor, capitalizar el nombre del usuario","","","Completado","Backend","Etapa 2","image59.png"
+"73","Pruebas 30 de julio","75","Dejar el stepper en el ajustado al contenedor.
+Título ajustado al contenedor.
+Revisar el estilo de la animación de instrucciones.
+Revisar el mapa porque el API no está actualizada.","","","Completado","Backend","Etapa 2","image60.png | image61.png"
+"74","Pruebas 30 de julio","76","Dejar el stepper en el ajustado al contenedor.
+Título ajustado al contenedor.
+Subtítulo ajustado al contenedor.
+Agregar el button sheet como contenedor para los CTA, sin interacción","","","Completado","UI","Etapa 2",""
+"75","Pruebas 30 de julio","77","Banner content con el color de la segmentación","","","Completado","UI","Etapa 2","image62.png | image63.png | image64.png"
+"76","Pruebas 30 de julio","78","Revisar el tamaño de la imagen de ofertas para tomar de referencia 250px","","","Completado","UI","Etapa 2",""
+"77","Pruebas 30 de julio","79","Ajustar le padding entre ""¡Tú decides cómo usarlo!"" y entre el ""O llévate:"" y el carrusel son 16px","","","Completado","UI","Etapa 2","image65.png | image66.png"
+"78","Pruebas 30 de julio","80","El carrusel debe abarcar todo el espacio a la derecha y ajustar el stroke de acuerdo al canal  y ocultar los dont´s","","","Pendiente","UI","Etapa 2",""
+"79","Pruebas 30 de julio","81","Cambiar la fuente y el peso de *Sujeto a aprobación","","","Completado","UI","Etapa 2","image67.png"
+"80","Pruebas 30 de julio","82","Ajuste de H2 general, bullets alineados al top, tomar la medida de 250px de base para los dispospositivos más grandes","","","Completado","UI","Etapa 2","image68.png"
+"81","Pruebas 30 de julio","83","El tamaño del logo queda en 50px de profundidad","","","Completado","UI","Etapa 2","image69.png"
+"82","Pruebas 30 de julio","84","Centrar el chip del día ""Domingo""","","","Pendiente","UI","Etapa 2","image70.png"
+"83","Pruebas 30 de julio","85","Falta la sombra en todos los chips no seleccionados y el stroke en el activo","","","Completado","UI","Etapa 2","image71.png"
+"84","Pruebas 30 de julio","86","La url a donde nos debe dirigir es: Pendiente
+Y pintar el punto final en verde","","","Pendiente","Copy","Etapa 1","image72.png"
+"85","Pruebas 30 de julio","87","Ajustar el tamaño de la tipografía a 11pts, en el design system tenemos un atributo específico","","","Completado","UI","Etapa 2","image73.png | image74.png"
+"86","Pruebas 30 de julio","88","Ajustar contenido de la card al 50% y que el margen entre el chip y el texto ""Al continuar, aceptas el Contrato de préstamo."" quede automatico y proporcional de acuerdo al dispositivo","","","Completado","Copy","Etapa 1","image75.png"
+"87","Pruebas 30 de julio","89","Revisar si las chips pueden adaptarse proporcionalmente al dispositivo, solo respetando el padding entre ellas","","","Completado","UI","Etapa 2",""
+"88","Pruebas 30 de julio","90","Ajustar contenido de la card al 50%, revisar tipografías y estilos, agregar la sombra de las chips cuando están en default","","","Completado","UI","Etapa 2","image76.png"
+"89","Pruebas 30 de julio","91","Cambiar la tipografía por el estilo correcto, cambiar el icono del calendario por el reloj de figma y verificar que el verde del fondo sea el hexadecimal #E3EDEA y el stroke #14875A","","","Pendiente","UI","Etapa 2","image77.png"
+"90","Pruebas 30 de julio","92","El CTA debe decir ""Confirmar""","","","Completado","Negocio","Etapa 2","image78.png"
+"91","Pruebas 30 de julio","93","En el estado de active cuando se selecciona el día, agregar un padding para que no se corte la sombra de la selección, y verificar el color del stroke debe ser #14875A","","","Pendiente","UI","Etapa 2","image79.png"
+"92","Pruebas 30 de julio","94","En el estado de active cuando se selecciona la hora agregar el stroke #14875A","","","Pendiente","UI","Etapa 2","image80.png"
+"93","Pruebas 30 de julio","95","Revisar si las chips pueden adaptarse proporcionalmente al dispositivo, solo respetando el padding entre ellas","","","Completado","UI","Etapa 2","image81.png"
+"94","Pruebas 30 de julio","96","Revisar la linea del header entre el logo y el título
+Agregrar el formato de a.m. o p.m. de acuerdo a la hora agendada 
+Revisar el hexadecimal del color verde que debe ser #106949
+Padding entre título y bullets debe de ser 24 px, quitar el margen extra del contenedor de los bullets","","","Completado","UI","Etapa 2","image82.png | image83.png"
+"95","Pruebas 30 de julio","97","Cambiar el icono","","","Pendiente","UI","Etapa 2","image84.png"
+"96","Pruebas 30 de julio","98","La variable de tiempo sobre la duración de la vista cambia de acuerdo al perfil de cliente: 15 minutos clientes verdes, 30 minutos clientes amarillos y 35 minutos clientes rojos","","","Pendiente","Funcionalidad","Etapa 2","image85.png"
+"97","Pruebas 30 de julio","99","Revisar los estilos del título y subtítulo
+Quitar los signos de exclamación del título
+Revisar la tipografía del CTA de whatsapp
+Agregar la gradiente dentro del CTA de whatsapp","","","Completado","UI","Etapa 2","image86.png"
+"98","Pruebas 30 de julio","100","Agregar la línea del color del canal en la card del carrusel y ocultar los dont´s","","","Completado","UI","Etapa 2","image87.png"
+"99","Pruebas 30 de julio","101","Agregar la URL al sitio de Banco Azteca","","","Completado","UI","Etapa 2","image88.png"
+"100","Pruebas 30 de julio","102","Eliminar el padding que tenemos en el componente del CTA de ""Responder""","","","Completado","UI","Etapa 2","image89.png"
+"101","Pruebas 30 de julio","103","Cambiar el input por textarea de la pregunta","","","Pendiente","UI","Etapa 2","image90.png"
+"102","Pruebas 30 de julio","104","Agregar la regla de al menos 3 caracteres para poder actrivar el CTA","","","Pendiente","Funcionalidad","Etapa 2","image91.png"
+"103","Pruebas 30 de julio","105","Revisar las fuentes tipografías
+Revisar el padding entre el Buscador y el subtítulo
+Revisar el padding ente el mapa y Buscador
+Revisar el tema del pin de BAZ en el mapa
+Falta el título de ""Elegir sucursal""
+Dejar en altas y bajas el nombre de la sucursal y la dirección
+Quitar los decimales de la unidad de KM
+Agregar el CTA dentro de la card blanca de sucursal
+Eliminar el textlink de ""No encuentro mi domicilio""","","","Pendiente","UI","Etapa 2","image92.png"
+"104","Pruebas 30 de julio","106","Ajuste de copy en la pantalla de salida para ""Busqueda de sucursal""","","","Pendiente","Copy","Etapa 1","image93.png"
+"105","Mod 31 Jul","2","Se reemplazó la promesa de tiempo por un beneficio real del flujo. El nuevo mensaje prepara al usuario para personalizar su préstamo (monto y plazo), generando expectativas alineadas con los siguientes pasos de la experiencia.","","","Pendiente","UI","Etapa 2","image113.png | image116.png"
+"106","Mod 31 Jul","3","Hogar:
+Engloba mejor esta y otras subcategorías. Con este ajuste la nomenclatura queda más clara, escalable y consistente.","","","Pendiente","UI","Etapa 2","image114.png | image115.png"
+"107","Mod 31 Jul","4","""Hagámoslo posible"" funciona tanto para: una moto; una emergencia; un negocio; pagar una deuda; comprar un refrigerador. Es una consecuencia natural de la pantalla anterior.","","","Pendiente","Negocio","Etapa 2","image117.png | image118.png"
+"108","Mod 31 Jul","5","Se adaptó el subhead más orientado al tono y voz de la OU, este nuevo texto: 
+- Reconoce que el usuario ya avanzó.
+- Reduce la carga del formulario.
+- No dice que la solicitud ""empieza.","","","Pendiente","Copy","Etapa 1","image119.png | image120.png"
+"109","Mod 31 Jul","6","Se eliminó ""Tómate tu tiempo"" por no aportar a la tarea principal. El nuevo copy prioriza una instrucción clara y reduce la carga cognitiva.","","","Pendiente","Copy","Etapa 1","image121.png | image122.png"
+"110","Mod 31 Jul","7","Son dos ideas separadas, por lo tanto va punto, no coma.","","","Pendiente","UI","Etapa 2","image123.png | image124.png"
+"111","Mod 31 Jul","8","Se reemplazaron headline y subhead por una redacción más neutral que comunica la misma situación sin atribuir el error directamente al usuario.","","","Pendiente","Copy","Etapa 1","image125.png | image126.png"
+"112","Mod 31 Jul","9","Se sustituyó ‘’el’’ por ‘’su’’, para interpretar naturalmente que el número es del asesor.
+
+Cambié ‘’Rectifícalo’’ por ‘Verifícalo’: se escuchaba muy técnico y no tenía coma o punto para separar las dos ideas.","","","Pendiente","UI","Etapa 2","image127.png | image128.png"
+"113","Mod 31 Jul","10","‘’Empezamos’’ rompe la continuidad porque da la sensación de que hasta ahora inicia el proceso.
+
+‘’Gorras’’ por ‘’Gorra’’: Nos estamos dirigiendo a una sola persona.","","aqui","Pendiente","UI","Etapa 2","image129.png | image130.png"
+"114","Mod 31 Jul","11","Se ajustó el copy para que se sienta más natural y directo. Al eliminar ""con nosotros"", el mensaje se enfoca en el beneficio para el usuario y mantiene la misma sensación de confianza.","","","Completado","Copy","Etapa 1","image94.png | image95.png"
+"115","Mod 31 Jul","12","‘’A mí como usuario me genera fricción si veo que algo llamado Solicitud Única quiere acceder a mi ubicación’’ - Ivar
+
+Se verá la posibilidad de cambiarlo por Banco Azteca.","","","Pendiente","UI","Etapa 2","image96.png | image97.png"
+"116","Mod 31 Jul","13","Propuesta de Ivar. El usuario debe enfocar/ubicar la fachada de su domicilio.","","","Pendiente","UI","Etapa 2","image99.png | image100.png"
+"117","Mod 31 Jul","14","Loader optimizado (de Botón de Pago, se adaptó a la OU). Propuesta de Mike.","","","Pendiente","Funcionalidad","Etapa 2","image101.png | image102.png"
+"118","Mod 31 Jul","15","El nuevo copy comunica una oferta más clara y confiable. Al reemplazar ""te podemos prestar hasta"" por ""ya tienes $22,000 aprobados"", se elimina la ambigüedad y se refuerza la certeza de la oferta disponible para el usuario.","","","Pendiente","Copy","Etapa 1","image103.png | image104.png"
+"119","Mod 31 Jul","16","Transforma un requisito en un beneficio. En lugar de pedir al usuario que agende una visita, comunica que el asesor irá a su domicilio y explica de forma más clara el siguiente paso, reduciendo la percepción de fricción.
+(Propuesta de Mike mejorar el copy)","","","Pendiente","Copy","Etapa 1","image105.png | image106.png"
+"120","Mod 31 Jul","17","Se adaptó el headline y subhead de Botón de Pago a la pantalla de agendamiento en OU.","","","Pendiente","Copy","Etapa 1","image107.png | image108.png"
+"121","Mod 31 Jul","18","Se adaptó el headline y subhead de Botón de Pago a la pantalla de agendamiento en OU.","","","Pendiente","Copy","Etapa 1","image109.png | image110.png | image112.png"
+"122","Mod 31 Jul","19","Línea Blanca por Hogar (Propuesta de Mike).
+El copy que se encuentra debajo de las categorías es para Incentivar al usuario a que se dirija a la App de Banco Azteca.
+
+Se evitó cerrar la experiencia únicamente con el fin del trámite (""Completaste tu solicitud"") y se dio continuidad a la relación con el usuario, reforzando el seguimiento por WhatsApp y los beneficios disponibles.","","","Pendiente","Copy","Etapa 1","image111.png"
+"123","Mod 31 Jul","24","Mover proceso de Reco Facial hasta la pantalal Oferta","","","Pendiente","UI","Etapa 2","image98.png"
+"124","Pruebas 3 agosto","2","Se agregan los loaders para validación de datos","","","Pendiente","Funcionalidad","Etapa 2","image131.png"
+"125","Pruebas 4 - 5 agosto","2","Revisar con negocio si el año debe de ser variable o fijo. Osea cambiar año con año o no","","","Pendiente","Negocio","Etapa 2","image132.png"
+"126","Pruebas 4 - 5 agosto","3","Falta el ajuste de Olvia en cuanto a tamaño","","","Pendiente","UI","Etapa 2","image133.png"
+"127","Pruebas 4 - 5 agosto","4","Revisar la sombra de la card de productos","","","Pendiente","UI","Etapa 2","image134.png"
+"128","Pruebas 4 - 5 agosto","5","Orden de la categoría de se valida con backend","","","Pendiente","Backend","Etapa 2","image135.png"
+"129","Pruebas 4 - 5 agosto","6","Backend se lleva el ajuste del orden de mayor a menor en el catálogo de semanas","","","Pendiente","Backend","Etapa 2","image136.png"
+"130","Pruebas 4 - 5 agosto","7","Se ajusta el formato de edición de cantidad y se agrega la coma de cifra","","","Pendiente","UI","Etapa 2","image137.png"
+"131","Pruebas 4 - 5 agosto","8","Negocio nos tiene que compartir la URL del link de ""Información laboral""","","","Pendiente","Negocio","Etapa 2","image138.png"
+"132","Pruebas 4 - 5 agosto","9","Se omite el autocomplete del la pantalla de nickname","","","Pendiente","Funcionalidad","Etapa 2","image19.png"
+"133","Pruebas 4 - 5 agosto","10","Ajustar el CTA en la parte inferior, se va a revisar en los formularios para poder ajustarlo","","","Pendiente","UI","Etapa 2","image139.png"
+"134","Pruebas 4 - 5 agosto","11","Se va agregar el componente de loader entre la pantalla de nickname y OTP","","","Pendiente","Funcionalidad","Etapa 2","image140.png"
+"135","Pruebas 4 - 5 agosto","12","Falta migrar el catálogo de iconos","","","Pendiente","UI","Etapa 2","image141.png"
+"136","Pruebas 4 - 5 agosto","13","Revisar la funcionalidad para que el keyboard ""suba"" y se vea el código cuando el usuario lo ingrese","","","Pendiente","Funcionalidad","Etapa 2","image142.png"
+"137","Pruebas 4 - 5 agosto","14","Agregar el stroke de 1px","","","Pendiente","UI","Etapa 2","image24.png"
+"138","Pruebas 4 - 5 agosto","15","Agregar el loader entre la verificación y la pantalla de éxito","","","Pendiente","Funcionalidad","Etapa 2","image143.png"
+"139","Pruebas 4 - 5 agosto","16","Revisión de reenvio de OTP - Backend y front - Carlos lo válido y nos comenta que se debe de revisar con alta única","","","Pendiente","Backend","Etapa 2","image144.png"
+"140","Pruebas 4 - 5 agosto","17","agregar el Swipe-to-Dismiss del bottom sheet","","","Pendiente","Funcionalidad","Etapa 2","image28.png"
+"141","Pruebas 4 - 5 agosto","18","Revisar escenario de numero de intentos para que redirija a la pantalla correcta y no al error general - Código de error C14 en el excel, revisar el C13 y confirmar","","","Pendiente","Negocio","Etapa 2",""
+"142","Pruebas 4 - 5 agosto","19","Revisar la redirección del CTA al sitio de BAZ","","","Pendiente","Funcionalidad","Etapa 2","image29.png"
+"143","Pruebas 4 - 5 agosto","20","Revisar el escenario cuando el usuario selecciona que si lo esta ayudando un asesor para que habilite el CTA hasta agregue el número de empleado","","","Pendiente","Funcionalidad","Etapa 2","image145.png"
+"144","Pruebas 4 - 5 agosto","21","Agregar el loader de validación de número de empleado","","","Pendiente","Funcionalidad","Etapa 2",""
+"145","Pruebas 4 - 5 agosto","22","Cambiar el icono de guardar en la pantalla de edición de datos","","","Pendiente","UI","Etapa 2","image167.png"
+"146","Pruebas 4 - 5 agosto","23","Revisar con negocio si se agrega ""ama de casa""","","","Pendiente","Negocio","Etapa 2","image168.png | image169.png"
+"147","Pruebas 4 - 5 agosto","24","Revisar el estilo de las shadows cuando no esta activado para que no se corte, y la tipo de am y pm para que quede en una linea","","","Pendiente","UI","Etapa 2",""
+"148","Pruebas 4 - 5 agosto","25","Ajuste manual en el carrusel para que quede en el borde","","","Pendiente","UI","Etapa 2","image170.png"
+"149","Pruebas 4 - 5 agosto","26","Revisar el ajuste de tipografía en chips","","","Pendiente","UI","Etapa 2","image171.png"
+"150","Pruebas 4 - 5 agosto","27","En el estado de active cuando se selecciona la hora agregar el stroke #14875A","","","Pendiente","UI","Etapa 2","image80.png"
+"151","Pruebas 4 - 5 agosto","28","La url a donde nos debe dirigir es: Pendiente
+Y pintar el punto final en verde","","","Pendiente","Copy","Etapa 1","image72.png"
+"152","Pruebas 4 - 5 agosto","29","Agregrar el formato de a.m. o p.m. de acuerdo a la hora agendada","","","Pendiente","UI","Etapa 2","image82.png"
+"153","Pruebas 4 - 5 agosto","30","La variable de tiempo sobre la duración de la vista cambia de acuerdo al perfil de cliente: 15 minutos clientes verdes, 30 minutos clientes amarillos y 35 minutos clientes rojos","","","Pendiente","Funcionalidad","Etapa 2","image85.png | image90.png"
+"154","Pruebas 4 - 5 agosto","31","Cambiar el input por textarea de la pregunta","","","Pendiente","UI","Etapa 2","image172.png"
+"155","Pruebas 4 - 5 agosto","32","Capitalizar texto porque vienen en altas y bajas
+Agregar emogis","","","Pendiente","Backend","Etapa 2",""
+"156","Pruebas 4 - 5 agosto","33","Agregar el acento a ""Cómo"" y ""préstamo""","","","Pendiente","Copy","Etapa 1","image173.png"
+"157","Pruebas 4 - 5 agosto","34","Cambiar el input por textarea de la pregunta","","","Pendiente","UI","Etapa 2","image90.png"
+"158","Pruebas 4 - 5 agosto","35","Agregar la regla de al menos 3 caracteres para poder actrivar el CTA","","","Pendiente","Funcionalidad","Etapa 2","image91.png"
+"159","Pruebas 4 - 5 agosto","36","Revisar las fuentes tipografías
+Revisar el padding entre el Buscador y el subtítulo
+Revisar el padding ente el mapa y Buscador
+Revisar el tema del pin de BAZ en el mapa
+Falta el título de ""Elegir sucursal""
+Dejar en altas y bajas el nombre de la sucursal y la dirección
+Quitar los decimales de la unidad de KM
+Agregar el CTA dentro de la card blanca de sucursal
+Eliminar el textlink de ""No encuentro mi domicilio""","","","Pendiente","UI","Etapa 2","image92.png"
+"160","Pruebas 4 - 5 agosto","37","Ajuste de copy en la pantalla de salida para ""Busqueda de sucursal""","","","Pendiente","Copy","Etapa 1","image93.png"
+"161","Pruebas 4 - 5 agosto","49","Loader listo","","","Completado","Funcionalidad","Etapa 2","image147.png"
+"162","Pruebas 4 - 5 agosto","50","Cambiamos el peso de la tipografia ""Body 1"" a 400","","","Completado","UI","Etapa 2","image146.tmp"
+"163","Pruebas 4 - 5 agosto","51","Listo ajustres entre pading izquierdo y derecho y mejoro desbordamiento","","","Completado","UI","Etapa 2","image148.png"
+"164","Pruebas 4 - 5 agosto","52","hay que pasarle el banco de preguntas y respuestas a Carlos Wilverth con su respuesta correcta e incorrecta. (pendiente de mandar del lado de UIX) / Duda de Jose, Mini Juego (caundo se aplica el loader del mini juego) hay que definir el loader normal o el minijuego.","","","Pendiente","Negocio","Etapa 2","image149.png"
+"165","Pruebas 4 - 5 agosto","53","Mejoramos el componente de imput dropdawnd buttom se sentia descompensado","","","Pendiente","UI","Etapa 2","image150.png"
+"166","Pruebas 4 - 5 agosto","54","Confirmar catalogo de opciones con organizacion de opciones (confirmacion del lado de UIX con negocio) en productivo los botones tienen sobmbra en la UI es plano el boton","","","Pendiente","Negocio","Etapa 2","image151.png"
+"167","Pruebas 4 - 5 agosto","55","Contemplar boton ""Guardar"" boton en UI","","","Pendiente","UI","Etapa 2","image152.png"
+"168","Pruebas 4 - 5 agosto","56","Listo ajustres entre pading izquierdo y derecho y mejoro desbordamiento","","","Completado","UI","Etapa 2","image153.png"
+"169","Pruebas 4 - 5 agosto","57","Se quito copy que no estaba contemplado en la UI, ajustamos los Gaps","","","Completado","Copy","Etapa 1","image154.png"
+"170","Pruebas 4 - 5 agosto","58","Pendeinte revision de gap entre radio buttoms","","","Pendiente","UI","Etapa 2","image155.png | image156.png"
+"171","Pruebas 4 - 5 agosto","59","Faltra motor de interacción de la Geocerca","","","Pendiente","Funcionalidad","Etapa 2","image157.png"
+"172","Pruebas 4 - 5 agosto","60","Primera iconografia no carga, segunda icnografia carga, los iconos no se logran ver por lo que aconsejamos cambiar de lineas a rellenos en UI, la transparencia de esta capa es mas oscura, cambiar icono greografico.","","","Pendiente","UI","Etapa 2","image158.png | image159.png"
+"173","Pruebas 4 - 5 agosto","61","Cambiamos los radios del top card en botones y radio top card de streetview","","","Completado","UI","Etapa 2","image160.png | image161.png"
+"174","Pruebas 4 - 5 agosto","62","Aplicación de este copy con el salto de parrafo en ""Vamos""","","","Pendiente","Copy","Etapa 1","image162.png"
+"175","Pruebas 4 - 5 agosto","63","Linea de borde del perfil y linea de los items y el margen que los corta","","","Pendiente","UI","Etapa 2","image163.png | image164.png | image165.png"
+"176","Pruebas 4 - 5 agosto","64","Cambio de color en el titulo sobre la variable ""Nombre""","","","Pendiente","UI","Etapa 2","image166.png"

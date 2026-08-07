@@ -1,0 +1,11 @@
+PAQUETE COMPARTIBLE · PRUEBAS MARÍA 2.0
+Corte: 5 de agosto de 2026
+
+Abra index.html para consultar el inventario y sus evidencias sin conexión.
+
+Estructura:
+- index.html (experiencia navegable)
+- images/ (173 evidencias e imagen de portada)
+- contenido/ (PDF, inventarios, manifiesto y archivos de consulta)
+
+Resumen: 176 observaciones, 82 completadas y 94 pendientes.

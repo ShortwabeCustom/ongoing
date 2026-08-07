@@ -1,0 +1,2644 @@
+[
+  {
+    "id": 1,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 2,
+    "observation": "Punto final en el segundo slide",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image4.png"
+    ]
+  },
+  {
+    "id": 2,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 3,
+    "observation": "Degadadado de fondo: background: var(--Color-Fill-Gradient-Button, linear-gradient(92deg, var(--Semantic-Colors-Fill-Button-Button-Gradient-Strong, #10553D) 3.93%, var(--Semantic-Colors-Fill-Button-Button-Gradient-Light, #14875A) 98.12%));",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image3.png"
+    ]
+  },
+  {
+    "id": 3,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 4,
+    "observation": "Mantener la proporción entre REMS",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image1.png"
+    ]
+  },
+  {
+    "id": 4,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 5,
+    "observation": "La tipografía de las categorías se muestra en 14 pt y debe de estár en 16 pts",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image1.png"
+    ]
+  },
+  {
+    "id": 5,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 6,
+    "observation": "Paddings entre categorías debe de ser de 16 px y agregar shadows",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image1.png"
+    ]
+  },
+  {
+    "id": 6,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 7,
+    "observation": "La imagen está en una proporción de 40x40px",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image2.png"
+    ]
+  },
+  {
+    "id": 7,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 8,
+    "observation": "La profundidad de la caja de subcategoría esta en 80 px y la tenemos en 68 px",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image1.png",
+      "image5.png"
+    ]
+  },
+  {
+    "id": 8,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 9,
+    "observation": "Se repite la categoría de \"Efectivo\" se debe de ocultar",
+    "adjustment": null,
+    "comments": "Ese se lo lleva back",
+    "status": "Pendiente",
+    "area": "Backend",
+    "stage": "Etapa 2",
+    "evidence": []
+  },
+  {
+    "id": 9,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 10,
+    "observation": "Darle un salto de parrafo a la dirección",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image6.png"
+    ]
+  },
+  {
+    "id": 10,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 11,
+    "observation": "La URL debe quedar del mismo tono de la tipografía",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image6.png"
+    ]
+  },
+  {
+    "id": 11,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 12,
+    "observation": "\"Ver información legal\" debe ir en tipografía regular, sin el subrayado y la palabra \"Legal\" va en minúscula",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image6.png"
+    ]
+  },
+  {
+    "id": 12,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 13,
+    "observation": "\"Crédito sujeto aprobación\" no va subrayado",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image7.png",
+      "image8.png"
+    ]
+  },
+  {
+    "id": 13,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 14,
+    "observation": "Se va a cambiar la tipografía de títulos y subtítulos por Sora y Satoshi",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": []
+  },
+  {
+    "id": 14,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 15,
+    "observation": "Agregar el padding entre \"Lo soñaste\" y \"Ahora cuéntanos...\" de 12 px",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image9.png"
+    ]
+  },
+  {
+    "id": 15,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 16,
+    "observation": "Ahora cuéntanos, ¿cuánto dinero necesitas? el \"cuánto\" va en minúsculas",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image9.png"
+    ]
+  },
+  {
+    "id": 16,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 17,
+    "observation": "Mascará en el blur del button sheet logo de Banco Azteca - semanalidades (estilo general)",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image10.png",
+      "image11.png"
+    ]
+  },
+  {
+    "id": 17,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 18,
+    "observation": "Tipografía del catalogo de semanalidades",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": []
+  },
+  {
+    "id": 18,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 19,
+    "observation": "Ordenar las semanas de mayor a menor, de 128 semanas a 4 semanas",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image11.png"
+    ]
+  },
+  {
+    "id": 19,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 20,
+    "observation": "Revisar el padding del selector de semanalidad debe de estár en 12 px",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image12.png"
+    ]
+  },
+  {
+    "id": 20,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 21,
+    "observation": "Tipografía del título debe de estár en 24 px en Sora",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image13.png"
+    ]
+  },
+  {
+    "id": 21,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 22,
+    "observation": "Ajusar el tamaño de 48 px a 54 px en la cifra del cotizador",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image14.png"
+    ]
+  },
+  {
+    "id": 22,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 23,
+    "observation": "Agregar el punto final a \"Ingresa los datos para iniciar tu solicitud.\"",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image15.png"
+    ]
+  },
+  {
+    "id": 23,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 24,
+    "observation": "Gap entre título y subtítulo de 12 px",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": []
+  },
+  {
+    "id": 24,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 25,
+    "observation": "Cambiar el hexadecimal del verde en los avisos legales por #106949",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image16.png",
+      "image17.png"
+    ]
+  },
+  {
+    "id": 25,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 26,
+    "observation": "Labels quedan como Body2 en Satoshi",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": []
+  },
+  {
+    "id": 26,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 27,
+    "observation": "Input Body1 en Satoshi",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image17.png"
+    ]
+  },
+  {
+    "id": 27,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 28,
+    "observation": "Los errores no llevan punto final",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image18.png",
+      "image21.png"
+    ]
+  },
+  {
+    "id": 28,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 29,
+    "observation": "Se omite el autocomplete del la pantalla de nickname",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image19.png",
+      "image20.png"
+    ]
+  },
+  {
+    "id": 29,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 30,
+    "observation": "Falta agregar la URL de Información laboral y separar el texto",
+    "adjustment": null,
+    "comments": "Ya se separo el texto solo falta la URL que negocio nos compartirá",
+    "status": "Completado",
+    "area": "Negocio",
+    "stage": "Etapa 2",
+    "evidence": []
+  },
+  {
+    "id": 30,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 31,
+    "observation": "Ajustar el icono del lapiz",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Backend",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image22.png"
+    ]
+  },
+  {
+    "id": 31,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 32,
+    "observation": "Revisar paddings y gaps en figma tenemos 32px. Revisar la funcionalidad para que el keyboard \"suba\" y se vean los números que ingresa al usuario del OTP",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image23.png"
+    ]
+  },
+  {
+    "id": 32,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 33,
+    "observation": "Agregar el stroke de 1px",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image24.png"
+    ]
+  },
+  {
+    "id": 33,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 34,
+    "observation": "Revisar los paddigns de los inputs (estilo general)",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image25.png",
+      "image26.png"
+    ]
+  },
+  {
+    "id": 34,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 35,
+    "observation": "Revisar el estilo de la tipografía en el número telefonico en figma la tenemos en H3 (24/30)",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": []
+  },
+  {
+    "id": 35,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 36,
+    "observation": "Revisar la validación cuando un numero telefonico es editado, no esta haciendo la redirección de mensaje SMS al nuevo número ingresado",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image27.png"
+    ]
+  },
+  {
+    "id": 36,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 37,
+    "observation": "agregar el Swipe-to-Dismiss del bottom sheet",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image28.png"
+    ]
+  },
+  {
+    "id": 37,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 38,
+    "observation": "Revisar el peso de la tipografía del CTA esta en 700 y debe ser 500 (cambio general)",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image29.png"
+    ]
+  },
+  {
+    "id": 38,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 39,
+    "observation": "Revisar escenario de numero de intentos para que redirija a la pantalla correcta y no al error general",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": []
+  },
+  {
+    "id": 39,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 40,
+    "observation": "Dejar las imagenes en un tamaño estandar de 250x250px y generar un tamaño proporcional para responsive. Crear un contenedor con padding de 16px por lado",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image30.png"
+    ]
+  },
+  {
+    "id": 40,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 41,
+    "observation": "El componente de radio button queda sin fondo y se va a crear una variante de este componente para tener con y sin background",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image31.png"
+    ]
+  },
+  {
+    "id": 41,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 42,
+    "observation": "Centrar el text label del input, también aplica en el escenario de error",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image32.png"
+    ]
+  },
+  {
+    "id": 42,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 43,
+    "observation": "El placeholder debe ser una cifra númerica como en el figma tenemos \"123456789\"",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image32.png"
+    ]
+  },
+  {
+    "id": 43,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 44,
+    "observation": "Revisar la validación en el escenario cuando un usuario regresa al input de número de empleado. Verificar que se vuelva a validar y el CTA quede deshabilitado",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image33.png"
+    ]
+  },
+  {
+    "id": 44,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 45,
+    "observation": "Ajustar el tamaño del icono a 24 px",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image34.png"
+    ]
+  },
+  {
+    "id": 45,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 46,
+    "observation": "Ajustar el bullet al top (ajuste general)",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image35.png"
+    ]
+  },
+  {
+    "id": 46,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 47,
+    "observation": "Se quita el scroll de la card y se ajusta el contenido al contenedor. Solo queda un scroll general",
+    "adjustment": "aqui",
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image36.png"
+    ]
+  },
+  {
+    "id": 47,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 48,
+    "observation": "Quitar la s a \"gorras\" dejarlo en singular",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image36.png"
+    ]
+  },
+  {
+    "id": 48,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 49,
+    "observation": "Ajustar el corner radius de la card a 24px",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image37.png"
+    ]
+  },
+  {
+    "id": 49,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 50,
+    "observation": "Se elimina el pading entre la card y la imagen solo queda el padding del contenedor de la imagen",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image38.png"
+    ]
+  },
+  {
+    "id": 50,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 51,
+    "observation": "Cambiar el estilo de la tipografía del loader, debe ser Diaplay 48/59",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image39.png"
+    ]
+  },
+  {
+    "id": 51,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 52,
+    "observation": "Cambiar el peso de la tipo 500",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image40.png",
+      "image41.png"
+    ]
+  },
+  {
+    "id": 52,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 53,
+    "observation": "Agregar la línea antes del signo de interrogación",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image41.png"
+    ]
+  },
+  {
+    "id": 53,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 54,
+    "observation": "Agregar el copy de la justificación de la respuesta de la trivia",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": []
+  },
+  {
+    "id": 54,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 55,
+    "observation": "Capitalizar los textos para que los nombres queden siempre en mayúsculas y minúsculas",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "Backend",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image42.png"
+    ]
+  },
+  {
+    "id": 55,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 56,
+    "observation": "\"Edítala\" falta acento en la í",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image43.png"
+    ]
+  },
+  {
+    "id": 56,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 57,
+    "observation": "Eliminar stroke y agregar sombreado en la card de domicilio, revisar el color de los textos y capitalizar los nombres",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "Backend",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image44.png"
+    ]
+  },
+  {
+    "id": 57,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 58,
+    "observation": "En la card de edición debe respetarse el diseño de en cuanto a la caja del container con fondo blanco, los inputs deben de estár prellenados con la información del usuarios",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image45.png"
+    ]
+  },
+  {
+    "id": 58,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 59,
+    "observation": "Cambiar por componente correcto - Solo ajustar la alineación a la izquierda, la tipografía y el color del label",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image46.png"
+    ]
+  },
+  {
+    "id": 59,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 60,
+    "observation": "Revisar el estilo del button sheet, revisar paddigs, estilo de la tipografía del título  \"Selecciona un estado civil\" y agregar en todos el drag handle",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image47.png"
+    ]
+  },
+  {
+    "id": 60,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 61,
+    "observation": "El CTA debe de permanecer deshabilitado hasta que el usuario seleccione la opción",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image47.png"
+    ]
+  },
+  {
+    "id": 61,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 62,
+    "observation": "Revisar paddings de este componente",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image48.png"
+    ]
+  },
+  {
+    "id": 62,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 63,
+    "observation": "Revisar el estilo del button sheet, revisar paddigs, estilo de la tipografía del título \"Selecciona una ocupación\" y agregar en todos el drag handle",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image49.png"
+    ]
+  },
+  {
+    "id": 63,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 64,
+    "observation": "El CTA debe de permanecer deshabilitado hasta que el usuario seleccione la opción",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image49.png",
+      "image50.png"
+    ]
+  },
+  {
+    "id": 64,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 65,
+    "observation": "Ordenar alfabeticamente todos los catálogos (cambio general). Validar si va con back o frontend",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Backend",
+    "stage": "Etapa 2",
+    "evidence": []
+  },
+  {
+    "id": 65,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 66,
+    "observation": "Ajustar tipografía que debe ser Display 48/59 y verifacir padding entre logo y texto",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image51.png",
+      "image52.png"
+    ]
+  },
+  {
+    "id": 66,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 68,
+    "observation": "Ajustar el stepper al ancho del contenedor y revisar sombra",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": []
+  },
+  {
+    "id": 67,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 69,
+    "observation": "Capitalizar nombre del usuario",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "Backend",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image54.png",
+      "image55.png"
+    ]
+  },
+  {
+    "id": 68,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 70,
+    "observation": "Ajustar el estilo del radio button con el circulo al centro blanco. Se ajusta por componente correcto",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": []
+  },
+  {
+    "id": 69,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 71,
+    "observation": "Ajuste general de inputs, peso y tipografía",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image56.png"
+    ]
+  },
+  {
+    "id": 70,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 72,
+    "observation": "Agregar \"opcional\" en el número interior",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image57.png"
+    ]
+  },
+  {
+    "id": 71,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 73,
+    "observation": "Ajustar validación de datos incompletos en pantalla",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image58.png"
+    ]
+  },
+  {
+    "id": 72,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 74,
+    "observation": "Ajustar stepper al ancho del contenedor, capitalizar el nombre del usuario",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "Backend",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image59.png"
+    ]
+  },
+  {
+    "id": 73,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 75,
+    "observation": "Dejar el stepper en el ajustado al contenedor.\nTítulo ajustado al contenedor.\nRevisar el estilo de la animación de instrucciones.\nRevisar el mapa porque el API no está actualizada.",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "Backend",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image60.png",
+      "image61.png"
+    ]
+  },
+  {
+    "id": 74,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 76,
+    "observation": "Dejar el stepper en el ajustado al contenedor.\nTítulo ajustado al contenedor.\nSubtítulo ajustado al contenedor.\nAgregar el button sheet como contenedor para los CTA, sin interacción",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": []
+  },
+  {
+    "id": 75,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 77,
+    "observation": "Banner content con el color de la segmentación",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image62.png",
+      "image63.png",
+      "image64.png"
+    ]
+  },
+  {
+    "id": 76,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 78,
+    "observation": "Revisar el tamaño de la imagen de ofertas para tomar de referencia 250px",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": []
+  },
+  {
+    "id": 77,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 79,
+    "observation": "Ajustar le padding entre \"¡Tú decides cómo usarlo!\" y entre el \"O llévate:\" y el carrusel son 16px",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image65.png",
+      "image66.png"
+    ]
+  },
+  {
+    "id": 78,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 80,
+    "observation": "El carrusel debe abarcar todo el espacio a la derecha y ajustar el stroke de acuerdo al canal  y ocultar los dont´s",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": []
+  },
+  {
+    "id": 79,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 81,
+    "observation": "Cambiar la fuente y el peso de *Sujeto a aprobación",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image67.png"
+    ]
+  },
+  {
+    "id": 80,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 82,
+    "observation": "Ajuste de H2 general, bullets alineados al top, tomar la medida de 250px de base para los dispospositivos más grandes",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image68.png"
+    ]
+  },
+  {
+    "id": 81,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 83,
+    "observation": "El tamaño del logo queda en 50px de profundidad",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image69.png"
+    ]
+  },
+  {
+    "id": 82,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 84,
+    "observation": "Centrar el chip del día \"Domingo\"",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image70.png"
+    ]
+  },
+  {
+    "id": 83,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 85,
+    "observation": "Falta la sombra en todos los chips no seleccionados y el stroke en el activo",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image71.png"
+    ]
+  },
+  {
+    "id": 84,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 86,
+    "observation": "La url a donde nos debe dirigir es: Pendiente\nY pintar el punto final en verde",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image72.png"
+    ]
+  },
+  {
+    "id": 85,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 87,
+    "observation": "Ajustar el tamaño de la tipografía a 11pts, en el design system tenemos un atributo específico",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image73.png",
+      "image74.png"
+    ]
+  },
+  {
+    "id": 86,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 88,
+    "observation": "Ajustar contenido de la card al 50% y que el margen entre el chip y el texto \"Al continuar, aceptas el Contrato de préstamo.\" quede automatico y proporcional de acuerdo al dispositivo",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image75.png"
+    ]
+  },
+  {
+    "id": 87,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 89,
+    "observation": "Revisar si las chips pueden adaptarse proporcionalmente al dispositivo, solo respetando el padding entre ellas",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": []
+  },
+  {
+    "id": 88,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 90,
+    "observation": "Ajustar contenido de la card al 50%, revisar tipografías y estilos, agregar la sombra de las chips cuando están en default",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image76.png"
+    ]
+  },
+  {
+    "id": 89,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 91,
+    "observation": "Cambiar la tipografía por el estilo correcto, cambiar el icono del calendario por el reloj de figma y verificar que el verde del fondo sea el hexadecimal #E3EDEA y el stroke #14875A",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image77.png"
+    ]
+  },
+  {
+    "id": 90,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 92,
+    "observation": "El CTA debe decir \"Confirmar\"",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "Negocio",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image78.png"
+    ]
+  },
+  {
+    "id": 91,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 93,
+    "observation": "En el estado de active cuando se selecciona el día, agregar un padding para que no se corte la sombra de la selección, y verificar el color del stroke debe ser #14875A",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image79.png"
+    ]
+  },
+  {
+    "id": 92,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 94,
+    "observation": "En el estado de active cuando se selecciona la hora agregar el stroke #14875A",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image80.png"
+    ]
+  },
+  {
+    "id": 93,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 95,
+    "observation": "Revisar si las chips pueden adaptarse proporcionalmente al dispositivo, solo respetando el padding entre ellas",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image81.png"
+    ]
+  },
+  {
+    "id": 94,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 96,
+    "observation": "Revisar la linea del header entre el logo y el título\nAgregrar el formato de a.m. o p.m. de acuerdo a la hora agendada \nRevisar el hexadecimal del color verde que debe ser #106949\nPadding entre título y bullets debe de ser 24 px, quitar el margen extra del contenedor de los bullets",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image82.png",
+      "image83.png"
+    ]
+  },
+  {
+    "id": 95,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 97,
+    "observation": "Cambiar el icono",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image84.png"
+    ]
+  },
+  {
+    "id": 96,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 98,
+    "observation": "La variable de tiempo sobre la duración de la vista cambia de acuerdo al perfil de cliente: 15 minutos clientes verdes, 30 minutos clientes amarillos y 35 minutos clientes rojos",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image85.png"
+    ]
+  },
+  {
+    "id": 97,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 99,
+    "observation": "Revisar los estilos del título y subtítulo\nQuitar los signos de exclamación del título\nRevisar la tipografía del CTA de whatsapp\nAgregar la gradiente dentro del CTA de whatsapp",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image86.png"
+    ]
+  },
+  {
+    "id": 98,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 100,
+    "observation": "Agregar la línea del color del canal en la card del carrusel y ocultar los dont´s",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image87.png"
+    ]
+  },
+  {
+    "id": 99,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 101,
+    "observation": "Agregar la URL al sitio de Banco Azteca",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image88.png"
+    ]
+  },
+  {
+    "id": 100,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 102,
+    "observation": "Eliminar el padding que tenemos en el componente del CTA de \"Responder\"",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image89.png"
+    ]
+  },
+  {
+    "id": 101,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 103,
+    "observation": "Cambiar el input por textarea de la pregunta",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image90.png"
+    ]
+  },
+  {
+    "id": 102,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 104,
+    "observation": "Agregar la regla de al menos 3 caracteres para poder actrivar el CTA",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image91.png"
+    ]
+  },
+  {
+    "id": 103,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 105,
+    "observation": "Revisar las fuentes tipografías\nRevisar el padding entre el Buscador y el subtítulo\nRevisar el padding ente el mapa y Buscador\nRevisar el tema del pin de BAZ en el mapa\nFalta el título de \"Elegir sucursal\"\nDejar en altas y bajas el nombre de la sucursal y la dirección\nQuitar los decimales de la unidad de KM\nAgregar el CTA dentro de la card blanca de sucursal\nEliminar el textlink de \"No encuentro mi domicilio\"",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image92.png"
+    ]
+  },
+  {
+    "id": 104,
+    "round": "Pruebas 30 de julio",
+    "roundOrder": 1,
+    "sourceRow": 106,
+    "observation": "Ajuste de copy en la pantalla de salida para \"Busqueda de sucursal\"",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image93.png"
+    ]
+  },
+  {
+    "id": 105,
+    "round": "Mod 31 Jul",
+    "roundOrder": 2,
+    "sourceRow": 2,
+    "observation": "Se reemplazó la promesa de tiempo por un beneficio real del flujo. El nuevo mensaje prepara al usuario para personalizar su préstamo (monto y plazo), generando expectativas alineadas con los siguientes pasos de la experiencia.",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image113.png",
+      "image116.png"
+    ]
+  },
+  {
+    "id": 106,
+    "round": "Mod 31 Jul",
+    "roundOrder": 2,
+    "sourceRow": 3,
+    "observation": "Hogar:\nEngloba mejor esta y otras subcategorías. Con este ajuste la nomenclatura queda más clara, escalable y consistente.",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image114.png",
+      "image115.png"
+    ]
+  },
+  {
+    "id": 107,
+    "round": "Mod 31 Jul",
+    "roundOrder": 2,
+    "sourceRow": 4,
+    "observation": "\"Hagámoslo posible\" funciona tanto para: una moto; una emergencia; un negocio; pagar una deuda; comprar un refrigerador. Es una consecuencia natural de la pantalla anterior.",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Negocio",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image117.png",
+      "image118.png"
+    ]
+  },
+  {
+    "id": 108,
+    "round": "Mod 31 Jul",
+    "roundOrder": 2,
+    "sourceRow": 5,
+    "observation": "Se adaptó el subhead más orientado al tono y voz de la OU, este nuevo texto: \n- Reconoce que el usuario ya avanzó.\n- Reduce la carga del formulario.\n- No dice que la solicitud \"empieza.",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image119.png",
+      "image120.png"
+    ]
+  },
+  {
+    "id": 109,
+    "round": "Mod 31 Jul",
+    "roundOrder": 2,
+    "sourceRow": 6,
+    "observation": "Se eliminó \"Tómate tu tiempo\" por no aportar a la tarea principal. El nuevo copy prioriza una instrucción clara y reduce la carga cognitiva.",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image121.png",
+      "image122.png"
+    ]
+  },
+  {
+    "id": 110,
+    "round": "Mod 31 Jul",
+    "roundOrder": 2,
+    "sourceRow": 7,
+    "observation": "Son dos ideas separadas, por lo tanto va punto, no coma.",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image123.png",
+      "image124.png"
+    ]
+  },
+  {
+    "id": 111,
+    "round": "Mod 31 Jul",
+    "roundOrder": 2,
+    "sourceRow": 8,
+    "observation": "Se reemplazaron headline y subhead por una redacción más neutral que comunica la misma situación sin atribuir el error directamente al usuario.",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image125.png",
+      "image126.png"
+    ]
+  },
+  {
+    "id": 112,
+    "round": "Mod 31 Jul",
+    "roundOrder": 2,
+    "sourceRow": 9,
+    "observation": "Se sustituyó ‘’el’’ por ‘’su’’, para interpretar naturalmente que el número es del asesor.\n\nCambié ‘’Rectifícalo’’ por ‘Verifícalo’: se escuchaba muy técnico y no tenía coma o punto para separar las dos ideas.",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image127.png",
+      "image128.png"
+    ]
+  },
+  {
+    "id": 113,
+    "round": "Mod 31 Jul",
+    "roundOrder": 2,
+    "sourceRow": 10,
+    "observation": "‘’Empezamos’’ rompe la continuidad porque da la sensación de que hasta ahora inicia el proceso.\n\n‘’Gorras’’ por ‘’Gorra’’: Nos estamos dirigiendo a una sola persona.",
+    "adjustment": null,
+    "comments": "aqui",
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image129.png",
+      "image130.png"
+    ]
+  },
+  {
+    "id": 114,
+    "round": "Mod 31 Jul",
+    "roundOrder": 2,
+    "sourceRow": 11,
+    "observation": "Se ajustó el copy para que se sienta más natural y directo. Al eliminar \"con nosotros\", el mensaje se enfoca en el beneficio para el usuario y mantiene la misma sensación de confianza.",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image94.png",
+      "image95.png"
+    ]
+  },
+  {
+    "id": 115,
+    "round": "Mod 31 Jul",
+    "roundOrder": 2,
+    "sourceRow": 12,
+    "observation": "‘’A mí como usuario me genera fricción si veo que algo llamado Solicitud Única quiere acceder a mi ubicación’’ - Ivar\n\nSe verá la posibilidad de cambiarlo por Banco Azteca.",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image96.png",
+      "image97.png"
+    ]
+  },
+  {
+    "id": 116,
+    "round": "Mod 31 Jul",
+    "roundOrder": 2,
+    "sourceRow": 13,
+    "observation": "Propuesta de Ivar. El usuario debe enfocar/ubicar la fachada de su domicilio.",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image99.png",
+      "image100.png"
+    ]
+  },
+  {
+    "id": 117,
+    "round": "Mod 31 Jul",
+    "roundOrder": 2,
+    "sourceRow": 14,
+    "observation": "Loader optimizado (de Botón de Pago, se adaptó a la OU). Propuesta de Mike.",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image101.png",
+      "image102.png"
+    ]
+  },
+  {
+    "id": 118,
+    "round": "Mod 31 Jul",
+    "roundOrder": 2,
+    "sourceRow": 15,
+    "observation": "El nuevo copy comunica una oferta más clara y confiable. Al reemplazar \"te podemos prestar hasta\" por \"ya tienes $22,000 aprobados\", se elimina la ambigüedad y se refuerza la certeza de la oferta disponible para el usuario.",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image103.png",
+      "image104.png"
+    ]
+  },
+  {
+    "id": 119,
+    "round": "Mod 31 Jul",
+    "roundOrder": 2,
+    "sourceRow": 16,
+    "observation": "Transforma un requisito en un beneficio. En lugar de pedir al usuario que agende una visita, comunica que el asesor irá a su domicilio y explica de forma más clara el siguiente paso, reduciendo la percepción de fricción.\n(Propuesta de Mike mejorar el copy)",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image105.png",
+      "image106.png"
+    ]
+  },
+  {
+    "id": 120,
+    "round": "Mod 31 Jul",
+    "roundOrder": 2,
+    "sourceRow": 17,
+    "observation": "Se adaptó el headline y subhead de Botón de Pago a la pantalla de agendamiento en OU.",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image107.png",
+      "image108.png"
+    ]
+  },
+  {
+    "id": 121,
+    "round": "Mod 31 Jul",
+    "roundOrder": 2,
+    "sourceRow": 18,
+    "observation": "Se adaptó el headline y subhead de Botón de Pago a la pantalla de agendamiento en OU.",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image109.png",
+      "image110.png",
+      "image112.png"
+    ]
+  },
+  {
+    "id": 122,
+    "round": "Mod 31 Jul",
+    "roundOrder": 2,
+    "sourceRow": 19,
+    "observation": "Línea Blanca por Hogar (Propuesta de Mike).\nEl copy que se encuentra debajo de las categorías es para Incentivar al usuario a que se dirija a la App de Banco Azteca.\n\nSe evitó cerrar la experiencia únicamente con el fin del trámite (\"Completaste tu solicitud\") y se dio continuidad a la relación con el usuario, reforzando el seguimiento por WhatsApp y los beneficios disponibles.",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image111.png"
+    ]
+  },
+  {
+    "id": 123,
+    "round": "Mod 31 Jul",
+    "roundOrder": 2,
+    "sourceRow": 24,
+    "observation": "Mover proceso de Reco Facial hasta la pantalal Oferta",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image98.png"
+    ]
+  },
+  {
+    "id": 124,
+    "round": "Pruebas 3 agosto",
+    "roundOrder": 3,
+    "sourceRow": 2,
+    "observation": "Se agregan los loaders para validación de datos",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image131.png"
+    ]
+  },
+  {
+    "id": 125,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 2,
+    "observation": "Revisar con negocio si el año debe de ser variable o fijo. Osea cambiar año con año o no",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Negocio",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image132.png"
+    ]
+  },
+  {
+    "id": 126,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 3,
+    "observation": "Falta el ajuste de Olvia en cuanto a tamaño",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image133.png"
+    ]
+  },
+  {
+    "id": 127,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 4,
+    "observation": "Revisar la sombra de la card de productos",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image134.png"
+    ]
+  },
+  {
+    "id": 128,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 5,
+    "observation": "Orden de la categoría de se valida con backend",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Backend",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image135.png"
+    ]
+  },
+  {
+    "id": 129,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 6,
+    "observation": "Backend se lleva el ajuste del orden de mayor a menor en el catálogo de semanas",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Backend",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image136.png"
+    ]
+  },
+  {
+    "id": 130,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 7,
+    "observation": "Se ajusta el formato de edición de cantidad y se agrega la coma de cifra",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image137.png"
+    ]
+  },
+  {
+    "id": 131,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 8,
+    "observation": "Negocio nos tiene que compartir la URL del link de \"Información laboral\"",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Negocio",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image138.png"
+    ]
+  },
+  {
+    "id": 132,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 9,
+    "observation": "Se omite el autocomplete del la pantalla de nickname",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image19.png"
+    ]
+  },
+  {
+    "id": 133,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 10,
+    "observation": "Ajustar el CTA en la parte inferior, se va a revisar en los formularios para poder ajustarlo",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image139.png"
+    ]
+  },
+  {
+    "id": 134,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 11,
+    "observation": "Se va agregar el componente de loader entre la pantalla de nickname y OTP",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image140.png"
+    ]
+  },
+  {
+    "id": 135,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 12,
+    "observation": "Falta migrar el catálogo de iconos",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image141.png"
+    ]
+  },
+  {
+    "id": 136,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 13,
+    "observation": "Revisar la funcionalidad para que el keyboard \"suba\" y se vea el código cuando el usuario lo ingrese",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image142.png"
+    ]
+  },
+  {
+    "id": 137,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 14,
+    "observation": "Agregar el stroke de 1px",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image24.png"
+    ]
+  },
+  {
+    "id": 138,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 15,
+    "observation": "Agregar el loader entre la verificación y la pantalla de éxito",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image143.png"
+    ]
+  },
+  {
+    "id": 139,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 16,
+    "observation": "Revisión de reenvio de OTP - Backend y front - Carlos lo válido y nos comenta que se debe de revisar con alta única",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Backend",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image144.png"
+    ]
+  },
+  {
+    "id": 140,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 17,
+    "observation": "agregar el Swipe-to-Dismiss del bottom sheet",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image28.png"
+    ]
+  },
+  {
+    "id": 141,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 18,
+    "observation": "Revisar escenario de numero de intentos para que redirija a la pantalla correcta y no al error general - Código de error C14 en el excel, revisar el C13 y confirmar",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Negocio",
+    "stage": "Etapa 2",
+    "evidence": []
+  },
+  {
+    "id": 142,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 19,
+    "observation": "Revisar la redirección del CTA al sitio de BAZ",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image29.png"
+    ]
+  },
+  {
+    "id": 143,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 20,
+    "observation": "Revisar el escenario cuando el usuario selecciona que si lo esta ayudando un asesor para que habilite el CTA hasta agregue el número de empleado",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image145.png"
+    ]
+  },
+  {
+    "id": 144,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 21,
+    "observation": "Agregar el loader de validación de número de empleado",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": []
+  },
+  {
+    "id": 145,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 22,
+    "observation": "Cambiar el icono de guardar en la pantalla de edición de datos",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image167.png"
+    ]
+  },
+  {
+    "id": 146,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 23,
+    "observation": "Revisar con negocio si se agrega \"ama de casa\"",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Negocio",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image168.png",
+      "image169.png"
+    ]
+  },
+  {
+    "id": 147,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 24,
+    "observation": "Revisar el estilo de las shadows cuando no esta activado para que no se corte, y la tipo de am y pm para que quede en una linea",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": []
+  },
+  {
+    "id": 148,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 25,
+    "observation": "Ajuste manual en el carrusel para que quede en el borde",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image170.png"
+    ]
+  },
+  {
+    "id": 149,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 26,
+    "observation": "Revisar el ajuste de tipografía en chips",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image171.png"
+    ]
+  },
+  {
+    "id": 150,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 27,
+    "observation": "En el estado de active cuando se selecciona la hora agregar el stroke #14875A",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image80.png"
+    ]
+  },
+  {
+    "id": 151,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 28,
+    "observation": "La url a donde nos debe dirigir es: Pendiente\nY pintar el punto final en verde",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image72.png"
+    ]
+  },
+  {
+    "id": 152,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 29,
+    "observation": "Agregrar el formato de a.m. o p.m. de acuerdo a la hora agendada",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image82.png"
+    ]
+  },
+  {
+    "id": 153,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 30,
+    "observation": "La variable de tiempo sobre la duración de la vista cambia de acuerdo al perfil de cliente: 15 minutos clientes verdes, 30 minutos clientes amarillos y 35 minutos clientes rojos",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image85.png",
+      "image90.png"
+    ]
+  },
+  {
+    "id": 154,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 31,
+    "observation": "Cambiar el input por textarea de la pregunta",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image172.png"
+    ]
+  },
+  {
+    "id": 155,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 32,
+    "observation": "Capitalizar texto porque vienen en altas y bajas\nAgregar emogis",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Backend",
+    "stage": "Etapa 2",
+    "evidence": []
+  },
+  {
+    "id": 156,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 33,
+    "observation": "Agregar el acento a \"Cómo\" y \"préstamo\"",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image173.png"
+    ]
+  },
+  {
+    "id": 157,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 34,
+    "observation": "Cambiar el input por textarea de la pregunta",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image90.png"
+    ]
+  },
+  {
+    "id": 158,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 35,
+    "observation": "Agregar la regla de al menos 3 caracteres para poder actrivar el CTA",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image91.png"
+    ]
+  },
+  {
+    "id": 159,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 36,
+    "observation": "Revisar las fuentes tipografías\nRevisar el padding entre el Buscador y el subtítulo\nRevisar el padding ente el mapa y Buscador\nRevisar el tema del pin de BAZ en el mapa\nFalta el título de \"Elegir sucursal\"\nDejar en altas y bajas el nombre de la sucursal y la dirección\nQuitar los decimales de la unidad de KM\nAgregar el CTA dentro de la card blanca de sucursal\nEliminar el textlink de \"No encuentro mi domicilio\"",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image92.png"
+    ]
+  },
+  {
+    "id": 160,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 37,
+    "observation": "Ajuste de copy en la pantalla de salida para \"Busqueda de sucursal\"",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image93.png"
+    ]
+  },
+  {
+    "id": 161,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 49,
+    "observation": "Loader listo",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image147.png"
+    ]
+  },
+  {
+    "id": 162,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 50,
+    "observation": "Cambiamos el peso de la tipografia \"Body 1\" a 400",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image146.tmp"
+    ]
+  },
+  {
+    "id": 163,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 51,
+    "observation": "Listo ajustres entre pading izquierdo y derecho y mejoro desbordamiento",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image148.png"
+    ]
+  },
+  {
+    "id": 164,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 52,
+    "observation": "hay que pasarle el banco de preguntas y respuestas a Carlos Wilverth con su respuesta correcta e incorrecta. (pendiente de mandar del lado de UIX) / Duda de Jose, Mini Juego (caundo se aplica el loader del mini juego) hay que definir el loader normal o el minijuego.",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Negocio",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image149.png"
+    ]
+  },
+  {
+    "id": 165,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 53,
+    "observation": "Mejoramos el componente de imput dropdawnd buttom se sentia descompensado",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image150.png"
+    ]
+  },
+  {
+    "id": 166,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 54,
+    "observation": "Confirmar catalogo de opciones con organizacion de opciones (confirmacion del lado de UIX con negocio) en productivo los botones tienen sobmbra en la UI es plano el boton",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Negocio",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image151.png"
+    ]
+  },
+  {
+    "id": 167,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 55,
+    "observation": "Contemplar boton \"Guardar\" boton en UI",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image152.png"
+    ]
+  },
+  {
+    "id": 168,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 56,
+    "observation": "Listo ajustres entre pading izquierdo y derecho y mejoro desbordamiento",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image153.png"
+    ]
+  },
+  {
+    "id": 169,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 57,
+    "observation": "Se quito copy que no estaba contemplado en la UI, ajustamos los Gaps",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image154.png"
+    ]
+  },
+  {
+    "id": 170,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 58,
+    "observation": "Pendeinte revision de gap entre radio buttoms",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image155.png",
+      "image156.png"
+    ]
+  },
+  {
+    "id": 171,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 59,
+    "observation": "Faltra motor de interacción de la Geocerca",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Funcionalidad",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image157.png"
+    ]
+  },
+  {
+    "id": 172,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 60,
+    "observation": "Primera iconografia no carga, segunda icnografia carga, los iconos no se logran ver por lo que aconsejamos cambiar de lineas a rellenos en UI, la transparencia de esta capa es mas oscura, cambiar icono greografico.",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image158.png",
+      "image159.png"
+    ]
+  },
+  {
+    "id": 173,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 61,
+    "observation": "Cambiamos los radios del top card en botones y radio top card de streetview",
+    "adjustment": null,
+    "comments": null,
+    "status": "Completado",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image160.png",
+      "image161.png"
+    ]
+  },
+  {
+    "id": 174,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 62,
+    "observation": "Aplicación de este copy con el salto de parrafo en \"Vamos\"",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "Copy",
+    "stage": "Etapa 1",
+    "evidence": [
+      "image162.png"
+    ]
+  },
+  {
+    "id": 175,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 63,
+    "observation": "Linea de borde del perfil y linea de los items y el margen que los corta",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image163.png",
+      "image164.png",
+      "image165.png"
+    ]
+  },
+  {
+    "id": 176,
+    "round": "Pruebas 4 - 5 agosto",
+    "roundOrder": 4,
+    "sourceRow": 64,
+    "observation": "Cambio de color en el titulo sobre la variable \"Nombre\"",
+    "adjustment": null,
+    "comments": null,
+    "status": "Pendiente",
+    "area": "UI",
+    "stage": "Etapa 2",
+    "evidence": [
+      "image166.png"
+    ]
+  }
+]
