@@ -1,2 +1,30 @@
+# Dependencies
 node_modules
-node_modules
+.pnpm-debug.log*
+
+# Build
+/lib/generated/prisma
+.next
+dist
+build
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+*.log
+*.log*
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Testing
+coverage
+.nyc_output
