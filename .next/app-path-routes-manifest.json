@@ -1,5 +1,13 @@
 {
   "/_global-error/page": "/_global-error",
   "/_not-found/page": "/_not-found",
-  "/page": "/"
+  "/api/findings/[id]/route": "/api/findings/[id]",
+  "/api/findings/bulk-update/route": "/api/findings/bulk-update",
+  "/api/findings/route": "/api/findings",
+  "/api/findings/stats/route": "/api/findings/stats",
+  "/api/imports/[id]/confirm/route": "/api/imports/[id]/confirm",
+  "/api/imports/[id]/route": "/api/imports/[id]",
+  "/api/imports/preview/route": "/api/imports/preview",
+  "/page": "/",
+  "/test-import/page": "/test-import"
 }

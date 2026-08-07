@@ -132,7 +132,32 @@
     "afterFiles": [],
     "fallback": []
   },
-  "dynamicRoutes": [],
+  "dynamicRoutes": [
+    {
+      "page": "/api/findings/[id]",
+      "regex": "^/api/findings/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/findings/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/imports/[id]",
+      "regex": "^/api/imports/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/imports/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/imports/[id]/confirm",
+      "regex": "^/api/imports/([^/]+?)/confirm(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/imports/(?<nxtPid>[^/]+?)/confirm(?:/)?$"
+    }
+  ],
   "staticRoutes": [
     {
       "page": "/",
@@ -151,6 +176,36 @@
       "regex": "^/_not\\-found(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/api/findings",
+      "regex": "^/api/findings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/findings(?:/)?$"
+    },
+    {
+      "page": "/api/findings/bulk-update",
+      "regex": "^/api/findings/bulk\\-update(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/findings/bulk\\-update(?:/)?$"
+    },
+    {
+      "page": "/api/findings/stats",
+      "regex": "^/api/findings/stats(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/findings/stats(?:/)?$"
+    },
+    {
+      "page": "/api/imports/preview",
+      "regex": "^/api/imports/preview(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/imports/preview(?:/)?$"
+    },
+    {
+      "page": "/test-import",
+      "regex": "^/test\\-import(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/test\\-import(?:/)?$"
     }
   ],
   "dataRoutes": [],

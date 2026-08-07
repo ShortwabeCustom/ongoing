@@ -1,5 +1,13 @@
 {
   "/_global-error/page": "app/_global-error/page.js",
   "/_not-found/page": "app/_not-found/page.js",
-  "/page": "app/page.js"
+  "/api/findings/[id]/route": "app/api/findings/[id]/route.js",
+  "/api/findings/bulk-update/route": "app/api/findings/bulk-update/route.js",
+  "/api/findings/route": "app/api/findings/route.js",
+  "/api/findings/stats/route": "app/api/findings/stats/route.js",
+  "/api/imports/[id]/confirm/route": "app/api/imports/[id]/confirm/route.js",
+  "/api/imports/[id]/route": "app/api/imports/[id]/route.js",
+  "/api/imports/preview/route": "app/api/imports/preview/route.js",
+  "/page": "app/page.js",
+  "/test-import/page": "app/test-import/page.js"
 }
