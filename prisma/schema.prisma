@@ -199,10 +199,11 @@ model Finding {
   incidenceTypes  FindingIncidenceType[]
   experienceTags  FindingExperienceTag[]
   evidence        Evidence[]
-  resolution      Resolution?
-  validation      Validation?
+  resolutions     Resolution[]
+  validations     Validation[]
   comments        Comment[]
   statusHistory   FindingStatusHistory[]
+  auditLogs       AuditLog[]
 
   @@index([projectId])
   @@index([testSessionId])
@@ -303,12 +304,20 @@ model Evidence {
   fileSize          Int?         // bytes
   caption           String?
 
+  // Workflow attachments (optional)
+  resolutionId String?
+  resolution   Resolution? @relation(fields: [resolutionId], references: [id], onDelete: SetNull)
+  validationId String?
+  validation   Validation? @relation(fields: [validationId], references: [id], onDelete: SetNull)
+
   createdBy String
   creator   User   @relation(fields: [createdBy], references: [id])
   createdAt DateTime @default(now())
 
   @@index([findingId])
   @@index([createdBy])
+  @@index([resolutionId])
+  @@index([validationId])
   @@map("evidence")
 }
 
@@ -326,10 +335,16 @@ enum EvidenceType {
 
 model Resolution {
   id        String   @id @default(cuid())
-  findingId String   @unique
+  findingId String
   finding   Finding  @relation(fields: [findingId], references: [id], onDelete: Cascade)
 
+  state       ResolutionState @default(OPEN)
   description String
+  notes       String?
+  assignedTo  String?
+
+  // Evidence attached to this resolution
+  evidence Evidence[]
 
   createdBy String
   creator   User   @relation("ResolutionCreator", fields: [createdBy], references: [id])
@@ -337,31 +352,52 @@ model Resolution {
   updatedAt DateTime @updatedAt
 
   @@index([findingId])
+  @@index([state])
+  @@index([assignedTo])
   @@index([createdBy])
   @@map("resolutions")
 }
 
+enum ResolutionState {
+  OPEN
+  TRIAGED
+  INVESTIGATING
+  PROPOSED
+  APPROVED
+  IMPLEMENTED
+  VERIFIED
+  CLOSED
+}
+
 model Validation {
   id        String   @id @default(cuid())
-  findingId String   @unique
+  findingId String
   finding   Finding  @relation(fields: [findingId], references: [id], onDelete: Cascade)
 
-  result ValidationResult
-  notes  String?
+  result ValidationResult @default(PENDING)
+  criteria Json? // Array of { id, name, passed, notes }
+  notes    String?
 
-  validatedBy String
-  validator   User   @relation("ValidationValidator", fields: [validatedBy], references: [id])
-  validatedAt DateTime @default(now())
+  // Evidence attached to this validation
+  evidence Evidence[]
+
+  validatedBy String?
+  validator   User?   @relation("ValidationValidator", fields: [validatedBy], references: [id], onDelete: SetNull)
+  validatedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([findingId])
+  @@index([result])
   @@index([validatedBy])
   @@map("validations")
 }
 
 enum ValidationResult {
-  PASSED
-  FAILED
-  PARTIAL
+  PENDING
+  PASS
+  FAIL
 }
 
 // ============================================================================
@@ -410,18 +446,22 @@ model FindingStatusHistory {
 model AuditLog {
   id        String   @id @default(cuid())
 
-  entityType String  // "Finding", "Evidence", "Project", etc
-  entityId   String
-  action     AuditAction
+  findingId String
+  finding   Finding  @relation(fields: [findingId], references: [id], onDelete: Cascade)
 
-  before    Json?   // Previous state (no passwords/tokens)
-  after     Json?   // New state
+  action    AuditAction
+
+  changes   Json?   // Deltas: { before: {}, after: {} } for changed fields only
+  details   String? // Human-readable description
 
   actorId String
-  actor   User   @relation("AuditActor", fields: [actorId], references: [id])
+  actor   User   @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+  ipAddress String?
+
   createdAt DateTime @default(now())
 
-  @@index([entityType, entityId])
+  @@index([findingId])
+  @@index([action])
   @@index([actorId])
   @@index([createdAt])
   @@map("audit_logs")

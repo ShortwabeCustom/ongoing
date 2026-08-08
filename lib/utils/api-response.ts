@@ -22,6 +22,19 @@ export function apiSuccess<T>(data: T, statusCode: number = 200) {
   return NextResponse.json(data, { status: statusCode })
 }
 
+export function createApiResponse<T>(response: {
+  status: 'success' | 'error'
+  data?: T
+  message?: string
+  fields?: Record<string, string[]>
+}) {
+  return response
+}
+
+export function handleApiError(error: unknown) {
+  return apiError(error)
+}
+
 export function apiError(error: unknown) {
   // Handle known error types
   if (error instanceof ApiError) {
