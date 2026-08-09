@@ -134,12 +134,78 @@
   },
   "dynamicRoutes": [
     {
+      "page": "/api/evidence/[id]",
+      "regex": "^/api/evidence/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/evidence/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/evidence/[id]/refresh-url",
+      "regex": "^/api/evidence/([^/]+?)/refresh\\-url(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/evidence/(?<nxtPid>[^/]+?)/refresh\\-url(?:/)?$"
+    },
+    {
       "page": "/api/findings/[id]",
       "regex": "^/api/findings/([^/]+?)(?:/)?$",
       "routeKeys": {
         "nxtPid": "nxtPid"
       },
       "namedRegex": "^/api/findings/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/findings/[id]/audit-log",
+      "regex": "^/api/findings/([^/]+?)/audit\\-log(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/findings/(?<nxtPid>[^/]+?)/audit\\-log(?:/)?$"
+    },
+    {
+      "page": "/api/findings/[id]/audit-log/export",
+      "regex": "^/api/findings/([^/]+?)/audit\\-log/export(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/findings/(?<nxtPid>[^/]+?)/audit\\-log/export(?:/)?$"
+    },
+    {
+      "page": "/api/findings/[id]/resolutions",
+      "regex": "^/api/findings/([^/]+?)/resolutions(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/findings/(?<nxtPid>[^/]+?)/resolutions(?:/)?$"
+    },
+    {
+      "page": "/api/findings/[id]/resolutions/[resId]",
+      "regex": "^/api/findings/([^/]+?)/resolutions/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid",
+        "nxtPresId": "nxtPresId"
+      },
+      "namedRegex": "^/api/findings/(?<nxtPid>[^/]+?)/resolutions/(?<nxtPresId>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/findings/[id]/validations",
+      "regex": "^/api/findings/([^/]+?)/validations(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/findings/(?<nxtPid>[^/]+?)/validations(?:/)?$"
+    },
+    {
+      "page": "/api/findings/[id]/validations/[valId]/check",
+      "regex": "^/api/findings/([^/]+?)/validations/([^/]+?)/check(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid",
+        "nxtPvalId": "nxtPvalId"
+      },
+      "namedRegex": "^/api/findings/(?<nxtPid>[^/]+?)/validations/(?<nxtPvalId>[^/]+?)/check(?:/)?$"
     },
     {
       "page": "/api/imports/[id]",
@@ -156,6 +222,14 @@
         "nxtPid": "nxtPid"
       },
       "namedRegex": "^/api/imports/(?<nxtPid>[^/]+?)/confirm(?:/)?$"
+    },
+    {
+      "page": "/api/users/[id]",
+      "regex": "^/api/users/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/users/(?<nxtPid>[^/]+?)(?:/)?$"
     }
   ],
   "staticRoutes": [
@@ -176,6 +250,36 @@
       "regex": "^/_not\\-found(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/api/auth/login",
+      "regex": "^/api/auth/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/login(?:/)?$"
+    },
+    {
+      "page": "/api/auth/logout",
+      "regex": "^/api/auth/logout(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/logout(?:/)?$"
+    },
+    {
+      "page": "/api/auth/refresh",
+      "regex": "^/api/auth/refresh(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/refresh(?:/)?$"
+    },
+    {
+      "page": "/api/auth/session",
+      "regex": "^/api/auth/session(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/auth/session(?:/)?$"
+    },
+    {
+      "page": "/api/evidence/upload",
+      "regex": "^/api/evidence/upload(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/evidence/upload(?:/)?$"
     },
     {
       "page": "/api/findings",
@@ -200,6 +304,24 @@
       "regex": "^/api/imports/preview(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/imports/preview(?:/)?$"
+    },
+    {
+      "page": "/api/users",
+      "regex": "^/api/users(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/users(?:/)?$"
+    },
+    {
+      "page": "/api/users/me",
+      "regex": "^/api/users/me(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/users/me(?:/)?$"
+    },
+    {
+      "page": "/login",
+      "regex": "^/login(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/login(?:/)?$"
     },
     {
       "page": "/test-import",
