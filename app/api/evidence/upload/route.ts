@@ -3,9 +3,16 @@ import { apiSuccess, apiError, ApiError } from '@/lib/utils/api-response'
 import { StorageService } from '@/lib/services/storage-service'
 import { uploadEvidenceSchema } from '@/lib/validators/evidence'
 import { STORAGE_CONFIG } from '@/lib/storage/storage-config'
+import { checkRBAC, RBAC_PERMISSIONS } from '@/lib/middleware/rbac'
 
 export async function POST(request: NextRequest) {
   try {
+    // FASE 7: RBAC validation (only editors can upload evidence)
+    const { valid, user, error } = await checkRBAC(request, {
+      allowedRoles: RBAC_PERMISSIONS.CREATE_FINDING,
+    })
+    if (!valid) return error
+
     const formData = await request.formData()
     const file = formData.get('file') as File
     const findingId = formData.get('findingId') as string
@@ -73,7 +80,7 @@ export async function POST(request: NextRequest) {
       originalFilename: file.name,
       findingId: parsed.data.findingId,
       caption: parsed.data.caption,
-      uploadedBy: 'system', // TODO: Replace with real user from auth
+      uploadedBy: user.id,
     })
 
     return apiSuccess(result, 201)

@@ -3,14 +3,20 @@ import { z } from 'zod'
 import { ResolutionService } from '@/lib/services/resolution-service'
 import { CreateResolutionSchema } from '@/lib/validators/workflow'
 import { apiSuccess, apiError } from '@/lib/utils/api-response'
+import { checkRBAC, RBAC_PERMISSIONS } from '@/lib/middleware/rbac'
 
 export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } },
 ) {
   try {
+    // FASE 7: RBAC validation
+    const { valid, user, error } = await checkRBAC(request, {
+      allowedRoles: RBAC_PERMISSIONS.CREATE_RESOLUTION,
+    })
+    if (!valid) return error
+
     const findingId = params.id
-    const userId = 'temp-user-id' // TODO: Get from session (FASE 7)
 
     const body = await request.json()
     const input = CreateResolutionSchema.parse(body)
@@ -18,7 +24,7 @@ export async function POST(
     const resolution = await ResolutionService.createResolution(
       findingId,
       input,
-      userId,
+      user.id,
     )
 
     return apiSuccess({ status: 'success', data: resolution }, 201)

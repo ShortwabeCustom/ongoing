@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { ResolutionService } from '@/lib/services/resolution-service'
 import { UpdateResolutionStateSchema } from '@/lib/validators/workflow'
 import { apiSuccess, apiError } from '@/lib/utils/api-response'
+import { checkRBAC, RBAC_PERMISSIONS } from '@/lib/middleware/rbac'
 
 export async function GET(
   request: NextRequest,
@@ -36,8 +37,13 @@ export async function PATCH(
   { params }: { params: { id: string; resId: string } },
 ) {
   try {
+    // FASE 7: RBAC validation
+    const { valid, user, error } = await checkRBAC(request, {
+      allowedRoles: RBAC_PERMISSIONS.CHANGE_RESOLUTION_STATE_ANY,
+    })
+    if (!valid) return error
+
     const { id: findingId, resId } = params
-    const userId = 'temp-user-id' // TODO: Get from session (FASE 7)
 
     const body = await request.json()
     const input = UpdateResolutionStateSchema.parse(body)
@@ -46,7 +52,7 @@ export async function PATCH(
       findingId,
       resId,
       input,
-      userId,
+      user.id,
     )
 
     return apiSuccess({

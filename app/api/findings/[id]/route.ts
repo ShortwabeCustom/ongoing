@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { FindingUpdateSchema } from '@/lib/validators/finding'
 import { FindingService } from '@/lib/services/finding-service'
 import { apiSuccess, apiError, ApiError } from '@/lib/utils/api-response'
+import { checkRBAC, RBAC_PERMISSIONS } from '@/lib/middleware/rbac'
 
 export const dynamic = 'force-dynamic'
 
@@ -38,6 +39,12 @@ export async function PATCH(
   { params }: { params: { id: string } },
 ) {
   try {
+    // FASE 7: RBAC validation
+    const { valid, user, error } = await checkRBAC(request, {
+      allowedRoles: RBAC_PERMISSIONS.EDIT_FINDING_ANY,
+    })
+    if (!valid) return error
+
     const { id } = params
     const body = await request.json()
 
@@ -77,7 +84,7 @@ export async function PATCH(
       id,
       updateData,
       currentVersion,
-      'system', // TODO: use actual user from auth in FASE 7
+      user.id,
     )
 
     return apiSuccess(updated)
@@ -91,6 +98,12 @@ export async function DELETE(
   { params }: { params: { id: string } },
 ) {
   try {
+    // FASE 7: RBAC validation
+    const { valid, user, error } = await checkRBAC(request, {
+      allowedRoles: RBAC_PERMISSIONS.DELETE_FINDING,
+    })
+    if (!valid) return error
+
     const { id } = params
 
     // Validate ID
@@ -99,7 +112,7 @@ export async function DELETE(
     }
 
     // Soft delete finding
-    await FindingService.deleteFinding(id, 'system')
+    await FindingService.deleteFinding(id, user.id)
 
     // Return 204 No Content
     return new Response(null, { status: 204 })
