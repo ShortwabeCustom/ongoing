@@ -260,8 +260,7 @@ export function SearchFindings() {
         </div>
 
         {/* Quick filters + Advanced button */}
-        {searchTerm && (
-          <div className="mt-3 flex flex-wrap gap-2 items-center">
+        <div className="mt-3 flex flex-wrap gap-2 items-center">
             <div className="flex gap-1">
               {FINDING_STATUS_OPTIONS.slice(0, 4).map((status) => (
                 <button
@@ -323,8 +322,7 @@ export function SearchFindings() {
             >
               🕐 Recientes
             </button>
-          </div>
-        )}
+        </div>
 
         {/* Filter preview */}
         {activeFilterCount > 0 && (
