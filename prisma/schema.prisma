@@ -52,6 +52,10 @@ model User {
 
   importBatches         ImportBatch[]     @relation("ImportImporter")
 
+  // Push Notifications (FASE 9)
+  pushSubscriptions      PushSubscription[] @relation("PushSubscriptions")
+  notifications         Notification[]     @relation("Notifications")
+
   @@index([email])
   @@index([deletedAt])
   @@map("users")
@@ -532,4 +536,44 @@ enum ImportStatus {
   COMPLETED
   FAILED
   ROLLED_BACK
+}
+
+// ============================================================================
+// PUSH NOTIFICATIONS (FASE 9)
+// ============================================================================
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation("PushSubscriptions", fields: [userId], references: [id], onDelete: Cascade)
+
+  endpoint  String   @unique
+  auth      String   // Base64 auth key
+  p256dh    String   // Base64 p256dh key
+  userAgent String?
+
+  createdAt DateTime @default(now())
+  expiresAt DateTime?
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("push_subscriptions")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation("Notifications", fields: [userId], references: [id], onDelete: Cascade)
+
+  title     String
+  body      String
+  type      String?
+  data      Json?
+  isRead    Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([isRead])
+  @@map("notifications")
 }

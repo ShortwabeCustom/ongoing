@@ -296,3 +296,66 @@ async function updateIndexedDBItem(item) {
     transaction.oncomplete = () => resolve(null);
   });
 }
+
+// --- Push Notification Handlers (FASE 9) ---
+
+self.addEventListener("push", (event) => {
+  if (!event.data) {
+    console.log("Push event received but has no data");
+    return;
+  }
+
+  try {
+    const data = event.data.json();
+    const options = {
+      body: data.body,
+      icon: data.icon || "/icons/app-icon-192.png",
+      badge: data.badge || "/icons/badge-96.png",
+      tag: data.tag || "notification",
+      data: data.data || {},
+      requireInteraction: false,
+    };
+
+    event.waitUntil(
+      self.registration.showNotification(data.title, options)
+    );
+  } catch (err) {
+    console.error("Error processing push event:", err);
+    // Fallback: show generic notification
+    event.waitUntil(
+      self.registration.showNotification("Nueva notificación", {
+        body: "Tienes una nueva notificación",
+        icon: "/icons/app-icon-192.png",
+      })
+    );
+  }
+});
+
+// Notification click handler
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+
+  const data = event.notification.data || {};
+  const targetUrl = data.url || "/";
+
+  event.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then((windowClients) => {
+      // Check if there's already a window/tab open with the target URL
+      for (let i = 0; i < windowClients.length; i++) {
+        const client = windowClients[i];
+        if (new URL(client.url).pathname === new URL(targetUrl, self.location.origin).pathname) {
+          return client.focus();
+        }
+      }
+      // If not, open a new window/tab with the target URL
+      if (clients.openWindow) {
+        return clients.openWindow(targetUrl);
+      }
+    })
+  );
+});
+
+// Notification close handler (for logging)
+self.addEventListener("notificationclose", (event) => {
+  console.log("Notification closed:", event.notification.tag);
+});

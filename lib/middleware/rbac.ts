@@ -80,6 +80,14 @@ export const RBAC_PERMISSIONS = {
     "VIEWER",
   ],
   MANAGE_USERS: ["OWNER"],
+  RECEIVE_NOTIFICATIONS: [
+    "OWNER",
+    "QA_LEAD",
+    "DESIGNER",
+    "DEVELOPER",
+    "BUSINESS_REVIEWER",
+  ],
+  SEND_NOTIFICATIONS: ["OWNER", "QA_LEAD"],
 };
 
 export function hasPermission(

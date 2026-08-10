@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import { PushPermissionRequest } from '@/components/notifications/PushPermissionRequest'
 
 export const metadata: Metadata = {
   title: 'Pruebas María 2.0 · Reporte ejecutivo',
@@ -44,6 +45,7 @@ export default function RootLayout({
     <html lang="es">
       <body className="antialiased">
         {children}
+        <PushPermissionRequest />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
