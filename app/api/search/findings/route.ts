@@ -7,8 +7,9 @@ import { apiSuccess, apiError, ApiError } from '@/lib/utils/api-response'
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
-  // FASE 12: RBAC validation
+  // FASE 12: RBAC validation (allow unauthenticated for public search)
   const { valid, error } = await checkRBAC(request, {
+    requireAuth: false,
     allowedRoles: RBAC_PERMISSIONS.VIEW_ALL_FINDINGS,
   })
   if (!valid) return error
