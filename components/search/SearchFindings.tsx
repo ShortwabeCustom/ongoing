@@ -167,7 +167,7 @@ export function SearchFindings() {
   }
 
   const hasResults = data && data.items.length > 0
-  const showDropdown = isOpen && (isLoading || hasResults || error)
+  const showDropdown = isOpen && (isLoading || hasResults || error || (data && !hasResults))
 
   const renderResults = () => (
     <>
@@ -225,8 +225,10 @@ export function SearchFindings() {
         </>
       )}
 
-      {!isLoading && !hasResults && !error && searchTerm && (
-        <div className="p-4 text-center text-sm text-slate-500">No se encontraron resultados</div>
+      {!isLoading && !hasResults && !error && (
+        <div className="p-4 text-center text-sm text-slate-500">
+          {searchTerm ? 'No se encontraron resultados' : 'Sin resultados (base de datos vacía)'}
+        </div>
       )}
 
       {error && (
