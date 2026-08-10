@@ -1,4 +1,5 @@
-// Finding status options and labels
+// FASE 14: Single source of truth for finding enums and their metadata
+
 export const FINDING_STATUS_OPTIONS = [
   'OPEN',
   'TRIAGED',
@@ -40,30 +41,28 @@ export const SEVERITY_LABELS_ES: Record<string, string> = {
   BLOCKER: 'Bloqueante',
 }
 
-// Status colors (Tailwind)
+// Tailwind color classes for badges
 export const STATUS_COLORS: Record<string, string> = {
-  OPEN: 'bg-blue-50 text-blue-700 border-blue-200',
-  TRIAGED: 'bg-yellow-50 text-yellow-700 border-yellow-200',
-  IN_PROGRESS: 'bg-purple-50 text-purple-700 border-purple-200',
-  READY_FOR_VALIDATION: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-  VALIDATED: 'bg-green-50 text-green-700 border-green-200',
-  CLOSED: 'bg-slate-50 text-slate-700 border-slate-200',
-  BLOCKED: 'bg-red-50 text-red-700 border-red-200',
-  REOPENED: 'bg-orange-50 text-orange-700 border-orange-200',
+  OPEN: 'bg-blue-100 text-blue-800 border-blue-300',
+  TRIAGED: 'bg-purple-100 text-purple-800 border-purple-300',
+  IN_PROGRESS: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+  READY_FOR_VALIDATION: 'bg-indigo-100 text-indigo-800 border-indigo-300',
+  VALIDATED: 'bg-green-100 text-green-800 border-green-300',
+  CLOSED: 'bg-gray-100 text-gray-800 border-gray-300',
+  BLOCKED: 'bg-red-100 text-red-800 border-red-300',
+  REOPENED: 'bg-orange-100 text-orange-800 border-orange-300',
 }
 
-// Priority colors
 export const PRIORITY_COLORS: Record<string, string> = {
-  LOW: 'bg-blue-50 text-blue-700 border-blue-200',
-  MEDIUM: 'bg-yellow-50 text-yellow-700 border-yellow-200',
-  HIGH: 'bg-red-50 text-red-700 border-red-200',
-  CRITICAL: 'bg-red-900 text-red-50 border-red-950',
+  LOW: 'bg-slate-100 text-slate-800 border-slate-300',
+  MEDIUM: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+  HIGH: 'bg-orange-100 text-orange-800 border-orange-300',
+  CRITICAL: 'bg-red-100 text-red-800 border-red-300',
 }
 
-// Severity colors
 export const SEVERITY_COLORS: Record<string, string> = {
-  COSMETIC: 'bg-slate-50 text-slate-700 border-slate-200',
-  MINOR: 'bg-blue-50 text-blue-700 border-blue-200',
-  MAJOR: 'bg-orange-50 text-orange-700 border-orange-200',
-  BLOCKER: 'bg-red-50 text-red-700 border-red-200',
+  COSMETIC: 'bg-blue-100 text-blue-800 border-blue-300',
+  MINOR: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+  MAJOR: 'bg-orange-100 text-orange-800 border-orange-300',
+  BLOCKER: 'bg-red-100 text-red-800 border-red-300',
 }

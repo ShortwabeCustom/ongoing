@@ -3,14 +3,14 @@
 import { useState, useEffect } from 'react'
 import { LookupOption } from '@/lib/types/search'
 
-interface UseLookupResult {
+interface UseLookups {
   assignees: LookupOption[]
   projects: LookupOption[]
   isLoading: boolean
   error: string | null
 }
 
-export function useLookups(): UseLookupResult {
+export function useLookups(projectId?: string, userId?: string): UseLookups {
   const [assignees, setAssignees] = useState<LookupOption[]>([])
   const [projects, setProjects] = useState<LookupOption[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -22,29 +22,34 @@ export function useLookups(): UseLookupResult {
       setError(null)
 
       try {
-        const [assigneesRes, projectsRes] = await Promise.all([
-          fetch('/api/search/lookups?type=assignees'),
-          fetch('/api/search/lookups?type=projects'),
-        ])
+        // Fetch assignees
+        const assigneeParams = new URLSearchParams({ type: 'assignees' })
+        if (projectId) assigneeParams.append('projectId', projectId)
 
-        if (!assigneesRes.ok || !projectsRes.ok) {
-          throw new Error('Failed to fetch lookups')
-        }
+        const assigneeRes = await fetch(`/api/search/lookups?${assigneeParams.toString()}`)
+        if (!assigneeRes.ok) throw new Error('Failed to fetch assignees')
+        const assigneeData = await assigneeRes.json()
+        setAssignees(assigneeData.assignees || [])
 
-        const assigneesData = await assigneesRes.json()
-        const projectsData = await projectsRes.json()
+        // Fetch projects
+        const projectParams = new URLSearchParams({ type: 'projects' })
+        if (userId) projectParams.append('userId', userId)
 
-        setAssignees(assigneesData.assignees || [])
-        setProjects(projectsData.projects || [])
+        const projectRes = await fetch(`/api/search/lookups?${projectParams.toString()}`)
+        if (!projectRes.ok) throw new Error('Failed to fetch projects')
+        const projectData = await projectRes.json()
+        setProjects(projectData.projects || [])
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error')
+        setAssignees([])
+        setProjects([])
       } finally {
         setIsLoading(false)
       }
     }
 
     fetchLookups()
-  }, [])
+  }, [projectId, userId])
 
   return {
     assignees,

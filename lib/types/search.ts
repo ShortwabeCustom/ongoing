@@ -1,10 +1,33 @@
+// FASE 14: Advanced filters and batch actions types
+
 export interface AdvancedFilterValues {
-  assignee: string[]
-  project: string[]
-  severity: string[]
+  assignee?: string[]
+  project?: string[]
+  severity?: string[]
   dateFrom?: string
   dateTo?: string
-  hasEvidence?: boolean
+  hasEvidence?: 'any' | 'with' | 'without'
+}
+
+export interface SearchHistoryEntry {
+  id: string
+  q: string
+  status?: string[]
+  priority?: string[]
+  filters: AdvancedFilterValues
+  timestamp: number
+  resultCount?: number
+}
+
+export interface SavedFilterEntry {
+  id: string
+  name: string
+  q?: string
+  status?: string[]
+  priority?: string[]
+  filters: AdvancedFilterValues
+  createdAt: number
+  updatedAt: number
 }
 
 export interface LookupOption {
@@ -13,16 +36,23 @@ export interface LookupOption {
   avatar?: string
 }
 
-export interface SearchQueryParams {
-  q?: string
-  status?: string[]
-  priority?: string[]
-  severity?: string[]
-  assignee?: string[]
-  project?: string[]
-  dateFrom?: string
-  dateTo?: string
-  hasEvidence?: boolean
-  limit?: number
-  offset?: number
+export interface BatchActionUpdate {
+  status?: string
+  priority?: string
+  assigneeId?: string | null
+  dueDate?: string | null
+}
+
+export interface BulkUpdateApiResult {
+  updated: number
+  failed: number
+  results: Array<{
+    id: string
+    status?: string
+    priority?: string
+    severity?: string
+    assigneeId?: string
+    version?: number
+    error?: string
+  }>
 }

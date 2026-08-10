@@ -1,113 +1,70 @@
+// FASE 14: IndexedDB helper for search history and saved filters
+// Independent from pruebas-maria-offline DB to avoid regression
+
 const SEARCH_DB_NAME = 'pruebas-maria-search'
 const SEARCH_DB_VERSION = 1
 
-export function openSearchDb(): Promise<IDBDatabase> {
+export interface IDBStores {
+  search_history: {
+    keyPath: 'id'
+    indexes: ['timestamp']
+  }
+  saved_filters: {
+    keyPath: 'id'
+    indexes: ['createdAt']
+  }
+}
+
+export async function openSearchDb(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
+    if (typeof window === 'undefined') {
+      reject(new Error('IndexedDB not available in non-browser environment'))
+      return
+    }
+
     const request = indexedDB.open(SEARCH_DB_NAME, SEARCH_DB_VERSION)
 
     request.onupgradeneeded = (e) => {
-      const db = (e.target as IDBOpenDBRequest).result
-      if (!db.objectStoreNames.contains('search_history')) {
-        const store = db.createObjectStore('search_history', { keyPath: 'id' })
-        store.createIndex('timestamp', 'timestamp', { unique: false })
-      }
-      if (!db.objectStoreNames.contains('saved_filters')) {
-        const store = db.createObjectStore('saved_filters', { keyPath: 'id' })
-        store.createIndex('createdAt', 'createdAt', { unique: false })
+      const db = e.target.result as IDBDatabase
+      const source = e.oldVersion
+
+      if (source < 1) {
+        // Create search_history store
+        if (!db.objectStoreNames.contains('search_history')) {
+          const historyStore = db.createObjectStore('search_history', { keyPath: 'id' })
+          historyStore.createIndex('timestamp', 'timestamp', { unique: false })
+        }
+
+        // Create saved_filters store
+        if (!db.objectStoreNames.contains('saved_filters')) {
+          const filtersStore = db.createObjectStore('saved_filters', { keyPath: 'id' })
+          filtersStore.createIndex('createdAt', 'createdAt', { unique: false })
+        }
       }
     }
 
-    request.onsuccess = () => resolve(request.result)
-    request.onerror = () => reject(request.error)
-  })
-}
-
-export async function getAllFromStore(storeName: 'search_history' | 'saved_filters'): Promise<any[]> {
-  const db = await openSearchDb()
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction(storeName, 'readonly')
-    const store = transaction.objectStore(storeName)
-    const request = store.getAll()
-
     request.onsuccess = () => {
-      db.close()
       resolve(request.result)
     }
+
     request.onerror = () => {
-      db.close()
       reject(request.error)
     }
   })
 }
 
-export async function addToStore(storeName: 'search_history' | 'saved_filters', item: any): Promise<void> {
+export async function clearSearchDb(): Promise<void> {
   const db = await openSearchDb()
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction(storeName, 'readwrite')
-    const store = transaction.objectStore(storeName)
-    const request = store.add(item)
+  try {
+    const txn = db.transaction(['search_history', 'saved_filters'], 'readwrite')
+    txn.objectStore('search_history').clear()
+    txn.objectStore('saved_filters').clear()
 
-    request.onsuccess = () => {
-      db.close()
-      resolve()
-    }
-    request.onerror = () => {
-      db.close()
-      reject(request.error)
-    }
-  })
-}
-
-export async function deleteFromStore(storeName: 'search_history' | 'saved_filters', id: string): Promise<void> {
-  const db = await openSearchDb()
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction(storeName, 'readwrite')
-    const store = transaction.objectStore(storeName)
-    const request = store.delete(id)
-
-    request.onsuccess = () => {
-      db.close()
-      resolve()
-    }
-    request.onerror = () => {
-      db.close()
-      reject(request.error)
-    }
-  })
-}
-
-export async function updateInStore(storeName: 'search_history' | 'saved_filters', item: any): Promise<void> {
-  const db = await openSearchDb()
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction(storeName, 'readwrite')
-    const store = transaction.objectStore(storeName)
-    const request = store.put(item)
-
-    request.onsuccess = () => {
-      db.close()
-      resolve()
-    }
-    request.onerror = () => {
-      db.close()
-      reject(request.error)
-    }
-  })
-}
-
-export async function clearStore(storeName: 'search_history' | 'saved_filters'): Promise<void> {
-  const db = await openSearchDb()
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction(storeName, 'readwrite')
-    const store = transaction.objectStore(storeName)
-    const request = store.clear()
-
-    request.onsuccess = () => {
-      db.close()
-      resolve()
-    }
-    request.onerror = () => {
-      db.close()
-      reject(request.error)
-    }
-  })
+    return new Promise((resolve, reject) => {
+      txn.oncomplete = () => resolve()
+      txn.onerror = () => reject(txn.error)
+    })
+  } finally {
+    db.close()
+  }
 }

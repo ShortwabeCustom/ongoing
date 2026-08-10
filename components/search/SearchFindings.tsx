@@ -182,15 +182,15 @@ export function SearchFindings() {
           {batchActions.selectedIds.length > 0 && (
             <BatchActionsToolbar
               selectedCount={batchActions.selectedIds.length}
+              items={data!.items}
+              selectedIds={batchActions.selectedIds}
               onClearSelection={batchActions.clearSelection}
               onBulkStatus={batchActions.bulkUpdateStatus}
               onBulkPriority={batchActions.bulkUpdatePriority}
               onBulkAssign={batchActions.bulkAssign}
-              onExportCsv={handleCsvExport}
               assigneeOptions={assignees}
               isProcessing={batchActions.isProcessing}
               error={batchActions.error}
-              maxBatchSize={100}
             />
           )}
 
@@ -343,10 +343,16 @@ export function SearchFindings() {
         {activeFilterCount > 0 && (
           <div className="mt-3">
             <FilterPreview
-              status={statusFilter}
-              priority={priorityFilter}
-              severity={advancedFilters.severity || []}
-              filters={advancedFilters}
+              filters={{
+                status: statusFilter,
+                priority: priorityFilter,
+                severity: advancedFilters.severity,
+                assignee: advancedFilters.assignee,
+                project: advancedFilters.project,
+                dateFrom: advancedFilters.dateFrom,
+                dateTo: advancedFilters.dateTo,
+                hasEvidence: advancedFilters.hasEvidence,
+              }}
               assigneeLabels={assigneeLabels}
               projectLabels={projectLabels}
               onRemoveStatus={(status) =>
@@ -380,7 +386,7 @@ export function SearchFindings() {
                   dateTo: undefined,
                 }))
               }
-              onRemoveHasEvidence={() =>
+              onRemoveEvidence={() =>
                 setAdvancedFilters((prev) => ({
                   ...prev,
                   hasEvidence: undefined,
@@ -419,11 +425,21 @@ export function SearchFindings() {
         </div>
 
         {/* Search history dropdown */}
-        <SearchHistory
-          open={historyOpen}
-          onSelectHistory={handleSelectRecent}
-          onSelectSavedFilter={handleSelectSaved}
-        />
+        {historyOpen && (
+          <SearchHistory
+            open={historyOpen}
+            onClose={() => setHistoryOpen(false)}
+            recent={searchHistory.recent}
+            saved={savedFilters.filters}
+            onSelectRecent={handleSelectRecent}
+            onSelectSaved={handleSelectSaved}
+            onRemoveRecent={searchHistory.removeEntry}
+            onRemoveSaved={savedFilters.deleteFilter}
+            onRenameSaved={savedFilters.renameFilter}
+            onClearRecentAll={searchHistory.clearAll}
+            isLoading={!searchHistory.isReady}
+          />
+        )}
 
         {/* Dropdown results */}
         {showDropdown && (
@@ -501,10 +517,16 @@ export function SearchFindings() {
               {activeFilterCount > 0 && (
                 <div className="px-4 py-2 border-b border-slate-200">
                   <FilterPreview
-                    status={statusFilter}
-                    priority={priorityFilter}
-                    severity={advancedFilters.severity || []}
-                    filters={advancedFilters}
+                    filters={{
+                      status: statusFilter,
+                      priority: priorityFilter,
+                      severity: advancedFilters.severity,
+                      assignee: advancedFilters.assignee,
+                      project: advancedFilters.project,
+                      dateFrom: advancedFilters.dateFrom,
+                      dateTo: advancedFilters.dateTo,
+                      hasEvidence: advancedFilters.hasEvidence,
+                    }}
                     assigneeLabels={assigneeLabels}
                     projectLabels={projectLabels}
                     onRemoveStatus={(status) =>
@@ -538,7 +560,7 @@ export function SearchFindings() {
                         dateTo: undefined,
                       }))
                     }
-                    onRemoveHasEvidence={() =>
+                    onRemoveEvidence={() =>
                       setAdvancedFilters((prev) => ({
                         ...prev,
                         hasEvidence: undefined,

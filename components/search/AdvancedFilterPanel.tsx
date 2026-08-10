@@ -1,22 +1,22 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
+import { X, ChevronDown, Save } from 'lucide-react'
 import { AdvancedFilterValues, LookupOption } from '@/lib/types/search'
 import { FINDING_SEVERITY_OPTIONS, SEVERITY_LABELS_ES } from '@/lib/constants/finding-options'
-import { X } from 'lucide-react'
 
 interface AdvancedFilterPanelProps {
   open: boolean
   onClose: () => void
   value: AdvancedFilterValues
-  onApply: (values: AdvancedFilterValues) => void
-  onSaveAsNamedFilter: (name: string, values: AdvancedFilterValues) => Promise<void>
+  onApply: (filters: AdvancedFilterValues) => void
+  onSaveAsNamedFilter?: (name: string, filters: AdvancedFilterValues) => Promise<void>
   assigneeOptions: LookupOption[]
   projectOptions: LookupOption[]
   lookupsLoading: boolean
   lookupsError: string | null
-  disableExtendedFilters: boolean
-  activeCount: number
+  disableExtendedFilters?: boolean
+  activeCount?: number
 }
 
 export function AdvancedFilterPanel({
@@ -29,63 +29,89 @@ export function AdvancedFilterPanel({
   projectOptions,
   lookupsLoading,
   lookupsError,
-  disableExtendedFilters,
-  activeCount,
+  disableExtendedFilters = false,
+  activeCount = 0,
 }: AdvancedFilterPanelProps) {
   const [draft, setDraft] = useState<AdvancedFilterValues>(value)
+  const [showSaveForm, setShowSaveForm] = useState(false)
+  const [saveName, setSaveName] = useState('')
   const [assigneeSearch, setAssigneeSearch] = useState('')
   const [projectSearch, setProjectSearch] = useState('')
-  const [saveFilterName, setSaveFilterName] = useState('')
   const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
     if (open) {
       setDraft(value)
+      setSaveName('')
+      setShowSaveForm(false)
       setAssigneeSearch('')
       setProjectSearch('')
-      setSaveFilterName('')
     }
   }, [open, value])
 
   const filteredAssignees = assigneeOptions.filter((a) =>
-    a.name.toLowerCase().includes(assigneeSearch.toLowerCase()),
+    a.name.toLowerCase().includes(assigneeSearch.toLowerCase())
   )
 
   const filteredProjects = projectOptions.filter((p) =>
-    p.name.toLowerCase().includes(projectSearch.toLowerCase()),
+    p.name.toLowerCase().includes(projectSearch.toLowerCase())
   )
 
+  const handleToggleAssignee = (id: string) => {
+    setDraft((prev) => {
+      const assignee = prev.assignee || []
+      return {
+        ...prev,
+        assignee: assignee.includes(id) ? assignee.filter((a) => a !== id) : [...assignee, id],
+      }
+    })
+  }
+
+  const handleToggleProject = (id: string) => {
+    setDraft((prev) => {
+      const project = prev.project || []
+      return {
+        ...prev,
+        project: project.includes(id) ? project.filter((p) => p !== id) : [...project, id],
+      }
+    })
+  }
+
+  const handleToggleSeverity = (severity: string) => {
+    setDraft((prev) => {
+      const sev = prev.severity || []
+      return {
+        ...prev,
+        severity: sev.includes(severity) ? sev.filter((s) => s !== severity) : [...sev, severity],
+      }
+    })
+  }
+
   const handleClear = () => {
-    const empty: AdvancedFilterValues = {
-      assignee: [],
-      project: [],
-      severity: [],
-      dateFrom: undefined,
-      dateTo: undefined,
-      hasEvidence: undefined,
-    }
-    setDraft(empty)
-    onApply(empty)
-    onClose()
+    const cleared: AdvancedFilterValues = {}
+    setDraft(cleared)
+    onApply(cleared)
   }
 
   const handleApply = () => {
-    // Normalize dates to ISO strings
-    const normalized: AdvancedFilterValues = {
-      ...draft,
-      dateFrom: draft.dateFrom ? new Date(draft.dateFrom).toISOString() : undefined,
-      dateTo: draft.dateTo ? new Date(draft.dateTo).toISOString() : undefined,
+    // Normalize dates from 'YYYY-MM-DD' to ISO if needed
+    const normalized = { ...draft }
+    if (draft.dateFrom && !draft.dateFrom.includes('T')) {
+      normalized.dateFrom = new Date(draft.dateFrom).toISOString()
+    }
+    if (draft.dateTo && !draft.dateTo.includes('T')) {
+      normalized.dateTo = new Date(draft.dateTo).toISOString()
     }
     onApply(normalized)
-    onClose()
   }
 
   const handleSaveFilter = async () => {
-    if (!saveFilterName.trim()) return
+    if (!saveName.trim() || !onSaveAsNamedFilter) return
+    setIsSaving(true)
     try {
-      setIsSaving(true)
-      await onSaveAsNamedFilter(saveFilterName, draft)
-      setSaveFilterName('')
+      await onSaveAsNamedFilter(saveName, draft)
+      setShowSaveForm(false)
+      setSaveName('')
     } catch (err) {
       console.error('Failed to save filter:', err)
     } finally {
@@ -93,427 +119,362 @@ export function AdvancedFilterPanel({
     }
   }
 
-  // Mobile: bottom-sheet (fixed bottom, z-60)
-  // Desktop: dropdown (absolute, z-50)
-
   if (!open) return null
 
+  // Mobile: Bottom sheet
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
   if (isMobile) {
     return (
-      <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl max-h-[85vh] z-[60] overflow-hidden flex flex-col">
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-slate-200 shrink-0">
-          <h2 className="text-lg font-semibold">Filtros avanzados</h2>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-slate-100 rounded-lg focus-visible:ring-2 focus-visible:ring-indigo-500"
-            aria-label="Cerrar filtros"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+      <div className="fixed inset-0 z-50">
+        {/* Backdrop */}
+        <div
+          className="absolute inset-0 bg-black/30"
+          onClick={onClose}
+        />
 
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {/* Assignee */}
-          <div className={disableExtendedFilters ? 'opacity-50 pointer-events-none' : ''}>
-            <label className="block text-sm font-medium mb-2">Asignado a</label>
-            <input
-              type="text"
-              placeholder="Buscar..."
-              value={assigneeSearch}
-              onChange={(e) => setAssigneeSearch(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg mb-2 text-sm focus-visible:ring-2 focus-visible:ring-indigo-500"
-              disabled={lookupsLoading}
-            />
-            <div className="space-y-2 max-h-40 overflow-y-auto">
-              {filteredAssignees.map((a) => (
-                <label key={a.id} className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={draft.assignee.includes(a.id)}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setDraft((d) => ({
-                          ...d,
-                          assignee: [...d.assignee, a.id],
-                        }))
-                      } else {
-                        setDraft((d) => ({
-                          ...d,
-                          assignee: d.assignee.filter((x) => x !== a.id),
-                        }))
-                      }
-                    }}
-                    className="w-4 h-4 rounded border-slate-300"
-                  />
-                  <span className="text-sm">{a.name}</span>
-                </label>
-              ))}
-            </div>
-            {disableExtendedFilters && <p className="text-xs text-slate-500 mt-1">No disponible sin Elasticsearch</p>}
+        {/* Bottom Sheet */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl max-h-[85vh] z-[60] flex flex-col">
+          {/* Header */}
+          <div className="sticky top-0 border-b border-slate-200 px-4 py-3 flex items-center justify-between bg-white rounded-t-2xl">
+            <h2 className="text-lg font-semibold">Filtros avanzados</h2>
+            <button
+              onClick={onClose}
+              className="p-1 hover:bg-slate-100 rounded"
+              aria-label="Cerrar filtros"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
 
-          {/* Project */}
-          <div className={disableExtendedFilters ? 'opacity-50 pointer-events-none' : ''}>
-            <label className="block text-sm font-medium mb-2">Proyecto</label>
-            <input
-              type="text"
-              placeholder="Buscar..."
-              value={projectSearch}
-              onChange={(e) => setProjectSearch(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg mb-2 text-sm focus-visible:ring-2 focus-visible:ring-indigo-500"
-              disabled={lookupsLoading}
-            />
-            <div className="space-y-2 max-h-40 overflow-y-auto">
-              {filteredProjects.map((p) => (
-                <label key={p.id} className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={draft.project.includes(p.id)}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setDraft((d) => ({
-                          ...d,
-                          project: [...d.project, p.id],
-                        }))
-                      } else {
-                        setDraft((d) => ({
-                          ...d,
-                          project: d.project.filter((x) => x !== p.id),
-                        }))
-                      }
-                    }}
-                    className="w-4 h-4 rounded border-slate-300"
-                  />
-                  <span className="text-sm">{p.name}</span>
-                </label>
-              ))}
-            </div>
-            {disableExtendedFilters && <p className="text-xs text-slate-500 mt-1">No disponible sin Elasticsearch</p>}
-          </div>
-
-          {/* Severity */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Severidad</label>
-            <div className="grid grid-cols-2 gap-2">
-              {FINDING_SEVERITY_OPTIONS.map((sev) => (
-                <label key={sev} className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={draft.severity.includes(sev)}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setDraft((d) => ({ ...d, severity: [...d.severity, sev] }))
-                      } else {
-                        setDraft((d) => ({ ...d, severity: d.severity.filter((x) => x !== sev) }))
-                      }
-                    }}
-                    className="w-4 h-4 rounded border-slate-300"
-                  />
-                  <span className="text-sm">{SEVERITY_LABELS_ES[sev]}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* Date range */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Rango de fechas</label>
-            <input
-              type="date"
-              value={draft.dateFrom || ''}
-              onChange={(e) => setDraft((d) => ({ ...d, dateFrom: e.target.value }))}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg mb-2 text-sm focus-visible:ring-2 focus-visible:ring-indigo-500"
-            />
-            <input
-              type="date"
-              value={draft.dateTo || ''}
-              onChange={(e) => setDraft((d) => ({ ...d, dateTo: e.target.value }))}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus-visible:ring-2 focus-visible:ring-indigo-500"
-            />
-          </div>
-
-          {/* Evidence */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Evidencia</label>
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="hasEvidence"
-                  checked={draft.hasEvidence === undefined}
-                  onChange={() => setDraft((d) => ({ ...d, hasEvidence: undefined }))}
-                  className="w-4 h-4 rounded-full border-slate-300"
-                />
-                <span className="text-sm">Cualquiera</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="hasEvidence"
-                  checked={draft.hasEvidence === true}
-                  onChange={() => setDraft((d) => ({ ...d, hasEvidence: true }))}
-                  className="w-4 h-4 rounded-full border-slate-300"
-                />
-                <span className="text-sm">Con evidencia</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="hasEvidence"
-                  checked={draft.hasEvidence === false}
-                  onChange={() => setDraft((d) => ({ ...d, hasEvidence: false }))}
-                  className="w-4 h-4 rounded-full border-slate-300"
-                />
-                <span className="text-sm">Sin evidencia</span>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="flex gap-2 p-4 border-t border-slate-200 shrink-0 bg-slate-50">
-          <button
-            onClick={handleClear}
-            className="flex-1 px-4 py-2 text-sm font-medium border border-slate-300 rounded-lg hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-indigo-500"
-          >
-            Limpiar
-          </button>
-          <button
-            onClick={handleApply}
-            className="flex-1 px-4 py-2 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-500"
-          >
-            Aplicar
-          </button>
-        </div>
-
-        {/* Save filter */}
-        {activeCount > 0 && (
-          <div className="border-t border-slate-200 p-3 bg-slate-50">
-            <div className="flex gap-2">
-              <input
-                type="text"
-                placeholder="Nombre del filtro..."
-                value={saveFilterName}
-                onChange={(e) => setSaveFilterName(e.target.value)}
-                className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus-visible:ring-2 focus-visible:ring-indigo-500"
-              />
-              <button
-                onClick={handleSaveFilter}
-                disabled={isSaving || !saveFilterName.trim()}
-                className="px-3 py-2 text-sm font-medium bg-amber-500 text-white rounded-lg hover:bg-amber-600 disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-indigo-500"
+          {/* Scrollable Content */}
+          <div className="overflow-y-auto flex-1 px-4 py-4 space-y-4">
+            {/* Assignees */}
+            <fieldset>
+              <legend className="text-sm font-medium text-slate-900 mb-2">Asignado a</legend>
+              <div
+                className={`space-y-2 ${
+                  disableExtendedFilters ? 'opacity-50 pointer-events-none' : ''
+                }`}
               >
-                ⭐
-              </button>
-            </div>
+                <input
+                  type="search"
+                  placeholder="Buscar..."
+                  value={assigneeSearch}
+                  onChange={(e) => setAssigneeSearch(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
+                  disabled={lookupsLoading}
+                />
+                <div className="space-y-1 max-h-40 overflow-y-auto">
+                  {filteredAssignees.map((a) => (
+                    <label key={a.id} className="flex items-center gap-2 cursor-pointer py-1">
+                      <input
+                        type="checkbox"
+                        checked={draft.assignee?.includes(a.id) ?? false}
+                        onChange={() => handleToggleAssignee(a.id)}
+                        className="rounded border-slate-300"
+                      />
+                      <span className="text-sm">{a.name}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </fieldset>
+
+            {/* Projects */}
+            <fieldset>
+              <legend className="text-sm font-medium text-slate-900 mb-2">Proyecto</legend>
+              <div
+                className={`space-y-2 ${
+                  disableExtendedFilters ? 'opacity-50 pointer-events-none' : ''
+                }`}
+              >
+                <input
+                  type="search"
+                  placeholder="Buscar..."
+                  value={projectSearch}
+                  onChange={(e) => setProjectSearch(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
+                  disabled={lookupsLoading}
+                />
+                <div className="space-y-1 max-h-40 overflow-y-auto">
+                  {filteredProjects.map((p) => (
+                    <label key={p.id} className="flex items-center gap-2 cursor-pointer py-1">
+                      <input
+                        type="checkbox"
+                        checked={draft.project?.includes(p.id) ?? false}
+                        onChange={() => handleToggleProject(p.id)}
+                        className="rounded border-slate-300"
+                      />
+                      <span className="text-sm">{p.name}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </fieldset>
+
+            {/* Severity */}
+            <fieldset>
+              <legend className="text-sm font-medium text-slate-900 mb-2">Severidad</legend>
+              <div className="grid grid-cols-2 gap-2">
+                {FINDING_SEVERITY_OPTIONS.map((sev) => (
+                  <label key={sev} className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={draft.severity?.includes(sev) ?? false}
+                      onChange={() => handleToggleSeverity(sev)}
+                      className="rounded border-slate-300"
+                    />
+                    <span className="text-sm">{SEVERITY_LABELS_ES[sev]}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+
+            {/* Date Range */}
+            <fieldset>
+              <legend className="text-sm font-medium text-slate-900 mb-2">Rango de fechas</legend>
+              <div className="space-y-2">
+                <div>
+                  <label className="text-xs text-slate-600">Desde</label>
+                  <input
+                    type="date"
+                    value={draft.dateFrom ? draft.dateFrom.split('T')[0] : ''}
+                    onChange={(e) => setDraft((prev) => ({ ...prev, dateFrom: e.target.value }))}
+                    className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-slate-600">Hasta</label>
+                  <input
+                    type="date"
+                    value={draft.dateTo ? draft.dateTo.split('T')[0] : ''}
+                    onChange={(e) => setDraft((prev) => ({ ...prev, dateTo: e.target.value }))}
+                    className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
+                  />
+                </div>
+              </div>
+            </fieldset>
+
+            {/* Evidence */}
+            <fieldset>
+              <legend className="text-sm font-medium text-slate-900 mb-2">Tiene evidencia</legend>
+              <div className="space-y-1">
+                <label className="flex items-center gap-2 cursor-pointer py-1">
+                  <input
+                    type="radio"
+                    name="evidence"
+                    value="any"
+                    checked={!draft.hasEvidence || draft.hasEvidence === 'any'}
+                    onChange={() => setDraft((prev) => ({ ...prev, hasEvidence: 'any' }))}
+                    className="border-slate-300"
+                  />
+                  <span className="text-sm">Cualquiera</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer py-1">
+                  <input
+                    type="radio"
+                    name="evidence"
+                    value="with"
+                    checked={draft.hasEvidence === 'with'}
+                    onChange={() => setDraft((prev) => ({ ...prev, hasEvidence: 'with' }))}
+                    className="border-slate-300"
+                  />
+                  <span className="text-sm">Sí</span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer py-1">
+                  <input
+                    type="radio"
+                    name="evidence"
+                    value="without"
+                    checked={draft.hasEvidence === 'without'}
+                    onChange={() => setDraft((prev) => ({ ...prev, hasEvidence: 'without' }))}
+                    className="border-slate-300"
+                  />
+                  <span className="text-sm">No</span>
+                </label>
+              </div>
+            </fieldset>
+
+            {disableExtendedFilters && (
+              <div className="p-3 bg-yellow-50 border border-yellow-200 rounded text-sm text-yellow-800">
+                ⚠️ Modo sin Elasticsearch: los filtros de Asignado múltiple, Proyecto múltiple y
+                'Tiene evidencia' no están disponibles.
+              </div>
+            )}
           </div>
-        )}
+
+          {/* Footer */}
+          <div className="sticky bottom-0 border-t border-slate-200 p-3 bg-white space-y-2">
+            {showSaveForm ? (
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={saveName}
+                  onChange={(e) => setSaveName(e.target.value)}
+                  placeholder="Nombre del filtro"
+                  className="flex-1 px-3 py-2 border border-slate-300 rounded text-sm"
+                  autoFocus
+                />
+                <button
+                  onClick={handleSaveFilter}
+                  disabled={!saveName.trim() || isSaving}
+                  className="px-3 py-2 bg-indigo-600 text-white rounded text-sm font-medium disabled:opacity-50"
+                >
+                  {isSaving ? 'Guardando...' : 'Guardar'}
+                </button>
+                <button
+                  onClick={() => {
+                    setShowSaveForm(false)
+                    setSaveName('')
+                  }}
+                  className="px-3 py-2 bg-slate-100 rounded text-sm"
+                >
+                  Cancelar
+                </button>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                {onSaveAsNamedFilter && (
+                  <button
+                    onClick={() => setShowSaveForm(true)}
+                    className="flex items-center gap-1 px-3 py-2 bg-slate-100 rounded text-sm font-medium hover:bg-slate-200 min-h-[44px]"
+                  >
+                    <Save className="w-4 h-4" />
+                    Guardar
+                  </button>
+                )}
+                <button
+                  onClick={handleClear}
+                  className="flex-1 px-3 py-2 bg-slate-100 rounded text-sm font-medium hover:bg-slate-200 min-h-[44px]"
+                >
+                  Limpiar
+                </button>
+                <button
+                  onClick={handleApply}
+                  className="flex-1 px-3 py-2 bg-indigo-600 text-white rounded text-sm font-medium hover:bg-indigo-700 min-h-[44px]"
+                >
+                  Aplicar
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     )
   }
 
-  // Desktop dropdown
+  // Desktop: Floating panel
   return (
-    <div className="absolute top-full right-0 mt-2 w-96 bg-white border border-slate-200 rounded-lg shadow-lg z-50">
+    <div className="absolute top-full right-0 mt-2 w-96 bg-white border border-slate-200 rounded-lg shadow-lg z-50 flex flex-col max-h-96">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-slate-200">
-        <h3 className="font-semibold">Filtros avanzados</h3>
+      <div className="border-b border-slate-200 px-4 py-3 flex items-center justify-between">
+        <h2 className="text-sm font-semibold">Filtros avanzados</h2>
         <button
           onClick={onClose}
-          className="p-1 hover:bg-slate-100 rounded focus-visible:ring-2 focus-visible:ring-indigo-500"
-          aria-label="Cerrar"
+          className="p-1 hover:bg-slate-100 rounded"
+          aria-label="Cerrar filtros"
         >
-          <X className="w-4 h-4" />
+          <X className="w-5 h-5" />
         </button>
       </div>
 
       {/* Content */}
-      <div className="p-4 space-y-4 max-h-96 overflow-y-auto">
-        {/* Assignee */}
-        <div className={disableExtendedFilters ? 'opacity-50 pointer-events-none' : ''}>
-          <label className="block text-sm font-medium mb-2">Asignado a</label>
-          <input
-            type="text"
-            placeholder="Buscar..."
-            value={assigneeSearch}
-            onChange={(e) => setAssigneeSearch(e.target.value)}
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg mb-2 text-sm focus-visible:ring-2 focus-visible:ring-indigo-500"
-            disabled={lookupsLoading}
-          />
+      <div className="overflow-y-auto flex-1 px-4 py-3 space-y-3 text-sm">
+        {/* Assignees */}
+        <fieldset
+          className={disableExtendedFilters ? 'opacity-50 pointer-events-none' : ''}
+        >
+          <legend className="text-xs font-medium text-slate-900 mb-1">Asignado a</legend>
           <div className="space-y-1 max-h-32 overflow-y-auto">
-            {filteredAssignees.map((a) => (
-              <label key={a.id} className="flex items-center gap-2 cursor-pointer text-sm">
+            {assigneeOptions.slice(0, 10).map((a) => (
+              <label key={a.id} className="flex items-center gap-2 cursor-pointer py-0.5">
                 <input
                   type="checkbox"
-                  checked={draft.assignee.includes(a.id)}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setDraft((d) => ({ ...d, assignee: [...d.assignee, a.id] }))
-                    } else {
-                      setDraft((d) => ({ ...d, assignee: d.assignee.filter((x) => x !== a.id) }))
-                    }
-                  }}
-                  className="w-3 h-3 rounded border-slate-300"
+                  checked={draft.assignee?.includes(a.id) ?? false}
+                  onChange={() => handleToggleAssignee(a.id)}
+                  className="rounded border-slate-300"
                 />
-                {a.name}
+                <span className="text-xs">{a.name}</span>
               </label>
             ))}
           </div>
-          {disableExtendedFilters && <p className="text-xs text-slate-500 mt-1">No disponible sin Elasticsearch</p>}
-        </div>
+        </fieldset>
 
-        {/* Project */}
-        <div className={disableExtendedFilters ? 'opacity-50 pointer-events-none' : ''}>
-          <label className="block text-sm font-medium mb-2">Proyecto</label>
-          <input
-            type="text"
-            placeholder="Buscar..."
-            value={projectSearch}
-            onChange={(e) => setProjectSearch(e.target.value)}
-            className="w-full px-3 py-2 border border-slate-300 rounded-lg mb-2 text-sm focus-visible:ring-2 focus-visible:ring-indigo-500"
-            disabled={lookupsLoading}
-          />
+        {/* Projects */}
+        <fieldset
+          className={disableExtendedFilters ? 'opacity-50 pointer-events-none' : ''}
+        >
+          <legend className="text-xs font-medium text-slate-900 mb-1">Proyecto</legend>
           <div className="space-y-1 max-h-32 overflow-y-auto">
-            {filteredProjects.map((p) => (
-              <label key={p.id} className="flex items-center gap-2 cursor-pointer text-sm">
+            {projectOptions.slice(0, 10).map((p) => (
+              <label key={p.id} className="flex items-center gap-2 cursor-pointer py-0.5">
                 <input
                   type="checkbox"
-                  checked={draft.project.includes(p.id)}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setDraft((d) => ({ ...d, project: [...d.project, p.id] }))
-                    } else {
-                      setDraft((d) => ({ ...d, project: d.project.filter((x) => x !== p.id) }))
-                    }
-                  }}
-                  className="w-3 h-3 rounded border-slate-300"
+                  checked={draft.project?.includes(p.id) ?? false}
+                  onChange={() => handleToggleProject(p.id)}
+                  className="rounded border-slate-300"
                 />
-                {p.name}
+                <span className="text-xs">{p.name}</span>
               </label>
             ))}
           </div>
-          {disableExtendedFilters && <p className="text-xs text-slate-500 mt-1">No disponible sin Elasticsearch</p>}
-        </div>
+        </fieldset>
 
         {/* Severity */}
-        <div>
-          <label className="block text-sm font-medium mb-2">Severidad</label>
-          <div className="grid grid-cols-2 gap-2">
+        <fieldset>
+          <legend className="text-xs font-medium text-slate-900 mb-1">Severidad</legend>
+          <div className="grid grid-cols-2 gap-1">
             {FINDING_SEVERITY_OPTIONS.map((sev) => (
-              <label key={sev} className="flex items-center gap-2 cursor-pointer text-sm">
+              <label key={sev} className="flex items-center gap-1 cursor-pointer py-0.5">
                 <input
                   type="checkbox"
-                  checked={draft.severity.includes(sev)}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setDraft((d) => ({ ...d, severity: [...d.severity, sev] }))
-                    } else {
-                      setDraft((d) => ({ ...d, severity: d.severity.filter((x) => x !== sev) }))
-                    }
-                  }}
-                  className="w-3 h-3 rounded border-slate-300"
+                  checked={draft.severity?.includes(sev) ?? false}
+                  onChange={() => handleToggleSeverity(sev)}
+                  className="rounded border-slate-300 w-4 h-4"
                 />
-                {SEVERITY_LABELS_ES[sev]}
+                <span className="text-xs">{SEVERITY_LABELS_ES[sev]}</span>
               </label>
             ))}
           </div>
-        </div>
+        </fieldset>
 
-        {/* Date range */}
-        <div>
-          <label className="block text-sm font-medium mb-2">Rango de fechas</label>
+        {/* Date Range */}
+        <fieldset>
+          <legend className="text-xs font-medium text-slate-900 mb-1">Rango de fechas</legend>
           <div className="flex gap-2">
             <input
               type="date"
-              value={draft.dateFrom || ''}
-              onChange={(e) => setDraft((d) => ({ ...d, dateFrom: e.target.value }))}
-              className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus-visible:ring-2 focus-visible:ring-indigo-500"
+              value={draft.dateFrom ? draft.dateFrom.split('T')[0] : ''}
+              onChange={(e) => setDraft((prev) => ({ ...prev, dateFrom: e.target.value }))}
+              className="flex-1 px-2 py-1 border border-slate-300 rounded text-xs"
             />
+            <span className="px-1 py-1 text-xs text-slate-500">–</span>
             <input
               type="date"
-              value={draft.dateTo || ''}
-              onChange={(e) => setDraft((d) => ({ ...d, dateTo: e.target.value }))}
-              className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus-visible:ring-2 focus-visible:ring-indigo-500"
+              value={draft.dateTo ? draft.dateTo.split('T')[0] : ''}
+              onChange={(e) => setDraft((prev) => ({ ...prev, dateTo: e.target.value }))}
+              className="flex-1 px-2 py-1 border border-slate-300 rounded text-xs"
             />
           </div>
-        </div>
-
-        {/* Evidence */}
-        <div>
-          <label className="block text-sm font-medium mb-2">Evidencia</label>
-          <div className="space-y-1">
-            <label className="flex items-center gap-2 cursor-pointer text-sm">
-              <input
-                type="radio"
-                name="hasEvidence"
-                checked={draft.hasEvidence === undefined}
-                onChange={() => setDraft((d) => ({ ...d, hasEvidence: undefined }))}
-                className="w-3 h-3 rounded-full border-slate-300"
-              />
-              Cualquiera
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer text-sm">
-              <input
-                type="radio"
-                name="hasEvidence"
-                checked={draft.hasEvidence === true}
-                onChange={() => setDraft((d) => ({ ...d, hasEvidence: true }))}
-                className="w-3 h-3 rounded-full border-slate-300"
-              />
-              Con evidencia
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer text-sm">
-              <input
-                type="radio"
-                name="hasEvidence"
-                checked={draft.hasEvidence === false}
-                onChange={() => setDraft((d) => ({ ...d, hasEvidence: false }))}
-                className="w-3 h-3 rounded-full border-slate-300"
-              />
-              Sin evidencia
-            </label>
-          </div>
-        </div>
+        </fieldset>
       </div>
 
       {/* Footer */}
-      <div className="flex gap-2 p-4 border-t border-slate-200 bg-slate-50">
+      <div className="border-t border-slate-200 px-4 py-2 flex gap-2 bg-slate-50">
         <button
           onClick={handleClear}
-          className="flex-1 px-3 py-2 text-sm font-medium border border-slate-300 rounded-lg hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-indigo-500"
+          className="flex-1 px-2 py-1.5 bg-slate-200 rounded text-xs font-medium hover:bg-slate-300 min-h-[36px]"
         >
           Limpiar
         </button>
         <button
           onClick={handleApply}
-          className="flex-1 px-3 py-2 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-500"
+          className="flex-1 px-2 py-1.5 bg-indigo-600 text-white rounded text-xs font-medium hover:bg-indigo-700 min-h-[36px]"
         >
           Aplicar
         </button>
       </div>
-
-      {/* Save filter */}
-      {activeCount > 0 && (
-        <div className="border-t border-slate-200 p-3 bg-slate-50 flex gap-2">
-          <input
-            type="text"
-            placeholder="Nombre del filtro..."
-            value={saveFilterName}
-            onChange={(e) => setSaveFilterName(e.target.value)}
-            className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus-visible:ring-2 focus-visible:ring-indigo-500"
-          />
-          <button
-            onClick={handleSaveFilter}
-            disabled={isSaving || !saveFilterName.trim()}
-            className="px-3 py-2 text-sm font-medium bg-amber-500 text-white rounded-lg hover:bg-amber-600 disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-indigo-500"
-          >
-            ⭐
-          </button>
-        </div>
-      )}
     </div>
   )
 }

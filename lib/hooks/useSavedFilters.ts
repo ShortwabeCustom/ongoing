@@ -1,120 +1,182 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { AdvancedFilterValues } from '@/lib/types/search'
-import { getAllFromStore, addToStore, deleteFromStore, updateInStore, clearStore } from '@/lib/indexeddb/search-db'
+import { SavedFilterEntry } from '@/lib/types/search'
+import { openSearchDb } from '@/lib/indexeddb/search-db'
 import { v4 as uuidv4 } from 'uuid'
 
-export interface SavedFilterEntry {
-  id: string
-  name: string
-  q?: string
-  status: string[]
-  priority: string[]
-  filters: AdvancedFilterValues
-  createdAt: number
-  updatedAt: number
+const MAX_SAVED_FILTERS = 20
+
+export interface UseSavedFiltersReturn {
+  filters: SavedFilterEntry[]
+  isReady: boolean
+  saveFilter: (name: string, entry: Omit<SavedFilterEntry, 'id' | 'name' | 'createdAt' | 'updatedAt'>) => Promise<void>
+  renameFilter: (id: string, newName: string) => Promise<void>
+  deleteFilter: (id: string) => Promise<void>
+  clearAll: () => Promise<void>
 }
 
-const FILTERS_CAP = 20
-
-export function useSavedFilters() {
-  const [saved, setSaved] = useState<SavedFilterEntry[]>([])
+export function useSavedFilters(): UseSavedFiltersReturn {
+  const [filters, setFilters] = useState<SavedFilterEntry[]>([])
   const [isReady, setIsReady] = useState(false)
 
+  // Load saved filters on mount
   useEffect(() => {
     const loadFilters = async () => {
       try {
-        const items = await getAllFromStore('saved_filters')
-        setSaved(items.sort((a, b) => b.createdAt - a.createdAt))
+        const db = await openSearchDb()
+        const txn = db.transaction('saved_filters', 'readonly')
+        const store = txn.objectStore('saved_filters')
+        const index = store.index('createdAt')
+
+        return new Promise<SavedFilterEntry[]>((resolve, reject) => {
+          const allRange = IDBKeyRange.lowerBound(0)
+          const request = index.getAll(allRange)
+
+          request.onsuccess = () => {
+            const items = (request.result || []) as SavedFilterEntry[]
+            // Sort by createdAt descending (newest first)
+            const sorted = items.sort((a, b) => b.createdAt - a.createdAt)
+            setFilters(sorted)
+            setIsReady(true)
+            resolve(sorted)
+          }
+
+          request.onerror = () => {
+            setIsReady(true)
+            reject(request.error)
+          }
+        })
       } catch (err) {
-        console.error('Failed to load saved filters:', err)
-      } finally {
+        console.error('[useSavedFilters] Failed to load filters:', err)
         setIsReady(true)
       }
     }
 
-    if (typeof window !== 'undefined') {
-      loadFilters()
-    }
+    loadFilters()
   }, [])
 
   const saveFilter = useCallback(
-    async (name: string, filters: AdvancedFilterValues, q?: string) => {
+    async (name: string, entry: Omit<SavedFilterEntry, 'id' | 'name' | 'createdAt' | 'updatedAt'>) => {
       try {
+        const db = await openSearchDb()
+        const txn = db.transaction('saved_filters', 'readwrite')
+        const store = txn.objectStore('saved_filters')
         const now = Date.now()
+
         const newFilter: SavedFilterEntry = {
+          ...entry,
           id: uuidv4(),
           name,
-          q,
-          status: [],
-          priority: [],
-          filters,
           createdAt: now,
           updatedAt: now,
         }
 
-        await addToStore('saved_filters', newFilter)
+        const addRequest = store.add(newFilter)
 
-        setSaved((prev) => {
-          const updated = [newFilter, ...prev]
-          // Evict oldest if > cap
-          if (updated.length > FILTERS_CAP) {
-            const toEvict = updated
-              .sort((a, b) => a.createdAt - b.createdAt)
-              .slice(FILTERS_CAP)
-            toEvict.forEach((f) => deleteFromStore('saved_filters', f.id).catch(console.error))
-            return updated.slice(0, FILTERS_CAP)
+        return new Promise<void>((resolve, reject) => {
+          addRequest.onsuccess = async () => {
+            // Check if we exceeded max, remove oldest
+            const index = store.index('createdAt')
+            const allRequest = index.getAll()
+
+            allRequest.onsuccess = () => {
+              const items = (allRequest.result || []) as SavedFilterEntry[]
+              if (items.length > MAX_SAVED_FILTERS) {
+                const toRemove = items.sort((a, b) => a.createdAt - b.createdAt)[0]
+                store.delete(toRemove.id)
+              }
+              setFilters((prev) => [newFilter, ...prev].slice(0, MAX_SAVED_FILTERS))
+              resolve()
+            }
+
+            allRequest.onerror = () => reject(allRequest.error)
           }
-          return updated
+
+          addRequest.onerror = () => reject(addRequest.error)
         })
       } catch (err) {
-        console.error('Failed to save filter:', err)
-        throw err
+        console.error('[useSavedFilters] Failed to save filter:', err)
       }
     },
-    [],
+    []
   )
 
   const renameFilter = useCallback(async (id: string, newName: string) => {
     try {
-      const filter = saved.find((f) => f.id === id)
-      if (!filter) throw new Error('Filter not found')
+      const db = await openSearchDb()
+      const txn = db.transaction('saved_filters', 'readwrite')
+      const store = txn.objectStore('saved_filters')
+      const getRequest = store.get(id)
 
-      const updated: SavedFilterEntry = {
-        ...filter,
-        name: newName,
-        updatedAt: Date.now(),
-      }
+      return new Promise<void>((resolve, reject) => {
+        getRequest.onsuccess = () => {
+          const filter = getRequest.result as SavedFilterEntry
+          if (!filter) return resolve()
 
-      await updateInStore('saved_filters', updated)
-      setSaved((prev) => prev.map((f) => (f.id === id ? updated : f)))
+          const updated: SavedFilterEntry = {
+            ...filter,
+            name: newName,
+            updatedAt: Date.now(),
+          }
+
+          const putRequest = store.put(updated)
+          putRequest.onsuccess = () => {
+            setFilters((prev) =>
+              prev.map((f) => (f.id === id ? updated : f))
+            )
+            resolve()
+          }
+          putRequest.onerror = () => reject(putRequest.error)
+        }
+
+        getRequest.onerror = () => reject(getRequest.error)
+      })
     } catch (err) {
-      console.error('Failed to rename filter:', err)
-      throw err
+      console.error('[useSavedFilters] Failed to rename filter:', err)
     }
-  }, [saved])
+  }, [])
 
   const deleteFilter = useCallback(async (id: string) => {
     try {
-      await deleteFromStore('saved_filters', id)
-      setSaved((prev) => prev.filter((f) => f.id !== id))
+      const db = await openSearchDb()
+      const txn = db.transaction('saved_filters', 'readwrite')
+      const store = txn.objectStore('saved_filters')
+      const request = store.delete(id)
+
+      return new Promise<void>((resolve, reject) => {
+        request.onsuccess = () => {
+          setFilters((prev) => prev.filter((f) => f.id !== id))
+          resolve()
+        }
+        request.onerror = () => reject(request.error)
+      })
     } catch (err) {
-      console.error('Failed to delete filter:', err)
+      console.error('[useSavedFilters] Failed to delete filter:', err)
     }
   }, [])
 
   const clearAll = useCallback(async () => {
     try {
-      await clearStore('saved_filters')
-      setSaved([])
+      const db = await openSearchDb()
+      const txn = db.transaction('saved_filters', 'readwrite')
+      const store = txn.objectStore('saved_filters')
+      const request = store.clear()
+
+      return new Promise<void>((resolve, reject) => {
+        request.onsuccess = () => {
+          setFilters([])
+          resolve()
+        }
+        request.onerror = () => reject(request.error)
+      })
     } catch (err) {
-      console.error('Failed to clear saved filters:', err)
+      console.error('[useSavedFilters] Failed to clear:', err)
     }
   }, [])
 
   return {
-    saved,
+    filters,
     isReady,
     saveFilter,
     renameFilter,

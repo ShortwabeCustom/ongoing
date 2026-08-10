@@ -1,37 +1,48 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-
-export interface BulkUpdateApiResult {
-  updated: number
-  failed: number
-  results: Array<{
-    id: string
-    status?: string
-    priority?: string
-    severity?: string
-    assigneeId?: string
-    version?: number
-    error?: string
-  }>
-}
+import { BulkUpdateApiResult, BatchActionUpdate } from '@/lib/types/search'
 
 const MAX_BATCH_SIZE = 100
 
-export function useBatchActions() {
+export interface UseBatchActionsReturn {
+  selectedIds: string[]
+  isSelected: (id: string) => boolean
+  toggleSelect: (id: string) => void
+  selectMany: (ids: string[]) => void
+  clearSelection: () => void
+  bulkUpdateStatus: (status: string) => Promise<void>
+  bulkUpdatePriority: (priority: string) => Promise<void>
+  bulkAssign: (assigneeId: string | null) => Promise<void>
+  bulkSetDueDate: (dueDate: string | null) => Promise<void>
+  isProcessing: boolean
+  error: string | null
+  lastResult: BulkUpdateApiResult | null
+}
+
+export function useBatchActions(): UseBatchActionsReturn {
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [lastResult, setLastResult] = useState<BulkUpdateApiResult | null>(null)
 
-  const isSelected = useCallback((id: string) => selectedIds.includes(id), [selectedIds])
+  const isSelected = useCallback(
+    (id: string) => selectedIds.includes(id),
+    [selectedIds]
+  )
 
   const toggleSelect = useCallback((id: string) => {
-    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]))
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    )
   }, [])
 
   const selectMany = useCallback((ids: string[]) => {
-    setSelectedIds(ids)
+    setSelectedIds((prev) => {
+      const set = new Set(prev)
+      ids.forEach((id) => set.add(id))
+      return Array.from(set)
+    })
   }, [])
 
   const clearSelection = useCallback(() => {
@@ -41,14 +52,10 @@ export function useBatchActions() {
   }, [])
 
   const performUpdate = useCallback(
-    async (updates: Record<string, any>) => {
-      if (selectedIds.length === 0) {
-        setError('No items selected')
-        return
-      }
-
+    async (updates: BatchActionUpdate) => {
+      if (selectedIds.length === 0) return
       if (selectedIds.length > MAX_BATCH_SIZE) {
-        setError(`Maximum ${MAX_BATCH_SIZE} items can be updated at once`)
+        setError(`Máximo ${MAX_BATCH_SIZE} elementos permitidos`)
         return
       }
 
@@ -65,56 +72,64 @@ export function useBatchActions() {
           }),
         })
 
-        const result = await response.json()
+        const result = await response.json() as BulkUpdateApiResult
 
-        if (response.status === 207) {
-          // Partial success: keep only failed ids selected for retry
-          const failedIds = (result.results || [])
-            .filter((r: any) => r.error)
-            .map((r: any) => r.id)
+        if (response.status === 200) {
+          // All successful
+          setLastResult(result)
+          clearSelection()
+        } else if (response.status === 207) {
+          // Partial success
+          const failedIds = result.results
+            .filter((r) => r.error)
+            .map((r) => r.id)
           setSelectedIds(failedIds)
-          setError(`${result.failed} items failed, ${result.updated} updated`)
-        } else if (response.ok) {
-          // Full success
-          setSelectedIds([])
-          setError(null)
-        } else if (response.status === 401 || response.status === 403) {
-          setError('You do not have permission to perform this action')
+          setLastResult(result)
+          setError(`${result.failed} elementos fallaron`)
         } else {
-          throw new Error('Request failed')
+          // Error
+          const errorMsg = response.status === 401 || response.status === 403
+            ? 'No tienes permiso para esta acción'
+            : 'Error en la actualización'
+          setError(errorMsg)
+          setLastResult(result)
         }
-
-        setLastResult(result)
       } catch (err) {
-        const errMsg = err instanceof Error ? err.message : 'Unknown error'
-        setError(errMsg)
-        setLastResult(null)
+        const msg = err instanceof Error ? err.message : 'Error desconocido'
+        setError(msg)
       } finally {
         setIsProcessing(false)
       }
     },
-    [selectedIds],
+    [selectedIds, clearSelection]
   )
 
   const bulkUpdateStatus = useCallback(
     async (status: string) => {
       await performUpdate({ status })
     },
-    [performUpdate],
+    [performUpdate]
   )
 
   const bulkUpdatePriority = useCallback(
     async (priority: string) => {
       await performUpdate({ priority })
     },
-    [performUpdate],
+    [performUpdate]
   )
 
   const bulkAssign = useCallback(
     async (assigneeId: string | null) => {
       await performUpdate({ assigneeId })
     },
-    [performUpdate],
+    [performUpdate]
+  )
+
+  const bulkSetDueDate = useCallback(
+    async (dueDate: string | null) => {
+      await performUpdate({ dueDate })
+    },
+    [performUpdate]
   )
 
   return {
@@ -126,6 +141,7 @@ export function useBatchActions() {
     bulkUpdateStatus,
     bulkUpdatePriority,
     bulkAssign,
+    bulkSetDueDate,
     isProcessing,
     error,
     lastResult,
