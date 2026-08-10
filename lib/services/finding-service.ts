@@ -1,6 +1,7 @@
 import { Prisma } from '@prisma/client'
 import { getDb } from '@/lib/db-lazy'
 import { FindingsQuery, parseSort } from '@/lib/validators/query'
+import { SearchService } from '@/lib/services/search-service'
 
 export class FindingService {
   /**
@@ -35,6 +36,10 @@ export class FindingService {
 
     if (filters.assigneeId) {
       where.assigneeId = filters.assigneeId
+    }
+
+    if (filters.projectId) {
+      where.projectId = filters.projectId
     }
 
     // Date range filters
@@ -233,7 +238,7 @@ export class FindingService {
   static async getStatistics() {
     const db = getDb()
 
-    const [byStatus, byPriority, bySeverity, byArea, total, unassigned] = await Promise.all([
+    const [byStatus, byPriority, bySeverity, unassigned, total] = await Promise.all([
       db.finding.groupBy({
         by: ['status'],
         where: { deletedAt: null },
@@ -340,7 +345,29 @@ export class FindingService {
       throw new Error('VERSION_MISMATCH')
     }
 
-    return this.getFinding(id)
+    const updated_finding = await this.getFinding(id)
+
+    // FASE 12: Index in Elasticsearch (fire-and-forget)
+    if (updated_finding) {
+      const evidenceDescriptions = (updated_finding.evidence ?? [])
+        .map((e) => [e.caption, e.originalFilename].filter(Boolean).join(' '))
+        .join(' ')
+
+      void SearchService.indexFinding({
+        id: updated_finding.id,
+        observation: updated_finding.observation,
+        evidenceDescriptions,
+        status: updated_finding.status,
+        priority: updated_finding.priority,
+        severity: updated_finding.severity,
+        assigneeId: updated_finding.assigneeId || undefined,
+        projectId: updated_finding.projectId,
+        createdAt: updated_finding.createdAt,
+        updatedAt: updated_finding.updatedAt,
+      })
+    }
+
+    return updated_finding
   }
 
   /**
@@ -373,6 +400,9 @@ export class FindingService {
 
       throw new Error('ALREADY_DELETED')
     }
+
+    // FASE 12: Remove from Elasticsearch index (fire-and-forget)
+    void SearchService.removeFromIndex(id)
 
     return { id, deletedAt: new Date() }
   }

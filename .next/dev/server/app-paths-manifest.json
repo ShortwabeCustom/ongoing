@@ -1,7 +1,9 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
   "/api/auth/login/route": "app/api/auth/login/route.js",
+  "/api/auth/session/route": "app/api/auth/session/route.js",
   "/api/findings/[id]/resolutions/[resId]/route": "app/api/findings/[id]/resolutions/[resId]/route.js",
   "/api/findings/[id]/route": "app/api/findings/[id]/route.js",
-  "/api/findings/route": "app/api/findings/route.js"
+  "/api/findings/route": "app/api/findings/route.js",
+  "/api/search/findings/route": "app/api/search/findings/route.js"
 }

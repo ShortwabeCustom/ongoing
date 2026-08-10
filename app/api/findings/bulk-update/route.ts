@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { getDb } from '@/lib/db-lazy'
+import { SearchService } from '@/lib/services/search-service'
 import { apiSuccess, apiError, ApiError } from '@/lib/utils/api-response'
 
 export const dynamic = 'force-dynamic'
@@ -87,6 +88,45 @@ export async function POST(request: NextRequest) {
     // Separate successful and failed updates
     const successful = results.filter((r) => !('error' in r))
     const failed = results.filter((r) => 'error' in r)
+
+    // FASE 12: Index updated findings in Elasticsearch (fire-and-forget)
+    if (successful.length > 0) {
+      const findingsToIndex = await db.finding.findMany({
+        where: {
+          id: { in: successful.map((r) => r.id) },
+          deletedAt: null,
+        },
+        include: {
+          evidence: {
+            select: {
+              caption: true,
+              originalFilename: true,
+            },
+          },
+        },
+      })
+
+      const indexDocuments = findingsToIndex.map((finding) => {
+        const evidenceDescriptions = (finding.evidence ?? [])
+          .map((e) => [e.caption, e.originalFilename].filter(Boolean).join(' '))
+          .join(' ')
+
+        return {
+          id: finding.id,
+          observation: finding.observation,
+          evidenceDescriptions,
+          status: finding.status,
+          priority: finding.priority,
+          severity: finding.severity,
+          assigneeId: finding.assigneeId || undefined,
+          projectId: finding.projectId,
+          createdAt: finding.createdAt,
+          updatedAt: finding.updatedAt,
+        }
+      })
+
+      void SearchService.bulkIndexFindings(indexDocuments)
+    }
 
     // Determine response status
     const hasErrors = failed.length > 0

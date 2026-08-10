@@ -1,6 +1,8 @@
 {
   "/_global-error/page": "app/_global-error/page.js",
   "/_not-found/page": "app/_not-found/page.js",
+  "/api/analytics/activity/route": "app/api/analytics/activity/route.js",
+  "/api/analytics/summary/route": "app/api/analytics/summary/route.js",
   "/api/auth/login/route": "app/api/auth/login/route.js",
   "/api/auth/logout/route": "app/api/auth/logout/route.js",
   "/api/auth/refresh/route": "app/api/auth/refresh/route.js",
@@ -21,9 +23,14 @@
   "/api/imports/[id]/confirm/route": "app/api/imports/[id]/confirm/route.js",
   "/api/imports/[id]/route": "app/api/imports/[id]/route.js",
   "/api/imports/preview/route": "app/api/imports/preview/route.js",
+  "/api/notifications/subscribe/route": "app/api/notifications/subscribe/route.js",
+  "/api/realtime/activity/route": "app/api/realtime/activity/route.js",
+  "/api/realtime/presence/route": "app/api/realtime/presence/route.js",
+  "/api/search/findings/route": "app/api/search/findings/route.js",
   "/api/users/[id]/route": "app/api/users/[id]/route.js",
   "/api/users/me/route": "app/api/users/me/route.js",
   "/api/users/route": "app/api/users/route.js",
+  "/dashboard/analytics/page": "app/dashboard/analytics/page.js",
   "/login/page": "app/login/page.js",
   "/page": "app/page.js",
   "/test-import/page": "app/test-import/page.js"

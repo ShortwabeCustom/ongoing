@@ -44,6 +44,8 @@ export const FindingsQuerySchema = z.object({
 
   assigneeId: z.string().optional(),
 
+  projectId: z.string().optional(),
+
   createdAfter: z.string().datetime().optional(),
   createdBefore: z.string().datetime().optional(),
   updatedAfter: z.string().datetime().optional(),

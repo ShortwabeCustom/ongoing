@@ -1,6 +1,7 @@
 import { getDb } from '@/lib/db-lazy'
 import { parseCSV, type RawCSVRow } from './csv-parser'
 import { NormalizationService, type NormalizedFinding } from './normalization-service'
+import { SearchService } from '@/lib/services/search-service'
 import type { ImportPreviewResult, ImportIncidence, ImportPreviewRow } from '@/lib/validators/import'
 
 export class ImportService {
@@ -181,6 +182,46 @@ export class ImportService {
 
       return batch
     })
+
+    // FASE 12: Index created findings in Elasticsearch (fire-and-forget)
+    // Fetch the created findings with their evidence to index them
+    const createdFindings = await db.finding.findMany({
+      where: {
+        importBatchId: batchId,
+        deletedAt: null,
+      },
+      include: {
+        evidence: {
+          select: {
+            caption: true,
+            originalFilename: true,
+          },
+        },
+      },
+    })
+
+    if (createdFindings.length > 0) {
+      const findingsToIndex = createdFindings.map((finding) => {
+        const evidenceDescriptions = (finding.evidence ?? [])
+          .map((e) => [e.caption, e.originalFilename].filter(Boolean).join(' '))
+          .join(' ')
+
+        return {
+          id: finding.id,
+          observation: finding.observation,
+          evidenceDescriptions,
+          status: finding.status,
+          priority: finding.priority,
+          severity: finding.severity,
+          assigneeId: finding.assigneeId || undefined,
+          projectId: finding.projectId,
+          createdAt: finding.createdAt,
+          updatedAt: finding.updatedAt,
+        }
+      })
+
+      void SearchService.bulkIndexFindings(findingsToIndex)
+    }
 
     return {
       importBatchId: result.id,

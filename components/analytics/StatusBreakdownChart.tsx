@@ -1,0 +1,84 @@
+'use client'
+
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts'
+
+const statusLabels: Record<string, string> = {
+  OPEN: 'Abierto',
+  TRIAGED: 'Triado',
+  IN_PROGRESS: 'En Progreso',
+  READY_FOR_VALIDATION: 'Listo para Validar',
+  VALIDATED: 'Validado',
+  CLOSED: 'Cerrado',
+  BLOCKED: 'Bloqueado',
+  REOPENED: 'Reabierto',
+}
+
+interface StatusBreakdownChartProps {
+  data?: Record<string, number>
+  isLoading?: boolean
+}
+
+export function StatusBreakdownChart({
+  data,
+  isLoading,
+}: StatusBreakdownChartProps) {
+  if (isLoading) {
+    return (
+      <div className="flex h-80 items-center justify-center rounded-lg border bg-gray-50">
+        <p className="text-gray-500">Cargando breakdown...</p>
+      </div>
+    )
+  }
+
+  if (!data || Object.keys(data).length === 0) {
+    return (
+      <div className="flex h-80 items-center justify-center rounded-lg border bg-gray-50">
+        <p className="text-gray-500">Sin datos disponibles</p>
+      </div>
+    )
+  }
+
+  const chartData = Object.entries(data)
+    .map(([status, count]) => ({
+      status: statusLabels[status] || status,
+      count,
+    }))
+    .sort((a, b) => b.count - a.count)
+
+  return (
+    <div className="rounded-lg border border-gray-200 bg-white p-6">
+      <h3 className="mb-4 text-lg font-semibold text-gray-900">
+        Distribución por Estado
+      </h3>
+      <ResponsiveContainer width="100%" height={350}>
+        <BarChart data={chartData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis
+            dataKey="status"
+            tick={{ fontSize: 12 }}
+            angle={-45}
+            textAnchor="end"
+            height={100}
+          />
+          <YAxis tick={{ fontSize: 12 }} />
+          <Tooltip
+            contentStyle={{
+              backgroundColor: '#fff',
+              border: '1px solid #ccc',
+              borderRadius: '8px',
+            }}
+          />
+          <Bar dataKey="count" fill="#3b82f6" radius={[8, 8, 0, 0]} />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  )
+}

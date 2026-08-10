@@ -56,6 +56,9 @@ model User {
   pushSubscriptions      PushSubscription[] @relation("PushSubscriptions")
   notifications         Notification[]     @relation("Notifications")
 
+  // Real-time Collaboration (FASE 10)
+  activities            Activity[]         @relation("Activities")
+
   @@index([email])
   @@index([deletedAt])
   @@map("users")
@@ -232,6 +235,7 @@ model Finding {
   @@index([createdAt])
   @@index([importBatchId])
   @@index([deletedAt])
+  @@index([createdAt, status])
   @@map("findings")
 }
 
@@ -410,6 +414,7 @@ model Validation {
   @@index([findingId])
   @@index([result])
   @@index([validatedBy])
+  @@index([result, validatedAt])
   @@map("validations")
 }
 
@@ -459,6 +464,7 @@ model FindingStatusHistory {
 
   @@index([findingId])
   @@index([changedBy])
+  @@index([toStatus, changedAt])
   @@map("finding_status_history")
 }
 
@@ -576,4 +582,50 @@ model Notification {
   @@index([userId])
   @@index([isRead])
   @@map("notifications")
+}
+
+// ============================================================================
+// REAL-TIME COLLABORATION (FASE 10)
+// ============================================================================
+
+model Activity {
+  id            String          @id @default(cuid())
+  userId        String
+  user          User            @relation("Activities", fields: [userId], references: [id], onDelete: Cascade)
+
+  action        ActivityAction
+  resourceType  String          // "finding", "resolution", "comment", etc
+  resourceId    String
+
+  details       Json?           // Additional context about the action
+  ipAddress     String?
+  userAgent     String?
+
+  createdAt     DateTime        @default(now())
+
+  @@index([userId])
+  @@index([resourceId])
+  @@index([action])
+  @@index([createdAt])
+  @@map("activities")
+}
+
+enum ActivityAction {
+  FINDING_CREATED
+  FINDING_UPDATED
+  FINDING_DELETED
+  FINDING_VIEWED
+  RESOLUTION_ADDED
+  RESOLUTION_UPDATED
+  VALIDATION_COMPLETED
+  COMMENT_ADDED
+  STATUS_CHANGED
+  ASSIGNED
+}
+
+enum UserStatus {
+  ONLINE
+  EDITING
+  IDLE
+  OFFLINE
 }

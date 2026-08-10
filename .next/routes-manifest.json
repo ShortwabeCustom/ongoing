@@ -252,6 +252,18 @@
       "namedRegex": "^/_not\\-found(?:/)?$"
     },
     {
+      "page": "/api/analytics/activity",
+      "regex": "^/api/analytics/activity(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/analytics/activity(?:/)?$"
+    },
+    {
+      "page": "/api/analytics/summary",
+      "regex": "^/api/analytics/summary(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/analytics/summary(?:/)?$"
+    },
+    {
       "page": "/api/auth/login",
       "regex": "^/api/auth/login(?:/)?$",
       "routeKeys": {},
@@ -306,6 +318,30 @@
       "namedRegex": "^/api/imports/preview(?:/)?$"
     },
     {
+      "page": "/api/notifications/subscribe",
+      "regex": "^/api/notifications/subscribe(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/notifications/subscribe(?:/)?$"
+    },
+    {
+      "page": "/api/realtime/activity",
+      "regex": "^/api/realtime/activity(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/realtime/activity(?:/)?$"
+    },
+    {
+      "page": "/api/realtime/presence",
+      "regex": "^/api/realtime/presence(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/realtime/presence(?:/)?$"
+    },
+    {
+      "page": "/api/search/findings",
+      "regex": "^/api/search/findings(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/search/findings(?:/)?$"
+    },
+    {
       "page": "/api/users",
       "regex": "^/api/users(?:/)?$",
       "routeKeys": {},
@@ -316,6 +352,12 @@
       "regex": "^/api/users/me(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/api/users/me(?:/)?$"
+    },
+    {
+      "page": "/dashboard/analytics",
+      "regex": "^/dashboard/analytics(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard/analytics(?:/)?$"
     },
     {
       "page": "/login",

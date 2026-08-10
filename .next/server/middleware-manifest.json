@@ -3,24 +3,23 @@
   "middleware": {
     "/": {
       "files": [
-        "server/edge/chunks/[root-of-the-server]__16ta5d2._.js",
-        "server/edge/chunks/0q0o_client_runtime_query_compiler_fast_bg_postgresql_wasm-base64_mjs_1ew15ut._.js",
-        "server/edge/chunks/[root-of-the-server]__1sp6nmc._.js",
-        "server/edge/chunks/turbopack-node_modules_next_dist_esm_build_templates_edge-wrapper_16g6y6_.js"
+        "server/edge/chunks/[root-of-the-server]__0rl5avo._.js",
+        "server/edge/chunks/node_modules_1ukuy62._.js",
+        "server/edge/chunks/turbopack-node_modules_next_dist_esm_build_templates_edge-wrapper_011sgad.js"
       ],
       "name": "middleware",
       "page": "/",
-      "entrypoint": "server/edge/chunks/turbopack-node_modules_next_dist_esm_build_templates_edge-wrapper_16g6y6_.js",
+      "entrypoint": "server/edge/chunks/turbopack-node_modules_next_dist_esm_build_templates_edge-wrapper_011sgad.js",
       "matchers": [
         {
-          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?(?:\\/((?!_next\\/static|_next\\/image|favicon.ico).*))(\\.json|\\.rsc|\\.segments\\/.+\\.segment\\.rsc)?[\\/#\\?]?$",
-          "originalSource": "/((?!_next/static|_next/image|favicon.ico).*)"
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?(?:\\/((?!_next\\/static|_next\\/image|favicon.ico|api).*))(\\.json|\\.rsc|\\.segments\\/.+\\.segment\\.rsc)?[\\/#\\?]?$",
+          "originalSource": "/((?!_next/static|_next/image|favicon.ico|api).*)"
         }
       ],
       "wasm": [],
       "assets": [],
       "env": {
-        "__NEXT_BUILD_ID": "qojYiUWNTUHHZodrgl34a",
+        "__NEXT_BUILD_ID": "twrBuTyx7PMiF3J934lSV",
         "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "fDhtAR2FSUmpQnMBfiOQAgQU4XSyRbGzdP52vM573Pw=",
         "__NEXT_PREVIEW_MODE_ID": "f7f6b7fb3913914fd2cf656dc0b19fbd",
         "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "f33345080fec6b3ae1e2d6000068a9e0e6669d544bfcb31df581e3f76c6aa661",
