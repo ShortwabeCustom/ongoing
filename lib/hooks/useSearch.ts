@@ -39,7 +39,7 @@ export function useSearch(query: Partial<SearchQuery>): UseSearchResult {
   const [error, setError] = useState<string | null>(null)
   const [isFallback, setIsFallback] = useState(false)
 
-  const debouncedQuery = useDebouncedValue(query, 300)
+  const debouncedQuery = useDebouncedValue(query, { mobile: 500, desktop: 300 })
 
   const buildParams = useCallback((q: Partial<SearchQuery>): URLSearchParams => {
     const params = new URLSearchParams()

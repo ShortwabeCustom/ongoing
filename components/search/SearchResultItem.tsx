@@ -45,20 +45,20 @@ export function SearchResultItem({
   return (
     <div className="flex flex-col gap-2 border-l-2 border-slate-200 pl-3">
       <div
-        className="text-sm text-slate-800 line-clamp-2"
+        className="text-base md:text-sm text-slate-800 line-clamp-2"
         dangerouslySetInnerHTML={{
           __html: displayObservation,
         }}
       />
 
       <div className="flex flex-wrap gap-2">
-        <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${statusColors[status] || 'bg-gray-100'}`}>
+        <span className={`inline-block px-2.5 py-1.5 md:px-2 md:py-1 rounded text-xs font-medium ${statusColors[status] || 'bg-gray-100'}`}>
           {status}
         </span>
-        <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${priorityColors[priority] || 'bg-gray-100'}`}>
+        <span className={`inline-block px-2.5 py-1.5 md:px-2 md:py-1 rounded text-xs font-medium ${priorityColors[priority] || 'bg-gray-100'}`}>
           {priority}
         </span>
-        <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${severityColors[severity] || 'bg-gray-100'}`}>
+        <span className={`inline-block px-2.5 py-1.5 md:px-2 md:py-1 rounded text-xs font-medium ${severityColors[severity] || 'bg-gray-100'}`}>
           {severity}
         </span>
       </div>
