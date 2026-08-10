@@ -84,6 +84,9 @@ export const SearchQuerySchema = z.object({
     .optional()
     .transform((val) => (val ? parseInt(val, 10) : 0))
     .refine((val) => val >= 0, 'Offset must be non-negative'),
+
+  // Internal flag to force loading results even without filters
+  _forceSearch: z.boolean().optional(),
 }).transform((data) => {
   // Normalize: use new params if provided, fall back to old params
   return {

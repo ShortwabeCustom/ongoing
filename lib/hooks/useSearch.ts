@@ -81,7 +81,8 @@ export function useSearch(query: Partial<SearchQuery>): UseSearchResult {
       debouncedQuery.hasEvidence !== undefined
     )
 
-    if (!hasFilters) {
+    // @ts-ignore - _forceSearch is internal flag to load initial results
+    if (!hasFilters && !debouncedQuery._forceSearch) {
       setData(null)
       setError(null)
       setIsFallback(false)

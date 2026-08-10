@@ -35,6 +35,17 @@ export function SearchFindings() {
   const searchHistory = useSearchHistory()
   const savedFilters = useSavedFilters()
 
+  const hasActiveFilters = Boolean(
+    statusFilter.length > 0 ||
+    priorityFilter.length > 0 ||
+    advancedFilters.severity?.length ||
+    advancedFilters.assignee?.length ||
+    advancedFilters.project?.length ||
+    advancedFilters.dateFrom ||
+    advancedFilters.dateTo ||
+    advancedFilters.hasEvidence !== undefined
+  )
+
   const { data, isLoading, error, isFallback, refetch } = useSearch({
     q: searchTerm,
     status: statusFilter.length > 0 ? statusFilter : undefined,
@@ -45,7 +56,9 @@ export function SearchFindings() {
     dateFrom: advancedFilters.dateFrom,
     dateTo: advancedFilters.dateTo,
     hasEvidence: advancedFilters.hasEvidence,
-    limit: 10,
+    limit: 20,
+    // Always load findings initially (show results by default)
+    _forceSearch: true,
   })
 
   const assigneeLabels = useMemo(
