@@ -21,7 +21,7 @@ export function SearchFindings() {
   const canBatchEdit = auth?.user?.role && ['OWNER', 'QA_LEAD'].includes(auth.user.role)
 
   const [searchTerm, setSearchTerm] = useState('')
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(true) // FASE 14: Show results by default
   const [statusFilter, setStatusFilter] = useState<string[]>([])
   const [priorityFilter, setPriorityFilter] = useState<string[]>([])
   const [advancedFilters, setAdvancedFilters] = useState<AdvancedFilterValues>({})

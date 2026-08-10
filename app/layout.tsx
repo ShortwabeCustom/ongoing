@@ -1,4 +1,3 @@
-import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { PushPermissionRequest } from '@/components/notifications/PushPermissionRequest'
@@ -46,7 +45,6 @@ export default function RootLayout({
       <body className="antialiased">
         {children}
         <PushPermissionRequest />
-        {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
   )

@@ -41,6 +41,11 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+// Validar que el esquema sea cacheable
+function isCacheableScheme(url) {
+  return url.protocol === "http:" || url.protocol === "https:";
+}
+
 // Fetch: Estrategia de cache híbrida
 self.addEventListener("fetch", (event) => {
   const { request } = event;
@@ -49,6 +54,14 @@ self.addEventListener("fetch", (event) => {
   // Solo cachear GET
   if (request.method !== "GET") {
     event.respondWith(fetch(request));
+    return;
+  }
+
+  // Ignorar requests con esquemas no-cacheable (chrome-extension, etc)
+  if (!isCacheableScheme(url)) {
+    event.respondWith(fetch(request).catch(() =>
+      new Response("Unavailable offline", { status: 503 })
+    ));
     return;
   }
 
@@ -93,10 +106,12 @@ async function networkFirstStrategy(request) {
   try {
     const response = await fetchWithTimeout(request, NETWORK_TIMEOUT_MS);
 
-    // Guardar en cache si está OK
-    if (response.ok) {
+    // Guardar en cache si está OK y el esquema es cacheable
+    if (response.ok && isCacheableScheme(new URL(request.url))) {
       const cache = await caches.open(API_CACHE_NAME);
-      cache.put(request, response.clone());
+      cache.put(request, response.clone()).catch((err) => {
+        console.warn("Cache put error:", err);
+      });
     }
 
     return response;
@@ -130,9 +145,11 @@ async function cacheFirstStrategy(request) {
   try {
     const response = await fetch(request);
 
-    if (response.ok) {
+    if (response.ok && isCacheableScheme(new URL(request.url))) {
       const cache = await caches.open(ASSET_CACHE_NAME);
-      cache.put(request, response.clone());
+      cache.put(request, response.clone()).catch((err) => {
+        console.warn("Cache put error:", err);
+      });
     }
 
     return response;
