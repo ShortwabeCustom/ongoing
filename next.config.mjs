@@ -6,6 +6,9 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  experimental: {
+    instrumentationHook: false,
+  },
   async rewrites() {
     return {
       // Serve the offline-ready report bundle (public/app.html) at the site root.
