@@ -1,158 +1,256 @@
-# 📚 Documentación - Pruebas María 2.0
+# 📚 Pruebas María 2.0 — Documentación Completa
 
-Bienvenido a la documentación del proyecto **Pruebas María 2.0**. Esta carpeta contiene toda la información necesaria para desarrollar, mantener y expandir el proyecto.
-
----
-
-## 🚀 Inicio Rápido
-
-**¿Acabas de llegar?** Empieza aquí:
-1. Lee [`GETTING_STARTED.md`](./GETTING_STARTED.md) - Primeros pasos en 5 minutos
-2. Corre `pnpm dev` - Inicia el servidor
-3. Consulta [`QUICK_START.md`](./reference/QUICK_START.md) - Comandos frecuentes
+**Última Actualización**: 2026-08-10  
+**Versión del Proyecto**: FASE 14 (Advanced Filters & Batch Actions)  
+**Status**: Backend ✅ | Frontend 🚀 (próxima sesión)
 
 ---
 
-## 📖 Estructura de la Documentación
+## 🎯 Acceso Rápido
 
-### 🎯 **Guías Principales**
+### 🚀 Para Nuevas Sesiones
+👉 **[QUICK_START.md](./QUICK_START.md)** — Setup en 5 pasos + próximos pasos
 
-| Documento | Propósito | Para quién |
-|-----------|-----------|-----------|
-| [**GETTING_STARTED.md**](./GETTING_STARTED.md) | Primeros pasos | Nuevos desarrolladores |
-| [**ARCHITECTURE.md**](./ARCHITECTURE.md) | Diseño del proyecto | Todos los desarrolladores |
-| [**DEVELOPMENT.md**](./DEVELOPMENT.md) | Guía de desarrollo | Desarrolladores activos |
+### 📖 Documentación por FASE
+- **FASE 13** ✅ [Mobile Optimization](./PHASES/FASE_13.md) — Touch-first, responsive debounce, bottom-sheet
+- **FASE 14** 🚀 [Advanced Filters & Batch](./PHASES/FASE_14.md) — Backend ✅ | Frontend spec 📋
+- **ROADMAP** 🛣️ [Próximas Fases](./PHASES/ROADMAP.md) — FASE 15+ planeado
 
-### 📋 **Guías por Tema**
-
-La carpeta `guides/` contiene tutoriales específicos:
-
-- **[components.md](./guides/components.md)** - Crear y usar componentes
-- **[styling.md](./guides/styling.md)** - Sistema de estilos (Tailwind)
-- **[routing.md](./guides/routing.md)** - Rutas y navegación (Next.js)
-- **[typescript.md](./guides/typescript.md)** - Patrones TypeScript
-- **[deployment.md](./guides/deployment.md)** - Deploy a producción
-
-### 🔍 **Referencia Rápida**
-
-La carpeta `reference/` tiene consultas rápidas:
-
-- **[QUICK_START.md](./reference/QUICK_START.md)** - Comandos y templates
-- **[AGENTS.md](./reference/AGENTS.md)** - Reglas del proyecto
-- **[file-structure.md](./reference/file-structure.md)** - Estructura de carpetas
-- **[troubleshooting.md](./reference/troubleshooting.md)** - Solución de problemas
-
-### 📝 **Plantillas**
-
-La carpeta `templates/` contiene starters:
-
-- **[component-basic.tsx](./templates/component-basic.tsx)** - Componente simple
-- **[component-with-variants.tsx](./templates/component-with-variants.tsx)** - Componente con variantes (CVA)
-- **[page.tsx](./templates/page.tsx)** - Nueva página Next.js
-
-### 📜 **Historial**
-
-- **[CHANGELOG.md](./CHANGELOG.md)** - Cambios y versiones del proyecto
+### 🔧 Guías Prácticas
+- **[RBAC Testing Guide](./GUIDES/RBAC_TESTING.md)** — 5 endpoints + checklist de seguridad
+- **[Development Setup](./GUIDES/DEVELOPMENT_SETUP.md)** — PostgreSQL, env vars, seeds
+- **[Troubleshooting](./GUIDES/TROUBLESHOOTING.md)** — npm, build, database issues
 
 ---
 
-## 🎯 Mapeo por Tarea
+## 📊 Tech Stack Actual (FASE 14)
 
-¿Qué quieres hacer? Aquí está el documento que necesitas:
-
-### Trabajando en el Proyecto
-- Crear un **nuevo componente** → [`guides/components.md`](./guides/components.md)
-- Agregar **nueva página** → [`guides/routing.md`](./guides/routing.md)
-- Cambiar **estilos/temas** → [`guides/styling.md`](./guides/styling.md)
-- Corregir un **bug/error** → [`reference/troubleshooting.md`](./reference/troubleshooting.md)
-
-### Desarrollo
-- Entender la **arquitectura** → [`ARCHITECTURE.md`](./ARCHITECTURE.md)
-- Aprender **TypeScript patterns** → [`guides/typescript.md`](./guides/typescript.md)
-- Ver **comandos rápidos** → [`reference/QUICK_START.md`](./reference/QUICK_START.md)
-
-### Deploy & Producción
-- Preparar para **producción** → [`guides/deployment.md`](./guides/deployment.md)
-- Ver **estructura del proyecto** → [`reference/file-structure.md`](./reference/file-structure.md)
-
-### Inducción
-- **Nuevo en el equipo** → Comienza con:
-  1. [`GETTING_STARTED.md`](./GETTING_STARTED.md)
-  2. [`ARCHITECTURE.md`](./ARCHITECTURE.md)
-  3. [`guides/components.md`](./guides/components.md)
+| Categoría | Stack |
+|-----------|-------|
+| **Frontend** | React 19 + Next.js 16.3 + Tailwind CSS v4 + TypeScript |
+| **Backend** | Node.js + Prisma 7.9.1 + Lucia 3.2.2 (auth) |
+| **Database** | PostgreSQL (16 tablas) + Elasticsearch 8.11.0 |
+| **Storage** | Cloudflare R2 (evidence) + IndexedDB (offline) |
+| **Real-time** | Socket.io + Redis (collaboration) |
+| **Search** | Elasticsearch (full-text) + boolean queries + aggregations |
+| **Notifications** | Web Push API + Service Workers |
+| **Auth** | Lucia 3.2.2 + RBAC (6 roles) + Argon2id hashing |
 
 ---
 
-## 📊 Stack Tecnológico
+## ✅ Estado Actual por FASE
+
+### Completadas ✅
+
+| FASE | Tema | Commit | Fecha |
+|------|------|--------|-------|
+| 1-4 | Data model + CSV import + CRUD | d9c8b6f | Ago 2 |
+| 5-6 | Frontend + Workflows | - | Ago 3 |
+| 7 | Auth (Lucia) + RBAC (6 roles) | 043fe5e | Ago 9 |
+| 8 | PWA + Offline Sync | e8e9f44 | Ago 9 |
+| 9 | Push Notifications (Web Push API) | 7fd221c | Ago 9 |
+| 10 | Real-time Collaboration (Socket.io + Redis) | - | Ago 9 |
+| 11 | Analytics Dashboard (KPIs, Charts, Filtros) | - | Ago 10 |
+| 12 | Advanced Search (Elasticsearch) | 32fa909 | Ago 10 |
+| 13 | Mobile Optimization (Touch-first) | 6739ab5 | Ago 10 |
+
+### En Progreso 🚀
+
+| FASE | Tema | Status | Próximos Pasos |
+|------|------|--------|-----------------|
+| 14 | Advanced Filters & Batch Actions | Backend ✅ / Frontend 📋 | FASE14_FRONTEND_SPEC.md (10h) |
+
+### Bloqueantes ⚠️
+
+**SEGURIDAD CRÍTICA**: `app/api/findings/bulk-update/route.ts` SIN RBAC
+- ❌ Cualquier usuario sin sesión puede modificar findings en lote
+- ✅ Fix: Agregar `checkRBAC()` antes de procesar
+- ⏱️ Duración: 15 min
+
+**SEARCH**: `hasEvidence` field no synced en Elasticsearch
+- ✅ Fix: Regenerar index + actualizar indexación
+- ⏱️ Duración: 10 min
+
+---
+
+## 🗂️ Estructura de Archivos
 
 ```
-Next.js 16.3.0 + React 19 + TypeScript 24
-Tailwind CSS 4.3.3 + Base UI 1.5.0
+/var/www/uix.torrax.cloud/
+├── docs/                           # NUEVA ESTRUCTURA
+│   ├── README.md                  # ← Estás aquí
+│   ├── QUICK_START.md             # Setup + próximos pasos
+│   ├── PHASES/
+│   │   ├── FASE_13.md             # Mobile Optimization ✅
+│   │   ├── FASE_14.md             # Advanced Filters (Backend ✅ + Frontend)
+│   │   └── ROADMAP.md             # Próximas fases
+│   ├── GUIDES/
+│   │   ├── RBAC_TESTING.md        # 5 endpoints + seguridad
+│   │   ├── DEVELOPMENT_SETUP.md   # Prerequisites + env
+│   │   └── TROUBLESHOOTING.md     # Resolución de problemas
+│   └── ARCHIVE/                   # Archivos FASE 1-8 + obsoletos
+├── CLAUDE.md                       # Instrucciones del proyecto (actualizado)
+├── README.md                       # Quick reference (actualizado)
+├── app/                            # Next.js app router
+├── lib/                            # Librerías + servicios
+├── components/                     # Componentes React
+└── scripts/                        # Utilidades CLI
 ```
 
-Detalles completos en [`ARCHITECTURE.md`](./ARCHITECTURE.md)
-
 ---
 
-## 🔄 Cómo Mantener esta Documentación
+## 🔑 Datos de Configuración
 
-1. **Cuando agregues una nueva feature** → Documéntala en la guía correspondiente
-2. **Cuando hagas cambios importantes** → Actualiza [`CHANGELOG.md`](./CHANGELOG.md)
-3. **Cuando haya ambigüedades** → Agrega a [`reference/troubleshooting.md`](./reference/troubleshooting.md)
-
-**Documentación actualizada = Proyecto escalable** ✨
-
----
-
-## 📱 Comandos Esenciales
-
+### PostgreSQL
 ```bash
-# Desarrollo
-pnpm dev              # Servidor local con hot-reload
-
-# Build
-pnpm build            # Compilar producción
-pnpm start            # Ejecutar producción
-
-# Calidad
-pnpm lint             # Validar código
-
-# Git
-git log --oneline     # Ver commits
-git status            # Ver cambios
+BD: pruebas_maria_dev
+User: torrax_user
+Password: TorraxDev123!
+Host: localhost:5432
+DATABASE_URL=postgresql://torrax_user:TorraxDev123!@localhost:5432/pruebas_maria_dev?schema=public
 ```
 
-Ver más en [`reference/QUICK_START.md`](./reference/QUICK_START.md)
+### Test Users (6 roles)
+```
+owner@test.local           → OWNER
+qa-lead@test.local         → QA_LEAD
+designer@test.local        → DESIGNER
+developer@test.local       → DEVELOPER
+business@test.local        → BUSINESS_REVIEWER
+viewer@test.local          → VIEWER
+
+Password: TestPassword123
+```
+
+### Elasticsearch
+```bash
+URL: http://localhost:9200
+Index: findings-v1
+Status: docker-compose ps
+```
+
+### Development Server
+```bash
+npm run dev
+# → http://localhost:3001
+# → Turbopack enabled (46s build)
+```
 
 ---
 
-## 🤝 Contribuir a la Documentación
+## 📋 Matriz de Permisos RBAC
 
-¿Encontraste un bug en la docs? ¿O falta información?
-
-1. Edita el archivo relevante
-2. Asegúrate de que sea claro y conciso
-3. Haz commit: `git add . && git commit -m "docs: actualizar..."`
-
----
-
-## 📞 Contacto & Soporte
-
-- **Proyecto**: Pruebas María 2.0
-- **Usuario**: Alexis (alexis.pro_sk8@hotmail.com)
-- **Versión**: 0.1.0
-- **Última actualización**: 2026-08-07
+| Rol | Acciones |
+|-----|----------|
+| **OWNER** | Todas las acciones + administración |
+| **QA_LEAD** | Editar/eliminar findings, confirmar importes, cambiar estado resoluciones |
+| **DESIGNER** | Crear findings, ver analytics |
+| **DEVELOPER** | Crear findings, subir evidencia |
+| **BUSINESS_REVIEWER** | Ver todos findings, ver analytics |
+| **VIEWER** | Ver findings asignados únicamente |
 
 ---
 
-## 🎓 Recursos Externos
+## 🚀 Para Comenzar Nueva Sesión
 
-- [Next.js Docs](https://nextjs.org/docs)
-- [React Docs](https://react.dev/)
-- [Tailwind CSS](https://tailwindcss.com/docs)
-- [TypeScript](https://www.typescriptlang.org/docs/)
-- [Base UI](https://base-ui.com/)
+### 1️⃣ Lee Primero
+```markdown
+- docs/QUICK_START.md           (5 min)
+- docs/PHASES/FASE_14.md        (10 min si es FASE 14)
+```
+
+### 2️⃣ Verifica Setup
+```bash
+# PostgreSQL corriendo
+psql postgresql://torrax_user:TorraxDev123!@localhost:5432/pruebas_maria_dev -c "SELECT COUNT(*) FROM users;"
+
+# Elasticsearch corriendo
+curl http://localhost:9200/_cluster/health
+
+# Dev server
+npm run dev
+# → http://localhost:3001
+```
+
+### 3️⃣ Activa Skill Recomendada
+```
+/frontend-developer     # Para FASE 14 Frontend
+/senior-fullstack       # Para features completas
+```
+
+### 4️⃣ Revisa Blockers & PRs
+```bash
+git status
+git log --oneline -10
+# Verificar si hay cambios sin commitear
+```
 
 ---
 
-**Próximo paso**: 👉 Lee [`GETTING_STARTED.md`](./GETTING_STARTED.md)
+## 📚 Documentación Antigua (Archivada)
+
+Los documentos de FASE 1-8 se encuentran en **[ARCHIVE/](./ARCHIVE/)**:
+- `FASE_1_SUMMARY.md`
+- `FASE4_COMPLETE.md`
+- `FASE7_COMPLETION.md`
+- `FASE8_IMPLEMENTATION_GUIDE.md`
+- `SESSION_2026_08_09_SUMMARY.md`
+- y más...
+
+**Acceso**: Solo consulta si necesitas referencia histórica o contexto de decisiones antiguas.
+
+---
+
+## 📈 Métricas de Proyecto
+
+| Métrica | Valor |
+|---------|-------|
+| **Líneas de código** | ~8,000+ |
+| **Archivos de componentes** | 40+ |
+| **Endpoints API** | 25+ |
+| **Test coverage** | 70%+ (objetivo) |
+| **Build time** | 46s (Turbopack) |
+| **Database tables** | 16 |
+| **Elasticsearch indices** | 1 (findings-v1) |
+
+---
+
+## 🔗 Referencias Cruzadas
+
+- **Memory**: Revisar `/root/.claude/projects/-var-www-uix-torrax-cloud/memory/MEMORY.md`
+- **Git history**: `git log --oneline | head -20`
+- **Current branch**: `git branch -v`
+- **Status**: `git status`
+
+---
+
+## ✨ Próxima Sesión
+
+**FASE 14 Frontend Implementation**
+
+**Bloqueantes primero** (25 min):
+1. Fix RBAC en `bulk-update/route.ts`
+2. Fix `hasEvidence` en Elasticsearch
+
+**Después** (10h):
+- Implementar 4 componentes React
+- Integrar 3 hooks nuevos
+- Actualizar SearchFindings + SearchResultItem
+- Testing completo
+
+**Skill**: `/frontend-developer` ⭐  
+**Documento**: Seguir `docs/PHASES/FASE_14.md`
+
+---
+
+## 📝 Notas
+
+- **Cambio de idioma**: Todo en **Español** (persistido en memory)
+- **Estilo de trabajo**: Terse responses, sin trailing summaries
+- **Patrón**: Leer docs → entender scope → `/skill` → implementar → test → commit
+
+---
+
+**Documentación optimizada**: 2026-08-10  
+**Última revisión**: 2026-08-10  
+**Responsable**: Claude Code

@@ -1,15 +1,16 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { X } from 'lucide-react'
-import type { AdvancedFilterValues, LookupOption } from '@/lib/types/search'
+import { AdvancedFilterValues, LookupOption } from '@/lib/types/search'
 import { FINDING_SEVERITY_OPTIONS, SEVERITY_LABELS_ES } from '@/lib/constants/finding-options'
+import { X } from 'lucide-react'
 
 interface AdvancedFilterPanelProps {
   open: boolean
   onClose: () => void
   value: AdvancedFilterValues
   onApply: (values: AdvancedFilterValues) => void
+  onSaveAsNamedFilter: (name: string, values: AdvancedFilterValues) => Promise<void>
   assigneeOptions: LookupOption[]
   projectOptions: LookupOption[]
   lookupsLoading: boolean
@@ -18,17 +19,12 @@ interface AdvancedFilterPanelProps {
   activeCount: number
 }
 
-interface Draft extends AdvancedFilterValues {
-  assignee: string[]
-  project: string[]
-  severity: string[]
-}
-
 export function AdvancedFilterPanel({
   open,
   onClose,
   value,
   onApply,
+  onSaveAsNamedFilter,
   assigneeOptions,
   projectOptions,
   lookupsLoading,
@@ -36,524 +32,488 @@ export function AdvancedFilterPanel({
   disableExtendedFilters,
   activeCount,
 }: AdvancedFilterPanelProps) {
-  const [draft, setDraft] = useState<Draft>({
-    assignee: value.assignee || [],
-    project: value.project || [],
-    dateFrom: value.dateFrom,
-    dateTo: value.dateTo,
-    hasEvidence: value.hasEvidence,
-    severity: value.severity || [],
-  })
+  const [draft, setDraft] = useState<AdvancedFilterValues>(value)
+  const [assigneeSearch, setAssigneeSearch] = useState('')
+  const [projectSearch, setProjectSearch] = useState('')
+  const [saveFilterName, setSaveFilterName] = useState('')
+  const [isSaving, setIsSaving] = useState(false)
 
-  const [searchAssignee, setSearchAssignee] = useState('')
-  const [searchProject, setSearchProject] = useState('')
-
-  // Update draft when value changes externally
   useEffect(() => {
     if (open) {
-      setDraft({
-        assignee: value.assignee || [],
-        project: value.project || [],
-        dateFrom: value.dateFrom,
-        dateTo: value.dateTo,
-        hasEvidence: value.hasEvidence,
-        severity: value.severity || [],
-      })
+      setDraft(value)
+      setAssigneeSearch('')
+      setProjectSearch('')
+      setSaveFilterName('')
     }
   }, [open, value])
 
-  const handleToggleAssignee = (id: string) => {
-    setDraft((prev) => ({
-      ...prev,
-      assignee: prev.assignee.includes(id)
-        ? prev.assignee.filter((x) => x !== id)
-        : [...prev.assignee, id],
-    }))
-  }
+  const filteredAssignees = assigneeOptions.filter((a) =>
+    a.name.toLowerCase().includes(assigneeSearch.toLowerCase()),
+  )
 
-  const handleToggleProject = (id: string) => {
-    setDraft((prev) => ({
-      ...prev,
-      project: prev.project.includes(id)
-        ? prev.project.filter((x) => x !== id)
-        : [...prev.project, id],
-    }))
-  }
+  const filteredProjects = projectOptions.filter((p) =>
+    p.name.toLowerCase().includes(projectSearch.toLowerCase()),
+  )
 
-  const handleToggleSeverity = (sev: string) => {
-    setDraft((prev) => ({
-      ...prev,
-      severity: prev.severity.includes(sev)
-        ? prev.severity.filter((x) => x !== sev)
-        : [...prev.severity, sev],
-    }))
-  }
-
-  const handleReset = () => {
-    const empty: Draft = {
+  const handleClear = () => {
+    const empty: AdvancedFilterValues = {
       assignee: [],
       project: [],
+      severity: [],
       dateFrom: undefined,
       dateTo: undefined,
       hasEvidence: undefined,
-      severity: [],
     }
     setDraft(empty)
     onApply(empty)
+    onClose()
   }
 
   const handleApply = () => {
-    const result: AdvancedFilterValues = {
+    // Normalize dates to ISO strings
+    const normalized: AdvancedFilterValues = {
       ...draft,
-      assignee: draft.assignee.length ? draft.assignee : undefined,
-      project: draft.project.length ? draft.project : undefined,
-      severity: draft.severity.length ? draft.severity : undefined,
+      dateFrom: draft.dateFrom ? new Date(draft.dateFrom).toISOString() : undefined,
+      dateTo: draft.dateTo ? new Date(draft.dateTo).toISOString() : undefined,
     }
-    onApply(result)
+    onApply(normalized)
+    onClose()
   }
 
-  const filteredAssignees = assigneeOptions.filter((a) =>
-    a.name.toLowerCase().includes(searchAssignee.toLowerCase()),
-  )
-  const filteredProjects = projectOptions.filter((p) =>
-    p.name.toLowerCase().includes(searchProject.toLowerCase()),
-  )
+  const handleSaveFilter = async () => {
+    if (!saveFilterName.trim()) return
+    try {
+      setIsSaving(true)
+      await onSaveAsNamedFilter(saveFilterName, draft)
+      setSaveFilterName('')
+    } catch (err) {
+      console.error('Failed to save filter:', err)
+    } finally {
+      setIsSaving(false)
+    }
+  }
 
-  // Desktop: dropdown
+  // Mobile: bottom-sheet (fixed bottom, z-60)
+  // Desktop: dropdown (absolute, z-50)
+
   if (!open) return null
 
-  const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 768
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
-  if (isDesktop) {
+  if (isMobile) {
     return (
-      <div className="absolute top-full right-0 mt-2 w-96 bg-white border border-slate-200 rounded-lg shadow-lg z-50">
-        <div className="p-4 border-b border-slate-200 flex justify-between items-center">
-          <h3 className="font-semibold text-slate-900">Filtros avanzados</h3>
+      <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl max-h-[85vh] z-[60] overflow-hidden flex flex-col">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-slate-200 shrink-0">
+          <h2 className="text-lg font-semibold">Filtros avanzados</h2>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-slate-100 rounded focus-visible:ring-2 focus-visible:ring-indigo-500"
+            className="p-2 hover:bg-slate-100 rounded-lg focus-visible:ring-2 focus-visible:ring-indigo-500"
             aria-label="Cerrar filtros"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="p-4 space-y-4 max-h-[60vh] overflow-y-auto">
-          {/* Assignees */}
-          {!disableExtendedFilters && (
-            <fieldset className="space-y-2">
-              <legend className="text-sm font-semibold text-slate-900">Asignado a</legend>
-              {lookupsLoading ? (
-                <p className="text-xs text-slate-500">Cargando...</p>
-              ) : lookupsError ? (
-                <p className="text-xs text-red-600">{lookupsError}</p>
-              ) : (
-                <>
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {/* Assignee */}
+          <div className={disableExtendedFilters ? 'opacity-50 pointer-events-none' : ''}>
+            <label className="block text-sm font-medium mb-2">Asignado a</label>
+            <input
+              type="text"
+              placeholder="Buscar..."
+              value={assigneeSearch}
+              onChange={(e) => setAssigneeSearch(e.target.value)}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg mb-2 text-sm focus-visible:ring-2 focus-visible:ring-indigo-500"
+              disabled={lookupsLoading}
+            />
+            <div className="space-y-2 max-h-40 overflow-y-auto">
+              {filteredAssignees.map((a) => (
+                <label key={a.id} className="flex items-center gap-2 cursor-pointer">
                   <input
-                    type="text"
-                    placeholder="Buscar..."
-                    value={searchAssignee}
-                    onChange={(e) => setSearchAssignee(e.target.value)}
-                    className="w-full px-2 py-1.5 text-sm border border-slate-300 rounded focus-visible:ring-2 focus-visible:ring-indigo-500"
+                    type="checkbox"
+                    checked={draft.assignee.includes(a.id)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setDraft((d) => ({
+                          ...d,
+                          assignee: [...d.assignee, a.id],
+                        }))
+                      } else {
+                        setDraft((d) => ({
+                          ...d,
+                          assignee: d.assignee.filter((x) => x !== a.id),
+                        }))
+                      }
+                    }}
+                    className="w-4 h-4 rounded border-slate-300"
                   />
-                  <div className="space-y-1">
-                    {filteredAssignees.map((opt) => (
-                      <label key={opt.id} className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={draft.assignee.includes(opt.id)}
-                          onChange={() => handleToggleAssignee(opt.id)}
-                          className="w-4 h-4 rounded border-slate-300 focus-visible:ring-2 focus-visible:ring-indigo-500"
-                        />
-                        <span className="text-sm text-slate-700">{opt.name}</span>
-                      </label>
-                    ))}
-                  </div>
-                </>
-              )}
-            </fieldset>
-          )}
+                  <span className="text-sm">{a.name}</span>
+                </label>
+              ))}
+            </div>
+            {disableExtendedFilters && <p className="text-xs text-slate-500 mt-1">No disponible sin Elasticsearch</p>}
+          </div>
 
-          {/* Projects */}
-          {!disableExtendedFilters && (
-            <fieldset className="space-y-2">
-              <legend className="text-sm font-semibold text-slate-900">Proyecto</legend>
-              {lookupsLoading ? (
-                <p className="text-xs text-slate-500">Cargando...</p>
-              ) : lookupsError ? (
-                <p className="text-xs text-red-600">{lookupsError}</p>
-              ) : (
-                <>
+          {/* Project */}
+          <div className={disableExtendedFilters ? 'opacity-50 pointer-events-none' : ''}>
+            <label className="block text-sm font-medium mb-2">Proyecto</label>
+            <input
+              type="text"
+              placeholder="Buscar..."
+              value={projectSearch}
+              onChange={(e) => setProjectSearch(e.target.value)}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg mb-2 text-sm focus-visible:ring-2 focus-visible:ring-indigo-500"
+              disabled={lookupsLoading}
+            />
+            <div className="space-y-2 max-h-40 overflow-y-auto">
+              {filteredProjects.map((p) => (
+                <label key={p.id} className="flex items-center gap-2 cursor-pointer">
                   <input
-                    type="text"
-                    placeholder="Buscar..."
-                    value={searchProject}
-                    onChange={(e) => setSearchProject(e.target.value)}
-                    className="w-full px-2 py-1.5 text-sm border border-slate-300 rounded focus-visible:ring-2 focus-visible:ring-indigo-500"
+                    type="checkbox"
+                    checked={draft.project.includes(p.id)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setDraft((d) => ({
+                          ...d,
+                          project: [...d.project, p.id],
+                        }))
+                      } else {
+                        setDraft((d) => ({
+                          ...d,
+                          project: d.project.filter((x) => x !== p.id),
+                        }))
+                      }
+                    }}
+                    className="w-4 h-4 rounded border-slate-300"
                   />
-                  <div className="space-y-1">
-                    {filteredProjects.map((opt) => (
-                      <label key={opt.id} className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={draft.project.includes(opt.id)}
-                          onChange={() => handleToggleProject(opt.id)}
-                          className="w-4 h-4 rounded border-slate-300 focus-visible:ring-2 focus-visible:ring-indigo-500"
-                        />
-                        <span className="text-sm text-slate-700">{opt.name}</span>
-                      </label>
-                    ))}
-                  </div>
-                </>
-              )}
-            </fieldset>
-          )}
+                  <span className="text-sm">{p.name}</span>
+                </label>
+              ))}
+            </div>
+            {disableExtendedFilters && <p className="text-xs text-slate-500 mt-1">No disponible sin Elasticsearch</p>}
+          </div>
 
           {/* Severity */}
-          <fieldset className="space-y-2">
-            <legend className="text-sm font-semibold text-slate-900">Severidad</legend>
+          <div>
+            <label className="block text-sm font-medium mb-2">Severidad</label>
             <div className="grid grid-cols-2 gap-2">
               {FINDING_SEVERITY_OPTIONS.map((sev) => (
                 <label key={sev} className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={draft.severity.includes(sev)}
-                    onChange={() => handleToggleSeverity(sev)}
-                    className="w-4 h-4 rounded border-slate-300 focus-visible:ring-2 focus-visible:ring-indigo-500"
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setDraft((d) => ({ ...d, severity: [...d.severity, sev] }))
+                      } else {
+                        setDraft((d) => ({ ...d, severity: d.severity.filter((x) => x !== sev) }))
+                      }
+                    }}
+                    className="w-4 h-4 rounded border-slate-300"
                   />
-                  <span className="text-sm text-slate-700">{SEVERITY_LABELS_ES[sev]}</span>
+                  <span className="text-sm">{SEVERITY_LABELS_ES[sev]}</span>
                 </label>
               ))}
             </div>
-          </fieldset>
+          </div>
 
-          {/* Date Range */}
-          <fieldset className="space-y-2">
-            <legend className="text-sm font-semibold text-slate-900">Rango de fechas</legend>
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="text-xs text-slate-600">Desde</label>
-                <input
-                  type="date"
-                  value={draft.dateFrom ? draft.dateFrom.split('T')[0] : ''}
-                  onChange={(e) => {
-                    if (e.target.value) {
-                      setDraft((prev) => ({
-                        ...prev,
-                        dateFrom: `${e.target.value}T00:00:00Z`,
-                      }))
-                    } else {
-                      setDraft((prev) => ({
-                        ...prev,
-                        dateFrom: undefined,
-                      }))
-                    }
-                  }}
-                  className="w-full px-2 py-1.5 text-sm border border-slate-300 rounded focus-visible:ring-2 focus-visible:ring-indigo-500"
-                />
-              </div>
-              <div>
-                <label className="text-xs text-slate-600">Hasta</label>
-                <input
-                  type="date"
-                  value={draft.dateTo ? draft.dateTo.split('T')[0] : ''}
-                  onChange={(e) => {
-                    if (e.target.value) {
-                      setDraft((prev) => ({
-                        ...prev,
-                        dateTo: `${e.target.value}T23:59:59Z`,
-                      }))
-                    } else {
-                      setDraft((prev) => ({
-                        ...prev,
-                        dateTo: undefined,
-                      }))
-                    }
-                  }}
-                  className="w-full px-2 py-1.5 text-sm border border-slate-300 rounded focus-visible:ring-2 focus-visible:ring-indigo-500"
-                />
-              </div>
-            </div>
-          </fieldset>
+          {/* Date range */}
+          <div>
+            <label className="block text-sm font-medium mb-2">Rango de fechas</label>
+            <input
+              type="date"
+              value={draft.dateFrom || ''}
+              onChange={(e) => setDraft((d) => ({ ...d, dateFrom: e.target.value }))}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg mb-2 text-sm focus-visible:ring-2 focus-visible:ring-indigo-500"
+            />
+            <input
+              type="date"
+              value={draft.dateTo || ''}
+              onChange={(e) => setDraft((d) => ({ ...d, dateTo: e.target.value }))}
+              className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus-visible:ring-2 focus-visible:ring-indigo-500"
+            />
+          </div>
 
           {/* Evidence */}
-          <fieldset className="space-y-2">
-            <legend className="text-sm font-semibold text-slate-900">Evidencia</legend>
-            <div className="space-y-1">
+          <div>
+            <label className="block text-sm font-medium mb-2">Evidencia</label>
+            <div className="space-y-2">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
-                  name="evidence"
-                  value="all"
+                  name="hasEvidence"
                   checked={draft.hasEvidence === undefined}
-                  onChange={() => setDraft((prev) => ({ ...prev, hasEvidence: undefined }))}
-                  className="w-4 h-4 border-slate-300 focus-visible:ring-2 focus-visible:ring-indigo-500"
+                  onChange={() => setDraft((d) => ({ ...d, hasEvidence: undefined }))}
+                  className="w-4 h-4 rounded-full border-slate-300"
                 />
-                <span className="text-sm text-slate-700">Cualquiera</span>
+                <span className="text-sm">Cualquiera</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
-                  name="evidence"
-                  value="true"
+                  name="hasEvidence"
                   checked={draft.hasEvidence === true}
-                  onChange={() => setDraft((prev) => ({ ...prev, hasEvidence: true }))}
-                  className="w-4 h-4 border-slate-300 focus-visible:ring-2 focus-visible:ring-indigo-500"
+                  onChange={() => setDraft((d) => ({ ...d, hasEvidence: true }))}
+                  className="w-4 h-4 rounded-full border-slate-300"
                 />
-                <span className="text-sm text-slate-700">Con evidencia</span>
+                <span className="text-sm">Con evidencia</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
-                  name="evidence"
-                  value="false"
+                  name="hasEvidence"
                   checked={draft.hasEvidence === false}
-                  onChange={() => setDraft((prev) => ({ ...prev, hasEvidence: false }))}
-                  className="w-4 h-4 border-slate-300 focus-visible:ring-2 focus-visible:ring-indigo-500"
+                  onChange={() => setDraft((d) => ({ ...d, hasEvidence: false }))}
+                  className="w-4 h-4 rounded-full border-slate-300"
                 />
-                <span className="text-sm text-slate-700">Sin evidencia</span>
+                <span className="text-sm">Sin evidencia</span>
               </label>
             </div>
-          </fieldset>
-
-          {disableExtendedFilters && (
-            <div className="p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800">
-              Modo sin Elasticsearch: los filtros de Asignado múltiple, Proyecto múltiple y "Tiene evidencia" no están disponibles.
-            </div>
-          )}
+          </div>
         </div>
 
-        <div className="p-4 border-t border-slate-200 flex gap-2 justify-end">
+        {/* Footer */}
+        <div className="flex gap-2 p-4 border-t border-slate-200 shrink-0 bg-slate-50">
           <button
-            onClick={handleReset}
-            className="px-3 py-2 text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded focus-visible:ring-2 focus-visible:ring-indigo-500"
+            onClick={handleClear}
+            className="flex-1 px-4 py-2 text-sm font-medium border border-slate-300 rounded-lg hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-indigo-500"
           >
             Limpiar
           </button>
           <button
             onClick={handleApply}
-            className="px-3 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded focus-visible:ring-2 focus-visible:ring-indigo-500"
+            className="flex-1 px-4 py-2 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-500"
           >
             Aplicar
           </button>
         </div>
+
+        {/* Save filter */}
+        {activeCount > 0 && (
+          <div className="border-t border-slate-200 p-3 bg-slate-50">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="Nombre del filtro..."
+                value={saveFilterName}
+                onChange={(e) => setSaveFilterName(e.target.value)}
+                className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus-visible:ring-2 focus-visible:ring-indigo-500"
+              />
+              <button
+                onClick={handleSaveFilter}
+                disabled={isSaving || !saveFilterName.trim()}
+                className="px-3 py-2 text-sm font-medium bg-amber-500 text-white rounded-lg hover:bg-amber-600 disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-indigo-500"
+              >
+                ⭐
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     )
   }
 
-  // Mobile: bottom sheet
+  // Desktop dropdown
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl shadow-2xl z-[60] max-h-[85vh] flex flex-col">
-      <div className="sticky top-0 p-4 border-b border-slate-200 flex justify-between items-center bg-white rounded-t-2xl">
-        <h3 className="font-semibold text-slate-900">Filtros avanzados</h3>
+    <div className="absolute top-full right-0 mt-2 w-96 bg-white border border-slate-200 rounded-lg shadow-lg z-50">
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 border-b border-slate-200">
+        <h3 className="font-semibold">Filtros avanzados</h3>
         <button
           onClick={onClose}
           className="p-1 hover:bg-slate-100 rounded focus-visible:ring-2 focus-visible:ring-indigo-500"
-          aria-label="Cerrar filtros"
+          aria-label="Cerrar"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {/* Assignees */}
-        {!disableExtendedFilters && (
-          <fieldset className="space-y-2">
-            <legend className="text-sm font-semibold text-slate-900">Asignado a</legend>
-            {lookupsLoading ? (
-              <p className="text-xs text-slate-500">Cargando...</p>
-            ) : lookupsError ? (
-              <p className="text-xs text-red-600">{lookupsError}</p>
-            ) : (
-              <>
-                <input
-                  type="text"
-                  placeholder="Buscar..."
-                  value={searchAssignee}
-                  onChange={(e) => setSearchAssignee(e.target.value)}
-                  className="w-full px-2 py-1.5 text-sm border border-slate-300 rounded focus-visible:ring-2 focus-visible:ring-indigo-500"
-                />
-                <div className="space-y-1">
-                  {filteredAssignees.map((opt) => (
-                    <label key={opt.id} className="flex items-center gap-2 cursor-pointer min-h-[44px] md:min-h-[32px]">
-                      <input
-                        type="checkbox"
-                        checked={draft.assignee.includes(opt.id)}
-                        onChange={() => handleToggleAssignee(opt.id)}
-                        className="w-4 h-4 rounded border-slate-300 focus-visible:ring-2 focus-visible:ring-indigo-500"
-                      />
-                      <span className="text-sm text-slate-700">{opt.name}</span>
-                    </label>
-                  ))}
-                </div>
-              </>
-            )}
-          </fieldset>
-        )}
-
-        {/* Projects */}
-        {!disableExtendedFilters && (
-          <fieldset className="space-y-2">
-            <legend className="text-sm font-semibold text-slate-900">Proyecto</legend>
-            {lookupsLoading ? (
-              <p className="text-xs text-slate-500">Cargando...</p>
-            ) : lookupsError ? (
-              <p className="text-xs text-red-600">{lookupsError}</p>
-            ) : (
-              <>
-                <input
-                  type="text"
-                  placeholder="Buscar..."
-                  value={searchProject}
-                  onChange={(e) => setSearchProject(e.target.value)}
-                  className="w-full px-2 py-1.5 text-sm border border-slate-300 rounded focus-visible:ring-2 focus-visible:ring-indigo-500"
-                />
-                <div className="space-y-1">
-                  {filteredProjects.map((opt) => (
-                    <label key={opt.id} className="flex items-center gap-2 cursor-pointer min-h-[44px] md:min-h-[32px]">
-                      <input
-                        type="checkbox"
-                        checked={draft.project.includes(opt.id)}
-                        onChange={() => handleToggleProject(opt.id)}
-                        className="w-4 h-4 rounded border-slate-300 focus-visible:ring-2 focus-visible:ring-indigo-500"
-                      />
-                      <span className="text-sm text-slate-700">{opt.name}</span>
-                    </label>
-                  ))}
-                </div>
-              </>
-            )}
-          </fieldset>
-        )}
-
-        {/* Severity */}
-        <fieldset className="space-y-2">
-          <legend className="text-sm font-semibold text-slate-900">Severidad</legend>
-          <div className="grid grid-cols-2 gap-2">
-            {FINDING_SEVERITY_OPTIONS.map((sev) => (
-              <label key={sev} className="flex items-center gap-2 cursor-pointer">
+      {/* Content */}
+      <div className="p-4 space-y-4 max-h-96 overflow-y-auto">
+        {/* Assignee */}
+        <div className={disableExtendedFilters ? 'opacity-50 pointer-events-none' : ''}>
+          <label className="block text-sm font-medium mb-2">Asignado a</label>
+          <input
+            type="text"
+            placeholder="Buscar..."
+            value={assigneeSearch}
+            onChange={(e) => setAssigneeSearch(e.target.value)}
+            className="w-full px-3 py-2 border border-slate-300 rounded-lg mb-2 text-sm focus-visible:ring-2 focus-visible:ring-indigo-500"
+            disabled={lookupsLoading}
+          />
+          <div className="space-y-1 max-h-32 overflow-y-auto">
+            {filteredAssignees.map((a) => (
+              <label key={a.id} className="flex items-center gap-2 cursor-pointer text-sm">
                 <input
                   type="checkbox"
-                  checked={draft.severity.includes(sev)}
-                  onChange={() => handleToggleSeverity(sev)}
-                  className="w-4 h-4 rounded border-slate-300 focus-visible:ring-2 focus-visible:ring-indigo-500"
+                  checked={draft.assignee.includes(a.id)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setDraft((d) => ({ ...d, assignee: [...d.assignee, a.id] }))
+                    } else {
+                      setDraft((d) => ({ ...d, assignee: d.assignee.filter((x) => x !== a.id) }))
+                    }
+                  }}
+                  className="w-3 h-3 rounded border-slate-300"
                 />
-                <span className="text-sm text-slate-700">{SEVERITY_LABELS_ES[sev]}</span>
+                {a.name}
               </label>
             ))}
           </div>
-        </fieldset>
+          {disableExtendedFilters && <p className="text-xs text-slate-500 mt-1">No disponible sin Elasticsearch</p>}
+        </div>
 
-        {/* Date Range */}
-        <fieldset className="space-y-2">
-          <legend className="text-sm font-semibold text-slate-900">Rango de fechas</legend>
-          <div className="grid grid-cols-2 gap-2">
-            <div>
-              <label className="text-xs text-slate-600">Desde</label>
-              <input
-                type="date"
-                value={draft.dateFrom ? draft.dateFrom.split('T')[0] : ''}
-                onChange={(e) => {
-                  if (e.target.value) {
-                    setDraft((prev) => ({
-                      ...prev,
-                      dateFrom: `${e.target.value}T00:00:00Z`,
-                    }))
-                  } else {
-                    setDraft((prev) => ({
-                      ...prev,
-                      dateFrom: undefined,
-                    }))
-                  }
-                }}
-                className="w-full px-2 py-1.5 text-sm border border-slate-300 rounded focus-visible:ring-2 focus-visible:ring-indigo-500"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-slate-600">Hasta</label>
-              <input
-                type="date"
-                value={draft.dateTo ? draft.dateTo.split('T')[0] : ''}
-                onChange={(e) => {
-                  if (e.target.value) {
-                    setDraft((prev) => ({
-                      ...prev,
-                      dateTo: `${e.target.value}T23:59:59Z`,
-                    }))
-                  } else {
-                    setDraft((prev) => ({
-                      ...prev,
-                      dateTo: undefined,
-                    }))
-                  }
-                }}
-                className="w-full px-2 py-1.5 text-sm border border-slate-300 rounded focus-visible:ring-2 focus-visible:ring-indigo-500"
-              />
-            </div>
+        {/* Project */}
+        <div className={disableExtendedFilters ? 'opacity-50 pointer-events-none' : ''}>
+          <label className="block text-sm font-medium mb-2">Proyecto</label>
+          <input
+            type="text"
+            placeholder="Buscar..."
+            value={projectSearch}
+            onChange={(e) => setProjectSearch(e.target.value)}
+            className="w-full px-3 py-2 border border-slate-300 rounded-lg mb-2 text-sm focus-visible:ring-2 focus-visible:ring-indigo-500"
+            disabled={lookupsLoading}
+          />
+          <div className="space-y-1 max-h-32 overflow-y-auto">
+            {filteredProjects.map((p) => (
+              <label key={p.id} className="flex items-center gap-2 cursor-pointer text-sm">
+                <input
+                  type="checkbox"
+                  checked={draft.project.includes(p.id)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setDraft((d) => ({ ...d, project: [...d.project, p.id] }))
+                    } else {
+                      setDraft((d) => ({ ...d, project: d.project.filter((x) => x !== p.id) }))
+                    }
+                  }}
+                  className="w-3 h-3 rounded border-slate-300"
+                />
+                {p.name}
+              </label>
+            ))}
           </div>
-        </fieldset>
+          {disableExtendedFilters && <p className="text-xs text-slate-500 mt-1">No disponible sin Elasticsearch</p>}
+        </div>
+
+        {/* Severity */}
+        <div>
+          <label className="block text-sm font-medium mb-2">Severidad</label>
+          <div className="grid grid-cols-2 gap-2">
+            {FINDING_SEVERITY_OPTIONS.map((sev) => (
+              <label key={sev} className="flex items-center gap-2 cursor-pointer text-sm">
+                <input
+                  type="checkbox"
+                  checked={draft.severity.includes(sev)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setDraft((d) => ({ ...d, severity: [...d.severity, sev] }))
+                    } else {
+                      setDraft((d) => ({ ...d, severity: d.severity.filter((x) => x !== sev) }))
+                    }
+                  }}
+                  className="w-3 h-3 rounded border-slate-300"
+                />
+                {SEVERITY_LABELS_ES[sev]}
+              </label>
+            ))}
+          </div>
+        </div>
+
+        {/* Date range */}
+        <div>
+          <label className="block text-sm font-medium mb-2">Rango de fechas</label>
+          <div className="flex gap-2">
+            <input
+              type="date"
+              value={draft.dateFrom || ''}
+              onChange={(e) => setDraft((d) => ({ ...d, dateFrom: e.target.value }))}
+              className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus-visible:ring-2 focus-visible:ring-indigo-500"
+            />
+            <input
+              type="date"
+              value={draft.dateTo || ''}
+              onChange={(e) => setDraft((d) => ({ ...d, dateTo: e.target.value }))}
+              className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus-visible:ring-2 focus-visible:ring-indigo-500"
+            />
+          </div>
+        </div>
 
         {/* Evidence */}
-        <fieldset className="space-y-2">
-          <legend className="text-sm font-semibold text-slate-900">Evidencia</legend>
+        <div>
+          <label className="block text-sm font-medium mb-2">Evidencia</label>
           <div className="space-y-1">
-            <label className="flex items-center gap-2 cursor-pointer min-h-[44px] md:min-h-[32px]">
+            <label className="flex items-center gap-2 cursor-pointer text-sm">
               <input
                 type="radio"
-                name="evidence"
-                value="all"
+                name="hasEvidence"
                 checked={draft.hasEvidence === undefined}
-                onChange={() => setDraft((prev) => ({ ...prev, hasEvidence: undefined }))}
-                className="w-4 h-4 border-slate-300 focus-visible:ring-2 focus-visible:ring-indigo-500"
+                onChange={() => setDraft((d) => ({ ...d, hasEvidence: undefined }))}
+                className="w-3 h-3 rounded-full border-slate-300"
               />
-              <span className="text-sm text-slate-700">Cualquiera</span>
+              Cualquiera
             </label>
-            <label className="flex items-center gap-2 cursor-pointer min-h-[44px] md:min-h-[32px]">
+            <label className="flex items-center gap-2 cursor-pointer text-sm">
               <input
                 type="radio"
-                name="evidence"
-                value="true"
+                name="hasEvidence"
                 checked={draft.hasEvidence === true}
-                onChange={() => setDraft((prev) => ({ ...prev, hasEvidence: true }))}
-                className="w-4 h-4 border-slate-300 focus-visible:ring-2 focus-visible:ring-indigo-500"
+                onChange={() => setDraft((d) => ({ ...d, hasEvidence: true }))}
+                className="w-3 h-3 rounded-full border-slate-300"
               />
-              <span className="text-sm text-slate-700">Con evidencia</span>
+              Con evidencia
             </label>
-            <label className="flex items-center gap-2 cursor-pointer min-h-[44px] md:min-h-[32px]">
+            <label className="flex items-center gap-2 cursor-pointer text-sm">
               <input
                 type="radio"
-                name="evidence"
-                value="false"
+                name="hasEvidence"
                 checked={draft.hasEvidence === false}
-                onChange={() => setDraft((prev) => ({ ...prev, hasEvidence: false }))}
-                className="w-4 h-4 border-slate-300 focus-visible:ring-2 focus-visible:ring-indigo-500"
+                onChange={() => setDraft((d) => ({ ...d, hasEvidence: false }))}
+                className="w-3 h-3 rounded-full border-slate-300"
               />
-              <span className="text-sm text-slate-700">Sin evidencia</span>
+              Sin evidencia
             </label>
           </div>
-        </fieldset>
-
-        {disableExtendedFilters && (
-          <div className="p-2 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800">
-            Modo sin Elasticsearch: los filtros de Asignado múltiple, Proyecto múltiple y "Tiene evidencia" no están disponibles.
-          </div>
-        )}
+        </div>
       </div>
 
-      <div className="sticky bottom-0 p-4 border-t border-slate-200 bg-white rounded-b-2xl flex gap-2 justify-end">
+      {/* Footer */}
+      <div className="flex gap-2 p-4 border-t border-slate-200 bg-slate-50">
         <button
-          onClick={handleReset}
-          className="px-3 py-2 text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 rounded focus-visible:ring-2 focus-visible:ring-indigo-500"
+          onClick={handleClear}
+          className="flex-1 px-3 py-2 text-sm font-medium border border-slate-300 rounded-lg hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-indigo-500"
         >
           Limpiar
         </button>
         <button
           onClick={handleApply}
-          className="px-3 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded focus-visible:ring-2 focus-visible:ring-indigo-500"
+          className="flex-1 px-3 py-2 text-sm font-medium bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus-visible:ring-2 focus-visible:ring-indigo-500"
         >
           Aplicar
         </button>
       </div>
+
+      {/* Save filter */}
+      {activeCount > 0 && (
+        <div className="border-t border-slate-200 p-3 bg-slate-50 flex gap-2">
+          <input
+            type="text"
+            placeholder="Nombre del filtro..."
+            value={saveFilterName}
+            onChange={(e) => setSaveFilterName(e.target.value)}
+            className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus-visible:ring-2 focus-visible:ring-indigo-500"
+          />
+          <button
+            onClick={handleSaveFilter}
+            disabled={isSaving || !saveFilterName.trim()}
+            className="px-3 py-2 text-sm font-medium bg-amber-500 text-white rounded-lg hover:bg-amber-600 disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-indigo-500"
+          >
+            ⭐
+          </button>
+        </div>
+      )}
     </div>
   )
 }

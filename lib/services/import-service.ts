@@ -215,6 +215,7 @@ export class ImportService {
           severity: finding.severity,
           assigneeId: finding.assigneeId || undefined,
           projectId: finding.projectId,
+          evidenceCount: finding.evidence?.length || 0,
           createdAt: finding.createdAt,
           updatedAt: finding.updatedAt,
         }

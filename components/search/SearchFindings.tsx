@@ -173,7 +173,6 @@ export function SearchFindings() {
               onBulkStatus={batchActions.bulkUpdateStatus}
               onBulkPriority={batchActions.bulkUpdatePriority}
               onBulkAssign={batchActions.bulkAssign}
-              onBulkSetDueDate={batchActions.bulkSetDueDate}
               onExportCsv={handleCsvExport}
               assigneeOptions={assignees}
               isProcessing={batchActions.isProcessing}
@@ -331,6 +330,9 @@ export function SearchFindings() {
         {activeFilterCount > 0 && (
           <div className="mt-3">
             <FilterPreview
+              status={statusFilter}
+              priority={priorityFilter}
+              severity={advancedFilters.severity || []}
               filters={advancedFilters}
               assigneeLabels={assigneeLabels}
               projectLabels={projectLabels}
@@ -365,7 +367,7 @@ export function SearchFindings() {
                   dateTo: undefined,
                 }))
               }
-              onRemoveEvidence={() =>
+              onRemoveHasEvidence={() =>
                 setAdvancedFilters((prev) => ({
                   ...prev,
                   hasEvidence: undefined,
@@ -391,6 +393,9 @@ export function SearchFindings() {
               setAdvancedPanelOpen(false)
               setIsOpen(true)
             }}
+            onSaveAsNamedFilter={async (name, filters) => {
+              await savedFilters.saveFilter(name, filters, searchTerm)
+            }}
             assigneeOptions={assignees}
             projectOptions={projects}
             lookupsLoading={lookupsLoading}
@@ -403,18 +408,8 @@ export function SearchFindings() {
         {/* Search history dropdown */}
         <SearchHistory
           open={historyOpen}
-          recentHistory={searchHistory.recent}
-          savedFilters={savedFilters.saved}
-          onSelectRecent={handleSelectRecent}
-          onSelectSaved={handleSelectSaved}
-          onRemoveRecent={searchHistory.removeEntry}
-          onRemoveSaved={savedFilters.deleteFilter}
-          onRenameSaved={savedFilters.renameFilter}
-          onClearHistory={searchHistory.clearAll}
-          onClose={() => setHistoryOpen(false)}
-          onSaveFilter={async (name, filters, q) => {
-            await savedFilters.saveFilter(name, { q, ...filters })
-          }}
+          onSelectHistory={handleSelectRecent}
+          onSelectSavedFilter={handleSelectSaved}
         />
 
         {/* Dropdown results */}
@@ -493,6 +488,9 @@ export function SearchFindings() {
               {activeFilterCount > 0 && (
                 <div className="px-4 py-2 border-b border-slate-200">
                   <FilterPreview
+                    status={statusFilter}
+                    priority={priorityFilter}
+                    severity={advancedFilters.severity || []}
                     filters={advancedFilters}
                     assigneeLabels={assigneeLabels}
                     projectLabels={projectLabels}
@@ -527,7 +525,7 @@ export function SearchFindings() {
                         dateTo: undefined,
                       }))
                     }
-                    onRemoveEvidence={() =>
+                    onRemoveHasEvidence={() =>
                       setAdvancedFilters((prev) => ({
                         ...prev,
                         hasEvidence: undefined,
@@ -656,6 +654,9 @@ export function SearchFindings() {
                         onApply={(filters) => {
                           setAdvancedFilters(filters)
                           setAdvancedPanelOpen(false)
+                        }}
+                        onSaveAsNamedFilter={async (name, filters) => {
+                          await savedFilters.saveFilter(name, filters, searchTerm)
                         }}
                         assigneeOptions={assignees}
                         projectOptions={projects}

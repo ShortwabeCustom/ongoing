@@ -1,7 +1,20 @@
 'use client'
 
-import { useCallback, useState } from 'react'
-import type { BulkUpdateApiResult } from '@/lib/types/search'
+import { useState, useCallback } from 'react'
+
+export interface BulkUpdateApiResult {
+  updated: number
+  failed: number
+  results: Array<{
+    id: string
+    status?: string
+    priority?: string
+    severity?: string
+    assigneeId?: string
+    version?: number
+    error?: string
+  }>
+}
 
 const MAX_BATCH_SIZE = 100
 
@@ -18,10 +31,7 @@ export function useBatchActions() {
   }, [])
 
   const selectMany = useCallback((ids: string[]) => {
-    setSelectedIds((prev) => {
-      const set = new Set([...prev, ...ids])
-      return Array.from(set)
-    })
+    setSelectedIds(ids)
   }, [])
 
   const clearSelection = useCallback(() => {
@@ -38,7 +48,7 @@ export function useBatchActions() {
       }
 
       if (selectedIds.length > MAX_BATCH_SIZE) {
-        setError(`Maximum ${MAX_BATCH_SIZE} items allowed per batch`)
+        setError(`Maximum ${MAX_BATCH_SIZE} items can be updated at once`)
         return
       }
 
@@ -55,55 +65,55 @@ export function useBatchActions() {
           }),
         })
 
-        const result: BulkUpdateApiResult = await response.json()
-        setLastResult(result)
+        const result = await response.json()
 
-        if (!response.ok) {
-          if (response.status === 207) {
-            // Partial success: keep failed items selected
-            const failedIds = result.results
-              .filter((r) => r.error)
-              .map((r) => r.id)
-            setSelectedIds(failedIds)
-            setError(
-              `${result.failed} item(s) failed. Keep retrying selected items.`,
-            )
-          } else {
-            // Full failure
-            setError(result.results?.[0]?.error || 'Batch update failed')
-            // Keep selection intact for retry
-          }
+        if (response.status === 207) {
+          // Partial success: keep only failed ids selected for retry
+          const failedIds = (result.results || [])
+            .filter((r: any) => r.error)
+            .map((r: any) => r.id)
+          setSelectedIds(failedIds)
+          setError(`${result.failed} items failed, ${result.updated} updated`)
+        } else if (response.ok) {
+          // Full success
+          setSelectedIds([])
+          setError(null)
+        } else if (response.status === 401 || response.status === 403) {
+          setError('You do not have permission to perform this action')
         } else {
-          // Success
-          clearSelection()
+          throw new Error('Request failed')
         }
+
+        setLastResult(result)
       } catch (err) {
-        const msg = err instanceof Error ? err.message : 'Network error'
-        setError(msg)
+        const errMsg = err instanceof Error ? err.message : 'Unknown error'
+        setError(errMsg)
+        setLastResult(null)
       } finally {
         setIsProcessing(false)
       }
     },
-    [selectedIds, clearSelection],
+    [selectedIds],
   )
 
   const bulkUpdateStatus = useCallback(
-    (status: string) => performUpdate({ status }),
+    async (status: string) => {
+      await performUpdate({ status })
+    },
     [performUpdate],
   )
 
   const bulkUpdatePriority = useCallback(
-    (priority: string) => performUpdate({ priority }),
+    async (priority: string) => {
+      await performUpdate({ priority })
+    },
     [performUpdate],
   )
 
   const bulkAssign = useCallback(
-    (assigneeId: string | null) => performUpdate({ assigneeId }),
-    [performUpdate],
-  )
-
-  const bulkSetDueDate = useCallback(
-    (dueDate: string) => performUpdate({ dueDate }),
+    async (assigneeId: string | null) => {
+      await performUpdate({ assigneeId })
+    },
     [performUpdate],
   )
 
@@ -116,7 +126,6 @@ export function useBatchActions() {
     bulkUpdateStatus,
     bulkUpdatePriority,
     bulkAssign,
-    bulkSetDueDate,
     isProcessing,
     error,
     lastResult,

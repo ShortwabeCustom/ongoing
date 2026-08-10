@@ -1,30 +1,30 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import type { LookupOption } from '@/lib/types/search'
+import { useState, useEffect } from 'react'
+import { LookupOption } from '@/lib/types/search'
 
-interface UseLookups {
+interface UseLookupResult {
   assignees: LookupOption[]
   projects: LookupOption[]
   isLoading: boolean
   error: string | null
 }
 
-export function useLookups(projectId?: string, userId?: string): UseLookups {
+export function useLookups(): UseLookupResult {
   const [assignees, setAssignees] = useState<LookupOption[]>([])
   const [projects, setProjects] = useState<LookupOption[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchLookups = async () => {
-      try {
-        setIsLoading(true)
-        setError(null)
+      setIsLoading(true)
+      setError(null)
 
+      try {
         const [assigneesRes, projectsRes] = await Promise.all([
-          fetch(`/api/search/lookups?type=assignees${projectId ? `&projectId=${projectId}` : ''}`),
-          fetch(`/api/search/lookups?type=projects${userId ? `&userId=${userId}` : ''}`),
+          fetch('/api/search/lookups?type=assignees'),
+          fetch('/api/search/lookups?type=projects'),
         ])
 
         if (!assigneesRes.ok || !projectsRes.ok) {
@@ -37,14 +37,14 @@ export function useLookups(projectId?: string, userId?: string): UseLookups {
         setAssignees(assigneesData.assignees || [])
         setProjects(projectsData.projects || [])
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error loading lookups')
+        setError(err instanceof Error ? err.message : 'Unknown error')
       } finally {
         setIsLoading(false)
       }
     }
 
     fetchLookups()
-  }, [projectId, userId])
+  }, [])
 
   return {
     assignees,

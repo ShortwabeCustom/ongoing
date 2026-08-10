@@ -362,6 +362,7 @@ export class FindingService {
         severity: updated_finding.severity,
         assigneeId: updated_finding.assigneeId || undefined,
         projectId: updated_finding.projectId,
+        evidenceCount: updated_finding.evidence?.length || 0,
         createdAt: updated_finding.createdAt,
         updatedAt: updated_finding.updatedAt,
       })

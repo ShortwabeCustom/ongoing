@@ -25,6 +25,7 @@ const INDEX_MAPPING = {
       severity: { type: 'keyword' },
       assigneeId: { type: 'keyword' },
       projectId: { type: 'keyword' },
+      evidenceCount: { type: 'integer' },
       createdAt: { type: 'date' },
       updatedAt: { type: 'date' },
     },

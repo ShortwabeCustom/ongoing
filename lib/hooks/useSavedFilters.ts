@@ -1,67 +1,76 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
-import { v4 as uuid } from 'uuid'
-import type { SavedFilterEntry } from '@/lib/types/search'
-import {
-  getAllFromStore,
-  putInStore,
-  deleteFromStore,
-  clearStore,
-} from '@/lib/indexeddb/search-db'
+import { useState, useEffect, useCallback } from 'react'
+import { AdvancedFilterValues } from '@/lib/types/search'
+import { getAllFromStore, addToStore, deleteFromStore, updateInStore, clearStore } from '@/lib/indexeddb/search-db'
+import { v4 as uuidv4 } from 'uuid'
 
-const SAVED_FILTERS_CAP = 20
+export interface SavedFilterEntry {
+  id: string
+  name: string
+  q?: string
+  status: string[]
+  priority: string[]
+  filters: AdvancedFilterValues
+  createdAt: number
+  updatedAt: number
+}
+
+const FILTERS_CAP = 20
 
 export function useSavedFilters() {
   const [saved, setSaved] = useState<SavedFilterEntry[]>([])
   const [isReady, setIsReady] = useState(false)
 
-  // Load on mount
   useEffect(() => {
-    const load = async () => {
+    const loadFilters = async () => {
       try {
-        const items = await getAllFromStore<SavedFilterEntry>('saved_filters')
-        // Sort by createdAt DESC
+        const items = await getAllFromStore('saved_filters')
         setSaved(items.sort((a, b) => b.createdAt - a.createdAt))
       } catch (err) {
-        console.error('Error loading saved filters:', err)
+        console.error('Failed to load saved filters:', err)
       } finally {
         setIsReady(true)
       }
     }
 
-    load()
+    if (typeof window !== 'undefined') {
+      loadFilters()
+    }
   }, [])
 
   const saveFilter = useCallback(
-    async (name: string, entry: Omit<SavedFilterEntry, 'id' | 'createdAt' | 'updatedAt'>) => {
+    async (name: string, filters: AdvancedFilterValues, q?: string) => {
       try {
-        const newEntry: SavedFilterEntry = {
-          ...entry,
-          id: uuid(),
+        const now = Date.now()
+        const newFilter: SavedFilterEntry = {
+          id: uuidv4(),
           name,
-          createdAt: Date.now(),
-          updatedAt: Date.now(),
+          q,
+          status: [],
+          priority: [],
+          filters,
+          createdAt: now,
+          updatedAt: now,
         }
 
-        await putInStore('saved_filters', newEntry)
+        await addToStore('saved_filters', newFilter)
 
-        // Update local state
         setSaved((prev) => {
-          const updated = [newEntry, ...prev]
-          // Evict oldest if over cap
-          if (updated.length > SAVED_FILTERS_CAP) {
-            const toRemove = updated.reduce((oldest, current) =>
-              current.createdAt < oldest.createdAt ? current : oldest,
-            )
-            // Fire-and-forget delete
-            void deleteFromStore('saved_filters', toRemove.id)
-            return updated.filter((x) => x.id !== toRemove.id)
+          const updated = [newFilter, ...prev]
+          // Evict oldest if > cap
+          if (updated.length > FILTERS_CAP) {
+            const toEvict = updated
+              .sort((a, b) => a.createdAt - b.createdAt)
+              .slice(FILTERS_CAP)
+            toEvict.forEach((f) => deleteFromStore('saved_filters', f.id).catch(console.error))
+            return updated.slice(0, FILTERS_CAP)
           }
           return updated
         })
       } catch (err) {
-        console.error('Error saving filter:', err)
+        console.error('Failed to save filter:', err)
+        throw err
       }
     },
     [],
@@ -69,30 +78,29 @@ export function useSavedFilters() {
 
   const renameFilter = useCallback(async (id: string, newName: string) => {
     try {
-      setSaved((prev) => {
-        const updated = prev.map((x) =>
-          x.id === id
-            ? { ...x, name: newName, updatedAt: Date.now() }
-            : x,
-        )
-        // Persist the change
-        const entry = updated.find((x) => x.id === id)
-        if (entry) {
-          void putInStore('saved_filters', entry)
-        }
-        return updated
-      })
+      const filter = saved.find((f) => f.id === id)
+      if (!filter) throw new Error('Filter not found')
+
+      const updated: SavedFilterEntry = {
+        ...filter,
+        name: newName,
+        updatedAt: Date.now(),
+      }
+
+      await updateInStore('saved_filters', updated)
+      setSaved((prev) => prev.map((f) => (f.id === id ? updated : f)))
     } catch (err) {
-      console.error('Error renaming filter:', err)
+      console.error('Failed to rename filter:', err)
+      throw err
     }
-  }, [])
+  }, [saved])
 
   const deleteFilter = useCallback(async (id: string) => {
     try {
       await deleteFromStore('saved_filters', id)
-      setSaved((prev) => prev.filter((x) => x.id !== id))
+      setSaved((prev) => prev.filter((f) => f.id !== id))
     } catch (err) {
-      console.error('Error deleting filter:', err)
+      console.error('Failed to delete filter:', err)
     }
   }, [])
 
@@ -101,7 +109,7 @@ export function useSavedFilters() {
       await clearStore('saved_filters')
       setSaved([])
     } catch (err) {
-      console.error('Error clearing saved filters:', err)
+      console.error('Failed to clear saved filters:', err)
     }
   }, [])
 
