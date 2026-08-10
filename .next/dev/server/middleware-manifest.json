@@ -3,23 +3,17 @@
   "middleware": {
     "/": {
       "files": [
-        "server/edge/chunks/[root-of-the-server]__20an3-8._.js",
-        "server/edge/chunks/0_tt_next_dist_esm_0-m0o8s._.js",
-        "server/edge/chunks/0_tt_next_dist_compiled_0120r3_._.js",
-        "server/edge/chunks/0_tt_next_dist_experimental_testmode_0ui7z2z._.js",
-        "server/edge/chunks/11hf_@prisma_client_runtime_client_mjs_00-wyua._.js",
-        "server/edge/chunks/11hf_@prisma_client_runtime_query_compiler_fast_bg_postgresql_wasm-base64_mjs_0tvmmkh._.js",
-        "server/edge/chunks/11hf_@prisma_client_runtime_query_compiler_fast_bg_postgresql_mjs_0swqg2i._.js",
-        "server/edge/chunks/node_modules__pnpm_1ub0ctl._.js",
-        "server/edge/chunks/0xd7_next_dist_esm_build_templates_edge-wrapper_1c735w7.js"
+        "server/edge/chunks/node_modules_next_dist_10tsl73._.js",
+        "server/edge/chunks/[root-of-the-server]__1zbig41._.js",
+        "server/edge/chunks/turbopack-node_modules_next_dist_esm_build_templates_edge-wrapper_1t9q9__.js"
       ],
       "name": "middleware",
       "page": "/",
-      "entrypoint": "server/edge/chunks/0xd7_next_dist_esm_build_templates_edge-wrapper_1c735w7.js",
+      "entrypoint": "server/edge/chunks/turbopack-node_modules_next_dist_esm_build_templates_edge-wrapper_1t9q9__.js",
       "matchers": [
         {
-          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?(?:\\/((?!_next\\/static|_next\\/image|favicon.ico).*))(\\.json|\\.rsc|\\.segments\\/.+\\.segment\\.rsc)?[\\/#\\?]?$",
-          "originalSource": "/((?!_next/static|_next/image|favicon.ico).*)"
+          "regexp": "^(?:\\/(_next\\/data\\/[^/]{1,}))?(?:\\/((?!_next\\/static|_next\\/image|favicon.ico|api).*))(\\.json|\\.rsc|\\.segments\\/.+\\.segment\\.rsc)?[\\/#\\?]?$",
+          "originalSource": "/((?!_next/static|_next/image|favicon.ico|api).*)"
         }
       ],
       "wasm": [],
@@ -27,9 +21,9 @@
       "env": {
         "__NEXT_BUILD_ID": "development",
         "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "9fDBBfmMpOxh8apLlL/erQstfTDFXp33UwAydS4wruI=",
-        "__NEXT_PREVIEW_MODE_ID": "b6e04294dc67a09d2c6341f0545c0388",
-        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "5dd5efe629cebba148be8f7a382593344ac969e4c870b7b98e7b568110d52541",
-        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "4617834a550c1a7c9b499b924421174df7b7cceaa7398b5d257b86813e19c46c"
+        "__NEXT_PREVIEW_MODE_ID": "01a74ec6e9d52cd6f94970b82c7c7861",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "924d8a2919c08fccc9da120e407e094d9909c80d46a012066fb33c42a33991fe",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "247287f9990ed1b679bc82fe76504fe8bb7f7f2c136701faca4d7d6bd15289ed"
       }
     }
   },

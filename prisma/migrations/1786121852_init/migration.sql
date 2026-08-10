@@ -105,6 +105,30 @@ CREATE INDEX "test_sessions_projectId_idx" ON "test_sessions"("projectId");
 CREATE INDEX "test_sessions_versionId_idx" ON "test_sessions"("versionId");
 CREATE INDEX "test_sessions_createdBy_idx" ON "test_sessions"("createdBy");
 
+-- CreateTable import_batches (moved before findings)
+CREATE TABLE "import_batches" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "projectId" TEXT NOT NULL,
+    "testSessionId" TEXT NOT NULL,
+    "originalFilename" TEXT NOT NULL,
+    "fileSize" INTEGER NOT NULL,
+    "importedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "totalRows" INTEGER NOT NULL,
+    "validRows" INTEGER NOT NULL,
+    "skippedRows" INTEGER NOT NULL,
+    "status" "ImportStatus" NOT NULL,
+    "errorMessage" TEXT,
+    "importedBy" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "import_batches_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "projects" ("id") ON DELETE CASCADE,
+    CONSTRAINT "import_batches_testSessionId_fkey" FOREIGN KEY ("testSessionId") REFERENCES "test_sessions" ("id") ON DELETE CASCADE,
+    CONSTRAINT "import_batches_importedBy_fkey" FOREIGN KEY ("importedBy") REFERENCES "users" ("id"),
+    CONSTRAINT "import_batches_testSessionId_key" UNIQUE ("testSessionId")
+);
+
+CREATE INDEX "import_batches_projectId_idx" ON "import_batches"("projectId");
+CREATE INDEX "import_batches_importedBy_idx" ON "import_batches"("importedBy");
+
 -- CreateTable findings
 CREATE TABLE "findings" (
     "id" TEXT NOT NULL PRIMARY KEY,
@@ -266,27 +290,3 @@ CREATE TABLE "audit_logs" (
 CREATE INDEX "audit_logs_entityType_entityId_idx" ON "audit_logs"("entityType", "entityId");
 CREATE INDEX "audit_logs_actorId_idx" ON "audit_logs"("actorId");
 CREATE INDEX "audit_logs_createdAt_idx" ON "audit_logs"("createdAt");
-
--- CreateTable import_batches
-CREATE TABLE "import_batches" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "projectId" TEXT NOT NULL,
-    "testSessionId" TEXT NOT NULL,
-    "originalFilename" TEXT NOT NULL,
-    "fileSize" INTEGER NOT NULL,
-    "importedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "totalRows" INTEGER NOT NULL,
-    "validRows" INTEGER NOT NULL,
-    "skippedRows" INTEGER NOT NULL,
-    "status" "ImportStatus" NOT NULL,
-    "errorMessage" TEXT,
-    "importedBy" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT "import_batches_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "projects" ("id") ON DELETE CASCADE,
-    CONSTRAINT "import_batches_testSessionId_fkey" FOREIGN KEY ("testSessionId") REFERENCES "test_sessions" ("id") ON DELETE CASCADE,
-    CONSTRAINT "import_batches_importedBy_fkey" FOREIGN KEY ("importedBy") REFERENCES "users" ("id"),
-    CONSTRAINT "import_batches_testSessionId_key" UNIQUE ("testSessionId")
-);
-
-CREATE INDEX "import_batches_projectId_idx" ON "import_batches"("projectId");
-CREATE INDEX "import_batches_importedBy_idx" ON "import_batches"("importedBy");

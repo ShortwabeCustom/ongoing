@@ -1,9 +1,10 @@
 import { Lucia } from "lucia";
 import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
-import { prisma } from "@/lib/prisma";
+import { getDb } from "@/lib/db-lazy";
 import { cookies } from "next/headers";
 
-const adapter = new PrismaAdapter(prisma.session, prisma.user);
+const db = getDb();
+const adapter = new PrismaAdapter(db.session, db.user);
 
 export const lucia = new Lucia(adapter, {
   sessionCookie: {
@@ -40,7 +41,7 @@ interface DatabaseUserAttributes {
 
 export async function getSession() {
   const cookieStore = await cookies();
-  const sessionId = cookieStore.get(lucia.sessionCookie.name)?.value;
+  const sessionId = cookieStore.get("auth_session")?.value;
 
   if (!sessionId) return null;
 

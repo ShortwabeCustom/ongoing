@@ -42,13 +42,14 @@ const testUsers = [
 ]
 
 async function main() {
+  const db = prisma()
   console.log('🌱 Seeding test users...')
 
   for (const user of testUsers) {
     try {
       const passwordHash = await hashPassword(TEST_PASSWORD)
 
-      const created = await prisma.user.upsert({
+      const created = await db.user.upsert({
         where: { email: user.email },
         update: { passwordHash, role: user.role },
         create: {
@@ -80,5 +81,6 @@ main()
     process.exit(1)
   })
   .finally(async () => {
-    await prisma.$disconnect()
+    const db = prisma()
+    await db.$disconnect()
   })
