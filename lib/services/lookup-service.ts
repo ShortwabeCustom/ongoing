@@ -3,7 +3,6 @@ import { getDb } from '@/lib/db-lazy'
 export interface AssigneeOption {
   id: string
   name: string
-  avatar?: string | null
 }
 
 export interface ProjectOption {
@@ -20,10 +19,10 @@ export class LookupService {
     const db = getDb()
 
     if (projectId) {
-      // Get users who are members of this project
+      // Get users who are members of this project (exclude VIEWER role)
       return db.user.findMany({
         where: {
-          role: { not: 'GUEST' },
+          role: { not: 'VIEWER' },
           deletedAt: null,
           projectMembers: {
             some: {
@@ -34,22 +33,20 @@ export class LookupService {
         select: {
           id: true,
           name: true,
-          avatar: true,
         },
         orderBy: { name: 'asc' },
       })
     }
 
-    // Get all non-guest users
+    // Get all non-viewer users
     return db.user.findMany({
       where: {
-        role: { not: 'GUEST' },
+        role: { not: 'VIEWER' },
         deletedAt: null,
       },
       select: {
         id: true,
         name: true,
-        avatar: true,
       },
       orderBy: { name: 'asc' },
     })
@@ -104,7 +101,6 @@ export class LookupService {
       select: {
         id: true,
         name: true,
-        avatar: true,
       },
     })
   }
