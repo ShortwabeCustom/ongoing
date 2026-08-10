@@ -3,21 +3,28 @@ import { z } from 'zod'
 import { getDb } from '@/lib/db-lazy'
 import { SearchService } from '@/lib/services/search-service'
 import { apiSuccess, apiError, ApiError } from '@/lib/utils/api-response'
+import { checkRBAC, RBAC_PERMISSIONS } from '@/lib/middleware/rbac'
 
 export const dynamic = 'force-dynamic'
 
 const BulkUpdateSchema = z.object({
-  ids: z.array(z.string().min(5)).min(1, 'At least one ID required'),
+  ids: z.array(z.string().min(5)).min(1, 'At least one ID required').max(100, 'Maximum 100 IDs allowed'),
   updates: z.object({
     status: z.enum(['OPEN', 'TRIAGED', 'IN_PROGRESS', 'READY_FOR_VALIDATION', 'VALIDATED', 'CLOSED', 'BLOCKED', 'REOPENED']).optional(),
     priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']).optional(),
     severity: z.enum(['COSMETIC', 'MINOR', 'MAJOR', 'BLOCKER']).optional(),
     assigneeId: z.string().optional().nullable(),
+    dueDate: z.string().datetime().optional().nullable(),
   }).refine((data) => Object.keys(data).length > 0, 'At least one field to update is required'),
 })
 
 export async function POST(request: NextRequest) {
   try {
+    const { valid, user, error } = await checkRBAC(request, {
+      allowedRoles: RBAC_PERMISSIONS.EDIT_FINDING_ANY,
+    })
+    if (!valid) return error
+
     const body = await request.json()
 
     // Validate payload
@@ -34,62 +41,56 @@ export async function POST(request: NextRequest) {
     const { ids, updates } = validationResult.data
     const db = getDb()
 
-    // Update all findings in parallel
-    const results = await Promise.all(
-      ids.map(async (id) => {
-        try {
-          const updated = await db.finding.updateMany({
-            where: {
-              id,
-              deletedAt: null,
-            },
-            data: {
-              ...updates,
-              version: { increment: 1 },
-              updatedAt: new Date(),
-              updatedBy: 'system', // TODO: use actual user from auth in FASE 7
-            },
-          })
+    // Prepare update data with metadata
+    const updateData = {
+      ...updates,
+      version: { increment: 1 },
+      updatedAt: new Date(),
+      updatedBy: user.id,
+    }
 
-          if (updated.count === 0) {
-            return {
-              id,
-              error: 'NOT_FOUND',
-            }
-          }
+    // FASE 14: Atomic transaction for consistency
+    const results = await db.$transaction(async (tx) => {
+      // Bulk update all findings in one operation
+      const updateResult = await tx.finding.updateMany({
+        where: {
+          id: { in: ids },
+          deletedAt: null,
+        },
+        data: updateData,
+      })
 
-          // Fetch updated record
-          const record = await db.finding.findUnique({
-            where: { id },
-            select: {
-              id: true,
-              status: true,
-              priority: true,
-              severity: true,
-              assigneeId: true,
-              version: true,
-              updatedAt: true,
-            },
-          })
+      // Fetch updated findings
+      const updatedFindings = await tx.finding.findMany({
+        where: {
+          id: { in: ids },
+          deletedAt: null,
+        },
+        select: {
+          id: true,
+          status: true,
+          priority: true,
+          severity: true,
+          assigneeId: true,
+          version: true,
+          updatedAt: true,
+        },
+      })
 
-          return {
-            id,
-            ...record,
-          }
-        } catch (error) {
-          return {
-            id,
-            error: error instanceof Error ? error.message : 'UNKNOWN_ERROR',
-          }
-        }
-      }),
-    )
+      // Map results: successful if found, failed if not found
+      const resultMap = new Map(updatedFindings.map((f) => [f.id, f]))
+      return ids.map((id) => {
+        const found = resultMap.get(id)
+        return found
+          ? { id, ...found }
+          : { id, error: 'NOT_FOUND' }
+      })
+    })
 
-    // Separate successful and failed updates
     const successful = results.filter((r) => !('error' in r))
     const failed = results.filter((r) => 'error' in r)
 
-    // FASE 12: Index updated findings in Elasticsearch (fire-and-forget)
+    // FASE 14: Index updated findings in Elasticsearch (fire-and-forget)
     if (successful.length > 0) {
       const findingsToIndex = await db.finding.findMany({
         where: {
@@ -120,6 +121,7 @@ export async function POST(request: NextRequest) {
           severity: finding.severity,
           assigneeId: finding.assigneeId || undefined,
           projectId: finding.projectId,
+          evidenceCount: finding.evidence?.length || 0,
           createdAt: finding.createdAt,
           updatedAt: finding.updatedAt,
         }
@@ -130,7 +132,7 @@ export async function POST(request: NextRequest) {
 
     // Determine response status
     const hasErrors = failed.length > 0
-    const statusCode = hasErrors ? 207 : 200 // 207 Multi-Status for partial success
+    const statusCode = hasErrors ? 207 : 200
 
     return apiSuccess(
       {

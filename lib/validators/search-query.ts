@@ -39,12 +39,38 @@ export const SearchQuerySchema = z.object({
       'Invalid severity value',
     ),
 
+  // FASE 14: Multiple assignees support (backward compatible with assigneeId)
+  assignee: z
+    .string()
+    .optional()
+    .transform(commaSeparatedArray),
+
   assigneeId: z.string().optional(),
+
+  // FASE 14: Multiple projects support (backward compatible with projectId)
+  project: z
+    .string()
+    .optional()
+    .transform(commaSeparatedArray),
 
   projectId: z.string().optional(),
 
+  // FASE 14: Date range support
+  dateFrom: z.string().datetime().optional(),
+  dateTo: z.string().datetime().optional(),
+
+  // Backward compatible with old param names
   createdAfter: z.string().datetime().optional(),
   createdBefore: z.string().datetime().optional(),
+
+  // FASE 14: Filter by evidence presence
+  hasEvidence: z
+    .string()
+    .optional()
+    .transform((val) => {
+      if (!val) return undefined
+      return val === 'true' || val === '1'
+    }),
 
   // Pagination
   limit: z
@@ -58,6 +84,15 @@ export const SearchQuerySchema = z.object({
     .optional()
     .transform((val) => (val ? parseInt(val, 10) : 0))
     .refine((val) => val >= 0, 'Offset must be non-negative'),
+}).transform((data) => {
+  // Normalize: use new params if provided, fall back to old params
+  return {
+    ...data,
+    assignee: data.assignee || (data.assigneeId ? [data.assigneeId] : undefined),
+    project: data.project || (data.projectId ? [data.projectId] : undefined),
+    dateFrom: data.dateFrom || data.createdAfter,
+    dateTo: data.dateTo || data.createdBefore,
+  }
 })
 
 export type SearchQuery = z.infer<typeof SearchQuerySchema>

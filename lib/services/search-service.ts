@@ -26,6 +26,8 @@ export interface SearchResponse {
     status?: Record<string, number>
     priority?: Record<string, number>
     severity?: Record<string, number>
+    assignee?: Array<{ id: string; doc_count: number }>
+    project?: Array<{ id: string; doc_count: number }>
   }
 }
 
@@ -38,6 +40,7 @@ export interface FindingDocument {
   severity: string
   assigneeId?: string
   projectId: string
+  evidenceCount?: number
   createdAt: Date
   updatedAt: Date
 }
@@ -63,6 +66,7 @@ export class SearchService {
           severity: finding.severity,
           assigneeId: finding.assigneeId,
           projectId: finding.projectId,
+          evidenceCount: finding.evidenceCount || 0,
           createdAt: finding.createdAt.toISOString(),
           updatedAt: finding.updatedAt.toISOString(),
         },
@@ -114,6 +118,7 @@ export class SearchService {
           severity: finding.severity,
           assigneeId: finding.assigneeId,
           projectId: finding.projectId,
+          evidenceCount: finding.evidenceCount || 0,
           createdAt: finding.createdAt.toISOString(),
           updatedAt: finding.updatedAt.toISOString(),
         },
@@ -157,23 +162,35 @@ export class SearchService {
       filters.push({ terms: { severity: query.severity } })
     }
 
-    if (query.assigneeId) {
-      filters.push({ term: { assigneeId: query.assigneeId } })
+    // FASE 14: Support both single and multiple assignees
+    if (query.assignee?.length) {
+      filters.push({ terms: { assigneeId: query.assignee } })
     }
 
-    if (query.projectId) {
-      filters.push({ term: { projectId: query.projectId } })
+    // FASE 14: Support both single and multiple projects
+    if (query.project?.length) {
+      filters.push({ terms: { projectId: query.project } })
     }
 
-    if (query.createdAfter || query.createdBefore) {
+    // FASE 14: Date range (supports both new and old param names)
+    if (query.dateFrom || query.dateTo) {
       const rangeFilter: any = {}
-      if (query.createdAfter) {
-        rangeFilter.gte = new Date(query.createdAfter).toISOString()
+      if (query.dateFrom) {
+        rangeFilter.gte = new Date(query.dateFrom).toISOString()
       }
-      if (query.createdBefore) {
-        rangeFilter.lte = new Date(query.createdBefore).toISOString()
+      if (query.dateTo) {
+        rangeFilter.lte = new Date(query.dateTo).toISOString()
       }
       filters.push({ range: { createdAt: rangeFilter } })
+    }
+
+    // FASE 14: Filter by evidence presence
+    if (query.hasEvidence !== undefined) {
+      if (query.hasEvidence) {
+        filters.push({ range: { evidenceCount: { gt: 0 } } })
+      } else {
+        filters.push({ term: { evidenceCount: 0 } })
+      }
     }
 
     const boolQuery: any = {
@@ -211,6 +228,12 @@ export class SearchService {
         },
         severity: {
           terms: { field: 'severity', size: 20 },
+        },
+        assignee: {
+          terms: { field: 'assigneeId.keyword', size: 50 },
+        },
+        project: {
+          terms: { field: 'projectId.keyword', size: 50 },
         },
       },
       from: query.offset,
@@ -259,6 +282,22 @@ export class SearchService {
       for (const bucket of result.aggregations.severity.buckets ?? []) {
         facets.severity[bucket.key] = bucket.doc_count
       }
+    }
+
+    // FASE 14: Assignee facets
+    if (result.aggregations?.assignee) {
+      facets.assignee = (result.aggregations.assignee.buckets ?? []).map((bucket: any) => ({
+        id: bucket.key,
+        doc_count: bucket.doc_count,
+      }))
+    }
+
+    // FASE 14: Project facets
+    if (result.aggregations?.project) {
+      facets.project = (result.aggregations.project.buckets ?? []).map((bucket: any) => ({
+        id: bucket.key,
+        doc_count: bucket.doc_count,
+      }))
     }
 
     return {

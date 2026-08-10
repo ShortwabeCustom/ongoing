@@ -15,11 +15,15 @@ export interface UseSearchResult {
       priority: string
       severity: string
       projectId: string
+      assigneeId?: string
+      createdAt?: string
     }>
     facets?: {
       status?: Record<string, number>
       priority?: Record<string, number>
       severity?: Record<string, number>
+      assignee?: Array<{ id: string; doc_count: number }>
+      project?: Array<{ id: string; doc_count: number }>
     }
   } | null
   isLoading: boolean
@@ -52,6 +56,12 @@ export function useSearch(query: Partial<SearchQuery>): UseSearchResult {
     if (q.projectId) params.append('projectId', q.projectId)
     if (q.createdAfter) params.append('createdAfter', q.createdAfter)
     if (q.createdBefore) params.append('createdBefore', q.createdBefore)
+    // FASE 14: Advanced filters
+    if (q.assignee?.length) params.append('assignee', q.assignee.join(','))
+    if (q.project?.length) params.append('project', q.project.join(','))
+    if (q.dateFrom) params.append('dateFrom', q.dateFrom)
+    if (q.dateTo) params.append('dateTo', q.dateTo)
+    if (q.hasEvidence !== undefined) params.append('hasEvidence', String(q.hasEvidence))
     if (q.limit) params.append('limit', q.limit.toString())
     if (q.offset !== undefined) params.append('offset', q.offset.toString())
 
@@ -59,7 +69,19 @@ export function useSearch(query: Partial<SearchQuery>): UseSearchResult {
   }, [])
 
   const fetchSearch = useCallback(async () => {
-    if (!debouncedQuery.q && !debouncedQuery.status?.length && !debouncedQuery.priority?.length && !debouncedQuery.severity?.length) {
+    const hasFilters = Boolean(
+      debouncedQuery.q ||
+      debouncedQuery.status?.length ||
+      debouncedQuery.priority?.length ||
+      debouncedQuery.severity?.length ||
+      debouncedQuery.assignee?.length ||
+      debouncedQuery.project?.length ||
+      debouncedQuery.dateFrom ||
+      debouncedQuery.dateTo ||
+      debouncedQuery.hasEvidence !== undefined
+    )
+
+    if (!hasFilters) {
       setData(null)
       setError(null)
       setIsFallback(false)
@@ -98,6 +120,20 @@ export function useSearch(query: Partial<SearchQuery>): UseSearchResult {
         if (debouncedQuery.severity?.length) {
           fallbackParams.append('severity', debouncedQuery.severity.join(','))
         }
+        // FASE 14: Map advanced filters to fallback (first value only)
+        if (debouncedQuery.assignee?.[0]) {
+          fallbackParams.append('assigneeId', debouncedQuery.assignee[0])
+        }
+        if (debouncedQuery.project?.[0]) {
+          fallbackParams.append('projectId', debouncedQuery.project[0])
+        }
+        if (debouncedQuery.dateFrom) {
+          fallbackParams.append('createdAfter', debouncedQuery.dateFrom)
+        }
+        if (debouncedQuery.dateTo) {
+          fallbackParams.append('createdBefore', debouncedQuery.dateTo)
+        }
+        // hasEvidence: no equivalent in FindingsQuerySchema, omit
         if (debouncedQuery.limit) {
           fallbackParams.append('limit', debouncedQuery.limit.toString())
         }
@@ -122,7 +158,8 @@ export function useSearch(query: Partial<SearchQuery>): UseSearchResult {
             priority: item.priority,
             severity: item.severity,
             projectId: item.projectId,
-            // No highlighted observation from fallback
+            assigneeId: item.assigneeId,
+            createdAt: item.createdAt,
           })),
           facets: undefined,
         })
