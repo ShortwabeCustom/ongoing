@@ -6,11 +6,6 @@ import { apiSuccess, apiError } from '@/lib/utils/api-response'
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
-  const { valid, error } = await checkRBAC(request, {
-    allowedRoles: RBAC_PERMISSIONS.VIEW_ALL_FINDINGS,
-  })
-  if (!valid) return error
-
   try {
     const searchParams = request.nextUrl.searchParams
     const type = searchParams.get('type') // 'assignees' | 'projects'
