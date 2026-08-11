@@ -10,7 +10,7 @@ export interface UseAnalyticsOptions {
 }
 
 export function useAnalytics(options: UseAnalyticsOptions = {}) {
-  const { filters = {}, refreshInterval = 60000, initialData } = options
+  const { filters = { granularity: 'day' }, refreshInterval = 60000, initialData } = options
   const [data, setData] = useState<any | null>(initialData ?? null)
   const [isLoading, setIsLoading] = useState(!initialData)
   const [error, setError] = useState<string | null>(null)

@@ -31,7 +31,7 @@ export function EvidenceCard({
 
   const isImage = evidence.mimeType.startsWith('image/')
   const filename = evidence.originalFilename
-  const size = (evidence.fileSize / 1024 / 1024).toFixed(2)
+  const size = ((evidence.fileSize ?? 0) / 1024 / 1024).toFixed(2)
 
   const handleDelete = async () => {
     try {
@@ -77,7 +77,7 @@ export function EvidenceCard({
           <div className="absolute inset-0 z-50">
             <CaptionEditor
               evidenceId={evidence.id}
-              initialCaption={evidence.caption}
+              initialCaption={evidence.caption ?? undefined}
               onSave={onCaptionSave}
               onCancel={onEditCancel}
             />
@@ -156,7 +156,7 @@ export function EvidenceCard({
       {isEditing && (
         <CaptionEditor
           evidenceId={evidence.id}
-          initialCaption={evidence.caption}
+          initialCaption={evidence.caption ?? undefined}
           onSave={onCaptionSave}
           onCancel={onEditCancel}
         />

@@ -48,17 +48,6 @@ export async function POST(request: NextRequest) {
       throw new ApiError('VALIDATION_ERROR', 'Invalid input', fields, 400)
     }
 
-    // Validate file MIME type
-    if (!STORAGE_CONFIG.isAllowedType(file.type)) {
-      const allowedTypes = Object.keys(STORAGE_CONFIG.ALLOWED_TYPES).join(', ')
-      throw new ApiError(
-        'INVALID_FILE_TYPE',
-        `File type ${file.type} not supported. Supported: ${allowedTypes}`,
-        undefined,
-        415,
-      )
-    }
-
     // Validate file size
     if (file.size > STORAGE_CONFIG.MAX_FILE_SIZE) {
       const maxSizeMB = STORAGE_CONFIG.MAX_FILE_SIZE / (1024 * 1024)
@@ -105,6 +94,39 @@ export async function POST(request: NextRequest) {
           new ApiError(
             'INVALID_FILE_TYPE',
             `File type not supported. Supported: ${allowedTypes}`,
+            undefined,
+            415,
+          ),
+        )
+      }
+
+      if (error.message === 'UNVERIFIABLE_FILE_TYPE') {
+        return apiError(
+          new ApiError(
+            'UNVERIFIABLE_FILE_TYPE',
+            'File signature could not be verified',
+            undefined,
+            415,
+          ),
+        )
+      }
+
+      if (error.message === 'MIME_MISMATCH') {
+        return apiError(
+          new ApiError(
+            'MIME_MISMATCH',
+            'File content does not match the declared MIME type',
+            undefined,
+            415,
+          ),
+        )
+      }
+
+      if (error.message === 'INVALID_FILE_EXTENSION') {
+        return apiError(
+          new ApiError(
+            'INVALID_FILE_EXTENSION',
+            'File extension does not match the detected MIME type',
             undefined,
             415,
           ),

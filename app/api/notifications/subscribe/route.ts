@@ -24,7 +24,19 @@ export async function POST(request: NextRequest) {
     const { valid, user, error } = await checkRBAC(request, {
       allowedRoles: RBAC_PERMISSIONS.RECEIVE_NOTIFICATIONS,
     })
-    if (!valid) return error
+    if (!valid) {
+      return (
+        error ??
+        apiError(
+          new ApiError(
+            'FORBIDDEN',
+            'No tienes permisos para gestionar notificaciones',
+            undefined,
+            403,
+          ),
+        )
+      )
+    }
 
     const body = await request.json()
 
@@ -58,12 +70,16 @@ export async function POST(request: NextRequest) {
       201
     )
   } catch (error: any) {
-    if (error instanceof ApiError) {
-      return error.toResponse()
-    }
-
     console.error('Error in POST /api/notifications/subscribe:', error)
-    return apiError('INTERNAL_SERVER_ERROR', 'Failed to save subscription', 500)
+    if (error instanceof ApiError) return apiError(error)
+    return apiError(
+      new ApiError(
+        'INTERNAL_SERVER_ERROR',
+        'Failed to save subscription',
+        undefined,
+        500,
+      ),
+    )
   }
 }
 
@@ -73,7 +89,19 @@ export async function DELETE(request: NextRequest) {
     const { valid, user, error } = await checkRBAC(request, {
       allowedRoles: RBAC_PERMISSIONS.RECEIVE_NOTIFICATIONS,
     })
-    if (!valid) return error
+    if (!valid) {
+      return (
+        error ??
+        apiError(
+          new ApiError(
+            'FORBIDDEN',
+            'No tienes permisos para gestionar notificaciones',
+            undefined,
+            403,
+          ),
+        )
+      )
+    }
 
     const body = await request.json()
 
@@ -103,11 +131,15 @@ export async function DELETE(request: NextRequest) {
       success: true,
     })
   } catch (error: any) {
-    if (error instanceof ApiError) {
-      return error.toResponse()
-    }
-
     console.error('Error in DELETE /api/notifications/subscribe:', error)
-    return apiError('INTERNAL_SERVER_ERROR', 'Failed to remove subscription', 500)
+    if (error instanceof ApiError) return apiError(error)
+    return apiError(
+      new ApiError(
+        'INTERNAL_SERVER_ERROR',
+        'Failed to remove subscription',
+        undefined,
+        500,
+      ),
+    )
   }
 }

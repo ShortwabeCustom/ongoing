@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import { Prisma } from '@/lib/generated/prisma/client'
 import { getDb } from '@/lib/db-lazy'
 import { FindingService } from '@/lib/services/finding-service'
 import { AnalyticsQuery } from '@/lib/validators/analytics-query'

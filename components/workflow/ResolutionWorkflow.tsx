@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { Finding } from '@/lib/generated/prisma'
+import { Finding } from '@/lib/generated/prisma/client'
 import { WorkflowClient } from '@/lib/api/workflow-client'
 import { getAllowedTransitions, ResolutionState } from '@/lib/validators/workflow'
 import { WorkflowStateIndicator } from './WorkflowStateIndicator'
@@ -32,7 +32,7 @@ export function ResolutionWorkflow({
 
   const handleCreateResolution = useCallback(async () => {
     if (!newDescription.trim()) {
-      toast({ title: 'Error', description: 'Description is required' })
+      toast({ title: 'Error', description: 'La descripción es requerida' })
       return
     }
 
@@ -46,12 +46,12 @@ export function ResolutionWorkflow({
         setResolutions([response.data, ...resolutions])
         setActiveResId(response.data.id)
         setNewDescription('')
-        toast({ title: 'Success', description: 'Resolution created' })
+        toast({ title: 'Listo', description: 'Resolución creada' })
       } else {
         toast({ title: 'Error', description: response.message })
       }
-    } catch (error) {
-      toast({ title: 'Error', description: 'Failed to create resolution' })
+    } catch {
+      toast({ title: 'Error', description: 'No se pudo crear la resolución' })
     } finally {
       setIsLoading(false)
     }
@@ -75,13 +75,13 @@ export function ResolutionWorkflow({
               r.id === activeResolution.id ? response.data : r,
             ),
           )
-          toast({ title: 'Success', description: `State changed to ${newState}` })
+          toast({ title: 'Listo', description: `Estado actualizado a ${newState}` })
           await onStateChange?.(newState)
         } else {
           toast({ title: 'Error', description: response.message })
         }
-      } catch (error) {
-        toast({ title: 'Error', description: 'Failed to update state' })
+    } catch {
+      toast({ title: 'Error', description: 'No se pudo actualizar el estado' })
       } finally {
         setIsLoading(false)
       }
@@ -92,28 +92,28 @@ export function ResolutionWorkflow({
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold mb-4">Resolution Workflow</h3>
+        <h3 className="mb-4 text-lg font-semibold text-[#17251f]">Workflow de resolución</h3>
 
         {/* Resolution list */}
-        <div className="space-y-2 mb-4">
+        <div className="mb-4 space-y-2">
           {resolutions.length === 0 ? (
-            <p className="text-gray-500 dark:text-gray-400">No resolutions yet</p>
+            <p className="text-sm text-[#65766e]">Sin resoluciones registradas</p>
           ) : (
             resolutions.map((res) => (
               <button
                 key={res.id}
                 onClick={() => setActiveResId(res.id)}
-                className={`w-full text-left p-3 rounded-lg border-2 transition ${
+                className={`w-full rounded-lg border p-3 text-left transition ${
                   activeResId === res.id
-                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-950'
-                    : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                    ? 'border-[#00a85a] bg-[#f3fbf5]'
+                    : 'border-[#dbe4dd] bg-white hover:border-[#b9c8c0]'
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
-                    <p className="font-medium text-sm truncate">{res.description}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      {new Date(res.createdAt).toLocaleDateString()}
+                    <p className="truncate text-sm font-semibold text-[#17251f]">{res.description}</p>
+                    <p className="text-xs text-[#65766e]">
+                      {new Date(res.createdAt).toLocaleDateString('es-ES')}
                     </p>
                   </div>
                   <WorkflowStateIndicator state={res.state} />
@@ -126,9 +126,9 @@ export function ResolutionWorkflow({
 
       {/* Active resolution details */}
       {activeResolution && (
-        <div className="border rounded-lg p-4 space-y-4">
+        <div className="space-y-4 rounded-lg border border-[#dbe4dd] bg-[#f7faf5] p-4">
           <div>
-            <label className="text-sm font-semibold">Current State</label>
+            <label className="text-sm font-semibold text-[#3d4d45]">Estado actual</label>
             <div className="mt-2">
               <WorkflowStateIndicator
                 state={activeResolution.state}
@@ -140,8 +140,8 @@ export function ResolutionWorkflow({
           {/* State transition buttons */}
           {!readOnly && nextStates.length > 0 && (
             <div>
-              <label className="text-sm font-semibold mb-2 block">
-                Change State
+              <label className="mb-2 block text-sm font-semibold text-[#3d4d45]">
+                Cambiar estado
               </label>
               <div className="flex flex-wrap gap-2">
                 {nextStates.map((state) => (
@@ -149,9 +149,9 @@ export function ResolutionWorkflow({
                     key={state}
                     onClick={() => handleStateChange(state)}
                     disabled={isLoading}
-                    className="px-4 py-2 text-sm font-medium rounded-lg bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 hover:bg-blue-200 dark:hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                    className="rounded-full bg-[#052b20] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0b3e30] disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    → {state}
+                    {state}
                   </button>
                 ))}
               </div>
@@ -161,8 +161,8 @@ export function ResolutionWorkflow({
           {/* Notes */}
           {activeResolution.notes && (
             <div>
-              <label className="text-sm font-semibold">Notes</label>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+              <label className="text-sm font-semibold text-[#3d4d45]">Notas</label>
+              <p className="mt-1 text-sm text-[#65766e]">
                 {activeResolution.notes}
               </p>
             </div>
@@ -171,9 +171,9 @@ export function ResolutionWorkflow({
           {/* Evidence count */}
           {activeResolution.evidence?.length > 0 && (
             <div>
-              <label className="text-sm font-semibold">Evidence Attached</label>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                {activeResolution.evidence.length} file(s)
+              <label className="text-sm font-semibold text-[#3d4d45]">Evidencia adjunta</label>
+              <p className="text-sm text-[#65766e]">
+                {activeResolution.evidence.length} archivo(s)
               </p>
             </div>
           )}
@@ -182,24 +182,24 @@ export function ResolutionWorkflow({
 
       {/* Create new resolution */}
       {!readOnly && (
-        <div className="border-t pt-4">
-          <label className="text-sm font-semibold block mb-2">
-            New Resolution
+        <div className="border-t border-[#dbe4dd] pt-4">
+          <label className="mb-2 block text-sm font-semibold text-[#3d4d45]">
+            Nueva resolución
           </label>
           <textarea
             value={newDescription}
             onChange={(e) => setNewDescription(e.target.value)}
-            placeholder="Describe the resolution approach..."
-            className="w-full p-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700"
+            placeholder="Describe el enfoque de resolución..."
+            className="pm-input min-h-24 w-full p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#00a85a]"
             rows={3}
             disabled={isLoading}
           />
           <button
             onClick={handleCreateResolution}
             disabled={isLoading || !newDescription.trim()}
-            className="mt-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            className="mt-2 rounded-full bg-[#052b20] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0b3e30] disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {isLoading ? 'Creating...' : 'Create Resolution'}
+            {isLoading ? 'Creando...' : 'Crear resolución'}
           </button>
         </div>
       )}

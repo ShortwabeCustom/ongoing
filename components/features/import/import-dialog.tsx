@@ -1,6 +1,14 @@
 'use client'
 
 import { useState } from 'react'
+import type { ChangeEvent } from 'react'
+import {
+  ArrowLeft,
+  CheckCircle2,
+  FileSpreadsheet,
+  RotateCcw,
+  UploadCloud,
+} from 'lucide-react'
 import { PreviewTable } from './preview-table'
 import type { ImportPreviewResult } from '@/lib/validators/import'
 
@@ -18,7 +26,7 @@ export function ImportDialog({ projectId, onSuccess }: ImportDialogProps) {
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
     if (!selectedFile) return
 
@@ -38,14 +46,14 @@ export function ImportDialog({ projectId, onSuccess }: ImportDialogProps) {
 
       if (!response.ok) {
         const data = await response.json()
-        throw new Error(data.error || 'Failed to generate preview')
+        throw new Error(data.error || 'No se pudo generar la vista previa')
       }
 
       const result = await response.json()
       setPreview(result)
       setStep('preview')
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error')
+      setError(err instanceof Error ? err.message : 'Error desconocido')
     } finally {
       setIsLoading(false)
     }
@@ -68,14 +76,14 @@ export function ImportDialog({ projectId, onSuccess }: ImportDialogProps) {
 
       if (!response.ok) {
         const data = await response.json()
-        throw new Error(data.error || 'Failed to confirm import')
+        throw new Error(data.error || 'No se pudo confirmar la importación')
       }
 
       const result = await response.json()
       setStep('done')
       onSuccess?.(result.importBatchId)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error')
+      setError(err instanceof Error ? err.message : 'Error desconocido')
       setStep('preview')
     } finally {
       setIsLoading(false)
@@ -83,12 +91,20 @@ export function ImportDialog({ projectId, onSuccess }: ImportDialogProps) {
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto p-6 bg-white rounded-lg border border-gray-200">
-      <h2 className="text-2xl font-bold mb-6">Import Findings</h2>
+    <div className="pm-card w-full overflow-hidden">
+      <div className="flex items-start justify-between gap-4 border-b border-[#dbe4dd] bg-white px-5 py-4">
+        <div>
+          <p className="text-xs font-semibold uppercase text-[#00a85a]">Carga histórica</p>
+          <h2 className="mt-1 text-xl font-semibold text-[#17251f]">Importar hallazgos</h2>
+        </div>
+        <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#052b20] text-white">
+          <FileSpreadsheet className="h-5 w-5" />
+        </div>
+      </div>
 
       {step === 'upload' && (
-        <div className="space-y-4">
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+        <div className="space-y-4 p-5">
+          <div className="pm-card-subtle border-dashed p-8 text-center">
             <input
               type="file"
               accept=".csv,.xlsx"
@@ -101,14 +117,20 @@ export function ImportDialog({ projectId, onSuccess }: ImportDialogProps) {
               htmlFor="file-input"
               className="block cursor-pointer"
             >
-              <p className="text-gray-600 mb-2">
-                {isLoading ? 'Processing...' : 'Drag and drop your CSV or XLSX file here, or click to select'}
+              <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-lg bg-white text-[#052b20] shadow-sm">
+                <UploadCloud className="h-6 w-6" />
+              </span>
+              <p className="mt-4 text-base font-semibold text-[#17251f]">
+                {isLoading ? 'Procesando archivo...' : 'Selecciona un CSV o XLSX'}
               </p>
-              {file && <p className="text-sm text-gray-500">Selected: {file.name}</p>}
+              <p className="mt-1 text-sm text-[#65766e]">
+                Los registros se validan antes de crear nuevos hallazgos.
+              </p>
+              {file && <p className="mt-3 text-sm font-medium text-[#052b20]">{file.name}</p>}
             </label>
           </div>
           {error && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded text-red-700">
+            <div className="rounded-lg border border-[#f6b5aa] bg-[#fff1ee] p-4 text-sm text-[#9b321f]">
               {error}
             </div>
           )}
@@ -116,24 +138,40 @@ export function ImportDialog({ projectId, onSuccess }: ImportDialogProps) {
       )}
 
       {step === 'preview' && preview && (
-        <div className="space-y-4">
-          <div className="bg-blue-50 border border-blue-200 p-4 rounded">
-            <h3 className="font-semibold mb-2">Import Summary</h3>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>Total Rows: <span className="font-bold">{preview.summary.totalRows}</span></div>
-              <div>Valid Rows: <span className="font-bold text-green-600">{preview.summary.validRows}</span></div>
-              <div>Skipped: <span className="font-bold text-yellow-600">{preview.summary.skippedRows}</span></div>
-              <div>New Findings: <span className="font-bold">{preview.summary.newFindings}</span></div>
+        <div className="space-y-5 p-5">
+          <div className="pm-card-subtle p-4">
+            <h3 className="font-semibold text-[#17251f]">Resumen de importación</h3>
+            <div className="mt-3 grid grid-cols-2 gap-2 text-sm sm:grid-cols-5">
+              <div className="rounded-lg bg-white p-3">
+                <div className="text-lg font-semibold text-[#17251f]">{preview.summary.totalRows}</div>
+                <div className="text-xs text-[#65766e]">Filas</div>
+              </div>
+              <div className="rounded-lg bg-white p-3">
+                <div className="text-lg font-semibold text-[#00a85a]">{preview.summary.validRows}</div>
+                <div className="text-xs text-[#65766e]">Válidas</div>
+              </div>
+              <div className="rounded-lg bg-white p-3">
+                <div className="text-lg font-semibold text-[#85540d]">{preview.summary.skippedRows}</div>
+                <div className="text-xs text-[#65766e]">Omitidas</div>
+              </div>
+              <div className="rounded-lg bg-white p-3">
+                <div className="text-lg font-semibold text-[#052b20]">{preview.summary.newFindings}</div>
+                <div className="text-xs text-[#65766e]">Nuevos</div>
+              </div>
+              <div className="rounded-lg bg-white p-3">
+                <div className="text-lg font-semibold text-[#65766e]">{preview.summary.duplicateRows}</div>
+                <div className="text-xs text-[#65766e]">Duplicados</div>
+              </div>
             </div>
           </div>
 
           {preview.incidences.length > 0 && (
-            <div className="bg-yellow-50 border border-yellow-200 p-4 rounded">
-              <h4 className="font-semibold mb-2">Issues Found</h4>
+            <div className="rounded-lg border border-[#f2b84b]/50 bg-[#fff8e8] p-4">
+              <h4 className="mb-2 font-semibold text-[#17251f]">Incidencias detectadas</h4>
               <ul className="text-sm space-y-1">
                 {preview.incidences.slice(0, 5).map((inc, idx) => (
-                  <li key={idx} className="text-yellow-700">
-                    Row {inc.row}: {inc.message}
+                  <li key={idx} className="text-[#85540d]">
+                    Fila {inc.row}: {inc.message}
                   </li>
                 ))}
               </ul>
@@ -143,7 +181,7 @@ export function ImportDialog({ projectId, onSuccess }: ImportDialogProps) {
           <PreviewTable rows={preview.preview.rows} />
 
           {error && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded text-red-700">
+            <div className="rounded-lg border border-[#f6b5aa] bg-[#fff1ee] p-4 text-sm text-[#9b321f]">
               {error}
             </div>
           )}
@@ -152,25 +190,28 @@ export function ImportDialog({ projectId, onSuccess }: ImportDialogProps) {
             <button
               onClick={() => setStep('upload')}
               disabled={isLoading}
-              className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50"
+              className="inline-flex h-10 items-center gap-2 rounded-full border border-[#dbe4dd] bg-white px-4 text-sm font-semibold text-[#17251f] transition hover:border-[#052b20] disabled:opacity-50"
             >
-              Back
+              <ArrowLeft className="h-4 w-4" />
+              Volver
             </button>
             <button
               onClick={handleConfirm}
               disabled={isLoading}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+              className="inline-flex h-10 items-center gap-2 rounded-full bg-[#052b20] px-4 text-sm font-semibold text-white transition hover:bg-[#0b3e30] disabled:opacity-50"
             >
-              {isLoading ? 'Importing...' : 'Confirm Import'}
+              <CheckCircle2 className="h-4 w-4" />
+              {isLoading ? 'Importando...' : 'Confirmar importación'}
             </button>
           </div>
         </div>
       )}
 
       {step === 'done' && (
-        <div className="space-y-4">
-          <div className="p-4 bg-green-50 border border-green-200 rounded text-green-700">
-            ✓ Import completed successfully!
+        <div className="space-y-4 p-5">
+          <div className="flex items-center gap-3 rounded-lg border border-[#bfeccc] bg-[#eefbf2] p-4 text-[#0b5d38]">
+            <CheckCircle2 className="h-5 w-5" />
+            <span className="text-sm font-medium">Importación completada correctamente</span>
           </div>
           <button
             onClick={() => {
@@ -179,9 +220,10 @@ export function ImportDialog({ projectId, onSuccess }: ImportDialogProps) {
               setPreview(null)
               setError(null)
             }}
-            className="w-full px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+            className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-[#052b20] px-4 text-sm font-semibold text-white transition hover:bg-[#0b3e30]"
           >
-            Import Another File
+            <RotateCcw className="h-4 w-4" />
+            Importar otro archivo
           </button>
         </div>
       )}

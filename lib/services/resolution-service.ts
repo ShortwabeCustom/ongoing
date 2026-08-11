@@ -176,7 +176,7 @@ export class ResolutionService {
     // Log to audit trail
     await this.logAudit(
       findingId,
-      'STATE_CHANGED',
+      'RESOLVE',
       userId,
       { state: current.state, notes: current.notes },
       { state: updated.state, notes: updated.notes },
@@ -195,14 +195,16 @@ export class ResolutionService {
     before: Record<string, any> | null,
     after: Record<string, any> | null,
   ) {
+    const prisma = getDb()
+
     return prisma.auditLog.create({
       data: {
-        findingId,
+        entityType: 'Finding',
+        entityId: findingId,
         action,
         actorId: userId,
-        changes: { before, after },
-        details: `${action}: ${before ? 'updated' : 'created'}`,
-        ipAddress: undefined,
+        before: before ?? undefined,
+        after: after ?? undefined,
       },
     })
   }
@@ -222,7 +224,7 @@ export class ResolutionService {
         const result = await this.updateResolutionState(
           findingId,
           update.resolutionId,
-          { state: update.state },
+          { state: update.state, evidence: [] },
           userId,
         )
         results.push({ id: update.resolutionId, success: true, result })

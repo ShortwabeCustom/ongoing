@@ -1,13 +1,23 @@
 import { getDb } from '@/lib/db-lazy'
 import { AuditLogFilter } from '@/lib/validators/workflow'
 
+function asRecord(value: unknown): Record<string, any> | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return null
+  }
+  return value as Record<string, any>
+}
+
 export class AuditService {
   /**
    * Get audit log entries for a finding
    */
   static async getAuditLog(findingId: string, filter: AuditLogFilter) {
     const prisma = getDb()
-    const where: Record<string, any> = { findingId }
+    const where: Record<string, any> = {
+      entityType: 'Finding',
+      entityId: findingId,
+    }
 
     if (filter.action) {
       where.action = filter.action
@@ -63,7 +73,7 @@ export class AuditService {
   static async exportAuditLog(findingId: string): Promise<string> {
     const prisma = getDb()
     const logs = await prisma.auditLog.findMany({
-      where: { findingId },
+      where: { entityType: 'Finding', entityId: findingId },
       include: {
         actor: {
           select: { name: true, email: true },
@@ -73,14 +83,14 @@ export class AuditService {
     })
 
     // CSV headers
-    const headers = ['Timestamp', 'Action', 'Actor', 'Email', 'Changes', 'Details']
+    const headers = ['Timestamp', 'Action', 'Actor', 'Email', 'Before', 'After']
     const rows = logs.map((log) => [
       log.createdAt.toISOString(),
       log.action,
       log.actor?.name || 'System',
       log.actor?.email || '',
-      log.changes ? JSON.stringify(log.changes) : '',
-      log.details || '',
+      log.before ? JSON.stringify(log.before) : '',
+      log.after ? JSON.stringify(log.after) : '',
     ])
 
     // Format CSV
@@ -103,19 +113,21 @@ export class AuditService {
       byActor,
       latestChanges,
     ] = await Promise.all([
-      prisma.auditLog.count({ where: { findingId } }),
+      prisma.auditLog.count({
+        where: { entityType: 'Finding', entityId: findingId },
+      }),
       prisma.auditLog.groupBy({
         by: ['action'],
-        where: { findingId },
+        where: { entityType: 'Finding', entityId: findingId },
         _count: { id: true },
       }),
       prisma.auditLog.groupBy({
         by: ['actorId'],
-        where: { findingId },
+        where: { entityType: 'Finding', entityId: findingId },
         _count: { id: true },
       }),
       prisma.auditLog.findMany({
-        where: { findingId },
+        where: { entityType: 'Finding', entityId: findingId },
         orderBy: { createdAt: 'desc' },
         take: 5,
         select: {
@@ -142,7 +154,7 @@ export class AuditService {
   static async getFieldHistory(findingId: string, fieldName: string) {
     const prisma = getDb()
     const logs = await prisma.auditLog.findMany({
-      where: { findingId },
+      where: { entityType: 'Finding', entityId: findingId },
       include: {
         actor: {
           select: { id: true, name: true, email: true },
@@ -152,18 +164,17 @@ export class AuditService {
     })
 
     return logs
-      .filter(
-        (log) =>
-          log.changes &&
-          (log.changes.before?.[fieldName] !== undefined ||
-            log.changes.after?.[fieldName] !== undefined),
-      )
+      .filter((log) => {
+        const before = asRecord(log.before)
+        const after = asRecord(log.after)
+        return before?.[fieldName] !== undefined || after?.[fieldName] !== undefined
+      })
       .map((log) => ({
         timestamp: log.createdAt,
         action: log.action,
         actor: log.actor,
-        before: log.changes?.before?.[fieldName],
-        after: log.changes?.after?.[fieldName],
+        before: asRecord(log.before)?.[fieldName],
+        after: asRecord(log.after)?.[fieldName],
       }))
   }
 
@@ -173,7 +184,7 @@ export class AuditService {
   static async clearAuditLog(findingId: string) {
     const prisma = getDb()
     return prisma.auditLog.deleteMany({
-      where: { findingId },
+      where: { entityType: 'Finding', entityId: findingId },
     })
   }
 }

@@ -10,12 +10,12 @@ export const ImportPreviewSchema = z.object({
       'Only XLSX or CSV files allowed'
     )
     .refine((f) => f.size <= MAX_FILE_SIZE, `File too large (max ${MAX_FILE_SIZE / 1024 / 1024}MB)`),
-  projectId: z.string().uuid(),
-  testSessionId: z.string().uuid().optional(),
+  projectId: z.string().min(5),
+  testSessionId: z.string().min(5).optional(),
 })
 
 export const ImportConfirmSchema = z.object({
-  batchId: z.string().uuid(),
+  batchId: z.string().min(5),
   confirm: z.boolean().refine((v) => v === true, 'Confirmation required'),
 })
 
@@ -31,6 +31,19 @@ export interface ImportPreviewResult {
     skippedRows: number
     newFindings: number
     potentialDuplicates: number
+    duplicateRows: number
+  }
+  file: {
+    name: string
+    type: 'csv' | 'xlsx'
+    sheets: Array<{
+      name: string
+      rows: number
+      headers: string[]
+      embeddedImageCount: number
+    }>
+    recognizedColumns: string[]
+    unknownColumns: string[]
   }
   incidences: ImportIncidence[]
   preview: {
@@ -40,7 +53,16 @@ export interface ImportPreviewResult {
 
 export interface ImportIncidence {
   row: number
-  type: 'EMPTY_OBSERVATION' | 'INVALID_STATUS' | 'INVALID_AREA' | 'MISSING_EVIDENCE' | 'OTHER'
+  sheet?: string
+  type:
+    | 'EMPTY_OBSERVATION'
+    | 'INVALID_STATUS'
+    | 'INVALID_AREA'
+    | 'MISSING_EVIDENCE'
+    | 'DUPLICATE'
+    | 'UNKNOWN_COLUMN'
+    | 'EMBEDDED_IMAGES_NOT_EXTRACTED'
+    | 'OTHER'
   message: string
   severity: 'warning' | 'error'
 }
@@ -51,5 +73,7 @@ export interface ImportPreviewRow {
   area: string
   status: string
   evidenceFiles: string[]
+  fingerprint: string
+  isDuplicate: boolean
   isValid: boolean
 }

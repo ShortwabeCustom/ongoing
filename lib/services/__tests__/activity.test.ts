@@ -1,11 +1,33 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { ActivityService } from '../activity';
 
-// Mock Prisma
-vi.mock('@/lib/db', () => ({
-  prisma: {
-    activity: {
-      create: vi.fn().mockResolvedValue({
+const mockActivity = vi.hoisted(() => ({
+  create: vi.fn(),
+  findMany: vi.fn(),
+  findFirst: vi.fn(),
+}));
+
+vi.mock('@/lib/db', () => {
+  const db = { activity: mockActivity };
+  return { default: db, db };
+});
+
+describe('ActivityService', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockActivity.create.mockResolvedValue({
+      id: 'activity-1',
+      userId: 'user-1',
+      action: 'FINDING_UPDATED',
+      resourceType: 'finding',
+      resourceId: 'finding-123',
+      details: null,
+      ipAddress: '127.0.0.1',
+      userAgent: 'test',
+      createdAt: new Date(),
+    });
+    mockActivity.findMany.mockResolvedValue([
+      {
         id: 'activity-1',
         userId: 'user-1',
         action: 'FINDING_UPDATED',
@@ -15,44 +37,25 @@ vi.mock('@/lib/db', () => ({
         ipAddress: '127.0.0.1',
         userAgent: 'test',
         createdAt: new Date(),
-      }),
-      findMany: vi.fn().mockResolvedValue([
-        {
-          id: 'activity-1',
-          userId: 'user-1',
-          action: 'FINDING_UPDATED',
-          resourceType: 'finding',
-          resourceId: 'finding-123',
-          details: null,
-          ipAddress: '127.0.0.1',
-          userAgent: 'test',
-          createdAt: new Date(),
-          user: {
-            id: 'user-1',
-            name: 'Test User',
-            email: 'test@example.com',
-            role: 'QA_LEAD',
-          },
+        user: {
+          id: 'user-1',
+          name: 'Test User',
+          email: 'test@example.com',
+          role: 'QA_LEAD',
         },
-      ]),
-      findFirst: vi.fn().mockResolvedValue({
-        id: 'activity-1',
-        userId: 'user-1',
-        action: 'FINDING_VIEWED',
-        resourceType: 'finding',
-        resourceId: 'finding-123',
-        details: null,
-        ipAddress: '127.0.0.1',
-        userAgent: 'test',
-        createdAt: new Date(),
-      }),
-    },
-  },
-}));
-
-describe('ActivityService', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
+      },
+    ]);
+    mockActivity.findFirst.mockResolvedValue({
+      id: 'activity-1',
+      userId: 'user-1',
+      action: 'FINDING_VIEWED',
+      resourceType: 'finding',
+      resourceId: 'finding-123',
+      details: null,
+      ipAddress: '127.0.0.1',
+      userAgent: 'test',
+      createdAt: new Date(),
+    });
   });
 
   describe('logActivity', () => {
@@ -125,13 +128,11 @@ describe('ActivityService', () => {
     });
 
     it('should return null for non-existent user', async () => {
-      // Mock to return null
-      vi.doMock('@/lib/db');
+      mockActivity.findFirst.mockResolvedValueOnce(null);
 
       const presence = await ActivityService.getUserPresence('non-existent');
 
-      // Could be null if not found
-      expect(presence || typeof presence === 'object').toBe(true);
+      expect(presence).toBeNull();
     });
   });
 

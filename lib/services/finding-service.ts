@@ -1,35 +1,91 @@
-import { Prisma } from '@prisma/client'
+import {
+  Prisma,
+  type ExperienceTag,
+  type FindingEffort,
+  type FindingPriority,
+  type FindingSeverity,
+  type FindingStatus,
+  type IncidenceType,
+} from '@/lib/generated/prisma/client'
 import { getDb } from '@/lib/db-lazy'
+import { type FindingStatusTransition, type FindingCreate, type FindingUpdate } from '@/lib/validators/finding'
 import { FindingsQuery, parseSort } from '@/lib/validators/query'
 import { SearchService } from '@/lib/services/search-service'
 
+type FindingPatch = Omit<FindingUpdate, 'version'>
+
+const FINDING_TRANSITIONS: Record<FindingStatus, FindingStatus[]> = {
+  OPEN: ['TRIAGED', 'OPEN'],
+  TRIAGED: ['IN_PROGRESS', 'OPEN', 'BLOCKED'],
+  IN_PROGRESS: ['READY_FOR_VALIDATION', 'BLOCKED', 'IN_PROGRESS'],
+  READY_FOR_VALIDATION: ['VALIDATED', 'IN_PROGRESS', 'READY_FOR_VALIDATION'],
+  VALIDATED: ['CLOSED', 'REOPENED', 'VALIDATED'],
+  CLOSED: ['REOPENED', 'CLOSED'],
+  BLOCKED: ['IN_PROGRESS', 'BLOCKED'],
+  REOPENED: ['IN_PROGRESS', 'REOPENED'],
+}
+
+function hasOwn<T extends object>(object: T, key: keyof T) {
+  return Object.prototype.hasOwnProperty.call(object, key)
+}
+
+function toAuditJson(value: unknown): Prisma.InputJsonValue | undefined {
+  if (value == null) return undefined
+  return JSON.parse(JSON.stringify(value)) as Prisma.InputJsonValue
+}
+
+function isValidFindingTransition(from: FindingStatus, to: FindingStatus) {
+  return FINDING_TRANSITIONS[from]?.includes(to) ?? false
+}
+
+function getAllowedFindingTransitions(status: FindingStatus) {
+  return FINDING_TRANSITIONS[status] ?? []
+}
+
+function getCount(row: { _count?: unknown }) {
+  if (typeof row._count === 'number') return row._count
+  if (row._count && typeof row._count === 'object' && '_all' in row._count) {
+    return Number((row._count as { _all: number })._all)
+  }
+  return 0
+}
+
 export class FindingService {
   /**
-   * Build WHERE clause from filters
+   * Build WHERE clause from API filters. This keeps filtering in PostgreSQL
+   * instead of pulling the inventory into the browser.
    */
   static buildWhereClause(filters: Partial<FindingsQuery>): Prisma.FindingWhereInput {
     const where: Prisma.FindingWhereInput = {
-      deletedAt: null, // Exclude soft-deleted findings
+      deletedAt: null,
     }
+    const and: Prisma.FindingWhereInput[] = []
 
     if (filters.status?.length) {
-      where.status = { in: filters.status as Prisma.FindingStatus[] }
+      where.status = { in: filters.status as FindingStatus[] }
     }
 
     if (filters.priority?.length) {
-      where.priority = { in: filters.priority as Prisma.FindingPriority[] }
+      where.priority = { in: filters.priority as FindingPriority[] }
     }
 
     if (filters.severity?.length) {
-      where.severity = { in: filters.severity as Prisma.FindingSeverity[] }
+      where.severity = { in: filters.severity as FindingSeverity[] }
     }
 
-    if (filters.area?.length) {
-      // area is stored in experienceTags relationship
-      // Use some() to match if ANY of the specified areas exist
+    const experienceTags = filters.experienceTag ?? filters.area
+    if (experienceTags?.length) {
       where.experienceTags = {
         some: {
-          experienceTag: { in: filters.area as Prisma.ExperienceTag[] },
+          experienceTag: { in: experienceTags as ExperienceTag[] },
+        },
+      }
+    }
+
+    if (filters.incidenceType?.length) {
+      where.incidenceTypes = {
+        some: {
+          incidenceType: { in: filters.incidenceType as IncidenceType[] },
         },
       }
     }
@@ -42,47 +98,66 @@ export class FindingService {
       where.projectId = filters.projectId
     }
 
-    // Date range filters
-    if (filters.createdAfter || filters.createdBefore) {
+    const testSessionId = filters.testSessionId ?? filters.session
+    if (testSessionId) {
+      where.testSessionId = testSessionId
+    }
+
+    const createdAfter = filters.createdAfter ?? filters.createdFrom
+    const createdBefore = filters.createdBefore ?? filters.createdTo
+    if (createdAfter || createdBefore) {
       where.createdAt = {}
-      if (filters.createdAfter) {
-        where.createdAt.gte = new Date(filters.createdAfter)
-      }
-      if (filters.createdBefore) {
-        where.createdAt.lte = new Date(filters.createdBefore)
-      }
+      if (createdAfter) where.createdAt.gte = new Date(createdAfter)
+      if (createdBefore) where.createdAt.lte = new Date(createdBefore)
     }
 
     if (filters.updatedAfter || filters.updatedBefore) {
       where.updatedAt = {}
-      if (filters.updatedAfter) {
-        where.updatedAt.gte = new Date(filters.updatedAfter)
-      }
-      if (filters.updatedBefore) {
-        where.updatedAt.lte = new Date(filters.updatedBefore)
-      }
+      if (filters.updatedAfter) where.updatedAt.gte = new Date(filters.updatedAfter)
+      if (filters.updatedBefore) where.updatedAt.lte = new Date(filters.updatedBefore)
     }
 
-    // Text search in observation
+    if (filters.screen) {
+      const screenFilter = { contains: filters.screen, mode: 'insensitive' as const }
+      and.push({
+        OR: [
+          { previousScreen: screenFilter },
+          { currentScreen: screenFilter },
+          { flowStep: screenFilter },
+        ],
+      })
+    }
+
     if (filters.search) {
-      where.observation = {
-        search: filters.search,
-      }
+      const textFilter = { contains: filters.search, mode: 'insensitive' as const }
+      and.push({
+        OR: [
+          { observation: textFilter },
+          { folio: textFilter },
+          { previousScreen: textFilter },
+          { currentScreen: textFilter },
+          { flowStep: textFilter },
+          { comments: { some: { text: textFilter } } },
+          { resolutions: { some: { description: textFilter } } },
+        ],
+      })
+    }
+
+    if (and.length > 0) {
+      where.AND = and
     }
 
     return where
   }
 
   /**
-   * List findings with filters, sorting, and pagination
+   * List findings with filters, sorting, and pagination.
    */
   static async listFindings(filters: FindingsQuery) {
     const db = getDb()
-
     const where = this.buildWhereClause(filters)
     const orderBy = parseSort(filters.sort)
 
-    // Execute queries in parallel
     const [items, total] = await Promise.all([
       db.finding.findMany({
         where,
@@ -90,22 +165,28 @@ export class FindingService {
         skip: filters.offset,
         take: filters.limit,
         include: {
+          project: {
+            select: { id: true, name: true },
+          },
+          testSession: {
+            select: { id: true, name: true, date: true, environment: true },
+          },
           creator: {
-            select: {
-              id: true,
-              email: true,
-              name: true,
-            },
+            select: { id: true, email: true, name: true },
           },
           assignee: {
-            select: {
-              id: true,
-              email: true,
-              name: true,
-            },
+            select: { id: true, email: true, name: true },
           },
           experienceTags: true,
           incidenceTypes: true,
+          _count: {
+            select: {
+              evidence: true,
+              comments: true,
+              resolutions: true,
+              validations: true,
+            },
+          },
         },
       }),
       db.finding.count({ where }),
@@ -121,7 +202,102 @@ export class FindingService {
   }
 
   /**
-   * Get single finding with full relations
+   * Create a finding in a project/test session with normalized categories.
+   */
+  static async createFinding(projectId: string, input: FindingCreate, createdBy: string) {
+    const db = getDb()
+    const status = (input.status ?? 'OPEN') as FindingStatus
+
+    const finding = await db.$transaction(async (tx) => {
+      const testSession = await tx.testSession.findFirst({
+        where: {
+          id: input.testSessionId,
+          projectId,
+          project: { deletedAt: null },
+        },
+        select: { id: true },
+      })
+
+      if (!testSession) {
+        throw new Error('TEST_SESSION_NOT_FOUND')
+      }
+
+      const created = await tx.finding.create({
+        data: {
+          projectId,
+          testSessionId: input.testSessionId,
+          folio: input.folio ?? undefined,
+          observation: input.observation,
+          status,
+          priority: input.priority,
+          severity: input.severity,
+          effort: input.effort,
+          previousScreen: input.previousScreen ?? undefined,
+          currentScreen: input.currentScreen ?? undefined,
+          flowStep: input.flowStep ?? undefined,
+          assigneeId: input.assigneeId ?? undefined,
+          dueDate: input.dueDate ?? undefined,
+          createdBy,
+          incidenceTypes: {
+            create: input.incidenceTypes.map((incidenceType) => ({ incidenceType })),
+          },
+          experienceTags: input.experienceTags?.length
+            ? {
+                create: input.experienceTags.map((experienceTag) => ({ experienceTag })),
+              }
+            : undefined,
+        },
+        include: {
+          incidenceTypes: true,
+          experienceTags: true,
+          evidence: true,
+          creator: { select: { id: true, email: true, name: true } },
+          assignee: { select: { id: true, email: true, name: true } },
+        },
+      })
+
+      await tx.findingStatusHistory.create({
+        data: {
+          findingId: created.id,
+          fromStatus: 'OPEN',
+          toStatus: status,
+          reason: status === 'OPEN' ? 'Finding created' : 'Initial imported status',
+          changedBy: createdBy,
+        },
+      })
+
+      await tx.auditLog.create({
+        data: {
+          entityType: 'Finding',
+          entityId: created.id,
+          action: 'CREATE',
+          actorId: createdBy,
+          after: toAuditJson(created),
+        },
+      })
+
+      return created
+    })
+
+    void SearchService.indexFinding({
+      id: finding.id,
+      observation: finding.observation,
+      evidenceDescriptions: '',
+      status: finding.status,
+      priority: finding.priority,
+      severity: finding.severity,
+      assigneeId: finding.assigneeId || undefined,
+      projectId: finding.projectId,
+      evidenceCount: 0,
+      createdAt: finding.createdAt,
+      updatedAt: finding.updatedAt,
+    })
+
+    return finding
+  }
+
+  /**
+   * Get single finding with full relations for detail screens.
    */
   static async getFinding(id: string) {
     const db = getDb()
@@ -129,52 +305,71 @@ export class FindingService {
     return db.finding.findUnique({
       where: { id },
       include: {
+        project: {
+          select: { id: true, name: true },
+        },
+        testSession: {
+          select: { id: true, name: true, date: true, environment: true },
+        },
         creator: {
-          select: {
-            id: true,
-            email: true,
-            name: true,
-          },
+          select: { id: true, email: true, name: true },
         },
         assignee: {
-          select: {
-            id: true,
-            email: true,
-            name: true,
-          },
+          select: { id: true, email: true, name: true },
         },
         updater: {
-          select: {
-            id: true,
-            email: true,
-            name: true,
-          },
+          select: { id: true, email: true, name: true },
         },
         evidence: {
+          where: { deletedAt: null },
+          orderBy: { createdAt: 'desc' },
           select: {
             id: true,
+            type: true,
             originalFilename: true,
             url: true,
             caption: true,
             mimeType: true,
             fileSize: true,
             createdAt: true,
+            resolutionId: true,
+            validationId: true,
           },
         },
-        resolution: {
+        resolutions: {
+          orderBy: { createdAt: 'desc' },
           select: {
             id: true,
-            status: true,
+            state: true,
             description: true,
+            notes: true,
+            assignedTo: true,
             createdAt: true,
+            updatedAt: true,
           },
         },
-        validation: {
+        validations: {
+          orderBy: { createdAt: 'desc' },
           select: {
             id: true,
             result: true,
-            feedback: true,
+            notes: true,
+            criteria: true,
+            validatedBy: true,
+            validatedAt: true,
             createdAt: true,
+          },
+        },
+        comments: {
+          orderBy: { createdAt: 'desc' },
+          include: {
+            creator: { select: { id: true, email: true, name: true } },
+          },
+        },
+        statusHistory: {
+          orderBy: { changedAt: 'desc' },
+          include: {
+            changer: { select: { id: true, email: true, name: true } },
           },
         },
         experienceTags: true,
@@ -184,8 +379,7 @@ export class FindingService {
   }
 
   /**
-   * Get finding with fresh signed URLs for evidence
-   * (Call this in GET endpoint instead of getFinding)
+   * Get finding with fresh signed URLs for evidence.
    */
   static async getFindingWithSignedUrls(id: string) {
     const finding = await this.getFinding(id)
@@ -194,7 +388,6 @@ export class FindingService {
       return finding
     }
 
-    // Regenerate signed URLs for all evidence files
     const { StorageService } = await import('@/lib/services/storage-service')
 
     const evidenceWithUrls = await Promise.all(
@@ -202,24 +395,14 @@ export class FindingService {
         try {
           const withUrl = await StorageService.getEvidenceWithUrl(ev.id)
           return {
-            id: withUrl.id,
-            originalFilename: withUrl.originalFilename,
+            ...ev,
             url: withUrl.url,
             urlExpiresAt: withUrl.urlExpiresAt,
-            caption: withUrl.caption,
-            mimeType: withUrl.mimeType,
-            fileSize: withUrl.fileSize,
             uploadedAt: withUrl.uploadedAt,
           }
         } catch {
-          // If URL generation fails, return evidence as-is
           return {
-            id: ev.id,
-            originalFilename: ev.originalFilename,
-            url: ev.url,
-            caption: ev.caption,
-            mimeType: ev.mimeType,
-            fileSize: ev.fileSize,
+            ...ev,
             uploadedAt: ev.createdAt,
           }
         }
@@ -233,178 +416,369 @@ export class FindingService {
   }
 
   /**
-   * Get findings statistics
+   * Aggregate operational statistics from the database.
    */
-  static async getStatistics() {
+  static async getStatistics(projectId?: string) {
     const db = getDb()
+    const where: Prisma.FindingWhereInput = {
+      deletedAt: null,
+      ...(projectId ? { projectId } : {}),
+    }
 
-    const [byStatus, byPriority, bySeverity, unassigned, total] = await Promise.all([
-      db.finding.groupBy({
-        by: ['status'],
-        where: { deletedAt: null },
-        _count: true,
+    const [
+      byStatus,
+      byPriority,
+      bySeverity,
+      byIncidenceType,
+      byExperienceTag,
+      byScreen,
+      byTestSession,
+      unassigned,
+      total,
+      openFindings,
+      validatedFindings,
+      closedFindings,
+      blockedFindings,
+      evidenceCount,
+    ] = await Promise.all([
+      db.finding.groupBy({ by: ['status'], where, _count: true }),
+      db.finding.groupBy({ by: ['priority'], where, _count: true }),
+      db.finding.groupBy({ by: ['severity'], where, _count: true }),
+      db.findingIncidenceType.groupBy({
+        by: ['incidenceType'],
+        where: { finding: where },
+        _count: { _all: true },
+      }),
+      db.findingExperienceTag.groupBy({
+        by: ['experienceTag'],
+        where: { finding: where },
+        _count: { _all: true },
       }),
       db.finding.groupBy({
-        by: ['priority'],
-        where: { deletedAt: null },
+        by: ['currentScreen'],
+        where,
         _count: true,
+        orderBy: { _count: { currentScreen: 'desc' } },
+        take: 25,
       }),
       db.finding.groupBy({
-        by: ['severity'],
-        where: { deletedAt: null },
+        by: ['testSessionId'],
+        where,
         _count: true,
+        orderBy: { _count: { testSessionId: 'desc' } },
+        take: 25,
       }),
-      db.finding.count({ where: { deletedAt: null, assigneeId: null } }),
-      db.finding.count({ where: { deletedAt: null } }),
+      db.finding.count({ where: { ...where, assigneeId: null } }),
+      db.finding.count({ where }),
+      db.finding.count({ where: { ...where, status: { in: ['OPEN', 'TRIAGED', 'IN_PROGRESS', 'REOPENED'] } } }),
+      db.finding.count({ where: { ...where, status: 'VALIDATED' } }),
+      db.finding.count({ where: { ...where, status: 'CLOSED' } }),
+      db.finding.count({ where: { ...where, status: 'BLOCKED' } }),
+      db.evidence.count({ where: { deletedAt: null, finding: where } }),
     ])
-
-    // Group by area (experienceTags)
-    const areaData = await db.finding.findMany({
-      where: { deletedAt: null },
-      select: {
-        experienceTags: {
-          select: {
-            experienceTag: true,
-          },
-        },
-      },
-    })
-
-    const byAreaMap = new Map<string, number>()
-    areaData.forEach((finding) => {
-      finding.experienceTags.forEach((tag) => {
-        const current = byAreaMap.get(tag.experienceTag) || 0
-        byAreaMap.set(tag.experienceTag, current + 1)
-      })
-    })
 
     return {
       total,
-      byStatus: Object.fromEntries(
-        byStatus.map((row) => [
-          row.status,
-          (row as any)._count,
-        ]),
-      ),
-      byPriority: Object.fromEntries(
-        byPriority.map((row) => [
-          row.priority,
-          (row as any)._count,
-        ]),
-      ),
-      bySeverity: Object.fromEntries(
-        bySeverity.map((row) => [
-          row.severity,
-          (row as any)._count,
-        ]),
-      ),
-      byArea: Object.fromEntries(byAreaMap),
+      totalFindings: total,
+      openFindings,
+      validatedFindings,
+      closedFindings,
+      blockedFindings,
+      evidenceCount,
+      byStatus: Object.fromEntries(byStatus.map((row) => [row.status, getCount(row)])),
+      statusDistribution: Object.fromEntries(byStatus.map((row) => [row.status, getCount(row)])),
+      byPriority: Object.fromEntries(byPriority.map((row) => [row.priority, getCount(row)])),
+      priorityDistribution: Object.fromEntries(byPriority.map((row) => [row.priority, getCount(row)])),
+      bySeverity: Object.fromEntries(bySeverity.map((row) => [row.severity, getCount(row)])),
+      severityDistribution: Object.fromEntries(bySeverity.map((row) => [row.severity, getCount(row)])),
+      byIncidenceType: Object.fromEntries(byIncidenceType.map((row) => [row.incidenceType, getCount(row)])),
+      byExperienceTag: Object.fromEntries(byExperienceTag.map((row) => [row.experienceTag, getCount(row)])),
+      byArea: Object.fromEntries(byExperienceTag.map((row) => [row.experienceTag, getCount(row)])),
+      byScreen: Object.fromEntries(byScreen.map((row) => [row.currentScreen ?? 'Unspecified', getCount(row)])),
+      byTestSession: Object.fromEntries(byTestSession.map((row) => [row.testSessionId, getCount(row)])),
       unassigned,
     }
   }
 
   /**
-   * Update finding with optimistic locking
+   * Update finding with optimistic locking and explicit allowlisted fields.
    */
   static async updateFinding(
     id: string,
-    updates: Prisma.FindingUpdateInput,
+    updates: FindingPatch,
     currentVersion: number,
     updatedBy: string,
+    reason?: string,
   ) {
     const db = getDb()
 
-    const updated = await db.finding.updateMany({
-      where: {
-        id,
-        version: currentVersion,
-        deletedAt: null,
-      },
-      data: {
-        ...updates,
+    await db.$transaction(async (tx) => {
+      const current = await tx.finding.findUnique({
+        where: { id },
+        include: {
+          incidenceTypes: true,
+          experienceTags: true,
+        },
+      })
+
+      if (!current) throw new Error('NOT_FOUND')
+      if (current.deletedAt) throw new Error('DELETED')
+      if (current.version !== currentVersion) throw new Error('VERSION_MISMATCH')
+
+      const nextStatus = updates.status as FindingStatus | undefined
+      if (nextStatus && nextStatus !== current.status && !isValidFindingTransition(current.status, nextStatus)) {
+        throw new Error(
+          `INVALID_STATUS_TRANSITION:${current.status}:${nextStatus}:${getAllowedFindingTransitions(current.status).join(',')}`,
+        )
+      }
+
+      const data: Prisma.FindingUncheckedUpdateManyInput = {
         version: { increment: 1 },
         updatedAt: new Date(),
         updatedBy,
-      },
-    })
+      }
 
-    if (updated.count === 0) {
-      // Check if finding exists to distinguish between not found and version mismatch
-      const finding = await db.finding.findUnique({
-        where: { id },
-        select: { version: true, deletedAt: true },
+      if (hasOwn(updates, 'folio')) data.folio = updates.folio ?? null
+      if (hasOwn(updates, 'observation') && updates.observation !== undefined) data.observation = updates.observation
+      if (hasOwn(updates, 'status') && updates.status !== undefined) data.status = updates.status as FindingStatus
+      if (hasOwn(updates, 'priority') && updates.priority !== undefined) data.priority = updates.priority as FindingPriority
+      if (hasOwn(updates, 'severity') && updates.severity !== undefined) data.severity = updates.severity as FindingSeverity
+      if (hasOwn(updates, 'effort') && updates.effort !== undefined) data.effort = updates.effort as FindingEffort
+      if (hasOwn(updates, 'previousScreen')) data.previousScreen = updates.previousScreen ?? null
+      if (hasOwn(updates, 'currentScreen')) data.currentScreen = updates.currentScreen ?? null
+      if (hasOwn(updates, 'flowStep')) data.flowStep = updates.flowStep ?? null
+      if (hasOwn(updates, 'assigneeId')) data.assigneeId = updates.assigneeId ?? null
+      if (hasOwn(updates, 'dueDate')) data.dueDate = updates.dueDate ?? null
+
+      const updated = await tx.finding.updateMany({
+        where: {
+          id,
+          version: currentVersion,
+          deletedAt: null,
+        },
+        data,
       })
 
-      if (!finding) {
-        throw new Error('NOT_FOUND')
+      if (updated.count === 0) throw new Error('VERSION_MISMATCH')
+
+      if (updates.incidenceTypes) {
+        await tx.findingIncidenceType.deleteMany({ where: { findingId: id } })
+        await tx.findingIncidenceType.createMany({
+          data: updates.incidenceTypes.map((incidenceType) => ({
+            findingId: id,
+            incidenceType,
+          })),
+          skipDuplicates: true,
+        })
       }
-      if (finding.deletedAt) {
-        throw new Error('DELETED')
+
+      if (updates.experienceTags) {
+        await tx.findingExperienceTag.deleteMany({ where: { findingId: id } })
+        if (updates.experienceTags.length > 0) {
+          await tx.findingExperienceTag.createMany({
+            data: updates.experienceTags.map((experienceTag) => ({
+              findingId: id,
+              experienceTag,
+            })),
+            skipDuplicates: true,
+          })
+        }
       }
 
-      throw new Error('VERSION_MISMATCH')
-    }
+      const after = await tx.finding.findUnique({
+        where: { id },
+        include: {
+          incidenceTypes: true,
+          experienceTags: true,
+        },
+      })
 
-    const updated_finding = await this.getFinding(id)
+      if (nextStatus && nextStatus !== current.status) {
+        await tx.findingStatusHistory.create({
+          data: {
+            findingId: id,
+            fromStatus: current.status,
+            toStatus: nextStatus,
+            reason,
+            changedBy: updatedBy,
+          },
+        })
 
-    // FASE 12: Index in Elasticsearch (fire-and-forget)
-    if (updated_finding) {
-      const evidenceDescriptions = (updated_finding.evidence ?? [])
+        await tx.auditLog.create({
+          data: {
+            entityType: 'Finding',
+            entityId: id,
+            action: 'STATUS_CHANGE',
+            actorId: updatedBy,
+            before: toAuditJson({ status: current.status, version: current.version }),
+            after: toAuditJson({ status: nextStatus, version: current.version + 1, reason }),
+          },
+        })
+      }
+
+      if (hasOwn(updates, 'assigneeId') && updates.assigneeId !== current.assigneeId) {
+        await tx.auditLog.create({
+          data: {
+            entityType: 'Finding',
+            entityId: id,
+            action: 'ASSIGN',
+            actorId: updatedBy,
+            before: toAuditJson({ assigneeId: current.assigneeId }),
+            after: toAuditJson({ assigneeId: updates.assigneeId ?? null }),
+          },
+        })
+      }
+
+      await tx.auditLog.create({
+        data: {
+          entityType: 'Finding',
+          entityId: id,
+          action: 'UPDATE',
+          actorId: updatedBy,
+          before: toAuditJson(current),
+          after: toAuditJson(after),
+        },
+      })
+    })
+
+    const updatedFinding = await this.getFinding(id)
+
+    if (updatedFinding) {
+      const evidenceDescriptions = (updatedFinding.evidence ?? [])
         .map((e) => [e.caption, e.originalFilename].filter(Boolean).join(' '))
         .join(' ')
 
       void SearchService.indexFinding({
-        id: updated_finding.id,
-        observation: updated_finding.observation,
+        id: updatedFinding.id,
+        observation: updatedFinding.observation,
         evidenceDescriptions,
-        status: updated_finding.status,
-        priority: updated_finding.priority,
-        severity: updated_finding.severity,
-        assigneeId: updated_finding.assigneeId || undefined,
-        projectId: updated_finding.projectId,
-        evidenceCount: updated_finding.evidence?.length || 0,
-        createdAt: updated_finding.createdAt,
-        updatedAt: updated_finding.updatedAt,
+        status: updatedFinding.status,
+        priority: updatedFinding.priority,
+        severity: updatedFinding.severity,
+        assigneeId: updatedFinding.assigneeId || undefined,
+        projectId: updatedFinding.projectId,
+        evidenceCount: updatedFinding.evidence?.length || 0,
+        createdAt: updatedFinding.createdAt,
+        updatedAt: updatedFinding.updatedAt,
       })
     }
 
-    return updated_finding
+    return updatedFinding
+  }
+
+  static async transitionFinding(
+    id: string,
+    input: FindingStatusTransition,
+    changedBy: string,
+  ) {
+    return this.updateFinding(
+      id,
+      { status: input.toStatus },
+      input.version,
+      changedBy,
+      input.reason,
+    )
+  }
+
+  static async getComments(findingId: string, limit = 50, offset = 0) {
+    const db = getDb()
+    const [items, total] = await Promise.all([
+      db.comment.findMany({
+        where: { findingId },
+        orderBy: { createdAt: 'desc' },
+        take: limit,
+        skip: offset,
+        include: {
+          creator: { select: { id: true, email: true, name: true } },
+        },
+      }),
+      db.comment.count({ where: { findingId } }),
+    ])
+
+    return { items, total, limit, offset }
+  }
+
+  static async addComment(findingId: string, text: string, createdBy: string) {
+    const db = getDb()
+
+    const comment = await db.$transaction(async (tx) => {
+      const finding = await tx.finding.findFirst({
+        where: { id: findingId, deletedAt: null },
+        select: { id: true },
+      })
+
+      if (!finding) throw new Error('NOT_FOUND')
+
+      const created = await tx.comment.create({
+        data: {
+          findingId,
+          text,
+          createdBy,
+        },
+        include: {
+          creator: { select: { id: true, email: true, name: true } },
+        },
+      })
+
+      await tx.auditLog.create({
+        data: {
+          entityType: 'Finding',
+          entityId: findingId,
+          action: 'UPDATE',
+          actorId: createdBy,
+          after: toAuditJson({ commentId: created.id, text: created.text }),
+        },
+      })
+
+      return created
+    })
+
+    return comment
   }
 
   /**
-   * Soft delete finding
+   * Soft delete finding.
    */
   static async deleteFinding(id: string, deletedBy: string) {
     const db = getDb()
 
-    const updated = await db.finding.updateMany({
-      where: {
-        id,
-        deletedAt: null,
-      },
-      data: {
-        deletedAt: new Date(),
-        updatedBy: deletedBy,
-        updatedAt: new Date(),
-      },
-    })
-
-    if (updated.count === 0) {
-      const finding = await db.finding.findUnique({
+    const deletedAt = new Date()
+    const updated = await db.$transaction(async (tx) => {
+      const current = await tx.finding.findUnique({
         where: { id },
-        select: { deletedAt: true },
+        select: { id: true, deletedAt: true },
       })
 
-      if (!finding) {
-        throw new Error('NOT_FOUND')
-      }
+      if (!current) throw new Error('NOT_FOUND')
+      if (current.deletedAt) throw new Error('ALREADY_DELETED')
 
-      throw new Error('ALREADY_DELETED')
-    }
+      const result = await tx.finding.updateMany({
+        where: { id, deletedAt: null },
+        data: {
+          deletedAt,
+          updatedBy: deletedBy,
+          updatedAt: deletedAt,
+        },
+      })
 
-    // FASE 12: Remove from Elasticsearch index (fire-and-forget)
+      if (result.count === 0) throw new Error('ALREADY_DELETED')
+
+      await tx.auditLog.create({
+        data: {
+          entityType: 'Finding',
+          entityId: id,
+          action: 'DELETE',
+          actorId: deletedBy,
+          before: toAuditJson(current),
+          after: toAuditJson({ id, deletedAt }),
+        },
+      })
+
+      return result
+    })
+
     void SearchService.removeFromIndex(id)
 
-    return { id, deletedAt: new Date() }
+    return { id, deletedAt, updated }
   }
 }

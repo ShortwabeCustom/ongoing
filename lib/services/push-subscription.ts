@@ -1,4 +1,4 @@
-import { PushSubscription } from '@/lib/generated/prisma'
+import { PushSubscription } from '@/lib/generated/prisma/client'
 import { prisma } from '@/lib/prisma'
 import { customAlphabet } from 'nanoid'
 

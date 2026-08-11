@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import type { SyncQueueItem } from "@/lib/services/sync-queue-processor";
 
 const DB_NAME = "pruebas-maria-offline";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 export interface Finding {
   id: string;
@@ -13,6 +13,16 @@ export interface Finding {
   priority: string;
   createdAt: string;
   updatedAt: string;
+}
+
+function ensureIndex(
+  store: IDBObjectStore,
+  name: string,
+  keyPath: string
+): void {
+  if (!store.indexNames.contains(name)) {
+    store.createIndex(name, keyPath, { unique: false });
+  }
 }
 
 export function useIndexedDB() {
@@ -28,26 +38,26 @@ export function useIndexedDB() {
       const request = indexedDB.open(DB_NAME, DB_VERSION);
 
       request.onupgradeneeded = (e) => {
-        const database = (e.target as IDBOpenDBRequest).result;
+        const request = e.target as IDBOpenDBRequest;
+        const database = request.result;
+        const transaction = request.transaction;
 
         // findings_cache store
-        if (!database.objectStoreNames.contains("findings_cache")) {
-          const findingsStore = database.createObjectStore("findings_cache", {
-            keyPath: "id",
-          });
-          findingsStore.createIndex("status", "status", { unique: false });
-          findingsStore.createIndex("createdAt", "createdAt", {
-            unique: false,
-          });
+        const findingsStore = database.objectStoreNames.contains("findings_cache")
+          ? transaction?.objectStore("findings_cache")
+          : database.createObjectStore("findings_cache", { keyPath: "id" });
+        if (findingsStore) {
+          ensureIndex(findingsStore, "status", "status");
+          ensureIndex(findingsStore, "createdAt", "createdAt");
         }
 
         // sync_queue store
-        if (!database.objectStoreNames.contains("sync_queue")) {
-          const queueStore = database.createObjectStore("sync_queue", {
-            keyPath: "id",
-          });
-          queueStore.createIndex("timestamp", "timestamp", { unique: false });
-          queueStore.createIndex("status", "status", { unique: false });
+        const queueStore = database.objectStoreNames.contains("sync_queue")
+          ? transaction?.objectStore("sync_queue")
+          : database.createObjectStore("sync_queue", { keyPath: "id" });
+        if (queueStore) {
+          ensureIndex(queueStore, "timestamp", "timestamp");
+          ensureIndex(queueStore, "status", "status");
         }
 
         // metadata store

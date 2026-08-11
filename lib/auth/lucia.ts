@@ -2,22 +2,27 @@ import { Lucia } from "lucia";
 import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
 import { getDb } from "@/lib/db-lazy";
 import { cookies } from "next/headers";
+import type { UserRole } from "@/lib/generated/prisma/client";
 
 const db = getDb();
 const adapter = new PrismaAdapter(db.session, db.user);
 
-export const lucia = new Lucia(adapter, {
+type LuciaUserAttributes = {
+  email: string;
+  name: string;
+  role: UserRole;
+};
+
+export const lucia = new Lucia<Record<never, never>, LuciaUserAttributes>(adapter, {
   sessionCookie: {
     attributes: {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      httpOnly: true,
     },
     name: "auth_session",
   },
   getUserAttributes: (attributes) => {
     return {
-      id: attributes.id,
       email: attributes.email,
       name: attributes.name,
       role: attributes.role,
@@ -33,10 +38,9 @@ declare module "lucia" {
 }
 
 interface DatabaseUserAttributes {
-  id: string;
   email: string;
   name: string;
-  role: string;
+  role: UserRole;
 }
 
 export async function getSession() {
@@ -50,7 +54,6 @@ export async function getSession() {
 }
 
 export async function createSessionCookie(sessionId: string) {
-  const session = await lucia.createSession(sessionId, {});
   const sessionCookie = lucia.createSessionCookie(sessionId);
   return sessionCookie;
 }

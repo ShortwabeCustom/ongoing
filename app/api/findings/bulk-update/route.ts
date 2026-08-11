@@ -44,6 +44,9 @@ export async function POST(request: NextRequest) {
     // Prepare update data with metadata
     const updateData = {
       ...updates,
+      ...(updates.dueDate !== undefined
+        ? { dueDate: updates.dueDate ? new Date(updates.dueDate) : null }
+        : {}),
       version: { increment: 1 },
       updatedAt: new Date(),
       updatedBy: user.id,
@@ -81,9 +84,9 @@ export async function POST(request: NextRequest) {
       const resultMap = new Map(updatedFindings.map((f) => [f.id, f]))
       return ids.map((id) => {
         const found = resultMap.get(id)
-        return found
-          ? { id, ...found }
-          : { id, error: 'NOT_FOUND' }
+        if (!found) return { id, error: 'NOT_FOUND' }
+        const { id: findingId, ...data } = found
+        return { id: findingId, ...data }
       })
     })
 
@@ -99,6 +102,7 @@ export async function POST(request: NextRequest) {
         },
         include: {
           evidence: {
+            where: { deletedAt: null },
             select: {
               caption: true,
               originalFilename: true,

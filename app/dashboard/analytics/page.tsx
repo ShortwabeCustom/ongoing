@@ -1,9 +1,10 @@
 import { getSession } from '@/lib/auth/lucia'
 import { redirect } from 'next/navigation'
 import { RBAC_PERMISSIONS } from '@/lib/middleware/rbac'
-import { UserRole } from '@prisma/client'
+import { UserRole } from '@/lib/generated/prisma/client'
 import { AnalyticsService } from '@/lib/services/analytics'
 import { AnalyticsQuerySchema } from '@/lib/validators/analytics-query'
+import type { AnalyticsQuery } from '@/lib/validators/analytics-query'
 import { Suspense } from 'react'
 import { KPIGrid } from '@/components/analytics/KPIGrid'
 import { TrendChart } from '@/components/analytics/TrendChart'
@@ -11,6 +12,8 @@ import { StatusBreakdownChart } from '@/components/analytics/StatusBreakdownChar
 import { DateRangeFilter } from '@/components/analytics/DateRangeFilter'
 import { RecentActivityPanel } from '@/components/analytics/RecentActivityPanel'
 import { SearchFindings } from '@/components/search/SearchFindings'
+import { AppShell } from '@/components/app/AppShell'
+import { getInventoryStats } from '@/lib/services/inventory-stats'
 
 export const metadata = {
   title: 'Panel de Analíticas — Pruebas María 2.0',
@@ -26,7 +29,7 @@ async function AnalyticsContent({
   const params = await searchParams
   const parsed = AnalyticsQuerySchema.safeParse(params)
 
-  const filters = parsed.success ? parsed.data : {}
+  const filters: AnalyticsQuery = parsed.success ? parsed.data : { granularity: 'day' }
 
   const [kpis, statusBreakdown, timeSeries] = await Promise.all([
     AnalyticsService.getKPIs(filters),
@@ -73,22 +76,21 @@ export default async function AnalyticsDashboardPage({
     redirect('/app.html')
   }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Panel de Analíticas
-          </h1>
-          <p className="mt-1 text-gray-600">
-            Métricas y tendencias de hallazgos en tiempo real
-          </p>
-        </div>
+  const stats = await getInventoryStats()
 
-        <div className="mb-6 space-y-4">
-          <SearchFindings />
+  return (
+    <AppShell
+      current="analytics"
+      eyebrow="Vista ejecutiva"
+      title="Panel de analíticas"
+      description="Métricas, tendencias y actividad reciente para tomar decisiones sobre el inventario de pruebas."
+      stats={stats}
+    >
+      <div className="space-y-6">
+        <section className="pm-card grid gap-4 p-4 lg:grid-cols-[minmax(0,1fr)_360px]">
+          <SearchFindings presentation="dropdown" />
           <DateRangeFilter />
-        </div>
+        </section>
 
         <Suspense
           fallback={
@@ -107,6 +109,6 @@ export default async function AnalyticsDashboardPage({
           <AnalyticsContent searchParams={searchParams} />
         </Suspense>
       </div>
-    </div>
+    </AppShell>
   )
 }

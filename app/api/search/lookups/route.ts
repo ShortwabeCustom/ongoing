@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import { checkRBAC, RBAC_PERMISSIONS } from '@/lib/middleware/rbac'
 import { LookupService } from '@/lib/services/lookup-service'
-import { apiSuccess, apiError } from '@/lib/utils/api-response'
+import { apiSuccess, apiError, ApiError } from '@/lib/utils/api-response'
 
 export const dynamic = 'force-dynamic'
 
@@ -22,7 +22,14 @@ export async function GET(request: NextRequest) {
       return apiSuccess({ projects })
     }
 
-    return apiError(new Error('Missing or invalid type parameter (assignees|projects)'), 400)
+    return apiError(
+      new ApiError(
+        'VALIDATION_ERROR',
+        'Missing or invalid type parameter (assignees|projects)',
+        undefined,
+        400,
+      ),
+    )
   } catch (error) {
     return apiError(error)
   }

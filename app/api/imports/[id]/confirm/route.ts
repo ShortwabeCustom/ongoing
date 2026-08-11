@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getDb } from '@/lib/db-lazy'
 import { ImportService } from '@/lib/services/import-service'
+import { getSession } from '@/lib/auth/lucia'
 
 export const dynamic = 'force-dynamic'
 
@@ -9,10 +10,15 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const db = getDb()
-  try {
-    const { id: batchId } = await params
+  const { id: batchId } = await params
 
-    // Get ImportBatch
+  try {
+    const session = await getSession()
+    const user = session?.user as { id: string } | undefined
+    if (!user) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
+    }
+
     const batch = await db.importBatch.findUnique({
       where: { id: batchId },
     })
@@ -28,20 +34,18 @@ export async function POST(
       )
     }
 
-    // Get file from form data
     const formData = await request.formData()
-    const file = formData.get('file') as File
+    const file = formData.get('file')
 
     if (!file || !(file instanceof File)) {
       return NextResponse.json({ error: 'File is required for confirmation' }, { status: 400 })
     }
 
-    // Confirm import
     const result = await ImportService.confirmImport(
       batchId,
       batch.projectId,
       file,
-      'system', // TODO: use actual user from auth
+      user.id,
       batch.testSessionId,
     )
 
@@ -49,13 +53,13 @@ export async function POST(
       success: true,
       importBatchId: result.importBatchId,
       findingsCreated: result.findingsCreated,
+      duplicatesSkipped: result.duplicatesSkipped,
+      skippedRows: result.skippedRows,
     })
   } catch (error) {
     console.error('Import confirm error:', error)
 
-    // Try to mark batch as FAILED
     try {
-      const { id: batchId } = await params
       await db.importBatch.update({
         where: { id: batchId },
         data: {
@@ -63,8 +67,8 @@ export async function POST(
           errorMessage: error instanceof Error ? error.message : 'Unknown error',
         },
       })
-    } catch (e) {
-      console.error('Failed to update batch status:', e)
+    } catch (updateError) {
+      console.error('Failed to update batch status:', updateError)
     }
 
     return NextResponse.json(

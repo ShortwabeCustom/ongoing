@@ -3,10 +3,10 @@ import { AuditService } from '@/lib/services/audit-service'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const findingId = params.id
+    const { id: findingId } = await params
 
     const csv = await AuditService.exportAuditLog(findingId)
 

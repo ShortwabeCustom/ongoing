@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
+import { LogOut, UserRound } from "lucide-react";
 
 export function UserMenu() {
   const { user, logout } = useAuth();
@@ -13,7 +14,7 @@ export function UserMenu() {
     return (
       <button
         onClick={() => router.push("/login")}
-        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+        className="h-9 rounded-full bg-white px-4 text-xs font-semibold text-[#052b20] transition hover:bg-[#7bf0b1]"
       >
         Iniciar Sesión
       </button>
@@ -24,34 +25,35 @@ export function UserMenu() {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+        className="flex h-9 items-center gap-2 rounded-full border border-white/14 bg-white/8 px-2.5 pr-3 text-white transition hover:bg-white/14"
       >
-        <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-sm font-bold">
+        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#7bf0b1] text-xs font-bold text-[#052b20]">
           {user.name.charAt(0).toUpperCase()}
         </div>
-        <span className="text-sm font-medium text-slate-900 dark:text-white hidden sm:inline">
+        <span className="hidden text-xs font-semibold text-white sm:inline">
           {user.name}
         </span>
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-lg z-50">
-          <div className="p-3 border-b border-slate-200 dark:border-slate-700">
-            <p className="text-sm font-medium text-slate-900 dark:text-white">
+        <div className="absolute right-0 z-50 mt-2 w-56 rounded-lg border border-[#dbe4dd] bg-white shadow-xl">
+          <div className="border-b border-[#dbe4dd] p-3">
+            <p className="text-sm font-semibold text-[#17251f]">
               {user.name}
             </p>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="mt-1 truncate text-xs text-[#65766e]">
               {user.email}
             </p>
-            <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+            <p className="mt-2 inline-flex rounded-full bg-[#e0f5e9] px-2 py-1 text-xs font-semibold text-[#087244]">
               Rol: {user.role}
             </p>
           </div>
 
           <button
             onClick={() => router.push("/profile")}
-            className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+            className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-[#17251f] transition hover:bg-[#f3f5ef]"
           >
+            <UserRound className="h-4 w-4" />
             Mi Perfil
           </button>
 
@@ -60,8 +62,9 @@ export function UserMenu() {
               await logout();
               router.push("/login");
             }}
-            className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors border-t border-slate-200 dark:border-slate-700"
+            className="flex w-full items-center gap-2 border-t border-[#dbe4dd] px-4 py-2.5 text-left text-sm text-[#9b321f] transition hover:bg-[#fff0eb]"
           >
+            <LogOut className="h-4 w-4" />
             Cerrar Sesión
           </button>
         </div>

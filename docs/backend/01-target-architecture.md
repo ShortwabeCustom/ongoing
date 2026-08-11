@@ -1,974 +1,661 @@
-# 🏗️ ARQUITECTURA OBJETIVO — Pruebas María 2.0 Dinámico
+# Arquitectura Objetivo Ajustada - Pruebas María 2.0
 
-**Autor**: Equipo de Arquitectura  
-**Fecha**: 2026-08-07  
-**Estado**: Propuesta (Pendiente de Aprobación)
+**Fecha:** 2026-08-11  
+**Fase:** 0 - propuesta ajustada al código real  
+**Estado:** pendiente de revisión antes de Fase 1  
 
----
+## Principio Rector
 
-## VISIÓN
+La arquitectura objetivo sigue siendo un **monolito modular con Next.js 16, Route Handlers, Prisma, PostgreSQL y Object Storage S3-compatible**, pero el repositorio ya contiene una implementación parcial. Por eso la arquitectura debe evolucionar por estabilización incremental, no por reemplazo.
 
-Transformar **"Pruebas María 2.0"** de una PWA estática con datos hardcodeados a una **plataforma dinámica de gestión de evidencias** donde:
+Reglas:
 
-1. **Excel es formato de entrada/salida**, NO la base operacional
-2. **PostgreSQL es la fuente de verdad** del proceso
-3. **API Route Handlers** exponen datos dinámicamente
-4. **Next.js + React** rinden interfaz moderna y responsiva
-5. **Object Storage** centraliza evidencias en S3-compatible
-6. **Offline PWA** sigue funcionando sin romper
+- Mantener `public/app.html` temporalmente.
+- Mantener PostgreSQL como fuente de verdad.
+- Tratar object storage como fuente de binarios y PostgreSQL como fuente de metadata.
+- Tratar Elasticsearch, IndexedDB, push y realtime como capacidades derivadas, nunca como fuente canónica.
+- No crear microservicios ni infraestructura adicional.
+- No cambiar el root routing hasta tener paridad y rollback.
 
----
+## Vista General Ajustada
 
-## DIAGRAMA OBJETIVO
+```text
+Browser / PWA
+  |
+  |-- Legacy root: / -> /app.html
+  |     - HTML estatico generado/derivado
+  |     - Datos hardcodeados
+  |     - Offline install/consulta actual
+  |
+  |-- Dynamic platform routes
+        /login
+        /findings
+        /search
+        /dashboard/analytics
+        /projects/:projectId         (objetivo)
+        /projects/:projectId/findings (objetivo)
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│                      USUARIO (Navegador)                      │
-│                    Next.js App Router (SSR)                   │
-└─────────────────────────┬──────────────────────────────────┬──┘
-                          │                                   │
-        ┌─────────────────┴────────────┐                ┌────┴─────────┐
-        │                              │                │               │
-   GET /findings              POST /findings    GET /evidence/:id    UI Cache
-        │                              │                │               │
-        └──────────────────┬───────────┴────────────────┴───────────────┘
-                           │
-          ┌────────────────▼────────────────┐
-          │    Route Handlers (/api/*)      │
-          │  ✓ Validation (Zod)             │
-          │  ✓ Authorization                │
-          │  ✓ Error handling               │
-          │  ✓ Transactions                 │
-          └────────────────┬────────────────┘
-                           │
-        ┌──────────────────┼──────────────────┐
-        │                  │                  │
-   ┌────▼────┐        ┌────▼────┐      ┌─────▼────┐
-   │ Services │        │Repositories│  │Validators │
-   │ Logic    │        │ DB Access  │  │ Schemas   │
-   │ & Rules  │        │ Queries    │  │ Types     │
-   └────┬─────┘        └────┬───────┘  └───────────┘
-        │                   │
-        └───────────┬───────┘
-                    │
-         ┌──────────▼──────────┐
-         │  Prisma ORM         │
-         │  ✓ Type-safe        │
-         │  ✓ Migrations       │
-         │  ✓ Relations        │
-         │  ✓ Indexes          │
-         └──────────┬──────────┘
-                    │
-         ┌──────────▼──────────┐
-         │   PostgreSQL 15+    │
-         │                     │
-         │ ✓ Finding          │
-         │ ✓ Evidence         │
-         │ ✓ TestSession      │
-         │ ✓ Project          │
-         │ ✓ User             │
-         │ ✓ ProjectMember    │
-         │ ✓ StatusHistory    │
-         │ ✓ AuditLog         │
-         │ ✓ ImportBatch      │
-         │ + relaciones       │
-         └─────────────────────┘
-
-┌───────────────────────────────────────────────────────────────┐
-│                  S3-Compatible Storage                         │
-│        (AWS S3 / Cloudflare R2 / MinIO)                       │
-│        ✓ Evidence images & files                             │
-│        ✓ Signed URLs                                          │
-│        ✓ Metadata in DB                                       │
-└───────────────────────────────────────────────────────────────┘
-
-┌───────────────────────────────────────────────────────────────┐
-│                    Service Worker (PWA)                       │
-│        ✓ Offline reads (IndexedDB cache)                     │
-│        ✓ Mutation queue (when online)                        │
-│        ✓ Sync on reconnect                                    │
-│        ✓ Conflict resolution                                  │
-└───────────────────────────────────────────────────────────────┘
+Next.js 16 App Router
+  |
+  |-- Server Components para lectura inicial
+  |-- Client Components solo para interaccion
+  |-- Route Handlers /api/*
+        |
+        |-- validators (Zod)
+        |-- auth/RBAC
+        |-- services
+        |-- repositories/data access
+        |
+        |-- Prisma 7 + PostgreSQL
+        |-- StorageService -> S3-compatible storage
+        |-- Search index derivado opcional
+        |-- IndexedDB/SW como cache offline derivado
 ```
 
----
+## Capas
 
-## STACK FINAL
+### 1. UI
 
-### Frontend
-- **Framework**: Next.js 16.3.0 (Keep)
-- **UI Library**: React 19 (Keep)
-- **Styling**: Tailwind CSS 4.3.3 (Keep)
-- **Components**: @base-ui/react + shadcn/ui extensions
-- **Icons**: lucide-react (Keep)
-- **Type Safety**: TypeScript 5.7.3 (Keep)
+Ubicación objetivo:
 
-### Backend
-- **Runtime**: Node.js (Next.js Route Handlers)
-- **API**: Next.js App Router `/api/*`
-- **Validation**: **Zod** (schema validation)
-- **ORM**: **Prisma** (type-safe DB)
-- **Database**: **PostgreSQL 15+** (SQL)
+```text
+app/
+  (platform)/
+    projects/
+      [projectId]/
+        page.tsx
+        findings/
+          [findingId]/
+            page.tsx
 
-### Storage
-- **Interface**: StorageService (abstraction)
-- **Adapter A**: S3StorageAdapter (AWS S3)
-- **Adapter B**: R2StorageAdapter (Cloudflare R2)
-- **Adapter C**: MinIOStorageAdapter (self-hosted)
+components/
+  ui/
+  features/
+    findings/
+    imports/
+    evidence/
+    workflow/
+    analytics/
+```
 
-### Authentication
-- **Option A**: **Auth.js** (if compatible with Next.js 16)
-- **Option B**: **NextAuth.js** (if v4+ supports 16)
-- **Option C**: Custom JWT minimal (if external SAML/OAuth required)
+Uso:
 
-### Testing
-- **Unit/Integration**: Vitest + @testing-library/react
-- **E2E**: Playwright
-- **Database**: Test PostgreSQL instance (testcontainers)
+- Server Components para cargar datos iniciales de proyectos/hallazgos.
+- Client Components para búsqueda interactiva, filtros, upload, drawer, comentarios y transiciones.
+- Mantener la identidad visual de `public/app.html`: paleta, tipografía, densidad, chips, jerarquía editorial-operativa.
 
-### DevOps / Observability
-- **Analytics**: Vercel Analytics (Keep)
-- **Logging**: Structured logs (JSON)
-- **Error Tracking**: Sentry u otro
-- **Database Backups**: Automated (Vercel Postgres or managed)
-- **Environment**: Vercel (deploy) u otro serverless
+No objetivo:
 
----
+- No convertir toda la app a `use client`.
+- No reemplazar el lenguaje visual con dashboard genérico.
 
-## DOMINIO — MODELO DE DATOS
+### 2. API
 
-### Entidades Principales
+Ubicación:
 
-```typescript
-// User — Usuarios
-entity User {
-  id: UUID (PK)
-  email: String (UNIQUE)
-  name: String
-  role: Enum(OWNER, QA_LEAD, DESIGNER, DEVELOPER, BUSINESS_REVIEWER, VIEWER)
-  createdAt: DateTime
-  updatedAt: DateTime
-  deletedAt: DateTime? (soft delete)
-}
+```text
+app/api/
+```
 
-// Project — Proyecto/Producto
-entity Project {
-  id: UUID (PK)
-  name: String
-  description: String?
-  ownerId: UUID (FK → User)
-  createdAt: DateTime
-  updatedAt: DateTime
-  deletedAt: DateTime? (soft delete)
-  
-  members: ProjectMember[]
-  versions: ProductVersion[]
-  testSessions: TestSession[]
-  findings: Finding[]
-}
+Convención objetivo:
 
-// ProjectMember — Miembro del Proyecto
-entity ProjectMember {
-  id: UUID (PK)
-  projectId: UUID (FK)
-  userId: UUID (FK)
-  role: Enum(OWNER, QA_LEAD, DESIGNER, DEVELOPER, BUSINESS_REVIEWER, VIEWER)
-  joinedAt: DateTime
-  
-  project: Project
-  user: User
-}
+- Usar `RouteContext`/`params: Promise<...>` compatible con Next.js 16.
+- Validar inputs con Zod.
+- Usar response envelope consistente.
+- Revisar sesión y RBAC en backend.
+- No usar spread ciego hacia Prisma.
+- Usar transacciones para operaciones compuestas.
 
-// ProductVersion — Versión del Producto
-entity ProductVersion {
-  id: UUID (PK)
-  projectId: UUID (FK)
-  version: String (ej. "1.0.0", "1.1.0")
-  releasedAt: DateTime?
-  
-  testSessions: TestSession[]
-}
+Envelope recomendado:
 
-// TestSession — Sesión de Pruebas
-entity TestSession {
-  id: UUID (PK)
-  projectId: UUID (FK)
-  versionId: UUID (FK)
-  name: String (ej. "Pruebas 30 de julio")
-  date: DateTime
-  environment: String? (dev, staging, prod)
-  createdBy: UUID (FK → User)
-  createdAt: DateTime
-  
-  project: Project
-  version: ProductVersion
-  findings: Finding[]
-  importBatch: ImportBatch?
-}
-
-// Finding — Hallazgo/Observación
-entity Finding {
-  id: UUID (PK)
-  projectId: UUID (FK)
-  testSessionId: UUID (FK)
-  folio: String? (ej. "REF-001")
-  observation: String (descripción)
-  
-  status: Enum(OPEN, TRIAGED, IN_PROGRESS, READY_FOR_VALIDATION, VALIDATED, CLOSED, BLOCKED, REOPENED)
-  version: Int (optimistic locking)
-  
-  priority: Enum(LOW, MEDIUM, HIGH, CRITICAL)
-  severity: Enum(COSMETIC, MINOR, MAJOR, BLOCKER)
-  effort: Enum(S, M, L, XL)
-  
-  previousScreen: String?
-  currentScreen: String?
-  flowStep: String?
-  
-  assigneeId: UUID? (FK → User)
-  dueDate: DateTime?
-  
-  sourceSheet: String? (ej. "Hoja 1")
-  sourceRow: Int? (para audit)
-  importBatchId: UUID? (FK)
-  
-  createdBy: UUID (FK → User)
-  createdAt: DateTime
-  updatedAt: DateTime
-  updatedBy: UUID? (FK → User)
-  deletedAt: DateTime? (soft delete)
-  
-  // Relations
-  incidenceTypes: FindingIncidenceType[] (many-to-many)
-  experienceTags: FindingExperienceTag[] (many-to-many)
-  evidence: Evidence[]
-  resolution: Resolution? (1-to-1)
-  validation: Validation? (1-to-1)
-  comments: Comment[]
-  statusHistory: FindingStatusHistory[]
-  auditLogs: AuditLog[]
-}
-
-// FindingIncidenceType — Tipo de Incidencia (many-to-many)
-entity FindingIncidenceType {
-  findingId: UUID (PK, FK)
-  incidenceType: Enum(DESIGN, FUNCTIONALITY, BUSINESS_RULE, COPY) (PK)
-  
-  finding: Finding
-}
-
-// FindingExperienceTag — Etiqueta de Experiencia (many-to-many)
-entity FindingExperienceTag {
-  findingId: UUID (PK, FK)
-  experienceTag: Enum(UI, UX, COPY) (PK)
-  
-  finding: Finding
-}
-
-// Evidence — Evidencia (Imagen/Documento)
-entity Evidence {
-  id: UUID (PK)
-  findingId: UUID (FK)
-  type: Enum(IMAGE, VIDEO, DOCUMENT, FIGMA_URL, EXTERNAL_URL)
-  storageKey: String (ruta en S3: "projects/123/evidence/abc.jpg")
-  url: String? (signed URL o external)
-  originalFilename: String
-  mimeType: String
-  fileSize: Int? (bytes)
-  caption: String?
-  
-  createdBy: UUID (FK → User)
-  createdAt: DateTime
-  
-  finding: Finding
-}
-
-// Resolution — Resolución del Hallazgo
-entity Resolution {
-  id: UUID (PK)
-  findingId: UUID (FK, UNIQUE)
-  description: String
-  evidence: Evidence[]? (relación a imagenes de resolución)
-  
-  createdBy: UUID (FK → User)
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-// Validation — Validación del Hallazgo
-entity Validation {
-  id: UUID (PK)
-  findingId: UUID (FK, UNIQUE)
-  result: Enum(PASSED, FAILED, PARTIAL)
-  notes: String?
-  evidence: Evidence[]? (relación a imagenes de validación)
-  
-  validatedBy: UUID (FK → User)
-  validatedAt: DateTime
-}
-
-// Comment — Comentarios en Hallazgo
-entity Comment {
-  id: UUID (PK)
-  findingId: UUID (FK)
-  text: String
-  
-  createdBy: UUID (FK → User)
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-// FindingStatusHistory — Historial de Estados
-entity FindingStatusHistory {
-  id: UUID (PK)
-  findingId: UUID (FK)
-  fromStatus: Enum(...)
-  toStatus: Enum(...)
-  reason: String?
-  
-  changedBy: UUID (FK → User)
-  changedAt: DateTime
-}
-
-// AuditLog — Auditoría General
-entity AuditLog {
-  id: UUID (PK)
-  entityType: String (ej. "Finding", "Evidence")
-  entityId: UUID
-  action: Enum(CREATE, UPDATE, DELETE, STATUS_CHANGE, ASSIGN, VALIDATE)
-  before: JSON?
-  after: JSON?
-  
-  actorId: UUID (FK → User)
-  createdAt: DateTime
-  
-  // Nota: NO almacenar passwords, tokens, sesiones
-}
-
-// ImportBatch — Lote de Importación
-entity ImportBatch {
-  id: UUID (PK)
-  projectId: UUID (FK)
-  testSessionId: UUID (FK)
-  
-  originalFilename: String
-  fileSize: Int
-  importedAt: DateTime
-  
-  totalRows: Int
-  validRows: Int
-  skippedRows: Int
-  
-  status: Enum(PENDING, PROCESSING, COMPLETED, FAILED, ROLLED_BACK)
-  errorMessage: String?
-  
-  importedBy: UUID (FK → User)
-  createdAt: DateTime
-  
-  findings: Finding[] (ref por importBatchId)
+```json
+{
+  "data": {}
 }
 ```
 
----
+Errores:
 
-## ÍNDICES DE BASE DE DATOS
-
-```sql
--- Búsquedas frecuentes
-CREATE INDEX idx_finding_projectid ON Finding(projectId);
-CREATE INDEX idx_finding_status ON Finding(status);
-CREATE INDEX idx_finding_testsession ON Finding(testSessionId);
-CREATE INDEX idx_finding_assignee ON Finding(assigneeId);
-CREATE INDEX idx_finding_priority ON Finding(priority);
-CREATE INDEX idx_finding_created ON Finding(createdAt DESC);
-
--- Importación (idempotencia)
-CREATE UNIQUE INDEX idx_finding_fingerprint ON Finding(importBatchId, sourceRow, HASH(observation));
--- o alternativa: almacenar fingerprint como columna
-
--- Relaciones
-CREATE INDEX idx_evidence_finding ON Evidence(findingId);
-CREATE INDEX idx_statushistory_finding ON FindingStatusHistory(findingId);
-CREATE INDEX idx_auditlog_entity ON AuditLog(entityType, entityId);
-
--- Soft deletes
-CREATE INDEX idx_finding_not_deleted ON Finding(projectId, status) WHERE deletedAt IS NULL;
+```json
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Mensaje legible",
+    "fields": {}
+  }
+}
 ```
 
----
+### 3. Servicios de Aplicación
 
-## MACHINE DE ESTADOS — FINDING
+Ubicación:
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                  FINDING STATE MACHINE                      │
-└─────────────────────────────────────────────────────────────┘
-
-                    ┌──────────────┐
-                    │ OPEN (start) │
-                    └──────┬───────┘
-                           │ triaged()
-                           ▼
-                    ┌──────────────┐
-                    │   TRIAGED    │
-                    └──────┬───────┘
-                           │ startWork()
-                           ▼
-                    ┌──────────────┐
-          ┌────────▶│ IN_PROGRESS  │◀─────────────┐
-          │         └──────┬───────┘              │
-          │                │                      │
-          │   blockWork()   │ readyForValidation()│ unblock()
-          │                ▼                      │
-          │         ┌──────────────┐              │
-          └─────────│   BLOCKED    │──────────────┘
-                    └──────────────┘
-                           │
-        ┌──────────────────┴──────────────────┐
-        │                                     │
-        ▼                                     ▼
- ┌────────────────────┐            ┌─────────────────────┐
- │ READY_FOR_VALIDATION│            │ IN_PROGRESS         │
- └────────┬───────────┘            └─────────────────────┘
-          │ validate()
-          │
-          ├─ pass() ─────────┐
-          │                  │
-          │                  ▼
-          │           ┌──────────────┐
-          │           │  VALIDATED   │
-          │           └──────┬───────┘
-          │                  │ close()
-          │                  ▼
-          │           ┌──────────────┐
-          │           │    CLOSED    │ ◀─── close() desde VALIDATED
-          │           └──────────────┘
-          │
-          ├─ fail() ──────────────────────────────┐
-          │                                       │
-          │                                       ▼
-          │                                ┌──────────────┐
-          │                                │ IN_PROGRESS  │
-          │                                └──────────────┘
-          │
-          └─ reopen()
-                      ┌──────────────┐
-                      │  REOPENED    │
-                      └──────┬───────┘
-                             │ triaged()
-                             ▼
-                      ┌──────────────┐
-                      │   TRIAGED    │
-                      └──────────────┘
-
-NOTA: Version = optimistic locking
-      Si client envía version 5 pero DB está en 6 → 409 Conflict
+```text
+lib/services/
 ```
 
----
+Responsabilidades:
 
-## CATEGORIZACIÓN (DDD BOUNDED CONTEXT)
+- Reglas de negocio.
+- Transiciones de estado.
+- Import pipeline.
+- Cálculo de stats.
+- Upload/metadata de evidencia.
+- Auditoría.
+- Indexación derivada.
 
-```
-Finding categoría NO es un simple enum string.
+Los servicios no deben depender de UI ni de objetos `Request`.
 
-OPCIÓN A: Tabla Pivot (Recomendado)
-┌──────────────┐        ┌──────────────────────────┐
-│ Finding      │        │ FindingIncidenceType     │
-│              │◀───┤├──│                          │
-│ id (PK)      │        │ findingId (PK, FK)       │
-└──────────────┘        │ incidenceType (PK, Enum) │
-                        │ • DESIGN                 │
-                        │ • FUNCTIONALITY          │
-                        │ • BUSINESS_RULE          │
-                        │ • COPY                   │
-                        └──────────────────────────┘
+### 4. Data Access
 
-                ┌──────────────────────────┐
-                │ FindingExperienceTag     │
-                │                          │
-                │ findingId (PK, FK)       │
-                │ experienceTag (PK, Enum) │
-                │ • UI                     │
-                │ • UX                     │
-                │ • COPY                   │
-                └──────────────────────────┘
+Estado actual: el código usa Prisma directamente dentro de services y rutas.
 
-Ventaja: Un Finding puede ser DESIGN + BUSINESS_RULE
-         Un Finding puede ser UI + UX + COPY
-         Consultas eficientes: WHERE incidenceType = 'DESIGN'
+Objetivo gradual:
 
-OPCIÓN B: JSONB (PostgreSQL)
-Finding.incidenceTypes = ["DESIGN", "BUSINESS_RULE"] (JSONB array)
-Finding.experienceTags = ["UI", "UX"] (JSONB array)
-
-Ventaja: Menos tablas
-Desventaja: Búsquedas menos eficientes
-
-RECOMENDACIÓN: Opción A (Pivot Tables)
+```text
+lib/repositories/
+  project-repository.ts
+  finding-repository.ts
+  import-repository.ts
+  evidence-repository.ts
 ```
 
----
+No es obligatorio crear repositorios para todo de inmediato; sí conviene para:
 
-## API ENDPOINTS — DEFINICIÓN
+- importación,
+- transiciones,
+- búsqueda/filtros,
+- autorización por proyecto.
 
-### Projects
-```
+### 5. Prisma y PostgreSQL
+
+Antes de nuevas migraciones:
+
+1. Decidir schema final de foundation.
+2. Comparar schema vs migraciones.
+3. Generar una migración de reconciliación o reset controlado solo en entorno dev.
+4. Validar fresh DB desde cero.
+5. Nunca usar `migrate reset` o `DROP` en `/var/www` sin aprobación explícita.
+
+Modelo conceptual base:
+
+- User
+- Session
+- Project
+- ProjectMember
+- ProductVersion
+- TestSession
+- Finding
+- FindingIncidenceType
+- FindingExperienceTag
+- Evidence
+- Resolution
+- Validation
+- Comment
+- FindingStatusHistory
+- AuditLog
+- ImportBatch
+
+Extensiones ya presentes:
+
+- PushSubscription
+- Notification
+- Activity
+
+Recomendación: conservarlas solo si las migraciones y pruebas se estabilizan; si no, marcarlas como fases posteriores.
+
+## Routing Objetivo
+
+El repo actual tiene APIs parciales. La arquitectura final debe converger hacia:
+
+```text
 GET    /api/projects
-       Response: { projects: Project[], total: Int }
-
 POST   /api/projects
-       Body: { name, description }
-       Response: { id, name, ... } (201 Created)
-
 GET    /api/projects/:projectId
-       Response: Project (con miembros y stats)
-
 PATCH  /api/projects/:projectId
-       Body: { name?, description? }
-       Response: Project (200 OK)
 
-DELETE /api/projects/:projectId
-       Response: {} (204 No Content) o soft-delete
-```
-
-### Findings
-```
 GET    /api/projects/:projectId/findings
-       Query: ?status=OPEN&priority=HIGH&limit=20&offset=0&search=text
-       Response: { findings: Finding[], total, hasMore }
-
 POST   /api/projects/:projectId/findings
-       Body: { observation, priority, severity, effort, assigneeId?, ... }
-       Response: Finding (201 Created)
 
-GET    /api/findings/:findingId
-       Response: Finding (con evidence, resolution, validation, comments, history)
+GET    /api/findings/:id
+PATCH  /api/findings/:id
+POST   /api/findings/:id/transitions
+POST   /api/findings/:id/comments
+POST   /api/findings/:id/resolutions
+POST   /api/findings/:id/validations
 
-PATCH  /api/findings/:findingId
-       Body: { observation?, priority?, severity?, version }
-       Response: Finding (200) o Finding + 409 if version mismatch
+POST   /api/findings/:id/evidence
+DELETE /api/evidence/:id
 
-DELETE /api/findings/:findingId
-       Response: {} (204) o soft delete
-
-POST   /api/findings/:findingId/transition
-       Body: { toStatus, reason?, version }
-       Response: Finding (status actualizado + history)
-
-POST   /api/findings/:findingId/assign
-       Body: { assigneeId }
-       Response: Finding
-
-POST   /api/findings/:findingId/comments
-       Body: { text }
-       Response: Comment (201)
-
-GET    /api/findings/:findingId/history
-       Response: { statusHistory, auditLog }
-```
-
-### Evidence
-```
-POST   /api/evidence/upload
-       Body: FormData (multipart/form-data)
-              file: File
-              findingId?: UUID
-              caption?: String
-       Response: Evidence (201)
-              { id, url (signed), storageKey, ... }
-
-GET    /api/evidence/:evidenceId
-       Response: Evidence { url (signed), ... }
-
-DELETE /api/evidence/:evidenceId
-       Response: {} (204)
-```
-
-### Resolutions & Validations
-```
-POST   /api/findings/:findingId/resolutions
-       Body: { description, evidenceIds?: [UUID] }
-       Response: Resolution (201)
-
-POST   /api/findings/:findingId/validations
-       Body: { result, notes, evidenceIds?: [UUID] }
-       Response: Validation (201)
-```
-
-### Imports
-```
-POST   /api/imports/preview
-       Body: FormData
-              file: File (Excel o CSV)
-              projectId: UUID
-              testSessionId?: UUID
-       Response: {
-         preview: {
-           totalRows: 176,
-           validRows: 174,
-           skippedRows: 2,
-           newFindings: 150,
-           duplicates: 24,
-           incidences: [{ row: 2, type: 'EMPTY_OBSERVATION', message: '...' }]
-         }
-       }
-
-POST   /api/imports/:batchId/confirm
-       Body: { confirm: true }
-       Response: { importBatch, findings: [...] } (201)
-
-GET    /api/imports/:batchId
-       Response: ImportBatch { status, errorMessage, stats }
-```
-
-### Stats / Analytics
-```
 GET    /api/projects/:projectId/stats
-       Response: {
-         totalFindings: 176,
-         openFindings: 94,
-         validatedFindings: 82,
-         byStatus: { OPEN: 10, IN_PROGRESS: 5, ... },
-         byPriority: { LOW: 20, MEDIUM: 50, ... },
-         byIncidenceType: { DESIGN: 60, FUNCTIONALITY: 50, ... },
-         ...
-       }
+
+POST   /api/imports/preview
+POST   /api/imports/:id/confirm
+GET    /api/imports/:id
 ```
 
----
+Compatibilidad temporal:
 
-## VALIDACIÓN ESQUEMAS (ZOD)
+- Mantener `/api/findings?projectId=...` mientras se migran consumers.
+- Mantener `/api/evidence/upload` hasta introducir ruta contextual.
+- Mantener `/api/findings/stats` como alias si lo consume frontend existente.
 
-```typescript
-// lib/validators/finding.ts
+## Modelo de Dominio
 
-export const FindingCreateSchema = z.object({
-  observation: z.string().min(5).max(2000),
-  priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']),
-  severity: z.enum(['COSMETIC', 'MINOR', 'MAJOR', 'BLOCKER']),
-  effort: z.enum(['S', 'M', 'L', 'XL']),
-  assigneeId: z.string().uuid().optional(),
-  dueDate: z.date().optional(),
-  incidenceTypes: z.array(z.enum(['DESIGN', 'FUNCTIONALITY', 'BUSINESS_RULE', 'COPY'])).min(1),
-  experienceTags: z.array(z.enum(['UI', 'UX', 'COPY'])).optional(),
-})
+### Finding
 
-export type FindingCreate = z.infer<typeof FindingCreateSchema>
+Debe preservar:
 
-// lib/validators/import.ts
+- observación original,
+- fuente histórica,
+- estado,
+- clasificación,
+- asignación,
+- prioridad/severidad/esfuerzo,
+- versión de concurrencia,
+- historial,
+- evidencia original,
+- resolución,
+- evidencia de resolución,
+- validación.
 
-export const ImportPreviewSchema = z.object({
-  file: z.instanceof(File).refine(f => ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv'].includes(f.type), 'Solo XLSX o CSV'),
-  projectId: z.string().uuid(),
-})
+IDs:
 
-// Middleware en Route Handler
-export async function validateRequest(req: NextRequest) {
-  const body = await req.json()
-  const parsed = FindingCreateSchema.safeParse(body)
-  if (!parsed.success) {
-    return NextResponse.json({
-      error: { code: 'VALIDATION_ERROR', fields: parsed.error.flatten().fieldErrors }
-    }, { status: 400 })
-  }
-  return parsed.data
-}
+- El schema actual usa `cuid()`.
+- Los validators no deben exigir UUID si el dominio usa CUID.
+- Elegir una estrategia y aplicarla en schema, validators, rutas y fixtures.
+
+### Categorías
+
+La arquitectura correcta es many-to-many:
+
+```text
+Finding -> FindingIncidenceType -> IncidenceType
+Finding -> FindingExperienceTag -> ExperienceTag
 ```
 
----
+El CSV histórico tiene un único campo `Área`; el importador debe mapearlo con reglas explícitas, no como copia directa.
 
-## TRANSACCIONES — IMPORT IDEMPOTENTE
+Mapeo inicial recomendado:
 
-```typescript
-// Pseudocódigo: Flujo de importación segura
-
-async function confirmImport(batchId: UUID) {
-  const batch = await db.importBatch.findUnique({ where: { id: batchId } })
-  
-  try {
-    // Inicio de transacción
-    await db.$transaction(async (tx) => {
-      // 1. Crear TestSession si no existe
-      const session = await tx.testSession.create({
-        data: {
-          projectId: batch.projectId,
-          name: batch.originalFilename,
-          date: new Date(),
-          createdBy: batch.importedBy,
-        }
-      })
-      
-      // 2. Procesar cada fila
-      for (const row of batch.rows) {
-        // Calcular fingerprint (idempotencia)
-        const fingerprint = sha256(
-          batch.projectId + session.id + row.sourceRow + row.observation
-        )
-        
-        // ¿Ya existe?
-        const existing = await tx.finding.findFirst({
-          where: { importBatchId: batch.id, sourceRow: row.sourceRow }
-        })
-        
-        if (existing) continue // Skip duplicado en mismo batch
-        
-        // Crear Finding
-        const finding = await tx.finding.create({
-          data: {
-            projectId: batch.projectId,
-            testSessionId: session.id,
-            observation: row.observation,
-            status: 'OPEN',
-            sourceRow: row.sourceRow,
-            importBatchId: batch.id,
-            priority: 'MEDIUM',
-            severity: 'MINOR',
-            // ...
-          }
-        })
-        
-        // 3. Subir evidencias (si existen)
-        for (const imageName of row.evidenceFiles) {
-          const buffer = await extractImageFromZip(batch.fileKey, imageName)
-          const storageKey = await storage.upload(buffer, {
-            path: `projects/${batch.projectId}/evidence/${finding.id}/${imageName}`
-          })
-          
-          await tx.evidence.create({
-            data: {
-              findingId: finding.id,
-              type: 'IMAGE',
-              storageKey,
-              originalFilename: imageName,
-              mimeType: 'image/jpeg',
-              createdBy: batch.importedBy,
-            }
-          })
-        }
-        
-        // 4. Crear categorías (many-to-many)
-        for (const tag of row.incidenceTypes) {
-          await tx.findingIncidenceType.create({
-            data: { findingId: finding.id, incidenceType: tag }
-          })
-        }
-      }
-      
-      // 5. Actualizar batch
-      await tx.importBatch.update({
-        where: { id: batch.id },
-        data: { status: 'COMPLETED' }
-      })
-    })
-  } catch (error) {
-    // Rollback automático
-    await db.importBatch.update({
-      where: { id: batch.id },
-      data: { status: 'FAILED', errorMessage: error.message }
-    })
-    throw error
-  }
-}
+```text
+UI              -> experienceTag UI, incidenceType DESIGN
+Copy            -> experienceTag COPY, incidenceType COPY
+Funcionalidad   -> incidenceType FUNCTIONALITY
+Backend         -> incidenceType FUNCTIONALITY
+Negocio         -> incidenceType BUSINESS_RULE
 ```
 
----
+Estas reglas deben quedar documentadas en `docs/backend/04-import-mapping.md` durante Fase 2.
 
-## STORAGE INTERFACE (ADAPTER PATTERN)
+### Estados
 
-```typescript
-// lib/storage/types.ts
+Estados de Finding:
 
-export interface IStorageService {
-  upload(file: File, options: { path: string }): Promise<string> // storageKey
-  download(storageKey: string): Promise<Buffer>
-  delete(storageKey: string): Promise<void>
-  getSignedUrl(storageKey: string, expiresIn?: number): Promise<string>
-  exists(storageKey: string): Promise<boolean>
-}
-
-// lib/storage/s3.ts
-
-export class S3StorageService implements IStorageService {
-  private client: S3Client
-  
-  constructor(config: S3Config) {
-    this.client = new S3Client({
-      region: config.region,
-      credentials: {
-        accessKeyId: config.accessKeyId,
-        secretAccessKey: config.secretAccessKey,
-      },
-      endpoint: config.endpoint, // Funciona con R2, MinIO, etc
-    })
-  }
-  
-  async upload(file: File, options: { path: string }): Promise<string> {
-    const buffer = await file.arrayBuffer()
-    await this.client.send(new PutObjectCommand({
-      Bucket: process.env.S3_BUCKET,
-      Key: options.path,
-      Body: buffer,
-      ContentType: file.type,
-    }))
-    return options.path
-  }
-  
-  async getSignedUrl(storageKey: string, expiresIn = 3600): Promise<string> {
-    const command = new GetObjectCommand({
-      Bucket: process.env.S3_BUCKET,
-      Key: storageKey,
-    })
-    return await getSignedUrl(this.client, command, { expiresIn })
-  }
-  
-  // ... otras métodos
-}
-
-// Factory
-export function createStorageService(): IStorageService {
-  const provider = process.env.STORAGE_PROVIDER || 's3'
-  
-  switch(provider) {
-    case 's3':
-      return new S3StorageService({
-        endpoint: process.env.S3_ENDPOINT,
-        region: process.env.S3_REGION,
-        accessKeyId: process.env.S3_ACCESS_KEY_ID,
-        secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-      })
-    // ... casos para R2, MinIO
-    default:
-      throw new Error(`Unknown storage provider: ${provider}`)
-  }
-}
-
-// Uso
-const storage = createStorageService()
-const signedUrl = await storage.getSignedUrl('projects/123/evidence/abc.jpg')
+```text
+OPEN
+TRIAGED
+IN_PROGRESS
+READY_FOR_VALIDATION
+VALIDATED
+CLOSED
+BLOCKED
+REOPENED
 ```
 
----
+La transición debe:
 
-## AUTORIZACIÓN (RBAC SIMPLE)
+- validar flujo permitido,
+- exigir versión actual,
+- responder `409` si hay conflicto,
+- escribir `FindingStatusHistory`,
+- escribir `AuditLog`,
+- actualizar índice derivado si aplica.
 
-```typescript
-// lib/auth/permissions.ts
+No basta con `PATCH` genérico de status.
 
-export const ROLE_PERMISSIONS = {
-  OWNER: ['read', 'create', 'update', 'delete', 'invite', 'config'],
-  QA_LEAD: ['read', 'create', 'update', 'validate', 'assign', 'reopen'],
-  DESIGNER: ['read', 'comment', 'update_resolution'],
-  DEVELOPER: ['read', 'comment', 'update_resolution'],
-  BUSINESS_REVIEWER: ['read', 'validate'],
-  VIEWER: ['read'],
-}
+## Import Pipeline
 
-// Middleware en Route Handler
-export async function authorize(req: NextRequest, requiredAction: string) {
-  const session = await getSession(req)
-  if (!session) return NextResponse.json({ error: 'UNAUTHORIZED' }, { status: 401 })
-  
-  const projectId = req.nextUrl.searchParams.get('projectId')
-  const member = await db.projectMember.findFirst({
-    where: { projectId, userId: session.user.id }
-  })
-  
-  const permissions = ROLE_PERMISSIONS[member.role] || []
-  if (!permissions.includes(requiredAction)) {
-    return NextResponse.json({ error: 'FORBIDDEN' }, { status: 403 })
-  }
-  
-  return { session, member, projectId }
-}
+Flujo objetivo:
+
+```text
+UPLOAD
+  -> PARSE
+  -> NORMALIZE
+  -> VALIDATE
+  -> DETECT DUPLICATES
+  -> PREVIEW
+  -> CONFIRM
+  -> TRANSACTION
+  -> IMPORT REPORT
 ```
 
----
+Estado ajustado al repo:
 
-## MIGRACIÓN PWA OFFLINE → DINÁMICO
+- Fase inmediata debe estabilizar CSV.
+- XLSX no debe marcarse soportado hasta incorporar parser real.
+- No hay XLSX disponible para analizar imágenes embebidas.
 
-### Fase Inicial (Sin Offline Mutations)
-- PWA cachea último estado conocido
-- Offline: pueden LEER datos cacheados
-- Offline: NO pueden crear/editar (mostrar mensajes)
-- Online: sync automático
+Preview debe devolver:
 
-### Fase Futura (Con Offline Mutations)
-- IndexedDB local + mutation queue
-- Crear Finding localmente
-- Guardar en cola cuando online
-- Sync on reconnect con conflict resolution
-- Rollback si error
+- archivo,
+- hojas detectadas si aplica,
+- filas analizadas,
+- registros válidos,
+- filas ignoradas,
+- errores,
+- warnings,
+- duplicados,
+- columnas reconocidas,
+- columnas desconocidas,
+- categorías,
+- evidencias encontradas.
 
----
+Confirm debe:
 
-## PRÓXIMA FASE (DIAGRAMA)
+- usar usuario real,
+- exigir RBAC,
+- usar transacción DB,
+- persistir fingerprint,
+- evitar duplicados,
+- crear status history/audit,
+- no subir binarios a storage dentro de una falsa transacción ACID.
 
-```
-FASE 0 (ACTUAL)
-├── ✓ Auditoría completada
-├── ✓ Arquitectura diseñada
-└── Espera aprobación
+Estrategia de fingerprint:
 
-FASE 1
-├── Crear prisma/schema.prisma
-├── PostgreSQL setup
-├── Primeras migraciones
-└── Validar modelo
-
-FASE 2
-├── Import preview/confirm
-├── CSV/XLSX parser
-├── StorageService (mock)
-
-FASE 3
-├── Route Handlers CRUD
-├── Validación Zod
-├── Autorización básica
-
-... y así sucesivamente
+```text
+sha256(projectId + normalizedSource + sheetOrCsv + sourceRow + normalizedObservation)
 ```
 
----
+El fingerprint debe ser campo persistido con índice único dentro del alcance correcto. La misma observación en otra sesión puede ser válida, así que el alcance no debe ser solo texto.
 
-## DECISIONES PENDIENTES DE USUARIO
+## Evidencia y Storage
 
-1. **Auth**: ¿Auth.js v5? ¿NextAuth v4? ¿Custom JWT?
-2. **Storage**: ¿AWS S3? ¿Cloudflare R2? ¿MinIO local?
-3. **DB Hosted**: ¿Vercel Postgres? ¿Managed PostgreSQL?
-4. **Soft Delete**: ¿Sí para Finding/Evidence/Project?
-5. **RBAC**: ¿6 roles suficientes? ¿Agregar más?
-6. **Offline Sync**: ¿MVP sin mutations? ¿Implementar desde inicio?
-7. **Testing**: ¿Qué coverage target? ¿E2E en Playwright?
+Objetivo:
 
----
+```text
+StorageService interface
+  upload()
+  delete()
+  getSignedUrl()
+  exists()
 
-## RIESGOS Y MITIGACIÓN
+S3CompatibleStorageService
+  AWS S3
+  Cloudflare R2
+  MinIO
+```
 
-| Riesgo | Probabilidad | Impacto | Mitigación |
-|--------|--------------|---------|-----------|
-| 176 findings sin paginación → lento | ALTA | MEDIA | Implementar offset/limit desde inicio |
-| Service Worker cache stuck | MEDIA | ALTA | Versionado de SW, cache busting |
-| Dependencia "hono" sin uso | BAJA | BAJA | Investigar y limpiar |
-| TypeScript errors ignorados | MEDIA | MEDIA | Resolver `ignoreBuildErrors` antes de Fase 1 |
-| Auth complejidad subestimada | MEDIA | ALTA | Evaluar Auth.js pronto |
-| Transacciones de importa fallan | BAJA | CRÍTICA | Tests de importación temprano |
+Configuración:
 
----
+```text
+S3_ENDPOINT
+S3_REGION
+S3_BUCKET
+S3_ACCESS_KEY_ID
+S3_SECRET_ACCESS_KEY
+S3_SIGNED_URL_EXPIRY
+```
 
-## ÉXITO = CUANDO
+Reglas:
 
-✅ PostgreSQL con schema de datos
-✅ API CRUD de findings funciona
-✅ Import CSV/XLSX funciona
-✅ Frontend lee datos dinámicos (NO JSON hardcoded)
-✅ Evidencias se suben a storage
-✅ Autorización bloquea sin permiso
-✅ PWA offline sigue funcionando
-✅ Tests críticos pasan
-✅ Documentación actualizada
+- Validar tamaño.
+- Validar MIME real, no solo `Content-Type`.
+- Sanitizar nombre.
+- Guardar metadata en PostgreSQL.
+- Guardar binarios en object storage.
+- Usar URLs firmadas temporales para privado.
+- Auditar upload/delete.
+- Preferir soft delete para evidencia histórica.
 
----
+## Auth y RBAC
 
-**Estado Final de Documento**: Listo para review.  
-**Siguiente**: Esperar feedback usuario → Iniciar FASE 1 (Modelo de Datos).
+Auth actual con Lucia puede reutilizarse si se estabiliza.
+
+Arquitectura objetivo:
+
+- `getSession()` server-side como fuente de usuario actual.
+- `requireSession()` helper para APIs protegidas.
+- `authorizeProject(user, projectId, action)` para reglas por membresía.
+- `authorizeFinding(user, findingId, action)` para evitar IDOR.
+- Roles globales y rol por proyecto reconciliados.
+
+Reglas:
+
+- No confiar en ocultar botones.
+- No aceptar `createdBy`, `updatedBy`, `importedBy` desde cliente.
+- Import, upload, validation, transition y bulk update deben exigir RBAC.
+
+## Search
+
+Arquitectura canónica:
+
+- PostgreSQL filtra y pagina inventario transaccional.
+- PostgreSQL cubre MVP search sobre `observation`, `resolution`, `screen`, `folio`.
+- Elasticsearch, ya presente, debe ser índice derivado opcional.
+
+Regla:
+
+- Si Elasticsearch falla, la plataforma debe seguir funcionando con PostgreSQL.
+- Si Elasticsearch queda activo, debe tener reindex job, health check, drift detection y documentación de consistencia eventual.
+
+## PWA / Offline
+
+Fase inicial ajustada:
+
+- Mantener installability de legacy.
+- Corregir cache manifest (`/manifest.webmanifest`) y fallback offline real.
+- Evitar prometer sync offline completo para writes críticos hasta tener idempotencia y conflictos resueltos.
+
+Fase posterior:
+
+```text
+IndexedDB cache
+  + mutation queue
+  + idempotency keys
+  + background sync
+  + conflict resolver
+  + UI de pendientes/fallidos
+```
+
+La cola offline debe alinearse con optimistic concurrency; `409` no debe considerarse éxito silencioso sin resolver conflicto en UI.
+
+## Analytics y Observabilidad
+
+Stats deben venir de PostgreSQL:
+
+- totalFindings
+- openFindings
+- validatedFindings
+- closedFindings
+- blockedFindings
+- evidenceCount
+- distribuciones por status, incidenceType, experienceTag, priority, severity, screen, session
+
+Eventos preparados:
+
+- finding_created
+- finding_imported
+- finding_viewed
+- finding_status_changed
+- finding_assigned
+- finding_reopened
+- evidence_uploaded
+- comment_created
+- validation_completed
+- import_completed
+- export_generated
+
+Logging:
+
+- requestId,
+- operation,
+- entityId,
+- errorCode.
+
+Nunca:
+
+- passwords,
+- tokens,
+- cookies,
+- secrets,
+- URLs firmadas completas en logs.
+
+## Seguridad
+
+Prioridades antes de producción:
+
+1. Sanear secretos hardcodeados y rotar credenciales si fueron reales.
+2. Revisar archivos trackeados `.env*`.
+3. Corregir auth/RBAC inconsistente.
+4. Corregir mass assignment potencial.
+5. Validar uploads con magic bytes.
+6. Rate limiting para login/import/upload.
+7. CSRF según estrategia de cookies.
+8. IDOR por project/finding/evidence.
+9. Error envelope sin leaks.
+10. Auditoría sin secretos.
+
+## Testing
+
+Antes de Fase 1 o como primer bloque de Fase 1:
+
+- Definir test runner: Vitest recomendado si se mantiene stack Vite-like para unit tests.
+- Agregar script `test`.
+- Asegurar que `pnpm lint`, `pnpm build`, `npx tsc --noEmit` sean señales reales.
+
+Pruebas críticas:
+
+- normalización CSV,
+- fingerprint,
+- transiciones de Finding,
+- RBAC,
+- validators,
+- import preview,
+- import confirm rollback,
+- update conflict `409`,
+- upload validation,
+- project/finding IDOR.
+
+## Deployment
+
+Estrategia recomendada:
+
+- Un solo package manager.
+- CI en rama real (`master` o cambiar repo a `main`).
+- `npm/pnpm ci` con dependencias necesarias para lint/build.
+- `prisma generate`.
+- `prisma migrate deploy` solo después de backup.
+- Smoke tests:
+  - `/api/health`
+  - login,
+  - list findings,
+  - stats,
+  - upload signed URL if configured.
+
+Producción:
+
+- Nunca migrar sin backup verificado.
+- No usar valores literales de secretos en compose/docs.
+- Separar `.env.example` de `.env.production`.
+- Revisar `.gitignore` y archivos ya trackeados.
+
+## Secuencia Recomendada de Fases
+
+### Bloque 0A - Saneamiento Foundation
+
+Antes de funcionalidad nueva:
+
+- secrets/docs cleanup,
+- package manager decision,
+- ESLint install/config,
+- test runner config,
+- TypeScript errors,
+- Next 16 params/proxy/config warnings,
+- Prisma schema vs migrations.
+
+### Fase 1 - Modelo de Datos Reconciliado
+
+- Ajustar schema.
+- Crear migración coherente.
+- Fresh DB desde cero.
+- Seed mínimo seguro.
+- Documentar `02-data-model.md` y `03-state-machine.md`.
+
+### Fase 2 - Importador CSV Real
+
+- `04-import-mapping.md` desde CSV real.
+- CSV parser/normalizer/validator.
+- Duplicate detection.
+- Preview.
+- Confirm transaccional.
+- Actor real y RBAC.
+
+### Fase 2B - XLSX
+
+Solo cuando exista archivo XLSX real:
+
+- analizar hojas,
+- evaluar ExcelJS u otra librería,
+- extraer imágenes embebidas si existen,
+- mapear hoja/fila/evidencia.
+
+### Fase 3 - API Foundation
+
+- Projects CRUD.
+- Findings CRUD.
+- Findings por proyecto.
+- Transitions.
+- Comments.
+- Stats por proyecto.
+- Response envelope consistente.
+
+### Fase 4 - Evidencias
+
+- StorageService neutral.
+- S3/R2/MinIO compatible.
+- MIME real.
+- Signed URLs.
+- Soft delete/audit.
+
+### Fase 5 - Frontend Dinámico
+
+- Migrar visualmente desde legacy.
+- Inventario desde API/Server Components.
+- Filtros server-side.
+- Detail drawer/sheet.
+- States loading/error/empty.
+
+### Fase 6+ - Workflow, RBAC, PWA Sync, Hardening
+
+- Completar resolución/validación.
+- Reopen/history.
+- Offline mutations.
+- Tests.
+- Observability.
+- Security readiness.
+
+## Non-goals
+
+No hacer en esta fase:
+
+- No eliminar `public/app.html`.
+- No cambiar `/` a UI dinámica.
+- No instalar paquetes.
+- No escribir migraciones.
+- No ejecutar migraciones.
+- No implementar Prisma desde cero.
+- No añadir microservicios, Kafka, RabbitMQ, Redis adicional, Kubernetes, GraphQL, CQRS, event sourcing ni vector DB.
+
+## Criterio Para Avanzar a Fase 1
+
+Fase 1 debe empezar solo cuando el equipo acepte:
+
+- el diagnóstico de `00-current-state-audit.md`;
+- que el repo ya tiene backend parcial;
+- que se debe reconciliar y estabilizar antes de ampliar;
+- si se conserva o se reduce temporalmente Elasticsearch/realtime/offline;
+- qué package manager se usará;
+- cómo se sanearán secretos existentes.
+
+Hasta entonces, la recomendación es detenerse aquí.

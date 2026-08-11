@@ -1,5 +1,5 @@
 import db from '@/lib/db';
-import { ActivityAction } from '@prisma/client';
+import { ActivityAction } from '@/lib/generated/prisma/client';
 
 export interface PresenceInfo {
   userId: string;
@@ -23,7 +23,7 @@ export class ActivityService {
           action,
           resourceType: 'finding',
           resourceId,
-          details: details || null,
+          details: details ?? undefined,
           ipAddress,
           userAgent,
         },

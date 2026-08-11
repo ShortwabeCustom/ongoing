@@ -39,9 +39,16 @@ details[hidden]{display:none}
 nav .brand{display:flex;align-items:center;gap:11px;min-width:0}
 nav .brand img{height:22px;width:auto;flex:none;display:block}
 nav .brand b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+nav .nav-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap;text-align:right}
+nav .doc-link{color:#7bf0b1;text-decoration:none}
+nav .login-link{display:inline-flex;align-items:center;justify-content:center;min-height:34px;border:1px solid rgba(123,240,177,.42);border-radius:999px;background:#7bf0b1;color:#052b20;text-decoration:none;font-weight:700;padding:8px 14px;line-height:1;white-space:nowrap;box-shadow:0 8px 22px rgba(0,0,0,.12)}
+nav .login-link:hover{background:#fff;color:#052b20}
+nav .login-link:focus-visible{outline:2px solid #fff;outline-offset:2px}
 @media(max-width:620px){
   nav .brand img{height:18px}
   nav .brand b{font-size:10px;white-space:normal}
+  nav .nav-actions{gap:8px;text-align:left;justify-content:flex-start}
+  nav .login-link{min-height:32px;padding:7px 12px}
 }
 /* ---- Chips de eje: Diseño / Copy ---- */
 summary{grid-template-columns:54px 1fr auto}
@@ -112,7 +119,7 @@ section[id],details{scroll-margin-top:76px}
 footer.site{padding:26px 5vw calc(30px + env(safe-area-inset-bottom));background:#052b20;color:#7f9a90;font-size:11px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 @media(max-width:800px){summary i{justify-self:start}.docs{padding-top:60px}}
 @media print{.docs,footer.site{display:none}}
-</style></head><body><nav><span class="brand"><img src="/images/uix-logo.png" alt="uix" width="62" height="22"><b>Originación Única · Reporte ejecutivo</b></span><span><a href="#documentos" style="color:#7bf0b1;text-decoration:none">Documentos</a> · 5 agosto 2026</span></nav><section class="hero" id="portada"><span class="kicker">Decisión ejecutiva · Primero lenguaje, después sistema</span><h1>Del hallazgo<br><span>a la acción.</span></h1><p>Inventario integral de cuatro rondas de pruebas, listo para consulta y presentación sin conexión.</p><div class="stats"><span><b>176</b>observaciones</span><span><b>82</b>completadas</span><span><b>94</b>pendientes</span><span><b>173</b>evidencias</span></div><div class="sched"><span class="sched-t">Horarios de las próximas pruebas</span><div class="sched-grid">
+</style></head><body><nav><span class="brand"><img src="/images/uix-logo.png" alt="uix" width="62" height="22"><b>Originación Única · Reporte ejecutivo</b></span><span class="nav-actions"><span><a class="doc-link" href="#documentos">Documentos</a> · 5 agosto 2026</span><a class="login-link" href="/login">Iniciar sesión</a></span></nav><section class="hero" id="portada"><span class="kicker">Decisión ejecutiva · Primero lenguaje, después sistema</span><h1>Del hallazgo<br><span>a la acción.</span></h1><p>Inventario integral de cuatro rondas de pruebas, listo para consulta y presentación sin conexión.</p><div class="stats"><span><b>176</b>observaciones</span><span><b>82</b>completadas</span><span><b>94</b>pendientes</span><span><b>173</b>evidencias</span></div><div class="sched"><span class="sched-t">Horarios de las próximas pruebas</span><div class="sched-grid">
 <div class="slot work"><em>Mañana</em><time datetime="09:00">9:00 – 14:00</time><span>Sesión de pruebas</span></div>
 <div class="slot rest"><em>Comida</em><time datetime="14:00">14:00 – 16:00</time><span>Receso</span></div>
 <div class="slot work"><em>Tarde</em><time datetime="16:00">16:00 – 19:00</time><span>Sesión de pruebas</span></div>

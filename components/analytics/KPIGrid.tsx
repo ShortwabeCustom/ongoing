@@ -9,7 +9,7 @@ interface KPIGridProps {
   filters?: AnalyticsQuery
 }
 
-export function KPIGrid({ initialData, filters = {} }: KPIGridProps) {
+export function KPIGrid({ initialData, filters = { granularity: 'day' } }: KPIGridProps) {
   const { data, isLoading, error } = useAnalytics({
     initialData,
     filters,
@@ -18,7 +18,7 @@ export function KPIGrid({ initialData, filters = {} }: KPIGridProps) {
 
   if (error) {
     return (
-      <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
+      <div className="rounded-lg border border-[#f1c8bd] bg-[#fff0eb] p-4 text-[#9b321f]">
         Error al cargar métricas: {error}
       </div>
     )

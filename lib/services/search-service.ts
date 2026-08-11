@@ -1,5 +1,12 @@
 import { getEsClient } from '@/lib/es-lazy'
 import { FINDINGS_INDEX, ensureIndexExists } from '@/lib/elasticsearch/findings-index'
+import {
+  Prisma,
+  type FindingPriority,
+  type FindingSeverity,
+  type FindingStatus,
+} from '@/lib/generated/prisma/client'
+import { getDb } from '@/lib/db-lazy'
 import { SearchQuery } from '@/lib/validators/search-query'
 
 export interface SearchFindingItem {
@@ -11,6 +18,8 @@ export interface SearchFindingItem {
   severity: string
   assigneeId?: string
   projectId: string
+  experienceTags?: Array<{ experienceTag: string }>
+  incidenceTypes?: Array<{ incidenceType: string }>
   createdAt: string
 }
 
@@ -22,6 +31,8 @@ export interface SearchResponse {
   total: number
   items: SearchFindingItem[]
   took_ms: number
+  source?: 'elasticsearch' | 'postgresql'
+  warning?: string
   facets: {
     status?: Record<string, number>
     priority?: Record<string, number>
@@ -45,11 +56,102 @@ export interface FindingDocument {
   updatedAt: Date
 }
 
+type TermsBucket = {
+  key: string | number
+  doc_count: number
+}
+
+type TermsAggregation = {
+  buckets?: TermsBucket[]
+}
+
+let elasticsearchUnavailableUntil = 0
+const ELASTICSEARCH_RETRY_DELAY_MS = 30_000
+
+function isElasticsearchEnabled() {
+  return process.env.ELASTICSEARCH_ENABLED === 'true' && Boolean(process.env.ELASTICSEARCH_URL)
+}
+
+function getTermsBuckets(aggregation: unknown): TermsBucket[] {
+  return (aggregation as TermsAggregation | undefined)?.buckets ?? []
+}
+
+function toFacetRecord(rows: Array<{ [key: string]: unknown; _count: number }>, field: string) {
+  return Object.fromEntries(rows.map((row) => [String(row[field]), row._count]))
+}
+
+function buildPostgresWhere(query: SearchQuery): Prisma.FindingWhereInput {
+  const where: Prisma.FindingWhereInput = {
+    deletedAt: null,
+  }
+  const and: Prisma.FindingWhereInput[] = []
+
+  if (query.status?.length) {
+    where.status = { in: query.status as FindingStatus[] }
+  }
+
+  if (query.priority?.length) {
+    where.priority = { in: query.priority as FindingPriority[] }
+  }
+
+  if (query.severity?.length) {
+    where.severity = { in: query.severity as FindingSeverity[] }
+  }
+
+  if (query.assignee?.length) {
+    where.assigneeId = { in: query.assignee }
+  }
+
+  if (query.project?.length) {
+    where.projectId = { in: query.project }
+  }
+
+  if (query.dateFrom || query.dateTo) {
+    where.createdAt = {}
+    if (query.dateFrom) where.createdAt.gte = new Date(query.dateFrom)
+    if (query.dateTo) where.createdAt.lte = new Date(query.dateTo)
+  }
+
+  if (query.hasEvidence !== undefined && query.hasEvidence !== 'any') {
+    const hasEvidence =
+      query.hasEvidence === true || query.hasEvidence === 'with'
+
+    where.evidence = hasEvidence
+      ? { some: { deletedAt: null } }
+      : { none: { deletedAt: null } }
+  }
+
+  if (query.q) {
+    const textFilter = { contains: query.q, mode: 'insensitive' as const }
+    and.push({
+      OR: [
+        { observation: textFilter },
+        { folio: textFilter },
+        { previousScreen: textFilter },
+        { currentScreen: textFilter },
+        { flowStep: textFilter },
+        { evidence: { some: { deletedAt: null, caption: textFilter } } },
+        { evidence: { some: { deletedAt: null, originalFilename: textFilter } } },
+        { comments: { some: { text: textFilter } } },
+        { resolutions: { some: { description: textFilter } } },
+      ],
+    })
+  }
+
+  if (and.length) {
+    where.AND = and
+  }
+
+  return where
+}
+
 export class SearchService {
   /**
    * Index a single finding in Elasticsearch
    */
   static async indexFinding(finding: FindingDocument): Promise<void> {
+    if (!isElasticsearchEnabled()) return
+
     try {
       await ensureIndexExists()
 
@@ -81,6 +183,8 @@ export class SearchService {
    * Remove a finding from the Elasticsearch index
    */
   static async removeFromIndex(id: string): Promise<void> {
+    if (!isElasticsearchEnabled()) return
+
     try {
       const client = getEsClient()
       await client.delete({
@@ -101,6 +205,7 @@ export class SearchService {
    */
   static async bulkIndexFindings(findings: FindingDocument[]): Promise<void> {
     if (findings.length === 0) return
+    if (!isElasticsearchEnabled()) return
 
     try {
       await ensureIndexExists()
@@ -144,6 +249,25 @@ export class SearchService {
    * Search findings with full-text and filters
    */
   static async search(query: SearchQuery): Promise<SearchResponse> {
+    if (!isElasticsearchEnabled()) {
+      return this.searchPostgres(query, 'Elasticsearch disabled; using PostgreSQL fallback')
+    }
+
+    const now = Date.now()
+    if (now < elasticsearchUnavailableUntil) {
+      return this.searchPostgres(query, 'Elasticsearch temporarily unavailable')
+    }
+
+    try {
+      return await this.searchElasticsearch(query)
+    } catch (error) {
+      elasticsearchUnavailableUntil = Date.now() + ELASTICSEARCH_RETRY_DELAY_MS
+      console.warn('[Search] Elasticsearch unavailable; falling back to PostgreSQL:', error)
+      return this.searchPostgres(query, 'Elasticsearch unavailable; using PostgreSQL fallback')
+    }
+  }
+
+  private static async searchElasticsearch(query: SearchQuery): Promise<SearchResponse> {
     await ensureIndexExists()
 
     const client = getEsClient()
@@ -230,10 +354,10 @@ export class SearchService {
           terms: { field: 'severity', size: 20 },
         },
         assignee: {
-          terms: { field: 'assigneeId.keyword', size: 50 },
+          terms: { field: 'assigneeId', size: 50 },
         },
         project: {
-          terms: { field: 'projectId.keyword', size: 50 },
+          terms: { field: 'projectId', size: 50 },
         },
       },
       from: query.offset,
@@ -258,6 +382,8 @@ export class SearchService {
       severity: hit._source.severity,
       assigneeId: hit._source.assigneeId,
       projectId: hit._source.projectId,
+      experienceTags: hit._source.experienceTags,
+      incidenceTypes: hit._source.incidenceTypes,
       createdAt: hit._source.createdAt,
     }))
 
@@ -265,37 +391,37 @@ export class SearchService {
 
     if (result.aggregations?.status) {
       facets.status = {}
-      for (const bucket of result.aggregations.status.buckets ?? []) {
-        facets.status[bucket.key] = bucket.doc_count
+      for (const bucket of getTermsBuckets(result.aggregations.status)) {
+        facets.status[String(bucket.key)] = bucket.doc_count
       }
     }
 
     if (result.aggregations?.priority) {
       facets.priority = {}
-      for (const bucket of result.aggregations.priority.buckets ?? []) {
-        facets.priority[bucket.key] = bucket.doc_count
+      for (const bucket of getTermsBuckets(result.aggregations.priority)) {
+        facets.priority[String(bucket.key)] = bucket.doc_count
       }
     }
 
     if (result.aggregations?.severity) {
       facets.severity = {}
-      for (const bucket of result.aggregations.severity.buckets ?? []) {
-        facets.severity[bucket.key] = bucket.doc_count
+      for (const bucket of getTermsBuckets(result.aggregations.severity)) {
+        facets.severity[String(bucket.key)] = bucket.doc_count
       }
     }
 
     // FASE 14: Assignee facets
     if (result.aggregations?.assignee) {
-      facets.assignee = (result.aggregations.assignee.buckets ?? []).map((bucket: any) => ({
-        id: bucket.key,
+      facets.assignee = getTermsBuckets(result.aggregations.assignee).map((bucket) => ({
+        id: String(bucket.key),
         doc_count: bucket.doc_count,
       }))
     }
 
     // FASE 14: Project facets
     if (result.aggregations?.project) {
-      facets.project = (result.aggregations.project.buckets ?? []).map((bucket: any) => ({
-        id: bucket.key,
+      facets.project = getTermsBuckets(result.aggregations.project).map((bucket) => ({
+        id: String(bucket.key),
         doc_count: bucket.doc_count,
       }))
     }
@@ -304,7 +430,98 @@ export class SearchService {
       total,
       items,
       took_ms,
+      source: 'elasticsearch',
       facets,
+    }
+  }
+
+  private static async searchPostgres(query: SearchQuery, warning?: string): Promise<SearchResponse> {
+    const db = getDb()
+    const startTime = Date.now()
+    const where = buildPostgresWhere(query)
+
+    const [items, total, statusFacetRows, priorityFacetRows, severityFacetRows, assigneeFacetRows, projectFacetRows] =
+      await Promise.all([
+        db.finding.findMany({
+          where,
+          orderBy: { createdAt: 'desc' },
+          skip: query.offset,
+          take: query.limit,
+          select: {
+            id: true,
+            observation: true,
+            status: true,
+            priority: true,
+            severity: true,
+            assigneeId: true,
+            projectId: true,
+            experienceTags: {
+              select: { experienceTag: true },
+            },
+            incidenceTypes: {
+              select: { incidenceType: true },
+            },
+            createdAt: true,
+          },
+        }),
+        db.finding.count({ where }),
+        db.finding.groupBy({
+          by: ['status'],
+          where,
+          _count: true,
+        }),
+        db.finding.groupBy({
+          by: ['priority'],
+          where,
+          _count: true,
+        }),
+        db.finding.groupBy({
+          by: ['severity'],
+          where,
+          _count: true,
+        }),
+        db.finding.groupBy({
+          by: ['assigneeId'],
+          where: { ...where, assigneeId: { not: null } },
+          _count: true,
+        }),
+        db.finding.groupBy({
+          by: ['projectId'],
+          where,
+          _count: true,
+        }),
+      ])
+
+    return {
+      total,
+      items: items.map((item) => ({
+        id: item.id,
+        observation: item.observation,
+        status: item.status,
+        priority: item.priority,
+        severity: item.severity,
+        assigneeId: item.assigneeId ?? undefined,
+        projectId: item.projectId,
+        experienceTags: item.experienceTags,
+        incidenceTypes: item.incidenceTypes,
+        createdAt: item.createdAt.toISOString(),
+      })),
+      took_ms: Date.now() - startTime,
+      source: 'postgresql',
+      warning,
+      facets: {
+        status: toFacetRecord(statusFacetRows, 'status'),
+        priority: toFacetRecord(priorityFacetRows, 'priority'),
+        severity: toFacetRecord(severityFacetRows, 'severity'),
+        assignee: assigneeFacetRows.map((row) => ({
+          id: row.assigneeId ?? '',
+          doc_count: row._count,
+        })),
+        project: projectFacetRows.map((row) => ({
+          id: row.projectId,
+          doc_count: row._count,
+        })),
+      },
     }
   }
 }

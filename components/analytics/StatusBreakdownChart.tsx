@@ -32,16 +32,16 @@ export function StatusBreakdownChart({
 }: StatusBreakdownChartProps) {
   if (isLoading) {
     return (
-      <div className="flex h-80 items-center justify-center rounded-lg border bg-gray-50">
-        <p className="text-gray-500">Cargando breakdown...</p>
+      <div className="pm-card flex h-80 items-center justify-center">
+        <p className="text-sm font-medium text-[#65766e]">Cargando distribución...</p>
       </div>
     )
   }
 
   if (!data || Object.keys(data).length === 0) {
     return (
-      <div className="flex h-80 items-center justify-center rounded-lg border bg-gray-50">
-        <p className="text-gray-500">Sin datos disponibles</p>
+      <div className="pm-card flex h-80 items-center justify-center">
+        <p className="text-sm font-medium text-[#65766e]">Sin datos disponibles</p>
       </div>
     )
   }
@@ -54,13 +54,13 @@ export function StatusBreakdownChart({
     .sort((a, b) => b.count - a.count)
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-6">
-      <h3 className="mb-4 text-lg font-semibold text-gray-900">
+    <div className="pm-card p-6">
+      <h3 className="mb-4 text-lg font-semibold text-[#17251f]">
         Distribución por Estado
       </h3>
       <ResponsiveContainer width="100%" height={350}>
         <BarChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid stroke="#dbe4dd" strokeDasharray="3 3" />
           <XAxis
             dataKey="status"
             tick={{ fontSize: 12 }}
@@ -72,11 +72,11 @@ export function StatusBreakdownChart({
           <Tooltip
             contentStyle={{
               backgroundColor: '#fff',
-              border: '1px solid #ccc',
+              border: '1px solid #dbe4dd',
               borderRadius: '8px',
             }}
           />
-          <Bar dataKey="count" fill="#3b82f6" radius={[8, 8, 0, 0]} />
+          <Bar dataKey="count" fill="#00a85a" radius={[8, 8, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

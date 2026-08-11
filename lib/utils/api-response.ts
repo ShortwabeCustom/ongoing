@@ -62,6 +62,36 @@ export function apiError(error: unknown) {
       )
     }
 
+    if (message === 'FORBIDDEN') {
+      return NextResponse.json(
+        {
+          code: 'FORBIDDEN',
+          message: 'You do not have permission to perform this action.',
+        },
+        { status: 403 },
+      )
+    }
+
+    if (message === 'USER_NOT_FOUND') {
+      return NextResponse.json(
+        {
+          code: 'USER_NOT_FOUND',
+          message: 'User not found',
+        },
+        { status: 404 },
+      )
+    }
+
+    if (message === 'PROJECT_OWNER_REQUIRED' || message === 'PROJECT_OWNER_ROLE_REQUIRED') {
+      return NextResponse.json(
+        {
+          code: message,
+          message: 'The project owner must remain an OWNER member.',
+        },
+        { status: 409 },
+      )
+    }
+
     if (message === 'VERSION_MISMATCH') {
       return NextResponse.json(
         {

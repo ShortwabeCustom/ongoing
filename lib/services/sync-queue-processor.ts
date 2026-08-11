@@ -149,7 +149,8 @@ export const syncQueueProcessor = {
       if (result.success) {
         succeeded++;
       } else {
-        if (item.status === "failed") failed++;
+        const processedItem = item as SyncQueueItem;
+        if (processedItem.status === "failed") failed++;
       }
 
       // Pequeño delay entre requests (no saturar)

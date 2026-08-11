@@ -1,531 +1,414 @@
-# 📊 MODELO DE DATOS — Pruebas María 2.0
-
-**Fecha**: 2026-08-07  
-**Status**: Implementado en Prisma ✓  
-**ORM**: Prisma 7.9.1  
-**Database**: PostgreSQL 15+
-
----
-
-## RELACIONES DE ENTIDADES
-
-```
-┌──────────────┐
-│ User         │
-├──────────────┤
-│ id (PK)      │
-│ email (UQ)   │
-│ name         │
-│ role (Enum)  │
-│ createdAt    │
-└──────────────┘
-       │
-       ├─────────────────────┬──────────────────┬─────────────────┐
-       │                     │                  │                 │
-       ▼                     ▼                  ▼                 ▼
-  ┌─────────────┐    ┌───────────────┐  ┌──────────────┐  ┌──────────────┐
-  │ProjectMember│    │Finding        │  │Evidence      │  │Comment       │
-  └─────────────┘    │(createdBy,    │  └──────────────┘  └──────────────┘
-                     │updatedBy,     │
-                     │assignee)      │
-                     └───────────────┘
-
-
-┌────────────┐
-│ Project    │ ◀──── 1:N ────── ProjectMember
-├────────────┤
-│ id (PK)    │
-│ name       │
-│ ownerId(FK)│ ─────────► User
-└────────────┘
-     │
-     ├─ 1:N ──────► ProductVersion
-     │
-     ├─ 1:N ──────► TestSession
-     │
-     └─ 1:N ──────► Finding
-
-
-┌──────────────────┐
-│ ProductVersion   │
-├──────────────────┤
-│ id (PK)          │
-│ projectId (FK)   │
-│ version (String) │
-│ releasedAt       │
-└──────────────────┘
-     │
-     └─ 1:N ──────► TestSession
-
-
-┌──────────────────┐
-│ TestSession      │
-├──────────────────┤
-│ id (PK)          │
-│ projectId (FK)   │
-│ versionId (FK)   │
-│ name (String)    │
-│ date             │
-│ environment      │
-│ createdBy (FK)   │
-└──────────────────┘
-     │
-     ├─ 1:N ──────► Finding
-     │
-     └─ 1:1 ──────► ImportBatch
-
-
-┌──────────────────────────────┐
-│ Finding (CORE)               │ ◀──── El corazón del dominio
-├──────────────────────────────┤
-│ id (PK)                      │
-│ projectId (FK)               │
-│ testSessionId (FK)           │
-│ observation (Text)           │
-│ status (Enum)                │
-│ priority (Enum)              │
-│ severity (Enum)              │
-│ effort (Enum)                │
-│ version (Int - opt lock)     │
-│ assigneeId (FK, nullable)    │
-│ importBatchId (FK, nullable) │
-│ createdBy (FK)               │
-│ updatedBy (FK, nullable)     │
-│ createdAt / updatedAt        │
-│ deletedAt (soft delete)      │
-└──────────────────────────────┘
-     │
-     ├─ N:M ──────► IncidenceType (FindingIncidenceType pivot)
-     │
-     ├─ N:M ──────► ExperienceTag (FindingExperienceTag pivot)
-     │
-     ├─ 1:N ──────► Evidence
-     │
-     ├─ 1:1 ──────► Resolution
-     │
-     ├─ 1:1 ──────► Validation
-     │
-     ├─ 1:N ──────► Comment
-     │
-     ├─ 1:N ──────► FindingStatusHistory
-     │
-     └─ 1:N ──────► AuditLog
-
-
-┌────────────────────────────────┐
-│ FindingIncidenceType (Pivot)   │
-├────────────────────────────────┤
-│ findingId (PK, FK)             │
-│ incidenceType (PK, Enum)       │
-│                                │
-│ Enum values:                   │
-│ • DESIGN                       │
-│ • FUNCTIONALITY                │
-│ • BUSINESS_RULE                │
-│ • COPY                         │
-└────────────────────────────────┘
-
-
-┌────────────────────────────────┐
-│ FindingExperienceTag (Pivot)   │
-├────────────────────────────────┤
-│ findingId (PK, FK)             │
-│ experienceTag (PK, Enum)       │
-│                                │
-│ Enum values:                   │
-│ • UI                           │
-│ • UX                           │
-│ • COPY                         │
-└────────────────────────────────┘
-
-
-┌──────────────────┐
-│ Evidence         │ ◀──── Imágenes, videos, documentos
-├──────────────────┤
-│ id (PK)          │
-│ findingId (FK)   │
-│ type (Enum)      │
-│ storageKey       │ ──────► S3 path
-│ url              │ ──────► Signed URL
-│ originalFilename │
-│ mimeType         │
-│ fileSize         │
-│ caption          │
-│ createdBy (FK)   │
-│ createdAt        │
-└──────────────────┘
-
-
-┌──────────────────┐
-│ Resolution       │ ◀──── Cómo se resolvió
-├──────────────────┤
-│ id (PK)          │
-│ findingId (UQ)   │
-│ description      │
-│ createdBy (FK)   │
-│ createdAt        │
-│ updatedAt        │
-└──────────────────┘
-
-
-┌──────────────────┐
-│ Validation       │ ◀──── Fue validado?
-├──────────────────┤
-│ id (PK)          │
-│ findingId (UQ)   │
-│ result (Enum)    │ ─► PASSED / FAILED / PARTIAL
-│ notes            │
-│ validatedBy (FK) │
-│ validatedAt      │
-└──────────────────┘
-
-
-┌──────────────────┐
-│ Comment          │ ◀──── Comentarios en hallazgo
-├──────────────────┤
-│ id (PK)          │
-│ findingId (FK)   │
-│ text (Text)      │
-│ createdBy (FK)   │
-│ createdAt        │
-│ updatedAt        │
-└──────────────────┘
-
-
-┌───────────────────────────┐
-│ FindingStatusHistory      │ ◀──── Auditoría de cambios
-├───────────────────────────┤
-│ id (PK)                   │
-│ findingId (FK)            │
-│ fromStatus (Enum)         │
-│ toStatus (Enum)           │
-│ reason (Text, nullable)   │
-│ changedBy (FK)            │
-│ changedAt (DateTime)      │
-└───────────────────────────┘
-
-
-┌───────────────────────────┐
-│ AuditLog                  │ ◀──── Log general de cambios
-├───────────────────────────┤
-│ id (PK)                   │
-│ entityType (String)       │
-│ entityId (UUID)           │
-│ action (Enum)             │
-│ before (JSON)             │
-│ after (JSON)              │
-│ actorId (FK)              │
-│ createdAt                 │
-│                           │
-│ Actions:                  │
-│ • CREATE                  │
-│ • UPDATE                  │
-│ • DELETE                  │
-│ • STATUS_CHANGE           │
-│ • ASSIGN                  │
-│ • VALIDATE                │
-│ • RESOLVE                 │
-│ • IMPORT                  │
-└───────────────────────────┘
-
-
-┌──────────────────────┐
-│ ImportBatch          │ ◀──── Lote de importación
-├──────────────────────┤
-│ id (PK)              │
-│ projectId (FK)       │
-│ testSessionId (UQ)   │
-│ originalFilename     │
-│ fileSize             │
-│ totalRows            │
-│ validRows            │
-│ skippedRows          │
-│ status (Enum)        │
-│ errorMessage         │
-│ importedBy (FK)      │
-│ createdAt            │
-│                      │
-│ Status:              │
-│ • PENDING            │
-│ • PROCESSING         │
-│ • COMPLETED          │
-│ • FAILED             │
-│ • ROLLED_BACK        │
-└──────────────────────┘
-```
-
----
-
-## ÍNDICES DE BASE DE DATOS
-
-```sql
--- Performance para búsquedas frecuentes
-CREATE INDEX idx_finding_projectid ON findings(projectId);
-CREATE INDEX idx_finding_status ON findings(status);
-CREATE INDEX idx_finding_testsession ON findings(testSessionId);
-CREATE INDEX idx_finding_assignee ON findings(assigneeId);
-CREATE INDEX idx_finding_priority ON findings(priority);
-CREATE INDEX idx_finding_created ON findings(createdAt DESC);
-
--- Soft deletes
-CREATE INDEX idx_finding_not_deleted ON findings(projectId, status)
-  WHERE deletedAt IS NULL;
-
--- Relaciones
-CREATE INDEX idx_evidence_finding ON evidence(findingId);
-CREATE INDEX idx_statushistory_finding ON finding_status_history(findingId);
-CREATE INDEX idx_auditlog_entity ON audit_logs(entityType, entityId);
-```
-
----
-
-## RESTRICCIONES ÚNIQUES
-
-```sql
--- Usuarios
-CREATE UNIQUE INDEX idx_user_email ON users(email);
-
--- Proyectos
--- (no unique email, pero sí email por usuario)
-
--- ProjectMembers
-CREATE UNIQUE INDEX idx_projectmember_unique ON project_members(projectId, userId);
-
--- ProductVersions
-CREATE UNIQUE INDEX idx_productversion_unique ON product_versions(projectId, version);
-
--- TestSession
-CREATE UNIQUE INDEX idx_testsession_importbatch ON test_sessions(id)
-  WHERE EXISTS (SELECT 1 FROM import_batches WHERE import_batches.testSessionId = test_sessions.id);
-
--- Finding
--- (version es para optimistic locking, no unique)
-
--- Resolution / Validation
-CREATE UNIQUE INDEX idx_resolution_finding ON resolutions(findingId);
-CREATE UNIQUE INDEX idx_validation_finding ON validations(findingId);
-
--- FindingIncidenceType / FindingExperienceTag
--- (PK compuesto ya garantiza unicidad)
-```
-
----
-
-## FOREIGN KEY CONSTRAINTS
-
-```sql
--- Cascade on delete para relaciones normales
--- SetNull para opcional (ej: assigneeId, updatedBy)
--- Cascade para puros borrados (soft delete manejo)
-
--- ON DELETE rules:
--- • User: No cascade (evitar borrar usuarios con datos)
--- • Project: Cascade (si borro proyecto, borro todo)
--- • TestSession: Cascade (si borro sesión, borro hallazgos)
--- • Finding: NO cascade (Finding es central)
--- • Evidence: Cascade (depende de Finding)
--- • ImportBatch: SetNull (para auditoría)
-```
-
----
-
-## CAMPOS ESPECIALES
-
-### Optimistic Locking
-```
-Finding.version (Int, default: 1)
-
-ANTES de UPDATE:
-  WHERE id = ? AND version = ?
-  
-Si version no coincide:
-  409 Conflict (otro usuario actualizó)
-  
-Si éxito:
-  version = version + 1
-```
-
-### Soft Delete
-```
-Finding.deletedAt (DateTime, nullable)
-
-Query por defecto:
-  WHERE deletedAt IS NULL
-  
-Restaurar:
-  UPDATE finding SET deletedAt = NULL WHERE id = ?
-```
-
-### Signed URLs
-```
-Evidence.storageKey   (ruta en S3)
-Evidence.url          (signed URL, temporal)
-
-GET /evidence/123 → devuelve URL firmada actual
-```
-
----
-
-## ENUMS DEFINIDOS
-
-### UserRole
-```
-OWNER                 ← Acceso completo
-QA_LEAD              ← Crear/validar hallazgos
-DESIGNER             ← Trabajar hallazgos UI/Copy
-DEVELOPER            ← Trabajar hallazgos funcionalidad
-BUSINESS_REVIEWER    ← Revisar reglas de negocio
-VIEWER               ← Solo lectura
-```
-
-### FindingStatus
-```
-OPEN                 ← Nuevo hallazgo
-TRIAGED              ← Analizado, listo para trabajo
-IN_PROGRESS          ← Siendo resuelto
-READY_FOR_VALIDATION ← Esperando validación
-VALIDATED            ← Validado exitoso
-CLOSED               ← Cerrado (resuelto + validado)
-BLOCKED              ← Bloqueado (espera recurso externo)
-REOPENED             ← Reabierto (falló validación)
-```
-
-### FindingPriority
-```
-LOW      ← No urgente
-MEDIUM   ← Estándar
-HIGH     ← Importante
-CRITICAL ← Bloqueador
-```
-
-### FindingSeverity
-```
-COSMETIC ← Visual, no funcional
-MINOR    ← Impacto bajo
-MAJOR    ← Impacto significativo
-BLOCKER  ← Bloquea funcionalidad
-```
-
-### FindingEffort
-```
-S  ← Small (< 2h)
-M  ← Medium (2-4h)
-L  ← Large (4-8h)
-XL ← Extra Large (> 8h)
-```
-
-### IncidenceType
-```
-DESIGN         ← Problema de diseño
-FUNCTIONALITY  ← Problema funcional
-BUSINESS_RULE  ← Regla de negocio
-COPY           ← Problema de texto
-```
-
-### ExperienceTag
-```
-UI   ← Interfaz
-UX   ← Experiencia
-COPY ← Texto/Contenido
-```
-
-### EvidenceType
-```
-IMAGE         ← Imagen (PNG, JPG)
-VIDEO         ← Video (MP4, etc)
-DOCUMENT      ← Documento (PDF, Word)
-FIGMA_URL     ← Link a Figma
-EXTERNAL_URL  ← URL externa
-```
-
-### ValidationResult
-```
-PASSED  ← Validó correctamente
-FAILED  ← No pasó validación
-PARTIAL ← Parcialmente validado
-```
-
-### AuditAction
-```
-CREATE        ← Entidad creada
-UPDATE        ← Campos actualizados
-DELETE        ← Borrado (soft)
-STATUS_CHANGE ← Cambio de estado
-ASSIGN        ← Asignación
-VALIDATE      ← Validación
-RESOLVE       ← Resolución
-IMPORT        ← Importación
-```
-
-### ImportStatus
-```
-PENDING     ← Esperando confirmación
-PROCESSING  ← En procesamiento
-COMPLETED   ← Completado
-FAILED      ← Error durante importación
-ROLLED_BACK ← Transacción revocada
-```
-
----
-
-## ARCHIVOS GENERADOS
-
-```
-prisma/
-├── schema.prisma         ← Definición completa (440 líneas)
-├── migrations/
-│   └── [timestamp]_init  ← Primera migración (generated)
-└── seed.ts (futuro)      ← Seeder para datos de prueba
-
-lib/
-├── db.ts                 ← Cliente Prisma singleton
-├── types/
-│   └── index.ts          ← Re-exports de Prisma types
-└── validators/
-    ├── finding.ts        ← Esquemas Zod para Finding
-    └── import.ts         ← Esquemas Zod para Import
-
-.env                      ← Configuración local
-.env.example              ← Plantilla con placeholders
-.gitignore                ← Actualizado con .env
-```
-
----
-
-## PRÓXIMOS PASOS
-
-1. ✓ Schema definido en Prisma
-2. ⏳ Generar migración inicial: `pnpm exec prisma migrate dev --name init`
-3. ⏳ Crear seed.ts para datos de prueba
-4. ⏳ Documentar API endpoints
-5. ⏳ Implementar Route Handlers
-
----
-
-## NOTAS DE DISEÑO
-
-### Por qué N:M con Pivot
-- Un hallazgo puede tener múltiples incidenceTypes (DESIGN + BUSINESS_RULE)
-- Un hallazgo puede tener múltiples experienceTags (UI + COPY)
-- Pivot tables permiten queries eficientes: `WHERE incidenceType = 'DESIGN'`
-
-### Por qué Soft Delete
-- Hallazgos son históricos
-- No queremos perder auditoría
-- Recuperación posible si error
-
-### Por qué Optimistic Locking
-- Concurrencia: dos usuarios editando simultáneamente
-- Sin lock = última escritura gana (bad)
-- Con versión = conflicto detectado (good)
-
-### Por qué Separate Resolution/Validation
-- Finding original se preserva
-- Resolution = cómo se arregló
-- Validation = fue correcta la resolución?
-- Permite ANTES/DESPUÉS en UI
-
----
-
-**Status**: Schema listo para migración.  
-**Siguiente**: Generar migración con `prisma migrate dev --name init`
+# Modelo de datos - Pruebas Maria 2.0
+
+Fecha: 2026-08-11  
+Fase: 1 - Modelo de datos  
+Fuente de verdad: `prisma/schema.prisma`
+
+Este documento describe el contrato de datos vigente para evolucionar la PWA estatica hacia la plataforma de evidencias. El modelo usa PostgreSQL + Prisma 7 con cliente generado en `lib/generated/prisma`.
+
+## Estado de Fase 1
+
+- Prisma ya estaba instalado y configurado.
+- `prisma.config.ts` ahora declara `SHADOW_DATABASE_URL` opcional para diff/validacion de migraciones.
+- `npx prisma validate` pasa sin warnings.
+- Se agrego una migracion de reconciliacion: `prisma/migrations/zz_20260811000000_reconcile_phase1_schema/migration.sql`.
+- La migracion fue probada sobre una DB temporal vacia con `prisma migrate deploy`; el diff final contra `schema.prisma` quedo sin diferencias.
+- La DB local de desarrollo aun no tiene aplicada esa migracion. Esto es intencional: no se ejecutaron cambios destructivos ni `migrate dev` contra la DB de trabajo.
+
+## Identificadores
+
+Los modelos usan `String @default(cuid())`. No son UUID. Cualquier validator/API que exija `uuid()` debe considerarse deuda tecnica para Fase 3, salvo endpoints que ya hayan sido corregidos.
+
+## Entidades
+
+### User
+
+Representa usuarios autenticados y actores de auditoria.
+
+Campos principales:
+
+- `id`
+- `email`
+- `name`
+- `passwordHash`
+- `role`
+- `createdAt`, `updatedAt`, `deletedAt`
+
+Relaciones:
+
+- proyectos propios
+- membresias de proyecto
+- hallazgos creados, actualizados o asignados
+- sesiones de prueba creadas
+- evidencia y comentarios
+- resoluciones, validaciones, historial y auditoria
+- sesiones auth, push subscriptions, notificaciones y actividad
+
+Soft delete: si, mediante `deletedAt`.
+
+### Project
+
+Agrupa producto o iniciativa.
+
+Campos principales:
+
+- `id`
+- `name`
+- `description`
+- `ownerId`
+- `createdAt`, `updatedAt`, `deletedAt`
+
+Relaciones:
+
+- `owner`
+- `members`
+- `versions`
+- `testSessions`
+- `findings`
+- `importBatches`
+
+Soft delete: si, mediante `deletedAt`.
+
+### ProjectMember
+
+Une usuarios con proyectos y su rol operativo dentro del proyecto.
+
+Campos principales:
+
+- `projectId`
+- `userId`
+- `role`
+- `joinedAt`
+
+Restriccion:
+
+- `@@unique([projectId, userId])`
+
+### ProductVersion
+
+Version de producto evaluada.
+
+Campos principales:
+
+- `projectId`
+- `version`
+- `releasedAt`
+- `createdAt`
+
+Restriccion:
+
+- `@@unique([projectId, version])`
+
+### TestSession
+
+Representa una sesion/ronda de pruebas.
+
+Campos principales:
+
+- `projectId`
+- `versionId`
+- `name`
+- `date`
+- `environment`
+- `createdBy`
+- `createdAt`
+
+Relaciones:
+
+- pertenece a `Project`
+- pertenece a `ProductVersion`
+- contiene muchos `Finding`
+- puede tener un `ImportBatch`
+
+### Finding
+
+Entidad central del dominio.
+
+Campos principales:
+
+- `projectId`
+- `testSessionId`
+- `folio`
+- `observation`
+- `status`
+- `version`
+- `priority`
+- `severity`
+- `effort`
+- `previousScreen`, `currentScreen`, `flowStep`
+- `assigneeId`, `dueDate`
+- `sourceSheet`, `sourceRow`, `importBatchId`
+- `createdBy`, `updatedBy`
+- `createdAt`, `updatedAt`, `deletedAt`
+
+Relaciones:
+
+- categorias multi-value via `FindingIncidenceType`
+- etiquetas de experiencia via `FindingExperienceTag`
+- muchas evidencias
+- muchas resoluciones
+- muchas validaciones
+- comentarios
+- historial de estado
+
+Soft delete: si, mediante `deletedAt`.
+
+Concurrencia:
+
+- `version` habilita optimistic locking.
+- Las actualizaciones deben comparar version cliente vs DB antes de escribir.
+
+### FindingIncidenceType
+
+Tabla pivote para tipos de incidencia.
+
+Enum:
+
+- `DESIGN`
+- `FUNCTIONALITY`
+- `BUSINESS_RULE`
+- `COPY`
+
+Clave:
+
+- `@@id([findingId, incidenceType])`
+
+### FindingExperienceTag
+
+Tabla pivote para clasificacion UI/UX/Copy.
+
+Enum:
+
+- `UI`
+- `UX`
+- `COPY`
+
+Clave:
+
+- `@@id([findingId, experienceTag])`
+
+### Evidence
+
+Metadatos de evidencia almacenada en object storage o URLs externas.
+
+Campos principales:
+
+- `findingId`
+- `type`
+- `storageKey`
+- `url`
+- `originalFilename`
+- `mimeType`
+- `fileSize`
+- `caption`
+- `resolutionId`
+- `validationId`
+- `createdBy`
+- `createdAt`
+
+Tipos:
+
+- `IMAGE`
+- `VIDEO`
+- `DOCUMENT`
+- `FIGMA_URL`
+- `EXTERNAL_URL`
+
+Decision de Fase 1:
+
+- No se agrego `deletedAt` a `Evidence` todavia.
+- Motivo: borrar o restaurar evidencia requiere una politica coordinada con object storage. Agregar soft delete sin esa politica podria dejar objetos huerfanos o una falsa sensacion de retencion.
+- Esta decision debe revisarse en la fase de Storage/API de evidencia.
+
+### Resolution
+
+Registro de propuesta o trabajo de resolucion asociado a un hallazgo.
+
+Campos principales:
+
+- `findingId`
+- `state`
+- `description`
+- `notes`
+- `assignedTo`
+- `createdBy`
+- `createdAt`, `updatedAt`
+
+Relacion:
+
+- un `Finding` puede tener muchas `Resolution`.
+- una `Resolution` puede tener evidencia adjunta.
+
+### Validation
+
+Checkpoint de validacion del resultado.
+
+Campos principales:
+
+- `findingId`
+- `result`
+- `criteria`
+- `notes`
+- `validatedBy`
+- `validatedAt`
+- `createdAt`, `updatedAt`
+
+Relacion:
+
+- un `Finding` puede tener muchas `Validation`.
+- una `Validation` puede tener evidencia adjunta.
+
+Resultados:
+
+- `PENDING`
+- `PASS`
+- `FAIL`
+
+La migracion de reconciliacion mapea valores historicos:
+
+- `PASSED` -> `PASS`
+- `FAILED` -> `FAIL`
+- `PARTIAL` -> `PENDING`
+
+### Comment
+
+Comentarios sobre un hallazgo.
+
+Campos principales:
+
+- `findingId`
+- `text`
+- `createdBy`
+- `createdAt`, `updatedAt`
+
+### FindingStatusHistory
+
+Historial especifico de transiciones de estado de `Finding`.
+
+Campos principales:
+
+- `findingId`
+- `fromStatus`
+- `toStatus`
+- `reason`
+- `changedBy`
+- `changedAt`
+
+`reason` cumple el rol de comentario de transicion.
+
+### AuditLog
+
+Log generico de cambios significativos.
+
+Campos principales:
+
+- `entityType`
+- `entityId`
+- `action`
+- `actorId`
+- `before`
+- `after`
+- `createdAt`
+
+Decisiones:
+
+- `AuditLog` es generico, no una relacion fuerte a `Finding`.
+- `actorId` es nullable para conservar auditoria si el usuario actor se elimina.
+- No debe almacenar passwords, tokens, cookies ni secretos.
+
+Acciones:
+
+- `CREATE`
+- `UPDATE`
+- `DELETE`
+- `STATUS_CHANGE`
+- `ASSIGN`
+- `VALIDATE`
+- `RESOLVE`
+- `IMPORT`
+
+### ImportBatch
+
+Control de lote de importacion.
+
+Campos principales:
+
+- `projectId`
+- `testSessionId`
+- `originalFilename`
+- `fileSize`
+- `importedAt`
+- `totalRows`, `validRows`, `skippedRows`
+- `status`
+- `errorMessage`
+- `importedBy`
+- `createdAt`
+
+Estados:
+
+- `PENDING`
+- `PROCESSING`
+- `COMPLETED`
+- `FAILED`
+- `ROLLED_BACK`
+
+### PushSubscription, Notification, Activity
+
+Modelos existentes para fases posteriores de notificaciones y colaboracion.
+
+Quedan en el schema porque ya existen servicios/componentes que los referencian, pero no son el foco funcional de Fase 1.
+
+## Indices principales
+
+Se mantienen indices para consultas esperadas:
+
+- `projectId`
+- `testSessionId`
+- `status`
+- `priority`
+- `assigneeId`
+- `createdAt`
+- `createdAt, status`
+- `importBatchId`
+- `deletedAt`
+- pivotes de categorias
+- `AuditLog.entityType, entityId`
+- `AuditLog.action`
+- `Validation.result`
+- `Validation.result, validatedAt`
+- `Resolution.state`
+
+## Migracion de Fase 1
+
+Archivo:
+
+`prisma/migrations/zz_20260811000000_reconcile_phase1_schema/migration.sql`
+
+Incluye:
+
+- `ResolutionState`
+- cambios de `ValidationResult`
+- campos de workflow en `Resolution` y `Validation`
+- relacion opcional de evidencia con resolucion/validacion
+- tablas `push_subscriptions` y `notifications`
+- indices faltantes
+- reconciliacion de foreign keys/referential actions
+- `AuditLog.actorId` nullable
+
+Validacion ejecutada:
+
+- `DATABASE_URL=<db temporal> npx prisma migrate deploy`
+- `DATABASE_URL=<db temporal> npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code`
+
+Resultado:
+
+- Todas las migraciones aplican desde DB vacia.
+- No queda diferencia contra `schema.prisma`.
+
+## Deuda tecnica que no se resuelve en Fase 1
+
+- La DB local de desarrollo tiene la migracion nueva pendiente.
+- Varias Route Handlers aun deben migrarse al contrato Next.js 16 con `params: Promise`.
+- El importador real corresponde a Fase 2; aun debe incorporar mapping, fingerprint, preview/confirm robusto y auth real.
+- Algunos validators usan UUID aunque los modelos usan CUID.
+- `public/app.html` sigue siendo legacy y no fue modificado.

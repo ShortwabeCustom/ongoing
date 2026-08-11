@@ -12,6 +12,8 @@ export function getEsClient(): Client {
 
     globalForElasticsearch.elasticsearchClient = new Client({
       node: elasticsearchUrl,
+      maxRetries: Number(process.env.ELASTICSEARCH_MAX_RETRIES ?? 0),
+      requestTimeout: Number(process.env.ELASTICSEARCH_REQUEST_TIMEOUT_MS ?? 1500),
       // Disable SSL verification for development
       tls: {
         rejectUnauthorized: false,

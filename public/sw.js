@@ -1,14 +1,19 @@
-const CACHE_NAME = "pruebas-maria-v1";
-const API_CACHE_NAME = "pruebas-maria-api-v1";
-const ASSET_CACHE_NAME = "pruebas-maria-assets-v1";
+const CACHE_NAME = "pruebas-maria-shell-v4";
+const ASSET_CACHE_NAME = "pruebas-maria-assets-v4";
+const DB_NAME = "pruebas-maria-offline";
+const DB_VERSION = 2;
+const OFFLINE_URL = "/offline.html";
 
 const URLS_TO_CACHE = [
   "/",
-  "/offline.html",
-  "/manifest.json",
-  "/api/findings?limit=100",
+  "/app.html",
+  OFFLINE_URL,
+  "/manifest.webmanifest",
+  "/icons/icon-192.png",
+  "/icons/icon-512.png",
 ];
 
+const CURRENT_CACHES = new Set([CACHE_NAME, ASSET_CACHE_NAME]);
 const NETWORK_TIMEOUT_MS = 5000;
 
 // Install: Cache críticos
@@ -17,7 +22,11 @@ self.addEventListener("install", (event) => {
     (async () => {
       try {
         const cache = await caches.open(CACHE_NAME);
-        await cache.addAll(URLS_TO_CACHE);
+        await Promise.allSettled(
+          URLS_TO_CACHE.map((url) =>
+            cache.add(new Request(url, { cache: "reload" }))
+          )
+        );
         self.skipWaiting();
       } catch (err) {
         console.error("Install error:", err);
@@ -33,7 +42,10 @@ self.addEventListener("activate", (event) => {
       const cacheNames = await caches.keys();
       await Promise.all(
         cacheNames
-          .filter((name) => !name.startsWith("pruebas-maria"))
+          .filter(
+            (name) =>
+              name.startsWith("pruebas-maria") && !CURRENT_CACHES.has(name)
+          )
           .map((name) => caches.delete(name))
       );
       self.clients.claim();
@@ -67,7 +79,13 @@ self.addEventListener("fetch", (event) => {
 
   // API: Network-first con timeout
   if (url.pathname.startsWith("/api/")) {
-    event.respondWith(networkFirstStrategy(request));
+    event.respondWith(apiNetworkStrategy(request));
+    return;
+  }
+
+  // Navigation: Network-first with HTML fallback
+  if (request.mode === "navigate") {
+    event.respondWith(navigationStrategy(request));
     return;
   }
 
@@ -108,7 +126,7 @@ async function networkFirstStrategy(request) {
 
     // Guardar en cache si está OK y el esquema es cacheable
     if (response.ok && isCacheableScheme(new URL(request.url))) {
-      const cache = await caches.open(API_CACHE_NAME);
+      const cache = await caches.open(CACHE_NAME);
       cache.put(request, response.clone()).catch((err) => {
         console.warn("Cache put error:", err);
       });
@@ -133,6 +151,49 @@ async function networkFirstStrategy(request) {
         headers: { "Content-Type": "application/json" },
       }
     );
+  }
+}
+
+async function apiNetworkStrategy(request) {
+  try {
+    return await fetchWithTimeout(request, NETWORK_TIMEOUT_MS);
+  } catch (err) {
+    return new Response(
+      JSON.stringify({
+        error: "Offline - API request requires connectivity",
+        code: "OFFLINE",
+      }),
+      {
+        status: 503,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
+}
+
+async function navigationStrategy(request) {
+  try {
+    const response = await fetchWithTimeout(request, NETWORK_TIMEOUT_MS);
+
+    if (response.ok && isCacheableScheme(new URL(request.url))) {
+      const cache = await caches.open(CACHE_NAME);
+      cache.put(request, response.clone()).catch((err) => {
+        console.warn("Navigation cache put error:", err);
+      });
+    }
+
+    return response;
+  } catch (err) {
+    const cached = await caches.match(request);
+    if (cached) return cached;
+
+    const offline = await caches.match(OFFLINE_URL);
+    if (offline) return offline;
+
+    return new Response("Offline", {
+      status: 503,
+      headers: { "Content-Type": "text/plain" },
+    });
   }
 }
 
@@ -181,6 +242,7 @@ async function processSyncQueue(port = null) {
 
     let processed = 0;
     let succeeded = 0;
+    let failed = 0;
 
     for (const item of queue) {
       if (item.status === "completed" || item.status === "failed") {
@@ -209,20 +271,34 @@ async function processSyncQueue(port = null) {
           item.status = "failed";
           item.error = "Session expired";
           await updateIndexedDBItem(item);
+          failed++;
         } else if (response.status >= 500) {
           if (item.retries < 3) {
             item.retries++;
+            item.status = "pending";
             await updateIndexedDBItem(item);
+          } else {
+            item.status = "failed";
+            item.error = `HTTP ${response.status}`;
+            await updateIndexedDBItem(item);
+            failed++;
           }
+        } else {
+          item.status = "failed";
+          item.error = `HTTP ${response.status}`;
+          await updateIndexedDBItem(item);
+          failed++;
         }
       } catch (err) {
         if (item.retries < 3) {
           item.retries++;
+          item.status = "pending";
           await updateIndexedDBItem(item);
         } else {
           item.status = "failed";
           item.error = err instanceof Error ? err.message : "Unknown error";
           await updateIndexedDBItem(item);
+          failed++;
         }
       }
 
@@ -236,6 +312,7 @@ async function processSyncQueue(port = null) {
               type: "sync-progress",
               processed,
               succeeded,
+              failed,
             });
           });
         });
@@ -250,6 +327,7 @@ async function processSyncQueue(port = null) {
             type: "sync-complete",
             processed,
             succeeded,
+            failed,
           });
         });
       });
@@ -260,6 +338,7 @@ async function processSyncQueue(port = null) {
         type: "sync-complete",
         processed,
         succeeded,
+        failed,
       });
     }
   } catch (err) {
@@ -277,19 +356,47 @@ async function processSyncQueue(port = null) {
 
 function getIndexedDB() {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open("pruebas-maria-offline", 1);
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
 
     request.onupgradeneeded = (e) => {
-      const db = e.target.result;
+      const request = e.target;
+      const db = request.result;
+      const transaction = request.transaction;
+
+      if (!db.objectStoreNames.contains("findings_cache")) {
+        const store = db.createObjectStore("findings_cache", { keyPath: "id" });
+        ensureIndex(store, "status", "status");
+        ensureIndex(store, "createdAt", "createdAt");
+      } else {
+        const store = transaction.objectStore("findings_cache");
+        ensureIndex(store, "status", "status");
+        ensureIndex(store, "createdAt", "createdAt");
+      }
+
       if (!db.objectStoreNames.contains("sync_queue")) {
         const store = db.createObjectStore("sync_queue", { keyPath: "id" });
-        store.createIndex("status", "status", { unique: false });
+        ensureIndex(store, "timestamp", "timestamp");
+        ensureIndex(store, "status", "status");
+      } else {
+        const store = transaction.objectStore("sync_queue");
+        ensureIndex(store, "timestamp", "timestamp");
+        ensureIndex(store, "status", "status");
+      }
+
+      if (!db.objectStoreNames.contains("metadata")) {
+        db.createObjectStore("metadata", { keyPath: "key" });
       }
     };
 
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error);
   });
+}
+
+function ensureIndex(store, name, keyPath) {
+  if (!store.indexNames.contains(name)) {
+    store.createIndex(name, keyPath, { unique: false });
+  }
 }
 
 async function getIndexedDBQueue() {

@@ -21,6 +21,7 @@ vi.mock('@/lib/prisma', () => ({
 
 describe('PushNotificationService', () => {
   beforeEach(() => {
+    vi.restoreAllMocks()
     vi.clearAllMocks()
   })
 

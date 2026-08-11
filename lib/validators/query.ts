@@ -1,11 +1,16 @@
 import { z } from 'zod'
 
 // Parse comma-separated query param into array
-const commaSeparatedArray = (val: any): string[] | undefined => {
+const commaSeparatedArray = (val: unknown): string[] | undefined => {
   if (!val) return undefined
   if (typeof val !== 'string') return undefined
-  return val.split(',').filter(Boolean)
+  return val
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean)
 }
+
+const idSchema = z.string().min(5).optional()
 
 export const FindingsQuerySchema = z.object({
   // Filters (all optional, comma-separated for array values)
@@ -40,18 +45,47 @@ export const FindingsQuerySchema = z.object({
     .string()
     .optional()
     .transform(commaSeparatedArray)
-    .transform((val) => val?.map((a) => a.toUpperCase())),
+    .transform((val) => val?.map((a) => a.toUpperCase()))
+    .refine(
+      (val) => !val || val.every((tag) => ['UI', 'UX', 'COPY'].includes(tag)),
+      'Invalid area value',
+    ),
 
-  assigneeId: z.string().optional(),
+  incidenceType: z
+    .string()
+    .optional()
+    .transform(commaSeparatedArray)
+    .transform((val) => val?.map((item) => item.toUpperCase()))
+    .refine(
+      (val) => !val || val.every((item) => ['DESIGN', 'FUNCTIONALITY', 'BUSINESS_RULE', 'COPY'].includes(item)),
+      'Invalid incidence type value',
+    ),
 
-  projectId: z.string().optional(),
+  experienceTag: z
+    .string()
+    .optional()
+    .transform(commaSeparatedArray)
+    .transform((val) => val?.map((item) => item.toUpperCase()))
+    .refine(
+      (val) => !val || val.every((item) => ['UI', 'UX', 'COPY'].includes(item)),
+      'Invalid experience tag value',
+    ),
+
+  assigneeId: idSchema,
+
+  projectId: idSchema,
+  testSessionId: idSchema,
+  session: idSchema,
+  screen: z.string().trim().min(1).max(200).optional(),
 
   createdAfter: z.string().datetime().optional(),
   createdBefore: z.string().datetime().optional(),
+  createdFrom: z.string().datetime().optional(),
+  createdTo: z.string().datetime().optional(),
   updatedAfter: z.string().datetime().optional(),
   updatedBefore: z.string().datetime().optional(),
 
-  search: z.string().optional(),
+  search: z.string().trim().min(1).max(200).optional(),
 
   // Sort (single field with optional - prefix for descending)
   sort: z.string().optional().default('createdAt'),
@@ -79,7 +113,7 @@ export function parseSort(sort: string | undefined) {
   const isDescending = sort.startsWith('-')
   const field = isDescending ? sort.slice(1) : sort
 
-  const validFields = ['createdAt', 'updatedAt', 'priority', 'status']
+  const validFields = ['createdAt', 'updatedAt', 'priority', 'severity', 'status', 'folio']
   if (!validFields.includes(field)) {
     return { createdAt: 'desc' as const }
   }

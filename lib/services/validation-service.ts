@@ -171,7 +171,7 @@ export class ValidationService {
     // Log to audit trail
     await this.logAudit(
       findingId,
-      'VALIDATED',
+      'VALIDATE',
       userId,
       { result: validation.result, criteria: currentCriteria },
       { result, criteria: updatedCriteria },
@@ -239,14 +239,16 @@ export class ValidationService {
     before: Record<string, any> | null,
     after: Record<string, any> | null,
   ) {
+    const prisma = getDb()
+
     return prisma.auditLog.create({
       data: {
-        findingId,
+        entityType: 'Finding',
+        entityId: findingId,
         action,
         actorId: userId,
-        changes: { before, after },
-        details: `${action}: validation checkpoint`,
-        ipAddress: undefined,
+        before: before ?? undefined,
+        after: after ?? undefined,
       },
     })
   }

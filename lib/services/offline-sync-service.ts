@@ -1,7 +1,23 @@
 import { idempotencyService } from "./idempotency-service";
 
 const DB_NAME = "pruebas-maria-offline";
-const DB_VERSION = 1;
+const DB_VERSION = 2;
+
+type BackgroundSyncRegistration = ServiceWorkerRegistration & {
+  sync?: {
+    register: (tag: string) => Promise<void>;
+  };
+};
+
+function ensureIndex(
+  store: IDBObjectStore,
+  name: string,
+  keyPath: string
+): void {
+  if (!store.indexNames.contains(name)) {
+    store.createIndex(name, keyPath, { unique: false });
+  }
+}
 
 export const offlineSyncService = {
   // Inicializar IndexedDB
@@ -11,25 +27,24 @@ export const offlineSyncService = {
 
       request.onupgradeneeded = (e) => {
         const db = (e.target as IDBOpenDBRequest).result;
+        const transaction = (e.target as IDBOpenDBRequest).transaction;
 
         // findings_cache
-        if (!db.objectStoreNames.contains("findings_cache")) {
-          const findingsStore = db.createObjectStore("findings_cache", {
-            keyPath: "id",
-          });
-          findingsStore.createIndex("status", "status", { unique: false });
-          findingsStore.createIndex("createdAt", "createdAt", {
-            unique: false,
-          });
+        const findingsStore = db.objectStoreNames.contains("findings_cache")
+          ? transaction?.objectStore("findings_cache")
+          : db.createObjectStore("findings_cache", { keyPath: "id" });
+        if (findingsStore) {
+          ensureIndex(findingsStore, "status", "status");
+          ensureIndex(findingsStore, "createdAt", "createdAt");
         }
 
         // sync_queue
-        if (!db.objectStoreNames.contains("sync_queue")) {
-          const queueStore = db.createObjectStore("sync_queue", {
-            keyPath: "id",
-          });
-          queueStore.createIndex("timestamp", "timestamp", { unique: false });
-          queueStore.createIndex("status", "status", { unique: false });
+        const queueStore = db.objectStoreNames.contains("sync_queue")
+          ? transaction?.objectStore("sync_queue")
+          : db.createObjectStore("sync_queue", { keyPath: "id" });
+        if (queueStore) {
+          ensureIndex(queueStore, "timestamp", "timestamp");
+          ensureIndex(queueStore, "status", "status");
         }
 
         // metadata
@@ -112,7 +127,8 @@ export const offlineSyncService = {
         // Notificar Service Worker para background sync
         if ("serviceWorker" in navigator) {
           navigator.serviceWorker.ready.then((registration) => {
-            registration.sync.register("sync-queue").catch((err) => {
+            const sync = (registration as BackgroundSyncRegistration).sync;
+            sync?.register("sync-queue").catch((err: unknown) => {
               console.error("Failed to register background sync:", err);
             });
           });

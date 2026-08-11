@@ -44,15 +44,15 @@ export function DateRangeFilter() {
   const to = searchParams.get('to')
 
   return (
-    <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4">
+    <div className="pm-card-subtle space-y-4 p-4">
       <div>
-        <p className="mb-3 text-sm font-medium text-gray-700">Presets rápidos</p>
+        <p className="mb-3 text-sm font-semibold text-[#3b4b43]">Presets rápidos</p>
         <div className="flex flex-wrap gap-2">
           {PRESETS.map((preset) => (
             <button
               key={preset.label}
               onClick={() => handlePreset(preset.days)}
-              className="rounded-md bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors"
+              className="pm-chip px-3 text-xs font-semibold transition-colors hover:border-[#052b20]"
             >
               {preset.label}
             </button>
@@ -60,29 +60,29 @@ export function DateRangeFilter() {
         </div>
       </div>
 
-      <div className="border-t border-gray-200 pt-4">
-        <p className="mb-3 text-sm font-medium text-gray-700">Rango personalizado</p>
+      <div className="border-t border-[#dbe4dd] pt-4">
+        <p className="mb-3 text-sm font-semibold text-[#3b4b43]">Rango personalizado</p>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs font-medium text-gray-600">
+            <label className="block text-xs font-semibold text-[#65766e]">
               Desde
             </label>
             <input
               type="date"
               value={from ? format(new Date(from), 'yyyy-MM-dd') : ''}
               onChange={(e) => handleDateChange('from', e.target.value)}
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+              className="pm-input mt-1 h-10 w-full px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#00a85a]"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-600">
+            <label className="block text-xs font-semibold text-[#65766e]">
               Hasta
             </label>
             <input
               type="date"
               value={to ? format(new Date(to), 'yyyy-MM-dd') : ''}
               onChange={(e) => handleDateChange('to', e.target.value)}
-              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+              className="pm-input mt-1 h-10 w-full px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#00a85a]"
             />
           </div>
         </div>

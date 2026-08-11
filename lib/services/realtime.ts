@@ -192,7 +192,7 @@ export class RealtimeService {
           action: action as any,
           resourceType: 'finding',
           resourceId,
-          details: details || null,
+          details: details ?? undefined,
         },
       });
     } catch (error) {

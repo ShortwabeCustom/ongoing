@@ -13,12 +13,12 @@ export class WorkflowClient {
   // Resolution endpoints
   static async createResolution(
     findingId: string,
-    input: CreateResolutionInput,
+    input: Omit<CreateResolutionInput, 'evidence'> & { evidence?: string[] },
   ) {
     const response = await fetch(`${this.baseUrl}/findings/${findingId}/resolutions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(input),
+      body: JSON.stringify({ evidence: [], ...input }),
     })
     return response.json()
   }
@@ -42,14 +42,14 @@ export class WorkflowClient {
   static async updateResolutionState(
     findingId: string,
     resolutionId: string,
-    input: UpdateResolutionStateInput,
+    input: Omit<UpdateResolutionStateInput, 'evidence'> & { evidence?: string[] },
   ) {
     const response = await fetch(
       `${this.baseUrl}/findings/${findingId}/resolutions/${resolutionId}`,
       {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(input),
+        body: JSON.stringify({ evidence: [], ...input }),
       },
     )
     return response.json()

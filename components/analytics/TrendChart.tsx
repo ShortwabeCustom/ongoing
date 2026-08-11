@@ -24,16 +24,16 @@ interface TrendChartProps {
 export function TrendChart({ data, isLoading }: TrendChartProps) {
   if (isLoading) {
     return (
-      <div className="flex h-96 items-center justify-center rounded-lg border bg-gray-50">
-        <p className="text-gray-500">Cargando tendencias...</p>
+      <div className="pm-card flex h-96 items-center justify-center">
+        <p className="text-sm font-medium text-[#65766e]">Cargando tendencias...</p>
       </div>
     )
   }
 
   if (!data?.created || data.created.length === 0) {
     return (
-      <div className="flex h-96 items-center justify-center rounded-lg border bg-gray-50">
-        <p className="text-gray-500">Sin datos disponibles</p>
+      <div className="pm-card flex h-96 items-center justify-center">
+        <p className="text-sm font-medium text-[#65766e]">Sin datos disponibles</p>
       </div>
     )
   }
@@ -45,13 +45,13 @@ export function TrendChart({ data, isLoading }: TrendChartProps) {
   }))
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-6">
-      <h3 className="mb-4 text-lg font-semibold text-gray-900">
+    <div className="pm-card p-6">
+      <h3 className="mb-4 text-lg font-semibold text-[#17251f]">
         Tendencia de Hallazgos
       </h3>
       <ResponsiveContainer width="100%" height={400}>
         <LineChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid stroke="#dbe4dd" strokeDasharray="3 3" />
           <XAxis
             dataKey="date"
             tick={{ fontSize: 12 }}
@@ -63,7 +63,7 @@ export function TrendChart({ data, isLoading }: TrendChartProps) {
           <Tooltip
             contentStyle={{
               backgroundColor: '#fff',
-              border: '1px solid #ccc',
+              border: '1px solid #dbe4dd',
               borderRadius: '8px',
             }}
           />
@@ -71,18 +71,18 @@ export function TrendChart({ data, isLoading }: TrendChartProps) {
           <Line
             type="monotone"
             dataKey="creados"
-            stroke="#ef4444"
-            strokeWidth={2}
+            stroke="#ed765e"
+            strokeWidth={3}
             name="Creados"
-            dot={{ fill: '#ef4444', r: 4 }}
+            dot={{ fill: '#ed765e', r: 4 }}
           />
           <Line
             type="monotone"
             dataKey="cerrados"
-            stroke="#22c55e"
-            strokeWidth={2}
+            stroke="#00a85a"
+            strokeWidth={3}
             name="Cerrados"
-            dot={{ fill: '#22c55e', r: 4 }}
+            dot={{ fill: '#00a85a', r: 4 }}
           />
         </LineChart>
       </ResponsiveContainer>

@@ -4,6 +4,13 @@ export interface EvidenceUploadResponse extends Evidence {
   uploadedBy: string
 }
 
+function unwrapApiData<T>(payload: T | ApiResponse<T>): T {
+  if (payload && typeof payload === 'object' && 'data' in payload && payload.data) {
+    return payload.data
+  }
+  return payload as T
+}
+
 export class EvidenceClient {
   static async upload(
     file: File,
@@ -33,11 +40,7 @@ export class EvidenceClient {
       xhr.addEventListener('load', () => {
         if (xhr.status >= 200 && xhr.status < 300) {
           const response = JSON.parse(xhr.responseText)
-          if (response.data) {
-            resolve(response.data)
-          } else {
-            reject(new Error('Invalid response format'))
-          }
+          resolve(unwrapApiData<EvidenceUploadResponse>(response))
         } else {
           const error = JSON.parse(xhr.responseText)
           reject(new Error(error.message || 'Upload failed'))
@@ -72,11 +75,8 @@ export class EvidenceClient {
       throw new Error(error.message || 'Failed to update caption')
     }
 
-    const result: ApiResponse<Evidence> = await response.json()
-    if (!result.data) {
-      throw new Error('Invalid response format')
-    }
-    return result.data
+    const result = await response.json()
+    return unwrapApiData<Evidence>(result)
   }
 
   static async delete(evidenceId: string): Promise<void> {
@@ -102,10 +102,7 @@ export class EvidenceClient {
       throw new Error(error.message || 'Failed to refresh URL')
     }
 
-    const result: ApiResponse = await response.json()
-    if (!result.data) {
-      throw new Error('Invalid response format')
-    }
-    return result.data
+    const result = await response.json()
+    return unwrapApiData<{ id: string; url: string; urlExpiresAt: Date }>(result)
   }
 }

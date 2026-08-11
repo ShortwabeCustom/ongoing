@@ -29,7 +29,7 @@ export function usePresence(options: UsePresenceOptions = {}) {
 
   const [activeUsers, setActiveUsers] = useState<UserPresence[]>([]);
   const [userStatus, setUserStatus] = useState<'online' | 'editing' | 'idle' | 'offline'>('online');
-  const statusTimeoutRef = useRef<NodeJS.Timeout>();
+  const statusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Join finding room
   useEffect(() => {

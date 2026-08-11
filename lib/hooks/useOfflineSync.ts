@@ -87,15 +87,30 @@ export function useOfflineSync() {
 
   const triggerSync = useCallback(async () => {
     if (syncStatus.isSyncing || !idb.isReady) return;
-    if (syncQueue.length === 0) return;
+    if (!syncStatus.isOnline) return;
+
+    const currentQueue = await idb.getSyncQueue();
+    if (currentQueue.length === 0) {
+      setSyncQueue([]);
+      setSyncStatus((prev) => ({ ...prev, queueLength: 0 }));
+      return;
+    }
 
     setSyncStatus((prev) => ({ ...prev, isSyncing: true, error: undefined }));
 
     try {
       const session = await offlineSessionService.getSession();
       const results = await syncQueueProcessor.processBatch(
-        syncQueue,
+        currentQueue,
         session?.sessionToken
+      );
+
+      await Promise.all(
+        currentQueue.map((item) =>
+          item.status === "completed"
+            ? idb.removeFromQueue(item.id)
+            : idb.updateQueueItem(item)
+        )
       );
 
       // Recargar queue actualizada
@@ -119,7 +134,7 @@ export function useOfflineSync() {
       }));
       throw err;
     }
-  }, [syncQueue, idb, syncStatus.isSyncing]);
+  }, [idb, syncStatus.isOnline, syncStatus.isSyncing]);
 
   const retryItem = useCallback(
     async (itemId: string) => {

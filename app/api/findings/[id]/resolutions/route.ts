@@ -1,5 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { z } from 'zod'
+import { NextRequest } from 'next/server'
 import { ResolutionService } from '@/lib/services/resolution-service'
 import { CreateResolutionSchema } from '@/lib/validators/workflow'
 import { apiSuccess, apiError } from '@/lib/utils/api-response'
@@ -7,7 +6,7 @@ import { checkRBAC, RBAC_PERMISSIONS } from '@/lib/middleware/rbac'
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     // FASE 7: RBAC validation
@@ -16,7 +15,7 @@ export async function POST(
     })
     if (!valid) return error
 
-    const findingId = params.id
+    const { id: findingId } = await params
 
     const body = await request.json()
     const input = CreateResolutionSchema.parse(body)
@@ -35,10 +34,10 @@ export async function POST(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const findingId = params.id
+    const { id: findingId } = await params
     const { searchParams } = new URL(request.url)
 
     const limit = Math.min(parseInt(searchParams.get('limit') ?? '50'), 100)

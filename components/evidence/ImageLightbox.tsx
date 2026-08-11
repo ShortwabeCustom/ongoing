@@ -43,6 +43,8 @@ export function ImageLightbox({
   }
 
   const downloadImage = async () => {
+    if (!evidence.url) return
+
     try {
       const response = await fetch(evidence.url)
       const blob = await response.blob()
@@ -75,12 +77,18 @@ export function ImageLightbox({
         className="relative w-full h-full flex items-center justify-center overflow-hidden"
         onWheel={handleWheel}
       >
-        <img
-          src={evidence.url}
-          alt={evidence.originalFilename}
-          className="max-w-[90vw] max-h-[90vh] object-contain transition-transform duration-200"
-          style={{ transform: `scale(${zoom})` }}
-        />
+        {evidence.url ? (
+          <img
+            src={evidence.url}
+            alt={evidence.originalFilename}
+            className="max-w-[90vw] max-h-[90vh] object-contain transition-transform duration-200"
+            style={{ transform: `scale(${zoom})` }}
+          />
+        ) : (
+          <div className="rounded border border-white/20 px-4 py-3 text-sm text-white">
+            Vista previa no disponible
+          </div>
+        )}
       </div>
 
       {/* Info Panel */}
@@ -90,8 +98,8 @@ export function ImageLightbox({
           <p className="text-sm text-gray-300 mb-3">{evidence.caption}</p>
         )}
         <p className="text-xs text-gray-400">
-          {(evidence.fileSize / 1024 / 1024).toFixed(2)} MB •{' '}
-          {new Date(evidence.uploadedAt).toLocaleDateString()}
+          {((evidence.fileSize ?? 0) / 1024 / 1024).toFixed(2)} MB •{' '}
+          {new Date(evidence.uploadedAt ?? evidence.createdAt).toLocaleDateString()}
         </p>
       </div>
 
@@ -147,6 +155,7 @@ export function ImageLightbox({
         <button
           onClick={downloadImage}
           className="p-2 text-white hover:bg-white/10 rounded transition-colors"
+          disabled={!evidence.url}
           title="Download image"
         >
           <Download className="w-5 h-5" />

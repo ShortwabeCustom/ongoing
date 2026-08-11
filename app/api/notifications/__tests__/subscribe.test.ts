@@ -1,11 +1,28 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { POST, DELETE } from '../subscribe/route'
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { checkRBAC } from '@/lib/middleware/rbac'
 import { PushSubscriptionService } from '@/lib/services/push-subscription'
 
-vi.mock('@/lib/middleware/rbac')
-vi.mock('@/lib/services/push-subscription')
+const notificationMocks = vi.hoisted(() => ({
+  checkRBAC: vi.fn(),
+  savePushSubscription: vi.fn(),
+  removePushSubscription: vi.fn(),
+}))
+
+vi.mock('@/lib/middleware/rbac', () => ({
+  checkRBAC: notificationMocks.checkRBAC,
+  RBAC_PERMISSIONS: {
+    RECEIVE_NOTIFICATIONS: ['OWNER', 'QA_LEAD', 'DESIGNER', 'DEVELOPER', 'BUSINESS_REVIEWER'],
+  },
+}))
+
+vi.mock('@/lib/services/push-subscription', () => ({
+  PushSubscriptionService: {
+    savePushSubscription: notificationMocks.savePushSubscription,
+    removePushSubscription: notificationMocks.removePushSubscription,
+  },
+}))
 
 describe('POST /api/notifications/subscribe', () => {
   beforeEach(() => {
@@ -60,9 +77,7 @@ describe('POST /api/notifications/subscribe', () => {
       body: JSON.stringify({ subscription: {} }),
     }) as unknown as NextRequest
 
-    const mockErrorResponse = new Response(JSON.stringify({ error: 'Forbidden' }), {
-      status: 403,
-    })
+    const mockErrorResponse = NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     vi.mocked(checkRBAC).mockResolvedValue({
       valid: false,
@@ -135,9 +150,7 @@ describe('DELETE /api/notifications/subscribe', () => {
       body: JSON.stringify({ endpoint: 'https://example.com' }),
     }) as unknown as NextRequest
 
-    const mockErrorResponse = new Response(JSON.stringify({ error: 'Forbidden' }), {
-      status: 403,
-    })
+    const mockErrorResponse = NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     vi.mocked(checkRBAC).mockResolvedValue({
       valid: false,

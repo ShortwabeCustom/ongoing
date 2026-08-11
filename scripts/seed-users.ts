@@ -39,6 +39,16 @@ const testUsers = [
     name: 'Viewer',
     role: 'VIEWER' as const,
   },
+  {
+    email: 'ilse.garcia@test.local',
+    name: 'Ilse García (Elektra)',
+    role: 'QA_LEAD' as const,
+  },
+  {
+    email: 'jonathan.ramos@test.local',
+    name: 'Jonathan Ramos (Elektra)',
+    role: 'DEVELOPER' as const,
+  },
 ]
 
 async function main() {

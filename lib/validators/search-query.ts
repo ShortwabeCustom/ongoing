@@ -1,5 +1,24 @@
 import { z } from 'zod'
 
+export type SearchQuery = {
+  q?: string
+  status?: string[]
+  priority?: string[]
+  severity?: string[]
+  assignee?: string[]
+  assigneeId?: string
+  project?: string[]
+  projectId?: string
+  dateFrom?: string
+  dateTo?: string
+  createdAfter?: string
+  createdBefore?: string
+  hasEvidence?: boolean | 'any' | 'with' | 'without'
+  limit?: number
+  offset?: number
+  _forceSearch?: boolean
+}
+
 // Parse comma-separated query param into array
 const commaSeparatedArray = (val: any): string[] | undefined => {
   if (!val) return undefined
@@ -97,5 +116,3 @@ export const SearchQuerySchema = z.object({
     dateTo: data.dateTo || data.createdBefore,
   }
 })
-
-export type SearchQuery = z.infer<typeof SearchQuerySchema>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { Finding } from '@/lib/generated/prisma'
+import { Finding } from '@/lib/generated/prisma/client'
 import { WorkflowClient } from '@/lib/api/workflow-client'
 import { ValidationCriterion, ValidationResult } from '@/lib/validators/workflow'
 import { toast } from '@/components/ui/use-toast'
@@ -23,9 +23,9 @@ export function ValidationCheckpoint({
   )
   const [isLoading, setIsLoading] = useState(false)
   const [criteria, setCriteria] = useState<ValidationCriterion[]>([
-    { id: '1', name: 'All issues documented', passed: undefined },
-    { id: '2', name: 'Evidence is complete', passed: undefined },
-    { id: '3', name: 'Resolution is clear', passed: undefined },
+    { id: '1', name: 'Hallazgos documentados', passed: undefined },
+    { id: '2', name: 'Evidencia completa', passed: undefined },
+    { id: '3', name: 'Resolución clara', passed: undefined },
   ])
 
   const activeValidation = validations.find((v) => v.id === activeValId)
@@ -34,7 +34,7 @@ export function ValidationCheckpoint({
 
   const handleCheckValidation = useCallback(async () => {
     if (!activeValidation || !allCriteriaAnswered) {
-      toast({ title: 'Error', description: 'Complete all criteria' })
+      toast({ title: 'Error', description: 'Completa todos los criterios' })
       return
     }
 
@@ -56,13 +56,13 @@ export function ValidationCheckpoint({
             v.id === activeValidation.id ? response.data : v,
           ),
         )
-        toast({ title: 'Success', description: `Validation: ${response.data.result}` })
+        toast({ title: 'Listo', description: `Validación: ${response.data.result}` })
         await onValidation?.(response.data.result)
       } else {
         toast({ title: 'Error', description: response.message })
       }
-    } catch (error) {
-      toast({ title: 'Error', description: 'Failed to validate' })
+    } catch {
+      toast({ title: 'Error', description: 'No se pudo validar' })
     } finally {
       setIsLoading(false)
     }
@@ -71,39 +71,39 @@ export function ValidationCheckpoint({
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-semibold mb-4">Validation Checkpoint</h3>
+        <h3 className="mb-4 text-lg font-semibold text-[#17251f]">Checkpoint de validación</h3>
 
         {/* Validation history */}
         {validations.length > 0 && (
-          <div className="space-y-2 mb-4">
+          <div className="mb-4 space-y-2">
             {validations.map((val) => (
               <button
                 key={val.id}
                 onClick={() => setActiveValId(val.id)}
-                className={`w-full text-left p-3 rounded-lg border-2 transition ${
+                className={`w-full rounded-lg border p-3 text-left transition ${
                   activeValId === val.id
-                    ? 'border-green-500 bg-green-50 dark:bg-green-950'
-                    : 'border-gray-200 dark:border-gray-700'
+                    ? 'border-[#00a85a] bg-[#f3fbf5]'
+                    : 'border-[#dbe4dd] bg-white hover:border-[#b9c8c0]'
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-sm">
-                      Validation #{validations.indexOf(val) + 1}
+                    <p className="text-sm font-semibold text-[#17251f]">
+                      Validación #{validations.indexOf(val) + 1}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-[#65766e]">
                       {val.validatedAt
-                        ? new Date(val.validatedAt).toLocaleDateString()
-                        : 'Pending'}
+                        ? new Date(val.validatedAt).toLocaleDateString('es-ES')
+                        : 'Pendiente'}
                     </p>
                   </div>
                   <span
-                    className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    className={`rounded-full px-3 py-1 text-sm font-semibold ${
                       val.result === 'PASS'
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                        ? 'bg-[#eefbf2] text-[#0b5d38]'
                         : val.result === 'FAIL'
-                          ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                          : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+                          ? 'bg-[#fff1ee] text-[#9b321f]'
+                          : 'bg-[#edf4ed] text-[#65766e]'
                     }`}
                   >
                     {val.result}
@@ -117,11 +117,11 @@ export function ValidationCheckpoint({
 
       {/* Active validation details */}
       {activeValidation && (
-        <div className="border rounded-lg p-4 space-y-4">
+        <div className="space-y-4 rounded-lg border border-[#dbe4dd] bg-[#f7faf5] p-4">
           {isPending ? (
             <>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Please review each criterion:
+              <p className="text-sm text-[#65766e]">
+                Revisión de criterios
               </p>
 
               {/* Criteria checklist */}
@@ -129,10 +129,10 @@ export function ValidationCheckpoint({
                 {criteria.map((criterion) => (
                   <div
                     key={criterion.id}
-                    className="flex items-center gap-3 p-3 border rounded-lg"
+                    className="flex items-center gap-3 rounded-lg border border-[#dbe4dd] bg-white p-3"
                   >
                     <div className="flex-1">
-                      <p className="text-sm font-medium">{criterion.name}</p>
+                      <p className="text-sm font-medium text-[#17251f]">{criterion.name}</p>
                     </div>
                     <div className="flex gap-2">
                       <button
@@ -143,13 +143,13 @@ export function ValidationCheckpoint({
                             ),
                           )
                         }
-                        className={`px-3 py-1 text-xs font-medium rounded ${
+                        className={`rounded-full px-3 py-1 text-xs font-semibold ${
                           criterion.passed === true
-                            ? 'bg-green-200 text-green-800 dark:bg-green-900 dark:text-green-200'
-                            : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+                            ? 'bg-[#eefbf2] text-[#0b5d38]'
+                            : 'bg-[#edf4ed] text-[#65766e]'
                         }`}
                       >
-                        Pass
+                        Pasa
                       </button>
                       <button
                         onClick={() =>
@@ -159,13 +159,13 @@ export function ValidationCheckpoint({
                             ),
                           )
                         }
-                        className={`px-3 py-1 text-xs font-medium rounded ${
+                        className={`rounded-full px-3 py-1 text-xs font-semibold ${
                           criterion.passed === false
-                            ? 'bg-red-200 text-red-800 dark:bg-red-900 dark:text-red-200'
-                            : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+                            ? 'bg-[#fff1ee] text-[#9b321f]'
+                            : 'bg-[#edf4ed] text-[#65766e]'
                         }`}
                       >
-                        Fail
+                        Falla
                       </button>
                     </div>
                   </div>
@@ -177,15 +177,17 @@ export function ValidationCheckpoint({
                 <button
                   onClick={handleCheckValidation}
                   disabled={isLoading || !allCriteriaAnswered}
-                  className="w-full px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+                  className="w-full rounded-full bg-[#052b20] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0b3e30] disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {isLoading ? 'Validating...' : 'Submit Validation'}
+                  {isLoading ? 'Validando...' : 'Enviar validación'}
                 </button>
               )}
             </>
           ) : (
             <div>
-              <p className="text-sm font-medium mb-3">Validation Result: {activeValidation.result}</p>
+              <p className="mb-3 text-sm font-semibold text-[#17251f]">
+                Resultado de validación: {activeValidation.result}
+              </p>
               {activeValidation.criteria && (
                 <div className="space-y-2 text-sm">
                   {activeValidation.criteria.map((c: ValidationCriterion, idx: number) => (
@@ -197,7 +199,7 @@ export function ValidationCheckpoint({
                       >
                         {c.passed ? '✓' : c.passed === false ? '✗' : '○'}
                       </span>
-                      <span>{c.name}</span>
+                      <span className="text-[#3d4d45]">{c.name}</span>
                     </div>
                   ))}
                 </div>

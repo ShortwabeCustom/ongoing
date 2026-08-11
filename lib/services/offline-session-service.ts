@@ -9,12 +9,30 @@ export interface OfflineSessionData {
 
 const SESSION_VALIDATION_INTERVAL = 60 * 60 * 1000; // Validar cada 1 hora
 const SESSION_STORAGE_KEY = "offline_session_data";
+const OFFLINE_DB_VERSION = 2;
+
+function getOfflineSessionDB(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open("pruebas-maria-offline", OFFLINE_DB_VERSION);
+
+    request.onupgradeneeded = (e) => {
+      const db = (e.target as IDBOpenDBRequest).result;
+
+      if (!db.objectStoreNames.contains("metadata")) {
+        db.createObjectStore("metadata", { keyPath: "key" });
+      }
+    };
+
+    request.onsuccess = () => resolve((request as IDBOpenDBRequest).result);
+    request.onerror = () => reject(request.error);
+  });
+}
 
 export const offlineSessionService = {
   // Guardar sesión en IndexedDB
   async saveSession(data: OfflineSessionData): Promise<void> {
     try {
-      const db = await this.getDB();
+      const db = await getOfflineSessionDB();
       const transaction = db.transaction(["metadata"], "readwrite");
       const store = transaction.objectStore("metadata");
 
@@ -31,7 +49,7 @@ export const offlineSessionService = {
   // Obtener sesión guardada
   async getSession(): Promise<OfflineSessionData | null> {
     try {
-      const db = await this.getDB();
+      const db = await getOfflineSessionDB();
       const transaction = db.transaction(["metadata"], "readonly");
       const store = transaction.objectStore("metadata");
 
@@ -124,7 +142,7 @@ export const offlineSessionService = {
   // Limpiar sesión
   async clearSession(): Promise<void> {
     try {
-      const db = await this.getDB();
+      const db = await getOfflineSessionDB();
       const transaction = db.transaction(["metadata"], "readwrite");
       const store = transaction.objectStore("metadata");
       await new Promise<void>((resolve) => {
@@ -135,23 +153,5 @@ export const offlineSessionService = {
     } catch (err) {
       console.error("Failed to clear session:", err);
     }
-  },
-
-  // Helper: Obtener IndexedDB
-  private getDB(): Promise<IDBDatabase> {
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open("pruebas-maria-offline", 1);
-
-      request.onupgradeneeded = (e) => {
-        const db = (e.target as IDBOpenDBRequest).result;
-
-        if (!db.objectStoreNames.contains("metadata")) {
-          db.createObjectStore("metadata", { keyPath: "key" });
-        }
-      };
-
-      request.onsuccess = () => resolve((request as IDBOpenDBRequest).result);
-      request.onerror = () => reject(request.error);
-    });
   },
 };

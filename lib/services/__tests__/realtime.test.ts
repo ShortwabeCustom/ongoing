@@ -1,6 +1,18 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { RealtimeService } from '../realtime';
 import { createServer } from 'http';
+
+const realtimeDb = vi.hoisted(() => ({
+  activity: {
+    create: vi.fn().mockResolvedValue({}),
+    findMany: vi.fn().mockResolvedValue([]),
+  },
+}));
+
+vi.mock('@/lib/db', () => ({
+  default: realtimeDb,
+  db: realtimeDb,
+}));
 
 describe('RealtimeService', () => {
   beforeEach(() => {

@@ -13,17 +13,17 @@ interface KPICardProps {
 }
 
 const variantClasses = {
-  default: 'bg-gradient-to-br from-slate-50 to-slate-100 border-slate-200',
-  success: 'bg-gradient-to-br from-green-50 to-green-100 border-green-200',
-  warning: 'bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200',
-  danger: 'bg-gradient-to-br from-red-50 to-red-100 border-red-200',
+  default: 'bg-white border-[#dbe4dd]',
+  success: 'bg-[#f0fbf4] border-[#b9dcca]',
+  warning: 'bg-[#fff7e6] border-[#f4daa8]',
+  danger: 'bg-[#fff0eb] border-[#f1c8bd]',
 }
 
 const textClasses = {
-  default: 'text-slate-600',
-  success: 'text-green-600',
-  warning: 'text-yellow-600',
-  danger: 'text-red-600',
+  default: 'text-[#052b20]',
+  success: 'text-[#087244]',
+  warning: 'text-[#85540d]',
+  danger: 'text-[#9b321f]',
 }
 
 export function KPICard({
@@ -36,13 +36,13 @@ export function KPICard({
 }: KPICardProps) {
   return (
     <div
-      className={`rounded-lg border p-6 ${variantClasses[variant]} transition-all hover:shadow-md`}
+      className={`rounded-lg border p-5 shadow-[0_16px_45px_rgba(5,43,32,0.07)] transition-all hover:-translate-y-0.5 hover:shadow-[0_24px_60px_rgba(5,43,32,0.10)] ${variantClasses[variant]}`}
     >
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <p className="text-sm font-medium text-gray-600">{label}</p>
+          <p className="text-xs font-semibold uppercase text-[#65766e]">{label}</p>
           <div className="mt-2 flex items-baseline gap-2">
-            <p className={`text-3xl font-bold ${textClasses[variant]}`}>
+            <p className={`text-4xl font-semibold leading-none ${textClasses[variant]}`}>
               {value}
             </p>
             {trend && (
@@ -55,11 +55,9 @@ export function KPICard({
               </span>
             )}
           </div>
-          {subtext && (
-            <p className="mt-1 text-xs text-gray-500">{subtext}</p>
-          )}
+          {subtext && <p className="mt-2 text-xs text-[#65766e]">{subtext}</p>}
         </div>
-        {icon && <div className="text-2xl text-gray-400">{icon}</div>}
+        {icon && <div className="text-2xl text-[#65766e]">{icon}</div>}
       </div>
     </div>
   )

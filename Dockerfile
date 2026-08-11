@@ -7,24 +7,25 @@ WORKDIR /app
 
 # Install build dependencies
 RUN apk add --no-cache python3 make g++
+RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
 
 # Copy package files
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies
-RUN npm ci
+RUN pnpm install --frozen-lockfile
 
 # Copy source code
 COPY . .
 
 # Generate Prisma client
-RUN npx prisma generate
+RUN pnpm exec prisma generate
 
 # Build Next.js application
-RUN npm run build
+RUN pnpm run build
 
 # Prune dependencies for production
-RUN npm prune --omit=dev
+RUN pnpm prune --prod
 
 # Stage 2: Runtime
 FROM node:20-alpine
@@ -40,7 +41,7 @@ RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
 # Copy built application from builder
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=nextjs:nodejs /app/package*.json ./
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./
 COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 

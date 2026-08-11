@@ -1,7 +1,8 @@
-import { R2Client } from '@/lib/storage/r2-client'
-import { STORAGE_CONFIG } from '@/lib/storage/storage-config'
-import { getDb } from '@/lib/db-lazy'
 import { nanoid } from 'nanoid'
+import { type EvidenceType } from '@/lib/generated/prisma/client'
+import { getDb } from '@/lib/db-lazy'
+import { S3StorageClient } from '@/lib/storage/s3-client'
+import { STORAGE_CONFIG } from '@/lib/storage/storage-config'
 
 export interface UploadFileInput {
   buffer: Buffer
@@ -26,82 +27,181 @@ export interface UploadFileResult {
   uploadedBy: string
 }
 
+type ValidatedFile = {
+  mimeType: string
+  evidenceType: EvidenceType
+  safeFilename: string
+}
+
+function detectMimeType(buffer: Buffer): string | null {
+  if (buffer.length >= 4 && buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff) {
+    return 'image/jpeg'
+  }
+
+  if (
+    buffer.length >= 8 &&
+    buffer[0] === 0x89 &&
+    buffer[1] === 0x50 &&
+    buffer[2] === 0x4e &&
+    buffer[3] === 0x47 &&
+    buffer[4] === 0x0d &&
+    buffer[5] === 0x0a &&
+    buffer[6] === 0x1a &&
+    buffer[7] === 0x0a
+  ) {
+    return 'image/png'
+  }
+
+  if (
+    buffer.length >= 12 &&
+    buffer.toString('ascii', 0, 4) === 'RIFF' &&
+    buffer.toString('ascii', 8, 12) === 'WEBP'
+  ) {
+    return 'image/webp'
+  }
+
+  if (buffer.length >= 4 && buffer.toString('ascii', 0, 4) === '%PDF') {
+    return 'application/pdf'
+  }
+
+  if (buffer.length >= 12 && buffer.toString('ascii', 4, 8) === 'ftyp') {
+    const brand = buffer.toString('ascii', 8, 12).toLowerCase()
+    return brand.includes('qt') ? 'video/quicktime' : 'video/mp4'
+  }
+
+  if (
+    buffer.length >= 4 &&
+    buffer[0] === 0x1a &&
+    buffer[1] === 0x45 &&
+    buffer[2] === 0xdf &&
+    buffer[3] === 0xa3
+  ) {
+    return 'video/webm'
+  }
+
+  return null
+}
+
+function inferEvidenceType(mimeType: string): EvidenceType {
+  if (mimeType.startsWith('image/')) return 'IMAGE'
+  if (mimeType.startsWith('video/')) return 'VIDEO'
+  return 'DOCUMENT'
+}
+
+function validateFile(buffer: Buffer, browserMimeType: string, filename: string): ValidatedFile {
+  if (buffer.length > STORAGE_CONFIG.MAX_FILE_SIZE) {
+    throw new Error('FILE_TOO_LARGE')
+  }
+
+  const detectedMimeType = detectMimeType(buffer)
+  const mimeType = detectedMimeType ?? browserMimeType
+
+  if (!detectedMimeType) {
+    throw new Error('UNVERIFIABLE_FILE_TYPE')
+  }
+
+  if (!STORAGE_CONFIG.isAllowedType(mimeType)) {
+    throw new Error('INVALID_FILE_TYPE')
+  }
+
+  if (browserMimeType && browserMimeType !== mimeType) {
+    throw new Error('MIME_MISMATCH')
+  }
+
+  const extension = STORAGE_CONFIG.getExtension(filename)
+  const allowedExtensions = STORAGE_CONFIG.getAllowedExtensionsForType(mimeType)
+  if (!extension || !allowedExtensions.includes(extension)) {
+    throw new Error('INVALID_FILE_EXTENSION')
+  }
+
+  return {
+    mimeType,
+    evidenceType: inferEvidenceType(mimeType),
+    safeFilename: STORAGE_CONFIG.sanitizeFilename(filename),
+  }
+}
+
+function getUrlExpiryDate() {
+  return new Date(Date.now() + STORAGE_CONFIG.SIGNED_URL_EXPIRY * 1000)
+}
+
+function isLegacyStorageKey(storageKey: string) {
+  return storageKey.startsWith('legacy/')
+}
+
 export class StorageService {
   /**
-   * Upload a file to R2 and create Evidence record
+   * Upload a file to S3-compatible storage and create Evidence metadata.
    */
   static async uploadFile(input: UploadFileInput): Promise<UploadFileResult> {
-    const {
-      buffer,
-      mimeType,
-      originalFilename,
-      findingId,
-      caption,
-      uploadedBy,
-    } = input
+    const { buffer, originalFilename, findingId, caption, uploadedBy } = input
+    const validated = validateFile(buffer, input.mimeType, originalFilename)
 
-    // Validate file size
-    if (buffer.length > STORAGE_CONFIG.MAX_FILE_SIZE) {
-      throw new Error('FILE_TOO_LARGE')
-    }
-
-    // Validate MIME type
-    if (!STORAGE_CONFIG.isAllowedType(mimeType)) {
-      throw new Error('INVALID_FILE_TYPE')
-    }
-
-    // Check finding exists
     const db = getDb()
-    const finding = await db.finding.findUnique({
-      where: { id: findingId },
+    const finding = await db.finding.findFirst({
+      where: { id: findingId, deletedAt: null },
+      select: { id: true },
     })
 
     if (!finding) {
       throw new Error('NOT_FOUND')
     }
 
-    // Generate evidence ID and storage key
     const evidenceId = nanoid()
     const storageKey = STORAGE_CONFIG.getStorageKey(
       findingId,
       evidenceId,
-      originalFilename,
+      validated.safeFilename,
     )
 
     try {
-      // Upload to R2
-      await R2Client.uploadFile(
+      await S3StorageClient.uploadFile(
         STORAGE_CONFIG.BUCKET,
         storageKey,
         buffer,
-        mimeType,
+        validated.mimeType,
       )
 
-      // Generate signed URL
-      const url = await R2Client.generateSignedUrl(
+      const url = await S3StorageClient.generateSignedUrl(
         STORAGE_CONFIG.BUCKET,
         storageKey,
         STORAGE_CONFIG.SIGNED_URL_EXPIRY,
       )
+      const urlExpiresAt = getUrlExpiryDate()
 
-      const urlExpiresAt = new Date(
-        Date.now() + STORAGE_CONFIG.SIGNED_URL_EXPIRY * 1000,
-      )
+      const evidence = await db.$transaction(async (tx) => {
+        const created = await tx.evidence.create({
+          data: {
+            id: evidenceId,
+            findingId,
+            type: validated.evidenceType,
+            storageKey,
+            url: null,
+            originalFilename: validated.safeFilename,
+            mimeType: validated.mimeType,
+            fileSize: buffer.length,
+            caption: caption || null,
+            createdBy: uploadedBy,
+          },
+        })
 
-      // Create Evidence record in DB
-      const evidence = await db.evidence.create({
-        data: {
-          id: evidenceId,
-          findingId,
-          type: 'IMAGE', // Default, will be inferred from MIME type
-          storageKey,
-          url,
-          originalFilename,
-          mimeType,
-          fileSize: buffer.length,
-          caption: caption || null,
-          createdBy: uploadedBy,
-        },
+        await tx.auditLog.create({
+          data: {
+            entityType: 'Evidence',
+            entityId: created.id,
+            action: 'CREATE',
+            actorId: uploadedBy,
+            after: {
+              findingId,
+              storageKey,
+              originalFilename: created.originalFilename,
+              mimeType: created.mimeType,
+              fileSize: created.fileSize,
+            },
+          },
+        })
+
+        return created
       })
 
       return {
@@ -118,48 +218,66 @@ export class StorageService {
         uploadedBy: evidence.createdBy,
       }
     } catch (error) {
-      // Clean up: delete from R2 if DB write fails
-      if (error instanceof Error && !['FILE_TOO_LARGE', 'INVALID_FILE_TYPE', 'NOT_FOUND'].includes(error.message)) {
-        try {
-          await R2Client.deleteFile(STORAGE_CONFIG.BUCKET, storageKey)
-        } catch (cleanupError) {
-          console.error('Failed to clean up R2 file:', cleanupError)
-        }
+      try {
+        await S3StorageClient.deleteFile(STORAGE_CONFIG.BUCKET, storageKey)
+      } catch (cleanupError) {
+        console.error('Failed to clean up uploaded object after metadata error:', cleanupError)
       }
       throw error
     }
   }
 
   /**
-   * Delete an evidence file and its DB record
+   * Soft-delete evidence metadata. The object is retained for audit/rollback.
    */
-  static async deleteEvidence(evidenceId: string): Promise<void> {
+  static async deleteEvidence(evidenceId: string, deletedBy?: string): Promise<void> {
     const db = getDb()
+    const deletedAt = new Date()
 
-    const evidence = await db.evidence.findUnique({
-      where: { id: evidenceId },
-    })
-
-    if (!evidence) {
-      throw new Error('NOT_FOUND')
-    }
-
-    try {
-      // Delete from R2
-      await R2Client.deleteFile(STORAGE_CONFIG.BUCKET, evidence.storageKey)
-
-      // Delete from DB
-      await db.evidence.delete({
+    await db.$transaction(async (tx) => {
+      const evidence = await tx.evidence.findUnique({
         where: { id: evidenceId },
       })
-    } catch (error) {
-      console.error('Failed to delete evidence:', error)
-      throw error
-    }
+
+      if (!evidence) throw new Error('NOT_FOUND')
+      if (evidence.deletedAt) throw new Error('ALREADY_DELETED')
+
+      await tx.evidence.update({
+        where: { id: evidenceId },
+        data: {
+          deletedAt,
+          deletedBy: deletedBy ?? null,
+          url: null,
+        },
+      })
+
+      await tx.auditLog.create({
+        data: {
+          entityType: 'Evidence',
+          entityId: evidenceId,
+          action: 'DELETE',
+          actorId: deletedBy ?? null,
+          before: {
+            findingId: evidence.findingId,
+            storageKey: evidence.storageKey,
+            deletedAt: evidence.deletedAt,
+          },
+          after: {
+            deletedAt,
+            retainedObject: true,
+          },
+        },
+      })
+    })
+  }
+
+  static async objectExists(storageKey: string): Promise<boolean> {
+    if (isLegacyStorageKey(storageKey)) return true
+    return S3StorageClient.exists(STORAGE_CONFIG.BUCKET, storageKey)
   }
 
   /**
-   * Generate a fresh signed URL for existing evidence
+   * Generate a fresh signed URL for existing evidence.
    */
   static async refreshSignedUrl(evidenceId: string): Promise<{
     id: string
@@ -168,39 +286,38 @@ export class StorageService {
   }> {
     const db = getDb()
 
-    const evidence = await db.evidence.findUnique({
-      where: { id: evidenceId },
+    const evidence = await db.evidence.findFirst({
+      where: { id: evidenceId, deletedAt: null },
     })
 
     if (!evidence) {
       throw new Error('NOT_FOUND')
     }
 
-    const url = await R2Client.generateSignedUrl(
+    if (isLegacyStorageKey(evidence.storageKey)) {
+      if (!evidence.url) throw new Error('UNSIGNED_LEGACY_EVIDENCE')
+      return {
+        id: evidenceId,
+        url: evidence.url,
+        urlExpiresAt: getUrlExpiryDate(),
+      }
+    }
+
+    const url = await S3StorageClient.generateSignedUrl(
       STORAGE_CONFIG.BUCKET,
       evidence.storageKey,
       STORAGE_CONFIG.SIGNED_URL_EXPIRY,
     )
 
-    const urlExpiresAt = new Date(
-      Date.now() + STORAGE_CONFIG.SIGNED_URL_EXPIRY * 1000,
-    )
-
-    // Update URL in database
-    await db.evidence.update({
-      where: { id: evidenceId },
-      data: { url },
-    })
-
     return {
       id: evidenceId,
       url,
-      urlExpiresAt,
+      urlExpiresAt: getUrlExpiryDate(),
     }
   }
 
   /**
-   * Update evidence metadata (caption)
+   * Update evidence metadata.
    */
   static async updateEvidence(
     evidenceId: string,
@@ -212,8 +329,8 @@ export class StorageService {
   }> {
     const db = getDb()
 
-    const evidence = await db.evidence.findUnique({
-      where: { id: evidenceId },
+    const evidence = await db.evidence.findFirst({
+      where: { id: evidenceId, deletedAt: null },
     })
 
     if (!evidence) {
@@ -230,12 +347,12 @@ export class StorageService {
     return {
       id: updated.id,
       caption: updated.caption || undefined,
-      updatedAt: updated.createdAt, // Evidence doesn't have updatedAt, use createdAt
+      updatedAt: updated.updatedAt,
     }
   }
 
   /**
-   * Get evidence with fresh signed URL
+   * Get evidence metadata with a fresh signed URL.
    */
   static async getEvidenceWithUrl(evidenceId: string): Promise<{
     id: string
@@ -250,30 +367,22 @@ export class StorageService {
   }> {
     const db = getDb()
 
-    const evidence = await db.evidence.findUnique({
-      where: { id: evidenceId },
+    const evidence = await db.evidence.findFirst({
+      where: { id: evidenceId, deletedAt: null },
     })
 
     if (!evidence) {
       throw new Error('NOT_FOUND')
     }
 
-    // Generate fresh signed URL if stored URL is about to expire
     let url = evidence.url || ''
-    const now = new Date()
-
-    // If no URL or URL might be expired, generate new one
-    if (!url) {
-      url = await R2Client.generateSignedUrl(
+    if (!isLegacyStorageKey(evidence.storageKey)) {
+      url = await S3StorageClient.generateSignedUrl(
         STORAGE_CONFIG.BUCKET,
         evidence.storageKey,
         STORAGE_CONFIG.SIGNED_URL_EXPIRY,
       )
     }
-
-    const urlExpiresAt = new Date(
-      Date.now() + STORAGE_CONFIG.SIGNED_URL_EXPIRY * 1000,
-    )
 
     return {
       id: evidence.id,
@@ -282,7 +391,7 @@ export class StorageService {
       mimeType: evidence.mimeType,
       fileSize: evidence.fileSize || 0,
       url,
-      urlExpiresAt,
+      urlExpiresAt: getUrlExpiryDate(),
       caption: evidence.caption || undefined,
       uploadedAt: evidence.createdAt,
     }

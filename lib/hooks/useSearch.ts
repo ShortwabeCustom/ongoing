@@ -4,20 +4,38 @@ import { useState, useEffect, useCallback } from 'react'
 import { useDebouncedValue } from '@/lib/hooks/useDebouncedValue'
 import { SearchQuery } from '@/lib/validators/search-query'
 
+const SEARCH_DEBOUNCE_DELAY = { mobile: 500, desktop: 300 } as const
+
+function normalizeRelationValues(items: unknown, key: 'experienceTag' | 'incidenceType') {
+  if (!Array.isArray(items)) return undefined
+
+  return items
+    .map((item) => {
+      if (typeof item === 'string') return { [key]: item }
+      if (!item || typeof item !== 'object') return undefined
+
+      const value = (item as Record<string, unknown>)[key]
+      return typeof value === 'string' ? { [key]: value } : undefined
+    })
+    .filter((item): item is Record<'experienceTag' | 'incidenceType', string> => Boolean(item))
+}
+
 export interface UseSearchResult {
   data: {
     total: number
     items: Array<{
       id: string
       observation: string
-      highlightedObservation?: string
-      status: string
-      priority: string
-      severity: string
-      projectId: string
-      assigneeId?: string
-      createdAt?: string
-    }>
+	      highlightedObservation?: string
+	      status: string
+	      priority: string
+	      severity: string
+	      projectId: string
+	      assigneeId?: string
+	      experienceTags?: Array<{ experienceTag: string }> | string[]
+	      incidenceTypes?: Array<{ incidenceType: string }> | string[]
+	      createdAt?: string
+	    }>
     facets?: {
       status?: Record<string, number>
       priority?: Record<string, number>
@@ -25,6 +43,8 @@ export interface UseSearchResult {
       assignee?: Array<{ id: string; doc_count: number }>
       project?: Array<{ id: string; doc_count: number }>
     }
+    source?: 'elasticsearch' | 'postgresql'
+    warning?: string
   } | null
   isLoading: boolean
   error: string | null
@@ -34,8 +54,8 @@ export interface UseSearchResult {
 
 /**
  * Hook para búsqueda de findings
- * Usa /api/search/findings (Elasticsearch)
- * Fallback a /api/findings?search=... si ES no está disponible
+ * Usa /api/search/findings. El endpoint degrada a PostgreSQL si Elasticsearch
+ * no esta disponible, para evitar cascadas de 503 en el navegador.
  */
 export function useSearch(query: Partial<SearchQuery>): UseSearchResult {
   const [data, setData] = useState<UseSearchResult['data']>(null)
@@ -43,7 +63,7 @@ export function useSearch(query: Partial<SearchQuery>): UseSearchResult {
   const [error, setError] = useState<string | null>(null)
   const [isFallback, setIsFallback] = useState(false)
 
-  const debouncedQuery = useDebouncedValue(query, { mobile: 500, desktop: 300 })
+  const debouncedQuery = useDebouncedValue(query, SEARCH_DEBOUNCE_DELAY)
 
   const buildParams = useCallback((q: Partial<SearchQuery>): URLSearchParams => {
     const params = new URLSearchParams()
@@ -61,7 +81,15 @@ export function useSearch(query: Partial<SearchQuery>): UseSearchResult {
     if (q.project?.length) params.append('project', q.project.join(','))
     if (q.dateFrom) params.append('dateFrom', q.dateFrom)
     if (q.dateTo) params.append('dateTo', q.dateTo)
-    if (q.hasEvidence !== undefined) params.append('hasEvidence', String(q.hasEvidence))
+    if (q.hasEvidence !== undefined && q.hasEvidence !== 'any') {
+      const hasEvidence =
+        q.hasEvidence === 'with'
+          ? true
+          : q.hasEvidence === 'without'
+            ? false
+            : q.hasEvidence
+      params.append('hasEvidence', String(hasEvidence))
+    }
     if (q.limit) params.append('limit', q.limit.toString())
     if (q.offset !== undefined) params.append('offset', q.offset.toString())
 
@@ -78,7 +106,7 @@ export function useSearch(query: Partial<SearchQuery>): UseSearchResult {
       debouncedQuery.project?.length ||
       debouncedQuery.dateFrom ||
       debouncedQuery.dateTo ||
-      debouncedQuery.hasEvidence !== undefined
+      (debouncedQuery.hasEvidence !== undefined && debouncedQuery.hasEvidence !== 'any')
     )
 
     // @ts-ignore - _forceSearch is internal flag to load initial results
@@ -104,6 +132,7 @@ export function useSearch(query: Partial<SearchQuery>): UseSearchResult {
       }
 
       const result = await response.json()
+      setIsFallback(result.source === 'postgresql')
       setData(result)
     } catch (esError) {
       // Fallback to simple /api/findings search if ES fails
@@ -155,13 +184,15 @@ export function useSearch(query: Partial<SearchQuery>): UseSearchResult {
           items: (fallbackResult.items || []).map((item: any) => ({
             id: item.id,
             observation: item.observation,
-            status: item.status,
-            priority: item.priority,
-            severity: item.severity,
-            projectId: item.projectId,
-            assigneeId: item.assigneeId,
-            createdAt: item.createdAt,
-          })),
+	            status: item.status,
+	            priority: item.priority,
+	            severity: item.severity,
+	            projectId: item.projectId,
+	            assigneeId: item.assigneeId,
+	            experienceTags: normalizeRelationValues(item.experienceTags, 'experienceTag'),
+	            incidenceTypes: normalizeRelationValues(item.incidenceTypes, 'incidenceType'),
+	            createdAt: item.createdAt,
+	          })),
           facets: undefined,
         })
         setIsFallback(true)

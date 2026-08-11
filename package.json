@@ -1,12 +1,14 @@
 {
   "name": "my-project",
   "version": "0.1.0",
+  "packageManager": "pnpm@10.33.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "vitest run"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.656.0",
@@ -23,6 +25,7 @@
     "clsx": "^2.1.1",
     "cookie": "^1.1.1",
     "date-fns": "^3.6.0",
+    "exceljs": "^4.4.0",
     "idb": "^8.0.3",
     "lucia": "^3.2.2",
     "lucide-react": "^1.16.0",
@@ -44,17 +47,25 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@prisma/cli": "3.0.0-beta.30",
     "@tailwindcss/postcss": "^4.3.3",
+    "@testing-library/react": "^16.3.2",
     "@types/node": "^24",
     "@types/papaparse": "^5.5.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "eslint": "^10.8.1",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.9.0",
+    "jsdom": "^26.1.0",
     "postcss": "^8.5",
     "prisma": "^7.9.1",
     "sharp": "^0.35.3",
     "tailwindcss": "^4.3.3",
-    "typescript": "5.7.3"
+    "typescript": "5.7.3",
+    "typescript-eslint": "^8.67.0",
+    "vitest": "^4.1.10"
   },
   "pnpm": {
     "overrides": {

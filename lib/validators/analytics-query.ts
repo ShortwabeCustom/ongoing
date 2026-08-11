@@ -1,9 +1,19 @@
 import { z } from 'zod'
 
-const commaSeparatedArray = (val: any): string[] | undefined => {
+const commaSeparatedArray = (val: unknown): string[] | undefined => {
   if (!val) return undefined
   if (typeof val !== 'string') return undefined
-  return val.split(',').filter(Boolean)
+  return val.split(',').map((item) => item.trim()).filter(Boolean)
+}
+
+export type AnalyticsQuery = {
+  from?: string
+  to?: string
+  status?: string[]
+  priority?: string[]
+  severity?: string[]
+  projectId?: string
+  granularity?: 'day' | 'week'
 }
 
 export const AnalyticsQuerySchema = z.object({
@@ -57,5 +67,3 @@ export const AnalyticsQuerySchema = z.object({
 
   granularity: z.enum(['day', 'week']).optional().default('day'),
 })
-
-export type AnalyticsQuery = z.infer<typeof AnalyticsQuerySchema>

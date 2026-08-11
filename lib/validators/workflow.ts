@@ -81,11 +81,10 @@ export const AuditAction = z.enum([
   'UPDATE',
   'DELETE',
   'STATUS_CHANGE',
-  'STATE_CHANGED',
-  'EVIDENCE_ATTACHED',
-  'VALIDATED',
-  'REOPENED',
   'ASSIGN',
+  'VALIDATE',
+  'RESOLVE',
+  'IMPORT',
 ])
 
 export type AuditAction = z.infer<typeof AuditAction>

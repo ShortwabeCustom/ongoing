@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/lucia";
-import { UserRole } from "@prisma/client";
+import { UserRole } from "@/lib/generated/prisma/client";
 
 type RBACCheck = {
   requireAuth?: boolean;
@@ -53,7 +53,7 @@ export async function checkRBAC(
   };
 }
 
-export const RBAC_PERMISSIONS = {
+export const RBAC_PERMISSIONS: Record<string, UserRole[]> = {
   CREATE_FINDING: ["OWNER", "QA_LEAD", "DESIGNER", "DEVELOPER"],
   EDIT_FINDING_OWN: ["OWNER", "QA_LEAD", "DESIGNER", "DEVELOPER"],
   EDIT_FINDING_ANY: ["OWNER", "QA_LEAD"],
@@ -96,5 +96,5 @@ export function hasPermission(
   permission: keyof typeof RBAC_PERMISSIONS
 ): boolean {
   const allowedRoles = RBAC_PERMISSIONS[permission];
-  return allowedRoles.includes(userRole);
+  return allowedRoles.includes(userRole as UserRole);
 }

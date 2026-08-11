@@ -8,10 +8,15 @@ export const dynamic = 'force-dynamic'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const { id } = params
+    const { valid, error } = await checkRBAC(request, {
+      allowedRoles: RBAC_PERMISSIONS.VIEW_ALL_FINDINGS,
+    })
+    if (!valid) return error
+
+    const { id } = await params
 
     // Validate ID is a valid CUID
     if (!id || typeof id !== 'string' || id.length < 5) {
@@ -36,7 +41,7 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     // FASE 7: RBAC validation
@@ -45,7 +50,7 @@ export async function PATCH(
     })
     if (!valid) return error
 
-    const { id } = params
+    const { id } = await params
     const body = await request.json()
 
     // Validate ID
@@ -95,7 +100,7 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     // FASE 7: RBAC validation
@@ -104,7 +109,7 @@ export async function DELETE(
     })
     if (!valid) return error
 
-    const { id } = params
+    const { id } = await params
 
     // Validate ID
     if (!id || typeof id !== 'string' || id.length < 5) {

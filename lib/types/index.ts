@@ -5,17 +5,15 @@ export type {
   ProjectMember,
   ProductVersion,
   TestSession,
-  Finding,
   FindingIncidenceType,
   FindingExperienceTag,
-  Evidence,
   Resolution,
   Validation,
   Comment,
   FindingStatusHistory,
   AuditLog,
   ImportBatch,
-} from '@prisma/client'
+} from '@/lib/generated/prisma/client'
 
 export type {
   FindingStatus,
@@ -29,7 +27,30 @@ export type {
   AuditAction,
   ImportStatus,
   UserRole,
-} from '@prisma/client'
+} from '@/lib/generated/prisma/client'
+
+import type {
+  Evidence as PrismaEvidence,
+  Finding as PrismaFinding,
+  FindingExperienceTag,
+  FindingIncidenceType,
+} from '@/lib/generated/prisma/client'
+
+export type Evidence = Omit<PrismaEvidence, 'url' | 'fileSize'> & {
+  url?: string
+  fileSize?: number | null
+  uploadedAt?: Date | string
+  urlExpiresAt?: Date | string
+}
+
+export type Finding = PrismaFinding & {
+  title?: string
+  description?: string
+  area?: string
+  evidence?: Evidence[]
+  incidenceTypes?: FindingIncidenceType[]
+  experienceTags?: FindingExperienceTag[]
+}
 
 // Custom API Response Types
 export interface ApiResponse<T = unknown> {

@@ -30,7 +30,7 @@ const INDEX_MAPPING = {
       updatedAt: { type: 'date' },
     },
   },
-}
+} as const
 
 export async function ensureIndexExists(): Promise<void> {
   const client = getEsClient()

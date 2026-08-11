@@ -7,11 +7,14 @@ node_modules
 .next
 dist
 build
+tsconfig.tsbuildinfo
 
 # Environment & Secrets
 .env
 .env.local
 .env.*.local
+.env.production
+.env.docker
 
 # OS
 .DS_Store

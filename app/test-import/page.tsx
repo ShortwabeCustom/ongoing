@@ -1,25 +1,21 @@
-'use client'
+import { AppShell } from '@/components/app/AppShell'
+import { TestImportWorkspace } from '@/components/features/import/TestImportWorkspace'
+import { getInventoryStats } from '@/lib/services/inventory-stats'
 
-import { ImportDialog } from '@/components/features/import/import-dialog'
-import { useState } from 'react'
+export const dynamic = 'force-dynamic'
 
-export default function TestImportPage() {
-  const [lastBatchId, setLastBatchId] = useState<string | null>(null)
+export default async function TestImportPage() {
+  const stats = await getInventoryStats()
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-2xl mx-auto">
-        <ImportDialog
-          projectId="test-project-id-1"
-          onSuccess={(batchId) => setLastBatchId(batchId)}
-        />
-
-        {lastBatchId && (
-          <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded">
-            <p>Last imported batch: <code className="bg-white px-2 py-1 rounded">{lastBatchId}</code></p>
-          </div>
-        )}
-      </div>
-    </div>
+    <AppShell
+      current="import"
+      eyebrow="Importación"
+      title="Carga histórica"
+      description="Validación previa de archivos CSV y XLSX para incorporar hallazgos al inventario."
+      stats={stats}
+    >
+      <TestImportWorkspace />
+    </AppShell>
   )
 }

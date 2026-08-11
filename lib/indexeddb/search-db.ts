@@ -24,9 +24,9 @@ export async function openSearchDb(): Promise<IDBDatabase> {
 
     const request = indexedDB.open(SEARCH_DB_NAME, SEARCH_DB_VERSION)
 
-    request.onupgradeneeded = (e) => {
-      const db = e.target.result as IDBDatabase
-      const source = e.oldVersion
+    request.onupgradeneeded = (event) => {
+      const db = request.result
+      const source = event.oldVersion
 
       if (source < 1) {
         // Create search_history store

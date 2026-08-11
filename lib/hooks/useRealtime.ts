@@ -1,7 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export interface UseRealtimeOptions {
   autoConnect?: boolean;
@@ -10,112 +9,80 @@ export interface UseRealtimeOptions {
   role?: string;
 }
 
+type RealtimeHandler = (...args: any[]) => void;
+
 export function useRealtime(options: UseRealtimeOptions = {}) {
-  const socketRef = useRef<Socket | null>(null);
+  const handlersRef = useRef<Map<string, Set<RealtimeHandler>>>(new Map());
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!options.autoConnect && !options.userId) {
-      return;
-    }
+    if (!options.autoConnect && !options.userId) return;
 
-    const url = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:3001';
-
-    socketRef.current = io(url, {
-      auth: {
-        userId: options.userId,
-        userName: options.userName,
-        role: options.role,
-      },
-      reconnection: true,
-      reconnectionDelay: 1000,
-      reconnectionDelayMax: 5000,
-      reconnectionAttempts: 5,
-      transports: ['websocket', 'polling'],
-    });
-
-    socketRef.current.on('connect', () => {
-      setIsConnected(true);
-      setError(null);
-    });
-
-    socketRef.current.on('disconnect', () => {
-      setIsConnected(false);
-    });
-
-    socketRef.current.on('error', (err) => {
-      setError(typeof err === 'string' ? err : 'Connection error');
-    });
-
-    return () => {
-      socketRef.current?.disconnect();
-    };
+    // Realtime is intentionally optional in the first dynamic/offline phase.
+    // The app keeps working via Route Handlers when no socket client is bundled.
+    setIsConnected(false);
+    setError(null);
   }, [options.autoConnect, options.userId, options.userName, options.role]);
 
-  const joinFinding = useCallback((findingId: string) => {
-    if (!socketRef.current?.connected) {
-      console.warn('Socket not connected');
-      return;
-    }
-    socketRef.current.emit('finding:join', { findingId });
+  const emitLocal = useCallback((event: string, payload: unknown) => {
+    const handlers = handlersRef.current.get(event);
+    handlers?.forEach((handler) => handler(payload));
   }, []);
 
+  const joinFinding = useCallback((findingId: string) => {
+    emitLocal('finding:joined', { findingId });
+  }, [emitLocal]);
+
   const leaveFinding = useCallback((findingId: string) => {
-    if (!socketRef.current?.connected) {
-      console.warn('Socket not connected');
-      return;
-    }
-    socketRef.current.emit('finding:leave', { findingId });
-  }, []);
+    emitLocal('finding:left', { findingId });
+  }, [emitLocal]);
 
   const updateFinding = useCallback(
     (findingId: string, data: Record<string, any>, version: number) => {
-      if (!socketRef.current?.connected) {
-        console.warn('Socket not connected');
-        return;
-      }
-      socketRef.current.emit('finding:update', { findingId, data, version });
+      emitLocal('finding:update:queued', { findingId, data, version });
     },
-    []
+    [emitLocal],
   );
 
   const updatePresence = useCallback(
     (status: 'online' | 'editing' | 'idle' | 'offline', resourceId?: string) => {
-      if (!socketRef.current?.connected) {
-        console.warn('Socket not connected');
-        return;
-      }
-      socketRef.current.emit('presence:update', { status, resourceId });
+      emitLocal('presence:changed', {
+        userId: options.userId,
+        userName: options.userName,
+        role: options.role,
+        status,
+        resourceId,
+      });
     },
-    []
+    [emitLocal, options.role, options.userId, options.userName],
   );
 
   const logActivity = useCallback(
     (action: string, resourceId: string, details?: Record<string, any>) => {
-      if (!socketRef.current?.connected) {
-        console.warn('Socket not connected');
-        return;
-      }
-      socketRef.current.emit('activity:log', { action, resourceId, details });
+      emitLocal('activity:local', { action, resourceId, details });
     },
-    []
+    [emitLocal],
   );
 
-  const on = useCallback((event: string, callback: (...args: any[]) => void) => {
-    if (socketRef.current) {
-      socketRef.current.on(event, callback);
-    }
+  const on = useCallback((event: string, callback: RealtimeHandler) => {
+    const handlers = handlersRef.current.get(event) ?? new Set<RealtimeHandler>();
+    handlers.add(callback);
+    handlersRef.current.set(event, handlers);
   }, []);
 
-  const off = useCallback((event: string, callback?: (...args: any[]) => void) => {
-    if (socketRef.current) {
-      socketRef.current.off(event, callback);
+  const off = useCallback((event: string, callback?: RealtimeHandler) => {
+    if (!callback) {
+      handlersRef.current.delete(event);
+      return;
     }
+
+    const handlers = handlersRef.current.get(event);
+    handlers?.delete(callback);
   }, []);
 
   return {
-    socket: socketRef.current,
+    socket: null,
     isConnected,
     error,
     joinFinding,

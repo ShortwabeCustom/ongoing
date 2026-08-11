@@ -18,16 +18,16 @@ const ACTION_LABELS: Record<string, string> = {
 }
 
 const ACTION_COLORS: Record<string, string> = {
-  FINDING_CREATED: 'bg-blue-100 text-blue-800',
-  FINDING_UPDATED: 'bg-yellow-100 text-yellow-800',
-  FINDING_DELETED: 'bg-red-100 text-red-800',
-  FINDING_VIEWED: 'bg-gray-100 text-gray-800',
-  RESOLUTION_ADDED: 'bg-green-100 text-green-800',
-  RESOLUTION_UPDATED: 'bg-green-100 text-green-800',
-  VALIDATION_COMPLETED: 'bg-purple-100 text-purple-800',
-  COMMENT_ADDED: 'bg-cyan-100 text-cyan-800',
-  STATUS_CHANGED: 'bg-orange-100 text-orange-800',
-  ASSIGNED: 'bg-indigo-100 text-indigo-800',
+  FINDING_CREATED: 'bg-[#e0f5e9] text-[#087244]',
+  FINDING_UPDATED: 'bg-[#fff5df] text-[#85540d]',
+  FINDING_DELETED: 'bg-[#fff0eb] text-[#9b321f]',
+  FINDING_VIEWED: 'bg-[#eef3ec] text-[#3b4b43]',
+  RESOLUTION_ADDED: 'bg-[#e0f5e9] text-[#087244]',
+  RESOLUTION_UPDATED: 'bg-[#e0f5e9] text-[#087244]',
+  VALIDATION_COMPLETED: 'bg-[#edf4ed] text-[#052b20]',
+  COMMENT_ADDED: 'bg-[#eef8f0] text-[#087244]',
+  STATUS_CHANGED: 'bg-[#fff5df] text-[#85540d]',
+  ASSIGNED: 'bg-[#edf4ed] text-[#052b20]',
 }
 
 interface Activity {
@@ -73,48 +73,48 @@ export function RecentActivityPanel({ limit = 20 }: RecentActivityPanelProps) {
 
   if (error) {
     return (
-      <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
+      <div className="rounded-lg border border-[#f1c8bd] bg-[#fff0eb] p-4 text-[#9b321f]">
         Error: {error}
       </div>
     )
   }
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-6">
-      <h3 className="mb-4 text-lg font-semibold text-gray-900">
+    <div className="pm-card p-6">
+      <h3 className="mb-4 text-lg font-semibold text-[#17251f]">
         Actividad Reciente
       </h3>
 
       {isLoading ? (
         <div className="space-y-3">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-12 animate-pulse rounded bg-gray-100" />
+            <div key={i} className="h-12 animate-pulse rounded-lg bg-[#eef3ec]" />
           ))}
         </div>
       ) : activities.length === 0 ? (
-        <p className="text-center text-gray-500">Sin actividad registrada</p>
+        <p className="text-center text-[#65766e]">Sin actividad registrada</p>
       ) : (
         <div className="space-y-3">
           {activities.slice(0, limit).map((activity) => (
             <div
               key={activity.id}
-              className="flex items-start justify-between gap-3 border-b border-gray-100 pb-3 last:border-0"
+              className="flex items-start justify-between gap-3 border-b border-[#edf2ee] pb-3 last:border-0"
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <span
-                    className={`inline-block rounded-full px-2.5 py-0.5 text-xs font-medium ${ACTION_COLORS[activity.action] || 'bg-gray-100 text-gray-800'}`}
+                    className={`inline-block rounded-full px-2.5 py-1 text-xs font-semibold ${ACTION_COLORS[activity.action] || 'bg-[#eef3ec] text-[#3b4b43]'}`}
                   >
                     {ACTION_LABELS[activity.action] || activity.action}
                   </span>
                 </div>
-                <p className="mt-1 text-sm text-gray-700">
+                <p className="mt-1 text-sm text-[#3b4b43]">
                   <span className="font-medium">{activity.userName}</span>{' '}
                   {ACTION_LABELS[activity.action]?.toLowerCase() || 'actualizó'}{' '}
                   {activity.resourceType}
                 </p>
               </div>
-              <time className="whitespace-nowrap text-xs text-gray-500">
+              <time className="whitespace-nowrap text-xs text-[#65766e]">
                 {formatDistanceToNow(new Date(activity.createdAt), {
                   addSuffix: true,
                   locale: es,

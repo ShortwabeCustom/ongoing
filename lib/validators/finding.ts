@@ -1,20 +1,28 @@
 import { z } from 'zod'
 
+const idSchema = z.string().min(5, 'Invalid identifier')
+const optionalText = z.string().trim().max(500).optional().nullable()
+
 export const FindingCreateSchema = z.object({
+  testSessionId: idSchema,
+  folio: z.string().trim().max(100).optional().nullable(),
   observation: z.string().min(5, 'Min 5 characters').max(2000, 'Max 2000 characters'),
-  priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']),
-  severity: z.enum(['COSMETIC', 'MINOR', 'MAJOR', 'BLOCKER']),
-  effort: z.enum(['S', 'M', 'L', 'XL']),
-  assigneeId: z.string().uuid().optional().nullable(),
-  dueDate: z.date().optional().nullable(),
+  status: z.enum(['OPEN', 'TRIAGED', 'IN_PROGRESS', 'READY_FOR_VALIDATION', 'VALIDATED', 'CLOSED', 'BLOCKED', 'REOPENED']).optional(),
+  priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'CRITICAL']).default('MEDIUM'),
+  severity: z.enum(['COSMETIC', 'MINOR', 'MAJOR', 'BLOCKER']).default('MINOR'),
+  effort: z.enum(['S', 'M', 'L', 'XL']).default('M'),
+  assigneeId: idSchema.optional().nullable(),
+  dueDate: z.coerce.date().optional().nullable(),
   incidenceTypes: z.array(z.enum(['DESIGN', 'FUNCTIONALITY', 'BUSINESS_RULE', 'COPY'])).min(1, 'Select at least one type'),
   experienceTags: z.array(z.enum(['UI', 'UX', 'COPY'])).optional(),
-  previousScreen: z.string().optional(),
-  currentScreen: z.string().optional(),
-  flowStep: z.string().optional(),
+  previousScreen: optionalText,
+  currentScreen: optionalText,
+  flowStep: optionalText,
 })
 
-export const FindingUpdateSchema = FindingCreateSchema.extend({
+export const FindingUpdateSchema = FindingCreateSchema.omit({
+  testSessionId: true,
+}).extend({
   version: z.number().int().positive('Optimistic locking version required'),
 }).partial()
 

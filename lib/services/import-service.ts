@@ -1,8 +1,179 @@
+import { randomUUID } from 'crypto'
 import { getDb } from '@/lib/db-lazy'
-import { parseCSV, type RawCSVRow } from './csv-parser'
-import { NormalizationService, type NormalizedFinding } from './normalization-service'
+import { parseImportFile, type ParsedImportFile } from './import-parser'
+import {
+  NormalizationService,
+  type NormalizedFinding,
+  type NormalizedImportRow,
+} from './normalization-service'
 import { SearchService } from '@/lib/services/search-service'
 import type { ImportPreviewResult, ImportIncidence, ImportPreviewRow } from '@/lib/validators/import'
+
+const KNOWN_COLUMNS = new Set([
+  'ID',
+  'Ronda',
+  'Fila fuente',
+  'Observación',
+  'Ajuste',
+  'Comentarios',
+  'Estatus',
+  'Estado',
+  'Área',
+  'Area',
+  'Etapa',
+  'Evidencias',
+  'Evidencia',
+])
+
+function unique<T>(items: T[]): T[] {
+  return Array.from(new Set(items))
+}
+
+function normalizeImportRows(
+  parsed: ParsedImportFile,
+  projectId: string,
+  testSessionId?: string,
+): NormalizedImportRow[] {
+  return parsed.sheets.flatMap((sheet) =>
+    sheet.rows.map((row) =>
+      NormalizationService.normalizeRow(row.data, {
+        projectId,
+        testSessionId,
+        sourceSheet: sheet.name,
+        sourceRow: row.sourceRow,
+      }),
+    ),
+  )
+}
+
+function rowKey(row: Pick<NormalizedImportRow, 'sourceSheet' | 'sourceRow'>): string {
+  return `${row.sourceSheet}:${row.sourceRow}`
+}
+
+function duplicateRowKeys(rows: NormalizedImportRow[]): Set<string> {
+  const seen = new Set<string>()
+  const duplicates = new Set<string>()
+
+  rows.forEach((row) => {
+    if (!row.normalized) return
+
+    if (seen.has(row.normalized.fingerprint)) {
+      duplicates.add(rowKey(row))
+    } else {
+      seen.add(row.normalized.fingerprint)
+    }
+  })
+
+  return duplicates
+}
+
+async function existingFingerprints(fingerprints: string[]): Promise<Set<string>> {
+  if (fingerprints.length === 0) return new Set()
+
+  const db = getDb()
+  const existing = await db.finding.findMany({
+    where: {
+      sourceFingerprint: {
+        in: fingerprints,
+      },
+      deletedAt: null,
+    },
+    select: {
+      sourceFingerprint: true,
+    },
+  })
+
+  return new Set(
+    existing
+      .map((finding) => finding.sourceFingerprint)
+      .filter((fingerprint): fingerprint is string => !!fingerprint),
+  )
+}
+
+function buildColumnReport(parsed: ParsedImportFile) {
+  const headers = unique(parsed.sheets.flatMap((sheet) => sheet.headers))
+  const recognizedColumns = headers.filter((header) => KNOWN_COLUMNS.has(header))
+  const unknownColumns = headers.filter((header) => !KNOWN_COLUMNS.has(header))
+
+  return { recognizedColumns, unknownColumns }
+}
+
+function buildIncidences(
+  parsed: ParsedImportFile,
+  rows: NormalizedImportRow[],
+  existing: Set<string>,
+  duplicatesInFile: Set<string>,
+): ImportIncidence[] {
+  const incidences: ImportIncidence[] = []
+
+  parsed.warnings.forEach((warning) => {
+    incidences.push({
+      row: 0,
+      type: warning.includes('embedded image') ? 'EMBEDDED_IMAGES_NOT_EXTRACTED' : 'OTHER',
+      message: warning,
+      severity: 'warning',
+    })
+  })
+
+  const { unknownColumns } = buildColumnReport(parsed)
+  unknownColumns.forEach((column) => {
+    incidences.push({
+      row: 0,
+      type: 'UNKNOWN_COLUMN',
+      message: `Unknown column preserved but not mapped: ${column}`,
+      severity: 'warning',
+    })
+  })
+
+  rows.forEach((row) => {
+    if (!row.normalized) {
+      incidences.push({
+        sheet: row.sourceSheet,
+        row: row.sourceRow,
+        type: 'EMPTY_OBSERVATION',
+        message: 'Fila sin observación; no se convertirá en Finding.',
+        severity: 'warning',
+      })
+      return
+    }
+
+    row.warnings.forEach((warning) => {
+      incidences.push({
+        sheet: row.sourceSheet,
+        row: row.sourceRow,
+        type: warning.includes('Evidence')
+          ? 'MISSING_EVIDENCE'
+          : warning.includes('area')
+            ? 'INVALID_AREA'
+            : warning.includes('status')
+              ? 'INVALID_STATUS'
+              : 'OTHER',
+        message: warning,
+        severity: 'warning',
+      })
+    })
+
+    if (existing.has(row.normalized.fingerprint)) {
+      incidences.push({
+        sheet: row.sourceSheet,
+        row: row.sourceRow,
+        type: 'DUPLICATE',
+        message: 'Ya existe un Finding con el mismo fingerprint.',
+        severity: 'warning',
+      })
+    } else if (duplicatesInFile.has(rowKey(row))) {
+      incidences.push({
+        sheet: row.sourceSheet,
+        row: row.sourceRow,
+        type: 'DUPLICATE',
+        message: 'Fingerprint duplicado dentro del archivo.',
+        severity: 'warning',
+      })
+    }
+  })
+
+  return incidences
+}
 
 export class ImportService {
   static async generatePreview(
@@ -10,66 +181,59 @@ export class ImportService {
     projectId: string,
     testSessionId?: string,
   ): Promise<ImportPreviewResult> {
-    // Parse CSV
-    const rawRows = await parseCSV(file)
+    const parsed = await parseImportFile(file)
+    const normalizedRows = normalizeImportRows(parsed, projectId, testSessionId)
+    const validRows = normalizedRows
+      .map((row) => row.normalized)
+      .filter((row): row is NormalizedFinding => row !== null)
 
-    // Normalize rows
-    const normalized: Array<{ raw: RawCSVRow; normalized: NormalizedFinding | null; rowIndex: number }> = rawRows.map(
-      (raw, idx) => ({
-        raw,
-        normalized: NormalizationService.normalizeRow(raw, idx),
-        rowIndex: idx,
-      }),
-    )
+    const duplicatesInFile = duplicateRowKeys(normalizedRows)
+    const existing = await existingFingerprints(validRows.map((row) => row.fingerprint))
 
-    // Generate incidences and count valid rows
-    const incidences: ImportIncidence[] = []
-    let validCount = 0
-    let skippedCount = 0
-
-    normalized.forEach((item, idx) => {
-      if (!item.normalized) {
-        skippedCount++
-        const observation = item.raw['Observación'] || item.raw['observation'] || ''
-        if (!observation?.trim()) {
-          incidences.push({
-            row: idx + 2,
-            type: 'EMPTY_OBSERVATION',
-            message: 'Fila sin observación',
-            severity: 'warning',
-          })
+    const previewRows: ImportPreviewRow[] = normalizedRows
+      .filter((row): row is NormalizedImportRow & { normalized: NormalizedFinding } => row.normalized !== null)
+      .map((row) => {
+        const isDuplicate =
+          existing.has(row.normalized.fingerprint) || duplicatesInFile.has(rowKey(row))
+        return {
+          sourceRow: row.normalized.sourceRow,
+          observation: row.normalized.observation,
+          area: row.normalized.area,
+          status: row.normalized.status,
+          evidenceFiles: row.normalized.evidenceFiles,
+          fingerprint: row.normalized.fingerprint,
+          isDuplicate,
+          isValid: !isDuplicate,
         }
-        return
-      }
+      })
 
-      validCount++
-    })
-
-    // Create ImportBatch (PENDING status)
-    const batchId = this.generateBatchId()
-
-    // Build preview rows
-    const previewRows: ImportPreviewRow[] = normalized
-      .filter((item) => item.normalized !== null)
-      .map((item) => ({
-        sourceRow: item.normalized!.sourceRow,
-        observation: item.normalized!.observation,
-        area: item.normalized!.area,
-        status: item.normalized!.status,
-        evidenceFiles: item.normalized!.evidenceFiles,
-        isValid: true,
-      }))
+    const duplicateRows = previewRows.filter((row) => row.isDuplicate).length
+    const skippedRows = normalizedRows.length - validRows.length
+    const { recognizedColumns, unknownColumns } = buildColumnReport(parsed)
 
     return {
-      batchId,
+      batchId: this.generateBatchId(),
       summary: {
-        totalRows: rawRows.length,
-        validRows: validCount,
-        skippedRows: skippedCount,
-        newFindings: validCount,
-        potentialDuplicates: 0, // MVP: skip duplicate detection
+        totalRows: normalizedRows.length,
+        validRows: validRows.length,
+        skippedRows,
+        newFindings: validRows.length - duplicateRows,
+        potentialDuplicates: duplicateRows,
+        duplicateRows,
       },
-      incidences,
+      file: {
+        name: parsed.fileName,
+        type: parsed.fileType,
+        sheets: parsed.sheets.map((sheet) => ({
+          name: sheet.name,
+          rows: sheet.rows.length,
+          headers: sheet.headers,
+          embeddedImageCount: sheet.embeddedImageCount,
+        })),
+        recognizedColumns,
+        unknownColumns,
+      },
+      incidences: buildIncidences(parsed, normalizedRows, existing, duplicatesInFile),
       preview: {
         rows: previewRows,
       },
@@ -82,55 +246,75 @@ export class ImportService {
     file: File,
     userId: string,
     testSessionId: string,
-  ): Promise<{ importBatchId: string; findingsCreated: number }> {
-    // Parse CSV
-    const rawRows = await parseCSV(file)
+  ): Promise<{
+    importBatchId: string
+    findingsCreated: number
+    duplicatesSkipped: number
+    skippedRows: number
+  }> {
+    const parsed = await parseImportFile(file)
+    const normalizedRows = normalizeImportRows(parsed, projectId, testSessionId)
+    const validRows = normalizedRows
+      .map((row) => row.normalized)
+      .filter((row): row is NormalizedFinding => row !== null)
 
-    // Normalize and import within transaction
+    const seenInFile = new Set<string>()
+    const rowsForImport: NormalizedFinding[] = []
+    let duplicatesSkipped = 0
+
+    const existingBefore = await existingFingerprints(validRows.map((row) => row.fingerprint))
+    validRows.forEach((row) => {
+      if (existingBefore.has(row.fingerprint) || seenInFile.has(row.fingerprint)) {
+        duplicatesSkipped++
+        return
+      }
+      seenInFile.add(row.fingerprint)
+      rowsForImport.push(row)
+    })
+
     const db = getDb()
-    const result = await db.$transaction(async (tx: any) => {
-      const normalizedRows: Array<{ normalized: NormalizedFinding; raw: RawCSVRow; rowIndex: number }> = []
-
-      rawRows.forEach((raw, idx) => {
-        const normalized = NormalizationService.normalizeRow(raw, idx)
-        if (normalized) {
-          normalizedRows.push({ normalized, raw, rowIndex: idx })
-        }
-      })
-
-      // Create findings
+    const result = await db.$transaction(async (tx) => {
       const createdFindings = []
 
-      for (const item of normalizedRows) {
-        const { normalized } = item
-
+      for (const normalized of rowsForImport) {
         const finding = await tx.finding.create({
           data: {
             projectId,
             testSessionId,
             observation: normalized.observation,
             status: normalized.status,
+            sourceSheet: normalized.sourceSheet,
             sourceRow: normalized.sourceRow,
+            sourceFingerprint: normalized.fingerprint,
             importBatchId: batchId,
             createdBy: userId,
           },
         })
 
-        // Create evidence records
-        for (const filename of normalized.evidenceFiles) {
+        for (const evidence of normalized.evidenceRefs) {
           await tx.evidence.create({
             data: {
               findingId: finding.id,
-              type: 'IMAGE',
-              storageKey: `evidence/${projectId}/${finding.id}/${filename}`,
-              originalFilename: filename,
-              mimeType: 'image/jpeg',
+              type: evidence.mimeType.startsWith('image/') ? 'IMAGE' : 'DOCUMENT',
+              storageKey: evidence.storageKey,
+              url: evidence.url,
+              originalFilename: evidence.originalFilename,
+              mimeType: evidence.mimeType,
+              caption: evidence.originalRef,
               createdBy: userId,
             },
           })
         }
 
-        // Create experience tag mappings
+        for (const incidenceType of normalized.incidenceTypes) {
+          await tx.findingIncidenceType.create({
+            data: {
+              findingId: finding.id,
+              incidenceType,
+            },
+          })
+        }
+
         for (const tag of normalized.experienceTags) {
           await tx.findingExperienceTag.create({
             data: {
@@ -140,67 +324,84 @@ export class ImportService {
           })
         }
 
-        // Create status history
+        if (normalized.adjustment) {
+          await tx.resolution.create({
+            data: {
+              findingId: finding.id,
+              description: normalized.adjustment,
+              state: normalized.status === 'VALIDATED' ? 'IMPLEMENTED' : 'OPEN',
+              createdBy: userId,
+            },
+          })
+        }
+
+        if (normalized.comments) {
+          await tx.comment.create({
+            data: {
+              findingId: finding.id,
+              text: normalized.comments,
+              createdBy: userId,
+            },
+          })
+        }
+
         await tx.findingStatusHistory.create({
           data: {
             findingId: finding.id,
-            newStatus: normalized.status,
-            previousStatus: null,
-            action: 'IMPORT',
+            fromStatus: 'OPEN',
+            toStatus: normalized.status,
             changedBy: userId,
             reason: `Imported from ${file.name}`,
+          },
+        })
+
+        await tx.auditLog.create({
+          data: {
+            entityType: 'Finding',
+            entityId: finding.id,
+            action: 'IMPORT',
+            actorId: userId,
+            after: {
+              status: finding.status,
+              sourceSheet: finding.sourceSheet,
+              sourceRow: finding.sourceRow,
+              sourceFingerprint: finding.sourceFingerprint,
+            },
           },
         })
 
         createdFindings.push(finding)
       }
 
-      // Update ImportBatch
       const batch = await tx.importBatch.update({
         where: { id: batchId },
         data: {
           status: 'COMPLETED',
-          totalRows: rawRows.length,
+          totalRows: normalizedRows.length,
           validRows: createdFindings.length,
-          skippedRows: rawRows.length - createdFindings.length,
+          skippedRows: normalizedRows.length - createdFindings.length,
         },
       })
 
-      // Create AuditLog
-      await tx.auditLog.create({
-        data: {
-          action: 'IMPORT',
-          resource: 'Finding',
-          resourceId: createdFindings.map((f) => f.id).join(','),
-          changes: {
-            imported: createdFindings.length,
-            file: file.name,
+      return { batch, createdFindings }
+    })
+
+    if (result.createdFindings.length > 0) {
+      const createdFindings = await db.finding.findMany({
+        where: {
+          importBatchId: batchId,
+          deletedAt: null,
+        },
+        include: {
+          evidence: {
+            select: {
+              caption: true,
+              originalFilename: true,
+            },
           },
-          createdBy: userId,
         },
       })
 
-      return batch
-    })
-
-    // FASE 12: Index created findings in Elasticsearch (fire-and-forget)
-    // Fetch the created findings with their evidence to index them
-    const createdFindings = await db.finding.findMany({
-      where: {
-        importBatchId: batchId,
-        deletedAt: null,
-      },
-      include: {
-        evidence: {
-          select: {
-            caption: true,
-            originalFilename: true,
-          },
-        },
-      },
-    })
-
-    if (createdFindings.length > 0) {
       const findingsToIndex = createdFindings.map((finding) => {
         const evidenceDescriptions = (finding.evidence ?? [])
           .map((e) => [e.caption, e.originalFilename].filter(Boolean).join(' '))
@@ -225,12 +426,14 @@ export class ImportService {
     }
 
     return {
-      importBatchId: result.id,
-      findingsCreated: result.validRows,
+      importBatchId: result.batch.id,
+      findingsCreated: result.createdFindings.length,
+      duplicatesSkipped,
+      skippedRows: normalizedRows.length - validRows.length,
     }
   }
 
   private static generateBatchId(): string {
-    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+    return `imp_${randomUUID()}`
   }
 }

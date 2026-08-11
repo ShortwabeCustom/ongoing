@@ -2,13 +2,19 @@ import { NextRequest } from 'next/server'
 import { apiSuccess, apiError, ApiError } from '@/lib/utils/api-response'
 import { StorageService } from '@/lib/services/storage-service'
 import { updateEvidenceSchema } from '@/lib/validators/evidence'
+import { checkRBAC, RBAC_PERMISSIONS } from '@/lib/middleware/rbac'
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const evidenceId = params.id
+    const { valid, error } = await checkRBAC(request, {
+      allowedRoles: RBAC_PERMISSIONS.CREATE_FINDING,
+    })
+    if (!valid) return error
+
+    const { id: evidenceId } = await params
     const body = await request.json()
 
     // Validate input
@@ -51,13 +57,18 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const evidenceId = params.id
+    const { valid, user, error } = await checkRBAC(request, {
+      allowedRoles: RBAC_PERMISSIONS.CREATE_FINDING,
+    })
+    if (!valid) return error
+
+    const { id: evidenceId } = await params
 
     // Delete evidence
-    await StorageService.deleteEvidence(evidenceId)
+    await StorageService.deleteEvidence(evidenceId, user.id)
 
     // Return 204 No Content
     return new Response(null, { status: 204 })
@@ -70,6 +81,17 @@ export async function DELETE(
             'Evidence not found',
             undefined,
             404,
+          ),
+        )
+      }
+
+      if (error.message === 'ALREADY_DELETED') {
+        return apiError(
+          new ApiError(
+            'ALREADY_DELETED',
+            'Evidence is already deleted',
+            undefined,
+            410,
           ),
         )
       }

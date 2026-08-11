@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pruebas-maria-app
+    restart: always
+    ports:
+      - "3001:3000"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://torrax_user:TorraxDev123!@host.docker.internal:5432/pruebas_maria_prod?schema=public
+      ELASTICSEARCH_URL: http://host.docker.internal:9200
+      AUTH_SECRET: prod-secret-key-12345
+      S3_ENDPOINT: https://your-r2.r2.cloudflarestorage.com
+      S3_BUCKET: pruebas-maria
+      S3_ACCESS_KEY_ID: your-access-key
+      S3_SECRET_ACCESS_KEY: your-secret-key
+      NEXT_PUBLIC_VAPID_PUBLIC_KEY: BLZU0YwBWfsOb0KEJr-nREYM2X9UaAflksLVhQQBoc-m2EcoTem0e2LCt29d7hk870qFrXh3Q9ZN0FynvVTPLrM
+      VAPID_PRIVATE_KEY: eegFVTG3ck5hhpnWI0b9-FqR6WiQ0sr09CNXtMjb7q4
+      NEXT_PUBLIC_API_URL: https://uix.torrax.cloud
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "10"
