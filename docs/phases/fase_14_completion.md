@@ -251,9 +251,9 @@
 ## 🔗 References
 
 **Master Spec**: [FASE_14.md](./FASE_14.md)  
-**Roadmap**: [ROADMAP.md](./ROADMAP.md)  
-**Setup**: [QUICK_START.md](../QUICK_START.md)  
-**Project Instructions**: [CLAUDE.md](../../CLAUDE.md)
+**Roadmap**: [ROADMAP.md](./roadmap.md)  
+**Setup**: [QUICK_START.md](../quick_start.md)  
+**Project Instructions**: [CLAUDE.md](../../claude.md)
 
 ---
 
@@ -261,7 +261,7 @@
 
 Pruebas María 2.0 now has enterprise-grade advanced search with batch operations, search history, and saved filters. The platform is production-ready and can move to FASE 15 (Export & Reporting).
 
-**Next Phase**: [FASE 15 — Export & Reporting](./ROADMAP.md#fase-15--export--reporting-propuesto)
+**Next Phase**: [FASE 15 — Export & Reporting](./roadmap.md#fase-15--export--reporting-propuesto)
 
 ---
 

@@ -391,8 +391,8 @@ npm run dev
 ## 📞 Si Aún No Funciona
 
 1. **Revisar logs**: `npm run dev` muestra errores detallados
-2. **Consultar docs**: [docs/README.md](../README.md)
-3. **Verificar prerequisites**: [DEVELOPMENT_SETUP.md](./DEVELOPMENT_SETUP.md)
+2. **Consultar docs**: [doc./readme.md](../readme.md)
+3. **Verificar prerequisites**: [DEVELOPMENT_SETUP.md](./development_setup.md)
 4. **Abrir issue**: Con logs + versiones
 
 ---

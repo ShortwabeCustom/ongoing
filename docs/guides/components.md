@@ -401,8 +401,8 @@ describe('Button', () => {
 
 ## 📖 Más Información
 
-- **Tailwind clases**: [`guides/styling.md`](./styling.md)
-- **TypeScript patterns**: [`guides/typescript.md`](./typescript.md)
+- **Tailwind clases**: [`guide./styling.md`](./styling.md)
+- **TypeScript patterns**: [`guide./typescript.md`](./typescript.md)
 - **Templates**: `docs/templates/component-basic.tsx`
 
 ---

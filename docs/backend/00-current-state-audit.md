@@ -34,10 +34,10 @@ Se revisaron los archivos solicitados y los equivalentes reales del repo:
 - `AGENTS.md`
 - `CLAUDE.md`
 - `README.md`
-- `docs/ARCHITECTURE.md`
+- `doc./architecture.md`
 - `docs/reference/file-structure.md`
-- `docs/README.md`
-- `docs/GUIDES/DEVELOPMENT_SETUP.md`
+- `doc./readme.md`
+- `doc./guides/development_setup.md`
 - `package.json`
 - `next.config.mjs`
 - `tsconfig.json`
@@ -55,9 +55,9 @@ Se revisaron los archivos solicitados y los equivalentes reales del repo:
 
 También se leyó documentación local de Next.js 16 en:
 
-- `node_modules/next/dist/docs/index.md`
-- `node_modules/next/dist/docs/01-app/index.md`
-- `node_modules/next/dist/docs/03-architecture/index.md`
+- `node_modules/next/dist/doc./index.md`
+- `node_modules/next/dist/docs/01-ap./index.md`
+- `node_modules/next/dist/docs/03-architectur./index.md`
 - `node_modules/next/dist/docs/01-app/04-glossary.md`
 
 Observación Next.js 16: los tipos generados en `.next/types/routes.d.ts` esperan `params: Promise<...>` para App Router y Route Handlers. Varias rutas actuales todavía usan `params` síncrono.
@@ -563,10 +563,10 @@ Archivos detectados:
 - `docker-compose.prod.yml`
 - `docker-compose.app.yml` no trackeado
 - `.github/workflows/deploy.yml`
-- `docs/DEPLOYMENT.md`
-- `docs/FINAL_DEPLOYMENT_GUIDE.md`
-- `docs/PRODUCTION_RUNBOOK.md`
-- `docs/PRODUCTION_STATUS.md`
+- `doc./deployment.md`
+- `doc./final_deployment_guide.md`
+- `doc./production_runbook.md`
+- `doc./production_status.md`
 
 CI/CD:
 

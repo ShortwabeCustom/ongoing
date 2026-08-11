@@ -26,8 +26,8 @@
 - **SESSION_FINAL_STATUS.md** — Final status
 
 ### Setup & Troubleshooting (Consolidadas en GUIDES/)
-- **NEXT_SESSION_QUICK_START.md** → [`docs/QUICK_START.md`](../QUICK_START.md)
-- **INSTALLATION_TROUBLESHOOTING.md** → [`docs/GUIDES/TROUBLESHOOTING.md`](../GUIDES/TROUBLESHOOTING.md)
+- **NEXT_SESSION_QUICK_START.md** → [`doc./quick_start.md`](../quick_start.md)
+- **INSTALLATION_TROUBLESHOOTING.md** → [`doc./guides/troubleshooting.md`](../guides/troubleshooting.md)
 
 ### Otros
 - **ACHIEVEMENTS_SUMMARY.md** — Logros FASE 7.5
@@ -50,10 +50,10 @@ Accede a estos archivos solo si:
 ## ✨ Documentación Actual
 
 Para desarrollo **actual**, consulta:
-- **[docs/README.md](../README.md)** — Índice maestro
-- **[docs/QUICK_START.md](../QUICK_START.md)** — Setup actual
-- **[docs/PHASES/FASE_14.md](../PHASES/FASE_14.md)** — FASE en progreso
-- **[docs/GUIDES/](../GUIDES/)** — Guías prácticas
+- **[doc./readme.md](../readme.md)** — Índice maestro
+- **[doc./quick_start.md](../quick_start.md)** — Setup actual
+- **[doc./phases/fase_14.md](../phases/fase_14.md)** — FASE en progreso
+- **[doc./guides/](../guides/)** — Guías prácticas
 
 ---
 

@@ -289,13 +289,13 @@ xl  1280px   (desktop grande)
 
 ## 📚 Documentación Completa
 
-- [ARCHITECTURE.md](../ARCHITECTURE.md) - Estructura general
-- [guides/components.md](../guides/components.md) - Crear componentes
-- [guides/styling.md](../guides/styling.md) - Tailwind CSS
-- [guides/routing.md](../guides/routing.md) - Rutas Next.js
-- [guides/typescript.md](../guides/typescript.md) - TypeScript patterns
-- [guides/deployment.md](../guides/deployment.md) - Deploy a producción
+- [ARCHITECTURE.md](../architecture.md) - Estructura general
+- [guide./components.md](../guides/components.md) - Crear componentes
+- [guide./styling.md](../guides/styling.md) - Tailwind CSS
+- [guide./routing.md](../guides/routing.md) - Rutas Next.js
+- [guide./typescript.md](../guides/typescript.md) - TypeScript patterns
+- [guide./deployment.md](../guides/deployment.md) - Deploy a producción
 
 ---
 
-**Vuelve a [README.md](../README.md) para más información.**
+**Vuelve a [README.md](../readme.md) para más información.**

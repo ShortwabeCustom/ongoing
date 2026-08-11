@@ -323,4 +323,4 @@ build/
 
 ---
 
-**Vuelve a [README.md](../README.md) para más información.**
+**Vuelve a [README.md](../readme.md) para más información.**

@@ -446,8 +446,8 @@ Usa /senior-fullstack skill para arquitectura completa.
 - [ ] No faltan dependencias
 
 **Documentación**:
-- [ ] Leíste MASTER_PROMPT_FASE_8_PWA.md
-- [ ] Tienes referencia de RBAC_TESTING_GUIDE.md
+- [ ] Leíste MASTER_PROMPT_FASE_8_PWa.md
+- [ ] Tienes referencia de RBAC_TESTING_GUIDe.md
 - [ ] Entiendes arquitectura offline
 
 ---

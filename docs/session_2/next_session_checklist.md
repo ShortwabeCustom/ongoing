@@ -41,11 +41,11 @@
 
 ### Documentación
 ```
-docs/FINAL_DEPLOYMENT_GUIDE.md      ← START HERE (5-step process)
-docs/DEPLOYMENT.md                   ← Detailed deployment options
-docs/SECURITY_CHECKLIST.md          ← Security verification
-docs/PRODUCTION_RUNBOOK.md          ← Incident response
-docs/PRODUCTION_STATUS.md           ← Current status
+doc./final_deployment_guide.md      ← START HERE (5-step process)
+doc./deployment.md                   ← Detailed deployment options
+doc./security_checklist.md          ← Security verification
+doc./production_runbook.md          ← Incident response
+doc./production_status.md           ← Current status
 ```
 
 ### Código Infrastructure
@@ -179,7 +179,7 @@ curl -X POST https://uix.torrax.cloud/api/search/findings \
 
 ## 💡 Tips para la Sesión
 
-1. **Start con**: `docs/FINAL_DEPLOYMENT_GUIDE.md` (tiene todo resumido)
+1. **Start con**: `doc./final_deployment_guide.md` (tiene todo resumido)
 2. **Obtén credenciales reales** antes de empezar (no uses de ejemplo)
 3. **Deploy opción A (Docker)** si tienes VPS (más fácil)
 4. **Monitorea logs** durante deploy: `docker logs -f`

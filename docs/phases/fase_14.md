@@ -335,16 +335,16 @@ User clicks item → restore all criteria (q + filters)
 - Scheduled reports via email
 - Dashboard de reportes históricos
 
-See: `/docs/PHASES/ROADMAP.md`
+See: `/doc./phases/roadmap.md`
 
 ---
 
 ## 📖 Related Documentation
 
-- [FASE_14_COMPLETION.md](./FASE_14_COMPLETION.md) — Detailed completion report
-- [ROADMAP.md](./ROADMAP.md) — Fases 15-17 overview
-- [QUICK_START.md](../QUICK_START.md) — Setup guide
-- [CLAUDE.md](../../CLAUDE.md) — Project instructions
+- [FASE_14_COMPLETION.md](./FASE_14_COMPLETIOn.md) — detailed completion report
+- [ROADMAP.md](./roadmap.md) — Fases 15-17 overview
+- [QUICK_START.md](../quick_start.md) — Setup guide
+- [CLAUDE.md](../../claude.md) — Project instructions
 
 ---
 

@@ -411,7 +411,7 @@ pnpm dev 2>&1 | grep -i error
 
 ## 📞 Obtener Ayuda
 
-1. **Lee la documentación** → `docs/README.md`
+1. **Lee la documentación** → `doc./readme.md`
 2. **Busca error en Google** → "Next.js 16 [tu error]"
 3. **Revisa GitHub Issues** → [github.com/vercel/next.js/issues](https://github.com/vercel/next.js/issues)
 4. **Pregunta en Stack Overflow** → [stackoverflow.com/questions/tagged/next.js](https://stackoverflow.com/questions/tagged/next.js)
@@ -431,4 +431,4 @@ pnpm dev 2>&1 | grep -i error
 
 ---
 
-**¿Problema no resuelto?** Revisa [ARCHITECTURE.md](../ARCHITECTURE.md) o [guides/](../guides/)
+**¿Problema no resuelto?** Revisa [ARCHITECTURE.md](../architecture.md) o [guides/](../guides/)

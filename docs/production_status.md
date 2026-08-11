@@ -46,7 +46,7 @@
 ### Before Deploying
 
 **Step 1: Configure GitHub Secrets** (15 min)
-- [ ] 11 secrets added to GitHub (see GITHUB_SECRETS_SETUP.md)
+- [ ] 11 secrets added to GitHub (see GITHUB_SECRETS_SETUp.md)
 - [ ] Test that all secrets are accessible
 - [ ] No secrets exposed in logs
 
@@ -245,10 +245,10 @@ vercel --prod
 
 ## 📞 Support & References
 
-- **Deployment Guide**: [DEPLOYMENT.md](./DEPLOYMENT.md)
-- **Security**: [SECURITY_CHECKLIST.md](./SECURITY_CHECKLIST.md)
-- **Operations**: [PRODUCTION_RUNBOOK.md](./PRODUCTION_RUNBOOK.md)
-- **GitHub Secrets**: [GITHUB_SECRETS_SETUP.md](./GITHUB_SECRETS_SETUP.md)
+- **Deployment Guide**: [DEPLOYMENT.md](./deployment.md)
+- **Security**: [SECURITY_CHECKLIST.md](./security_checklist.md)
+- **Operations**: [PRODUCTION_RUNBOOK.md](./production_runbook.md)
+- **GitHub Secrets**: [GITHUB_SECRETS_SETUP.md](./github_secrets_setup.md)
 
 ---
 

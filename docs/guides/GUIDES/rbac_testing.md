@@ -199,4 +199,4 @@ bash -c '
 
 ---
 
-**Próximo**: Ver [docs/README.md](../README.md) para setup completo
+**Próximo**: Ver [doc./readme.md](../readme.md) para setup completo

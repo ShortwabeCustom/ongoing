@@ -23,19 +23,19 @@ Registro de cambios y versiones del proyecto.
 - ✅ Vercel Analytics integrado
 
 ### Documentación
-- 📚 `docs/README.md` - Índice principal
-- 📖 `docs/GETTING_STARTED.md` - Primeros pasos
-- 🏗️ `docs/ARCHITECTURE.md` - Diseño general
-- 📋 `docs/DEVELOPMENT.md` - Guía desarrollo
-- 🧩 `docs/guides/components.md` - Crear componentes
-- 🎨 `docs/guides/styling.md` - Tailwind CSS
-- 🛣️ `docs/guides/routing.md` - Next.js routing
-- 📘 `docs/guides/typescript.md` - TypeScript patterns
-- 🚀 `docs/guides/deployment.md` - Deploy a producción
-- ⚡ `docs/reference/QUICK_START.md` - Comandos rápidos
+- 📚 `doc./readme.md` - Índice principal
+- 📖 `doc./getting_started.md` - Primeros pasos
+- 🏗️ `doc./architecture.md` - Diseño general
+- 📋 `doc./development.md` - Guía desarrollo
+- 🧩 `doc./guides/components.md` - Crear componentes
+- 🎨 `doc./guides/styling.md` - Tailwind CSS
+- 🛣️ `doc./guides/routing.md` - Next.js routing
+- 📘 `doc./guides/typescript.md` - TypeScript patterns
+- 🚀 `doc./guides/deployment.md` - Deploy a producción
+- ⚡ `docs/referenc./quick_start.md` - Comandos rápidos
 - 📁 `docs/reference/file-structure.md` - Estructura archivos
-- 🐛 `docs/reference/troubleshooting.md` - Solución problemas
-- 📋 `docs/reference/AGENTS.md` - Reglas proyecto
+- 🐛 `docs/referenc./troubleshooting.md` - Solución problemas
+- 📋 `docs/referenc./agents.md` - Reglas proyecto
 - 📝 `docs/templates/` - Templates de código
 
 ### Stack Tecnológico

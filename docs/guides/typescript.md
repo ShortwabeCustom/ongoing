@@ -547,4 +547,4 @@ export default function RondaPage({ params }: RondaPageProps) {
 
 ---
 
-**Siguiente tema**: [`guides/deployment.md`](./deployment.md)
+**Siguiente tema**: [`guide./deployment.md`](./deployment.md)

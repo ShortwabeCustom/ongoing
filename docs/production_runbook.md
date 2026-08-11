@@ -264,8 +264,8 @@ curl -s $ELASTICSEARCH_URL/findings-v1/_stats | jq '.indices["findings-v1"].prim
 
 - Production URL: https://uix.torrax.cloud/findings
 - Health endpoint: https://uix.torrax.cloud/api/health
-- Deployment guide: [DEPLOYMENT.md](./DEPLOYMENT.md)
-- Security checklist: [SECURITY_CHECKLIST.md](./SECURITY_CHECKLIST.md)
+- Deployment guide: [DEPLOYMENT.md](./deployment.md)
+- Security checklist: [SECURITY_CHECKLIST.md](./security_checklist.md)
 
 ---
 

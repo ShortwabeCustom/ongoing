@@ -447,4 +447,4 @@ Cliente ve la página ✨
 
 ---
 
-**Siguiente tema**: [`guides/typescript.md`](./typescript.md)
+**Siguiente tema**: [`guide./typescript.md`](./typescript.md)

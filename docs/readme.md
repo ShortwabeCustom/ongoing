@@ -9,17 +9,17 @@
 ## 🎯 Acceso Rápido
 
 ### 🚀 Para Nuevas Sesiones
-👉 **[QUICK_START.md](./QUICK_START.md)** — Setup en 5 pasos + próximos pasos
+👉 **[QUICK_START.md](./quick_start.md)** — Setup en 5 pasos + próximos pasos
 
 ### 📖 Documentación por FASE
-- **FASE 13** ✅ [Mobile Optimization](./PHASES/FASE_13.md) — Touch-first, responsive debounce, bottom-sheet
-- **FASE 14** ✅ [Advanced Filters & Batch](./PHASES/FASE_14.md) — Backend ✅ | Frontend ✅ | Production Ready
-- **ROADMAP** 🛣️ [Próximas Fases](./PHASES/ROADMAP.md) — FASE 15+ planeado
+- **FASE 13** ✅ [Mobile Optimization](./phases/fase_13.md) — Touch-first, responsive debounce, bottom-sheet
+- **FASE 14** ✅ [Advanced Filters & Batch](./phases/fase_14.md) — Backend ✅ | Frontend ✅ | Production Ready
+- **ROADMAP** 🛣️ [Próximas Fases](./phases/roadmap.md) — FASE 15+ planeado
 
 ### 🔧 Guías Prácticas
-- **[RBAC Testing Guide](./GUIDES/RBAC_TESTING.md)** — 5 endpoints + checklist de seguridad
-- **[Development Setup](./GUIDES/DEVELOPMENT_SETUP.md)** — PostgreSQL, env vars, seeds
-- **[Troubleshooting](./GUIDES/TROUBLESHOOTING.md)** — npm, build, database issues
+- **[RBAC Testing Guide](./guides/rbac_testing.md)** — 5 endpoints + checklist de seguridad
+- **[Development Setup](./guides/development_setup.md)** — PostgreSQL, env vars, seeds
+- **[Troubleshooting](./guides/troubleshooting.md)** — npm, build, database issues
 
 ---
 
@@ -58,7 +58,7 @@
 
 **Objetivo**: Desplegar a producción
 
-**Documentación**: Ver [docs/SESSION_2/](./SESSION_2/)
+**Documentación**: Ver [doc./session_2/](./session_2/)
 - `MASTER_PROMPT_SESSION_2.md` — Plan de deployment 4 fases
 - `NEXT_SESSION_CHECKLIST.md` — Checklist pre-deploy
 
@@ -148,8 +148,8 @@ npm run dev
 
 ### 1️⃣ Lee Primero
 ```markdown
-- docs/QUICK_START.md           (5 min)
-- docs/PHASES/FASE_14.md        (10 min si es FASE 14)
+- doc./quick_start.md           (5 min)
+- doc./phases/fase_14.md        (10 min si es FASE 14)
 ```
 
 ### 2️⃣ Verifica Setup
@@ -182,7 +182,7 @@ git log --oneline -10
 
 ## 📚 Documentación Antigua (Archivada)
 
-Los documentos de FASE 1-8 se encuentran en **[ARCHIVE/](./ARCHIVE/)**:
+Los documentos de FASE 1-8 se encuentran en **[ARCHIVE/](./archive/)**:
 - `FASE_1_SUMMARY.md`
 - `FASE4_COMPLETE.md`
 - `FASE7_COMPLETION.md`
@@ -210,7 +210,7 @@ Los documentos de FASE 1-8 se encuentran en **[ARCHIVE/](./ARCHIVE/)**:
 
 ## 🔗 Referencias Cruzadas
 
-- **Memory**: Revisar `/root/.claude/projects/-var-www-uix-torrax-cloud/memory/MEMORY.md`
+- **Memory**: Revisar `/root/.claude/projects/-var-www-uix-torrax-cloud/memor./memory.md`
 - **Git history**: `git log --oneline | head -20`
 - **Current branch**: `git branch -v`
 - **Status**: `git status`
@@ -230,8 +230,8 @@ Los documentos de FASE 1-8 se encuentran en **[ARCHIVE/](./ARCHIVE/)**:
 **Duración estimada**: 90 min
 
 **Documentos clave**:
-- [MASTER_PROMPT_SESSION_2.md](./SESSION_2/MASTER_PROMPT_SESSION_2.md) — Plan 4 fases
-- [FINAL_DEPLOYMENT_GUIDE.md](./FINAL_DEPLOYMENT_GUIDE.md) — Guía paso a paso
+- [MASTER_PROMPT_SESSION_2.md](./session_2/MASTER_PROMPT_SESSION_2.md) — Plan 4 fases
+- [FINAL_DEPLOYMENT_GUIDE.md](./final_deployment_guide.md) — Guía paso a paso
 
 ---
 

@@ -101,7 +101,7 @@ components/ui/modal.tsx
 - Variantes con CVA
 - Reutilizables en múltiples páginas
 
-**Crear nuevo**: Ve a [`guides/components.md`](./guides/components.md)
+**Crear nuevo**: Ve a [`guide./components.md`](./guides/components.md)
 
 ---
 
@@ -123,7 +123,7 @@ app/
         └── page.tsx            ← Ruta /admin/configuracion
 ```
 
-**Crear nueva**: Ve a [`guides/routing.md`](./guides/routing.md)
+**Crear nueva**: Ve a [`guide./routing.md`](./guides/routing.md)
 
 ---
 
@@ -151,7 +151,7 @@ export default {
 }
 ```
 
-**Modificar estilos**: Ve a [`guides/styling.md`](./guides/styling.md)
+**Modificar estilos**: Ve a [`guide./styling.md`](./guides/styling.md)
 
 ---
 
@@ -404,11 +404,11 @@ Works Offline ✨
 
 ## 📚 Documentación Relacionada
 
-- **Crear componentes**: [`guides/components.md`](./guides/components.md)
-- **Rutas y navegación**: [`guides/routing.md`](./guides/routing.md)
-- **Estilos**: [`guides/styling.md`](./guides/styling.md)
-- **TypeScript patterns**: [`guides/typescript.md`](./guides/typescript.md)
-- **Deploy**: [`guides/deployment.md`](./guides/deployment.md)
+- **Crear componentes**: [`guide./components.md`](./guides/components.md)
+- **Rutas y navegación**: [`guide./routing.md`](./guides/routing.md)
+- **Estilos**: [`guide./styling.md`](./guides/styling.md)
+- **TypeScript patterns**: [`guide./typescript.md`](./guides/typescript.md)
+- **Deploy**: [`guide./deployment.md`](./guides/deployment.md)
 
 ---
 
@@ -423,4 +423,4 @@ Works Offline ✨
 
 ---
 
-**Próximo paso**: [`guides/components.md`](./guides/components.md) para crear tu primer componente.
+**Próximo paso**: [`guide./components.md`](./guides/components.md) para crear tu primer componente.

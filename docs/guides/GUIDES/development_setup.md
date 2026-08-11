@@ -254,10 +254,10 @@ curl http://localhost:3001/api/findings
 
 Ejecutar RBAC testing:
 ```bash
-# Ver docs/GUIDES/RBAC_TESTING.md
+# Ver doc./guides/rbac_testing.md
 ```
 
 ---
 
 **Duración estimada**: 30 minutos  
-**Problemas**: Ver [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)
+**Problemas**: Ver [TROUBLESHOOTING.md](./troubleshooting.md)

@@ -90,7 +90,7 @@ npx ts-node scripts/seed-users.ts
 
 ### 5. Memoria Actualizada ✅
 
-**`/root/.claude/projects/*/memory/MEMORY.md`**
+**`/root/.claude/projects/*/memor./memory.md`**
 - Compactada a 110 líneas (límite 140)
 - Agregada FASE 7.5
 - Incluido checklist de próxima sesión

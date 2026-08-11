@@ -61,9 +61,9 @@ open http://localhost:3001
 ### FASE 14 (Actual)
 **Estado**: Backend ✅ | Frontend 🚀
 
-1. **[docs/README.md](./README.md)** — Índice maestro (5 min)
-2. **[docs/PHASES/FASE_14.md](./PHASES/FASE_14.md)** — Especificación completa (15 min)
-3. **[FASE14_FRONTEND_SPEC.md](../FASE14_FRONTEND_SPEC.md)** — Si vas a implementar UI (30 min)
+1. **[doc./readme.md](./readme.md)** — Índice maestro (5 min)
+2. **[doc./phases/fase_14.md](./phases/fase_14.md)** — Especificación completa (15 min)
+3. **[FASE14_FRONTEND_SPEC.md](../FASE14_FRONTEND_SPEc.md)** — si vas a implementar ui (30 min)
 
 **Bloqueantes primero** (25 min total):
 - ⚠️ Fix RBAC en `app/api/findings/bulk-update/route.ts` (15 min)
@@ -146,7 +146,7 @@ curl http://localhost:9200/_cat/indices
 curl http://localhost:9200/findings-v1/_mapping
 
 # Reindexar (si es necesario)
-# Ver docs/GUIDES/TROUBLESHOOTING.md
+# Ver doc./guides/troubleshooting.md
 ```
 
 ---
@@ -159,8 +159,8 @@ curl http://localhost:9200/findings-v1/_mapping
 - [ ] `npm run build` exitoso
 - [ ] `npm run dev` ejecutándose
 - [ ] Navegador: http://localhost:3001 carga ✅
-- [ ] Lee docs/README.md
-- [ ] Lee docs/PHASES/FASE_14.md (si es FASE 14)
+- [ ] Lee doc./readme.md
+- [ ] Lee doc./phases/fase_14.md (si es FASE 14)
 
 ---
 
@@ -202,16 +202,16 @@ docker-compose down
 docker-compose up -d
 ```
 
-**Más**: Ver [docs/GUIDES/TROUBLESHOOTING.md](./GUIDES/TROUBLESHOOTING.md)
+**Más**: Ver [doc./guides/troubleshooting.md](./guides/troubleshooting.md)
 
 ---
 
 ## 🚀 Próximos Pasos (después de setup)
 
 ### Si es tu primera vez
-1. Lee [docs/README.md](./README.md) (índice maestro)
-2. Revisa [docs/PHASES/](./PHASES/) para tu FASE actual
-3. Consulta [docs/GUIDES/DEVELOPMENT_SETUP.md](./GUIDES/DEVELOPMENT_SETUP.md)
+1. Lee [doc./readme.md](./readme.md) (índice maestro)
+2. Revisa [doc./phases/](./phases/) para tu FASE actual
+3. Consulta [doc./guides/development_setup.md](./guides/development_setup.md)
 
 ### Si vas a hacer feature
 1. Lee la especificación de tu FASE
@@ -221,7 +221,7 @@ docker-compose up -d
 
 ### Si hay bug
 1. Reproduce en dev server
-2. Busca en [docs/GUIDES/TROUBLESHOOTING.md](./GUIDES/TROUBLESHOOTING.md)
+2. Busca en [doc./guides/troubleshooting.md](./guides/troubleshooting.md)
 3. Si no encuentras, crea issue en GitHub
 
 ---
@@ -239,7 +239,7 @@ Tailwind CSS v4
 TypeScript
 ```
 
-Detalles: Ver [docs/README.md#-tech-stack-actual-fase-14](./README.md#-tech-stack-actual-fase-14)
+Detalles: Ver [doc./readme.md#-tech-stack-actual-fase-14](./readme.md#-tech-stack-actual-fase-14)
 
 ---
 
@@ -247,11 +247,11 @@ Detalles: Ver [docs/README.md#-tech-stack-actual-fase-14](./README.md#-tech-stac
 
 | Link | Descripción |
 |------|-------------|
-| [docs/README.md](./README.md) | Índice maestro + estado proyecto |
-| [docs/PHASES/](./PHASES/) | Documentación de cada FASE |
-| [docs/GUIDES/](./GUIDES/) | Guías prácticas (RBAC, setup, troubleshooting) |
-| [docs/ARCHIVE/](./ARCHIVE/) | Archivos FASE 1-8 (referencia histórica) |
-| [../FASE14_FRONTEND_SPEC.md](../FASE14_FRONTEND_SPEC.md) | Spec frontend FASE 14 (si aplica) |
+| [doc./readme.md](./readme.md) | Índice maestro + estado proyecto |
+| [doc./phases/](./phases/) | Documentación de cada FASE |
+| [doc./guides/](./guides/) | Guías prácticas (RBAC, setup, troubleshooting) |
+| [doc./archive/](./archive/) | Archivos FASE 1-8 (referencia histórica) |
+| [../FASE14_FRONTEND_SPEC.md](../FASE14_FRONTEND_SPEc.md) | spec frontend fase 14 (si aplica) |
 
 ---
 
@@ -266,4 +266,4 @@ Detalles: Ver [docs/README.md#-tech-stack-actual-fase-14](./README.md#-tech-stac
 
 **¿Listo?** → Abre http://localhost:3001 en tu navegador 🎉
 
-Próximo: Lee [docs/README.md](./README.md) para entender la estructura completa.
+Próximo: Lee [doc./readme.md](./readme.md) para entender la estructura completa.

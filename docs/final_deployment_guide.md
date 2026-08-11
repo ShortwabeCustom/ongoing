@@ -298,10 +298,10 @@ Una vez verificado todo, celebra 🎊
 ## 📞 Soporte
 
 - **Deployment Guide**: Arriba (este documento)
-- **Security**: `docs/SECURITY_CHECKLIST.md`
-- **Operations**: `docs/PRODUCTION_RUNBOOK.md`
-- **GitHub Secrets**: `docs/GITHUB_SECRETS_SETUP.md`
-- **Status**: `docs/PRODUCTION_STATUS.md`
+- **Security**: `doc./security_checklist.md`
+- **Operations**: `doc./production_runbook.md`
+- **GitHub Secrets**: `doc./github_secrets_setup.md`
+- **Status**: `doc./production_status.md`
 
 ---
 

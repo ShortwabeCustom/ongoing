@@ -10,7 +10,7 @@
 ## 📖 Pre-Read (5 min)
 
 Before starting, review:
-1. `docs/FINAL_DEPLOYMENT_GUIDE.md` (5-step process)
+1. `doc./final_deployment_guide.md` (5-step process)
 2. `NEXT_SESSION_CHECKLIST.md` (detailed checklist)
 3. Memory: `session_2_deployment_prep.md`
 
@@ -56,7 +56,7 @@ What's needed:
    - [ ] No secrets are empty
 
 **Files to Reference**:
-- `docs/GITHUB_SECRETS_SETUP.md` (detailed guide)
+- `doc./github_secrets_setup.md` (detailed guide)
 - Current secrets stored in `.env.local` (reference)
 
 ---
@@ -293,10 +293,10 @@ After deployment, check these metrics:
 
 ## 📞 Reference Links
 
-- **Deployment Guide**: `docs/FINAL_DEPLOYMENT_GUIDE.md`
-- **Security**: `docs/SECURITY_CHECKLIST.md`
-- **Runbook**: `docs/PRODUCTION_RUNBOOK.md`
-- **GitHub Secrets**: `docs/GITHUB_SECRETS_SETUP.md`
+- **Deployment Guide**: `doc./final_deployment_guide.md`
+- **Security**: `doc./security_checklist.md`
+- **Runbook**: `doc./production_runbook.md`
+- **GitHub Secrets**: `doc./github_secrets_setup.md`
 - **Repository**: https://github.com/ShortwabeCustom/ongoing
 - **GitHub Actions**: https://github.com/ShortwabeCustom/ongoing/actions
 - **Secrets Config**: https://github.com/ShortwabeCustom/ongoing/settings/secrets/actions
@@ -333,7 +333,7 @@ You should have:
 - [ ] Monitoring configured (Sentry/Datadog/CloudWatch)
 - [ ] Backups automated
 - [ ] Documentation updated
-- [ ] Incident response plan ready (`docs/PRODUCTION_RUNBOOK.md`)
+- [ ] Incident response plan ready (`doc./production_runbook.md`)
 
 ---
 
@@ -345,4 +345,4 @@ Next phase: Maintenance, monitoring, and feature improvements based on real usag
 
 ---
 
-**Start Session 2 with**: Read `docs/FINAL_DEPLOYMENT_GUIDE.md` (5 min), then execute Phase 1-4 above.
+**Start Session 2 with**: Read `doc./final_deployment_guide.md` (5 min), then execute Phase 1-4 above.
