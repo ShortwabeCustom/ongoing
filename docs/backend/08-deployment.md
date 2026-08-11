@@ -10,6 +10,22 @@ pnpm build
 
 The script runs `next build --webpack`. Next.js 16 supports this flag; it is used because Turbopack fails in this host while processing CSS with an internal bind operation.
 
+## PM2 deployment
+
+Use the PM2 deploy helper on the VPS:
+
+```bash
+./scripts/deploy-pm2.sh
+```
+
+The helper stops `uix-torrax-cloud` before rebuilding `.next`, then installs dependencies, generates Prisma Client, builds, applies migrations and restarts PM2. Do not run `pnpm build` in place while `next start` is serving traffic from the same directory; the build replaces `.next` and can briefly remove files that the running process still needs.
+
+Override the process name when needed:
+
+```bash
+PM2_APP_NAME=my-process ./scripts/deploy-pm2.sh
+```
+
 ## Environment
 
 Start from `.env.example` and provide real values through the deployment platform secret store.
