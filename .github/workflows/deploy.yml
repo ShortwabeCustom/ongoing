@@ -1,0 +1,95 @@
+name: Deploy Production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: ${{ secrets.DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          POSTGRES_DB: pruebas_maria_prod
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+        env:
+          - discovery.type=single-node
+          - xpack.security.enabled=false
+          - ES_JAVA_OPTS=-Xms512m -Xmx512m
+        options: >-
+          --health-cmd "curl -s http://localhost:9200/_cluster/health | grep -q cluster_name"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 9200:9200
+
+    env:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@localhost:5432/pruebas_maria_prod?schema=public
+      ELASTICSEARCH_URL: http://localhost:9200
+      AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+      S3_ENDPOINT: ${{ secrets.S3_ENDPOINT }}
+      S3_BUCKET: ${{ secrets.S3_BUCKET }}
+      S3_ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
+      S3_SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
+      NEXT_PUBLIC_API_URL: https://uix.torrax.cloud
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --omit=dev
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run database migrations
+        run: npx prisma migrate deploy
+
+      - name: Check Elasticsearch indices
+        run: |
+          curl -s -X GET "http://localhost:9200/_cat/indices" || echo "ES may need index initialization"
+
+      - name: Deploy to production
+        if: success()
+        run: |
+          echo "✅ All checks passed. Ready for deployment."
+          echo "Next: Manual deployment or CD pipeline integration"
+
+      - name: Notify deployment
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: |
+            Pruebas María Deploy: ${{ job.status }}
+            Commit: ${{ github.sha }}
+            Branch: ${{ github.ref }}
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        continue-on-error: true
