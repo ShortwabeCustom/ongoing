@@ -28,9 +28,9 @@ jobs:
       elasticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
         env:
-          - discovery.type=single-node
-          - xpack.security.enabled=false
-          - ES_JAVA_OPTS=-Xms512m -Xmx512m
+          discovery.type: single-node
+          xpack.security.enabled: 'false'
+          ES_JAVA_OPTS: -Xms512m -Xmx512m
         options: >-
           --health-cmd "curl -s http://localhost:9200/_cluster/health | grep -q cluster_name"
           --health-interval 10s
