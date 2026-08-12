@@ -71,7 +71,7 @@ export function ValidationCheckpoint({
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="mb-4 text-lg font-semibold text-[#17251f]">Checkpoint de validación</h3>
+        <h3 className="mb-4 text-xl font-bold text-[#17251f]">Checkpoint de validación</h3>
 
         {/* Validation history */}
         {validations.length > 0 && (

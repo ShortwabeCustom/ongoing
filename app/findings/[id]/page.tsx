@@ -109,21 +109,21 @@ export default async function FindingDetailPage({ params }: PageProps) {
         </>
       }
     >
-      <section className="pm-card p-5 md:p-6">
+      <div className="space-y-6">
         <FindingDetailWithEvidence finding={finding as any} />
 
-        <div className="mt-8 space-y-8">
-          <section className="border-t border-[#dbe4dd] pt-6">
-            <ResolutionWorkflow finding={finding as any} />
-          </section>
-          <section className="border-t border-[#dbe4dd] pt-6">
-            <ValidationCheckpoint finding={finding as any} />
-          </section>
-          <section className="border-t border-[#dbe4dd] pt-6">
-            <AuditTrailViewer findingId={finding.id} compact />
-          </section>
-        </div>
-      </section>
+        <section className="pm-card p-6 md:p-8">
+          <ResolutionWorkflow finding={finding as any} />
+        </section>
+
+        <section className="pm-card p-6 md:p-8">
+          <ValidationCheckpoint finding={finding as any} />
+        </section>
+
+        <section className="pm-card p-6 md:p-8">
+          <AuditTrailViewer findingId={finding.id} compact />
+        </section>
+      </div>
     </AppShell>
   )
 }

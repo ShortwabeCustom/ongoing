@@ -68,7 +68,7 @@ export function AuditTrailViewer({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-[#17251f]">Auditoría</h3>
+        <h3 className="text-xl font-bold text-[#17251f]">Auditoría</h3>
         {!compact && (
           <button
             onClick={handleExport}

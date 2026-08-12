@@ -7,7 +7,7 @@ import { ToastContainer } from '@/components/ui/toast-container'
 import { useToast } from '@/lib/hooks/use-toast'
 import { EvidenceClient } from '@/lib/api/evidence-client'
 import { useState } from 'react'
-import { ExternalLink, Pencil } from 'lucide-react'
+import { ExternalLink, Pencil, MapPin, AlertTriangle, Flag, ShieldAlert, User, CalendarDays, Hash, Workflow as WorkflowIcon } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { useLookups } from '@/lib/hooks/useLookups'
 import { EditFindingDialog } from '@/components/finding/EditFindingDialog'
@@ -138,19 +138,27 @@ export function FindingDetailWithEvidence({
     }
   }
 
+  const metaFields = [
+    { icon: MapPin, label: 'Área', value: area },
+    { icon: AlertTriangle, label: 'Incidencia', value: incidenceTypes },
+    { icon: Flag, label: 'Prioridad', value: PRIORITY_LABELS_ES[finding.priority] ?? finding.priority },
+    { icon: ShieldAlert, label: 'Severidad', value: SEVERITY_LABELS_ES[finding.severity] ?? finding.severity },
+    { icon: User, label: 'Responsable', value: assigneeName },
+    { icon: CalendarDays, label: 'Creado', value: new Date(finding.createdAt).toLocaleDateString('es-ES') },
+    { icon: Hash, label: 'Versión', value: finding.version.toString() },
+    ...(finding.flowStep
+      ? [{ icon: WorkflowIcon, label: 'Paso del flujo', value: finding.flowStep }]
+      : []),
+  ]
+
   return (
-    <div className="space-y-8">
-      <div className="border-b border-[#dbe4dd] pb-6">
+    <div className="space-y-6">
+      <section className="pm-card p-6 md:p-8">
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
           <div className="min-w-0">
-            <h2 className="text-2xl font-semibold leading-tight text-[#17251f]">
+            <h2 className="text-3xl font-bold leading-tight tracking-tight text-[#17251f]">
               {title}
             </h2>
-            {description && (
-              <p className="mt-3 max-w-3xl text-sm leading-7 text-[#3b4b43]">
-                {description}
-              </p>
-            )}
             <div className="mt-4 flex flex-wrap gap-2">
               <span className="rounded-full border border-[#b9dcca] bg-[#e0f5e9] px-3 py-1 text-xs font-semibold text-[#087244]">
                 {STATUS_LABELS_ES[finding.status] ?? finding.status}
@@ -172,44 +180,35 @@ export function FindingDetailWithEvidence({
             </button>
           )}
         </div>
-      </div>
-
-      <section className="space-y-4">
-        <h3 className="text-sm font-semibold uppercase text-[#65766e]">Observación</h3>
-        <p className="max-w-4xl text-sm leading-7 text-[#3b4b43]">{description}</p>
       </section>
 
-      <dl className="grid grid-cols-1 gap-x-6 gap-y-5 border-y border-[#dbe4dd] py-6 md:grid-cols-3">
-        {[
-          ['Área', area],
-          ['Incidencia', incidenceTypes],
-          ['Prioridad', PRIORITY_LABELS_ES[finding.priority] ?? finding.priority],
-          ['Severidad', SEVERITY_LABELS_ES[finding.severity] ?? finding.severity],
-          ['Responsable', assigneeName],
-          ['Creado', new Date(finding.createdAt).toLocaleDateString('es-ES')],
-          ['Versión', finding.version.toString()],
-        ].map(([label, value]) => (
-          <div key={label} className="min-w-0">
-            <dt className="text-xs font-semibold uppercase text-[#65766e]">{label}</dt>
-            <dd className="mt-1 truncate text-sm font-semibold text-[#17251f]">{value}</dd>
-          </div>
-        ))}
-      </dl>
+      <section className="pm-card p-6 md:p-8">
+        <h3 className="mb-4 text-xl font-bold text-[#17251f]">Observación</h3>
+        <p className="max-w-4xl text-base leading-8 text-[#3b4b43]">{description}</p>
+      </section>
 
-      {finding.flowStep && (
-        <div className="border-b border-[#dbe4dd] pb-6">
-          <p className="text-xs font-semibold uppercase text-[#65766e]">Paso del flujo</p>
-          <p className="mt-1 text-sm font-semibold text-[#17251f]">{finding.flowStep}</p>
+      <section className="pm-card p-6 md:p-8">
+        <h3 className="mb-6 text-xl font-bold text-[#17251f]">Detalles del hallazgo</h3>
+        <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+          {metaFields.map(({ icon: Icon, label, value }) => (
+            <div key={label} className="flex items-start gap-4">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#e0f5e9] text-[#052b20]">
+                <Icon className="h-5 w-5" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[#65766e]">{label}</p>
+                <p className={`mt-0.5 text-sm font-semibold text-[#17251f] ${label === 'Incidencia' ? 'line-clamp-2' : 'truncate'}`}>{value}</p>
+              </div>
+            </div>
+          ))}
         </div>
-      )}
+      </section>
 
-      <section className="space-y-5 border-b border-[#dbe4dd] pb-8">
-        <div>
-          <h3 className="text-lg font-semibold text-[#17251f]">Pantallas</h3>
-          <p className="mt-1 text-sm text-[#65766e]">
-            Adjunta capturas como evidencia visual del antes y el estado actual.
-          </p>
-        </div>
+      <section className="pm-card p-6 md:p-8">
+        <h3 className="mb-6 text-xl font-bold text-[#17251f]">Pantallas</h3>
+        <p className="mb-6 text-sm text-[#65766e]">
+          Adjunta capturas como evidencia visual del antes y el estado actual.
+        </p>
 
         <div className="grid gap-4 lg:grid-cols-2">
           {screenSlots.map((slot) => {
@@ -274,33 +273,31 @@ export function FindingDetailWithEvidence({
         </div>
       </section>
 
-      <div className="space-y-6 border-b border-[#dbe4dd] pb-8">
-        <div>
-          <h3 className="text-lg font-semibold text-[#17251f]">
-            Evidencias
-          </h3>
-          <p className="mt-1 text-sm text-[#65766e]">
-            {evidence.length} archivo{evidence.length !== 1 ? 's' : ''} adjunto{evidence.length !== 1 ? 's' : ''}
-          </p>
-        </div>
+      <section className="pm-card p-6 md:p-8">
+        <h3 className="mb-6 text-xl font-bold text-[#17251f]">Evidencias</h3>
+        <p className="mb-6 text-sm text-[#65766e]">
+          {evidence.length} archivo{evidence.length !== 1 ? 's' : ''} adjunto{evidence.length !== 1 ? 's' : ''}
+        </p>
 
-        <EvidenceUploader
-          findingId={finding.id}
-          onSuccess={handleUploadSuccess}
-          onError={handleUploadError}
-        />
-
-        {evidence.length > 0 && (
-          <EvidenceGallery
-            evidence={evidence}
+        <div className="space-y-6">
+          <EvidenceUploader
             findingId={finding.id}
-            onEvidenceDelete={handleEvidenceDelete}
-            onCaptionUpdate={handleCaptionUpdate}
-            isLoading={isLoading}
-            error={galleryError ?? undefined}
+            onSuccess={handleUploadSuccess}
+            onError={handleUploadError}
           />
-        )}
-      </div>
+
+          {evidence.length > 0 && (
+            <EvidenceGallery
+              evidence={evidence}
+              findingId={finding.id}
+              onEvidenceDelete={handleEvidenceDelete}
+              onCaptionUpdate={handleCaptionUpdate}
+              isLoading={isLoading}
+              error={galleryError ?? undefined}
+            />
+          )}
+        </div>
+      </section>
 
       <EditFindingDialog
         open={editOpen}

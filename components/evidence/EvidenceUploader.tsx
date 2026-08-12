@@ -29,16 +29,16 @@ export function EvidenceUploader({
   findingId,
   onSuccess,
   onError,
-  title = 'Upload Evidence',
+  title = 'Subir evidencia',
   compact = false,
   acceptedTypes = DEFAULT_ACCEPTED_TYPES,
-  acceptedTypesLabel = 'JPEG, PNG, WebP, or PDF up to 10 MB',
+  acceptedTypesLabel = 'JPEG, PNG, WebP o PDF hasta 10 MB',
   defaultCaption = '',
   showCaption = true,
-  dragLabel = 'Drag and drop your file here',
-  browseLabel = 'or click to browse',
-  selectLabel = 'Select File',
-  uploadLabel = 'Upload',
+  dragLabel = 'Arrastra tu archivo aquí',
+  browseLabel = 'o haz clic para explorar',
+  selectLabel = 'Seleccionar archivo',
+  uploadLabel = 'Subir',
 }: EvidenceUploaderProps) {
   const [isDragging, setIsDragging] = useState(false)
   const [file, setFile] = useState<File | null>(null)
@@ -114,7 +114,7 @@ export function EvidenceUploader({
       setCaption(defaultCaption)
       setProgress(0)
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Upload failed'
+      const message = err instanceof Error ? err.message : 'No se pudo subir el archivo'
       setError(message)
       onError(message)
     } finally {
@@ -132,13 +132,13 @@ export function EvidenceUploader({
   return (
     <div
       className={cn(
-        'space-y-4 rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800',
+        'space-y-4 rounded-lg border border-[#dbe4dd] bg-[#f7faf5]',
         compact ? 'p-4' : 'p-6',
       )}
     >
       <h3
         className={cn(
-          'font-semibold text-gray-900 dark:text-white',
+          'font-semibold text-[#17251f]',
           compact ? 'text-base' : 'text-lg',
         )}
       >
@@ -146,9 +146,9 @@ export function EvidenceUploader({
       </h3>
 
       {error && (
-        <div className="p-3 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg flex gap-2">
-          <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0" />
-          <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
+        <div className="p-3 bg-[#fdece8] border border-[#f3c7bb] rounded-lg flex gap-2">
+          <AlertCircle className="w-5 h-5 text-[#c2492f] flex-shrink-0" />
+          <p className="text-sm text-[#8a3320]">{error}</p>
         </div>
       )}
 
@@ -159,24 +159,24 @@ export function EvidenceUploader({
           onDrop={handleDrop}
           className={`border-2 border-dashed rounded-lg text-center transition-colors ${
             isDragging
-              ? 'border-blue-500 bg-blue-50 dark:bg-blue-950'
-              : 'border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
+              ? 'border-[#00a85a] bg-[#e0f5e9]'
+              : 'border-[#dbe4dd] hover:border-[#b9dcca]'
           } ${compact ? 'flex min-h-44 flex-col items-center justify-center p-5' : 'p-8'}`}
         >
           <Upload
-            className={`${compact ? 'h-7 w-7' : 'h-8 w-8'} mx-auto mb-3 ${isDragging ? 'text-blue-600' : 'text-gray-400'}`}
+            className={`${compact ? 'h-7 w-7' : 'h-8 w-8'} mx-auto mb-3 ${isDragging ? 'text-[#00a85a]' : 'text-[#9aa79f]'}`}
           />
-          <p className="text-sm font-medium text-gray-900 dark:text-white mb-1">
+          <p className="text-sm font-medium text-[#17251f] mb-1">
             {dragLabel}
           </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
+          <p className="text-xs text-[#65766e] mb-4">
             {browseLabel}
           </p>
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={isUploading}
-            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
+            className="px-4 py-2 bg-[#052b20] hover:bg-[#0b3e30] text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
           >
             {selectLabel}
           </button>
@@ -187,20 +187,20 @@ export function EvidenceUploader({
             accept={acceptedTypes.join(',')}
             disabled={isUploading}
             className="hidden"
-            aria-label="Select file"
+            aria-label="Seleccionar archivo"
           />
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">
+          <p className="text-xs text-[#65766e] mt-4">
             {acceptedTypesLabel}
           </p>
         </div>
       ) : (
         <div className="space-y-4">
-          <div className="p-4 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center justify-between">
+          <div className="p-4 bg-white rounded-lg border border-[#dbe4dd] flex items-center justify-between">
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+              <p className="text-sm font-medium text-[#17251f] truncate">
                 {file.name}
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-xs text-[#65766e]">
                 {(file.size / 1024 / 1024).toFixed(2)} MB
               </p>
             </div>
@@ -208,8 +208,8 @@ export function EvidenceUploader({
               type="button"
               onClick={handleClear}
               disabled={isUploading}
-              className="ml-4 p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors disabled:opacity-50"
-              title="Clear selection"
+              className="ml-4 p-2 text-[#9aa79f] hover:text-[#c2492f] transition-colors disabled:opacity-50"
+              title="Quitar selección"
             >
               <X className="w-5 h-5" />
             </button>
@@ -217,33 +217,33 @@ export function EvidenceUploader({
 
           {showCaption && (
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-900 dark:text-white">
-                Caption (optional)
+              <label className="block text-sm font-medium text-[#17251f]">
+                Descripción (opcional)
               </label>
               <textarea
                 value={caption}
                 onChange={(e) => setCaption(e.target.value.slice(0, 500))}
-                placeholder="Describe this evidence..."
+                placeholder="Describe esta evidencia..."
                 disabled={isUploading}
                 maxLength={500}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 disabled:opacity-50 resize-none"
+                className="w-full px-3 py-2 border border-[#dbe4dd] rounded-lg bg-white text-[#17251f] placeholder-[#9aa79f] focus:outline-none focus:ring-2 focus:ring-[#00a85a] disabled:opacity-50 resize-none"
                 rows={compact ? 2 : 3}
               />
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                {caption.length} / 500 characters
+              <p className="text-xs text-[#65766e]">
+                {caption.length} / 500 caracteres
               </p>
             </div>
           )}
 
           {isUploading && (
             <div className="space-y-2">
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+              <div className="w-full bg-[#e6ece5] rounded-full h-2 overflow-hidden">
                 <div
-                  className="bg-blue-600 h-full transition-all duration-200"
+                  className="bg-[#00a85a] h-full transition-all duration-200"
                   style={{ width: `${progress}%` }}
                 />
               </div>
-              <p className="text-xs text-center text-gray-500 dark:text-gray-400">
+              <p className="text-xs text-center text-[#65766e]">
                 {progress}%
               </p>
             </div>
@@ -254,18 +254,18 @@ export function EvidenceUploader({
               type="button"
               onClick={handleClear}
               disabled={isUploading}
-              className="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50"
+              className="px-4 py-2 text-[#3d4d45] hover:bg-[#edf4ed] rounded-lg transition-colors disabled:opacity-50"
             >
-              Cancel
+              Cancelar
             </button>
             <button
               type="button"
               onClick={handleUpload}
               disabled={isUploading}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50 flex items-center gap-2"
+              className="px-4 py-2 bg-[#052b20] hover:bg-[#0b3e30] text-white rounded-lg font-medium transition-colors disabled:opacity-50 flex items-center gap-2"
             >
               <Upload className="w-4 h-4" />
-              {isUploading ? 'Uploading...' : uploadLabel}
+              {isUploading ? 'Subiendo...' : uploadLabel}
             </button>
           </div>
         </div>

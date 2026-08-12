@@ -92,7 +92,7 @@ export function ResolutionWorkflow({
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="mb-4 text-lg font-semibold text-[#17251f]">Workflow de resolución</h3>
+        <h3 className="mb-4 text-xl font-bold text-[#17251f]">Workflow de resolución</h3>
 
         {/* Resolution list */}
         <div className="mb-4 space-y-2">

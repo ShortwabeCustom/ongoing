@@ -36,7 +36,7 @@ details[hidden]{display:none}
   .controls button{flex:1}
 }
 /* ---- Logo en el header ---- */
-nav .brand{display:flex;align-items:center;gap:11px;min-width:0}
+nav .brand{display:flex;align-items:center;gap:11px;min-width:0;color:white;text-decoration:none}
 nav .brand img{height:22px;width:auto;flex:none;display:block}
 nav .brand b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 nav .nav-actions{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap;text-align:right}
@@ -44,6 +44,45 @@ nav .doc-link{color:#7bf0b1;text-decoration:none}
 nav .login-link{display:inline-flex;align-items:center;justify-content:center;min-height:34px;border:1px solid rgba(123,240,177,.42);border-radius:999px;background:#7bf0b1;color:#052b20;text-decoration:none;font-weight:700;padding:8px 14px;line-height:1;white-space:nowrap;box-shadow:0 8px 22px rgba(0,0,0,.12)}
 nav .login-link:hover{background:#fff;color:#052b20}
 nav .login-link:focus-visible{outline:2px solid #fff;outline-offset:2px}
+nav[data-auth="loading"] .login-link{opacity:.68}
+nav .app-nav{display:none;align-items:center;justify-content:center;gap:4px;flex:1}
+nav .app-nav a{display:inline-flex;align-items:center;gap:8px;min-height:36px;border-radius:999px;padding:8px 13px;color:rgba(255,255,255,.74);text-decoration:none;font-size:13px;font-weight:700;line-height:1;transition:background .2s,color .2s}
+nav .app-nav a:hover{background:rgba(255,255,255,.1);color:#fff}
+nav .app-nav a[aria-current="page"]{background:#fff;color:#052b20}
+nav .app-nav svg{width:15px;height:15px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;flex:none}
+nav .session-actions{display:none;align-items:center;gap:8px}
+nav[data-auth="authenticated"] .app-nav,nav[data-auth="authenticated"] .session-actions{display:flex}
+nav[data-auth="authenticated"] .doc-meta,nav[data-auth="authenticated"] .login-link{display:none}
+nav .status-pill{display:inline-flex;align-items:center;gap:8px;min-height:36px;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(255,255,255,.08);padding:8px 14px;color:rgba(255,255,255,.76);font-size:12px;font-weight:700;line-height:1}
+nav .status-pill i{width:8px;height:8px;border-radius:999px;background:#7bf0b1;box-shadow:0 0 0 3px rgba(123,240,177,.12)}
+nav .session-menu{position:relative}
+nav .session-trigger{display:flex;align-items:center;gap:9px;min-height:38px;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:rgba(255,255,255,.08);color:#fff;padding:4px 12px 4px 4px;font:700 13px Poppins,Arial,sans-serif;cursor:pointer}
+nav .session-trigger:hover{background:rgba(255,255,255,.14)}
+nav .session-trigger:focus-visible{outline:2px solid #fff;outline-offset:2px}
+nav .session-avatar{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:999px;background:#7bf0b1;color:#052b20;font-size:13px;font-weight:800;text-transform:uppercase}
+nav .session-name{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+nav .session-dropdown{display:none;position:absolute;right:0;top:calc(100% + 8px);z-index:60;width:230px;border:1px solid #dbe4dd;border-radius:12px;background:#fff;color:#17251f;text-align:left;box-shadow:0 18px 44px rgba(3,20,15,.25);overflow:hidden}
+nav .session-dropdown[data-open="true"]{display:block}
+nav .session-summary{padding:12px 14px;border-bottom:1px solid #dbe4dd}
+nav .session-summary b,nav .session-summary small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+nav .session-summary small{margin-top:2px;color:#65766e;font-size:11px}
+nav .session-role{display:inline-flex;margin-top:8px;border-radius:999px;background:#e0f5e9;color:#087244;padding:4px 8px;font-size:10px;font-weight:700}
+nav .session-link,nav .session-logout{display:flex;width:100%;align-items:center;gap:8px;border:0;background:#fff;color:#17251f;text-decoration:none;padding:11px 14px;font:600 12px Poppins,Arial,sans-serif;cursor:pointer}
+nav .session-link:hover{background:#f3f5ef}
+nav .session-logout{border-top:1px solid #dbe4dd;color:#9b321f}
+nav .session-logout:hover{background:#fff0eb}
+@media(max-width:980px){
+  nav[data-auth="authenticated"]{align-items:flex-start}
+  nav .app-nav{order:3;width:100%;justify-content:flex-start;overflow-x:auto;padding-top:4px;scrollbar-width:none}
+  nav .app-nav::-webkit-scrollbar{display:none}
+  nav .app-nav a{flex:0 0 auto}
+  nav .status-pill{display:none}
+}
+@media(max-width:620px){
+  nav .app-nav a{min-height:34px;padding:8px 10px;font-size:12px}
+  nav .session-name{display:none}
+  nav .session-trigger{padding-right:4px}
+}
 @media(max-width:620px){
   nav .brand img{height:18px}
   nav .brand b{font-size:10px;white-space:normal}
@@ -119,7 +158,76 @@ section[id],details{scroll-margin-top:76px}
 footer.site{padding:26px 5vw calc(30px + env(safe-area-inset-bottom));background:#052b20;color:#7f9a90;font-size:11px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 @media(max-width:800px){summary i{justify-self:start}.docs{padding-top:60px}}
 @media print{.docs,footer.site{display:none}}
-</style></head><body><nav><span class="brand"><img src="/images/uix-logo.png" alt="uix" width="62" height="22"><b>Originación Única · Reporte ejecutivo</b></span><span class="nav-actions"><span><a class="doc-link" href="#documentos">Documentos</a> · 5 agosto 2026</span><a class="login-link" href="/login">Iniciar sesión</a></span></nav><section class="hero" id="portada"><span class="kicker">Decisión ejecutiva · Primero lenguaje, después sistema</span><h1>Del hallazgo<br><span>a la acción.</span></h1><p>Inventario integral de cuatro rondas de pruebas, listo para consulta y presentación sin conexión.</p><div class="stats"><span><b>176</b>observaciones</span><span><b>82</b>completadas</span><span><b>94</b>pendientes</span><span><b>173</b>evidencias</span></div><div class="sched"><span class="sched-t">Horarios de las próximas pruebas</span><div class="sched-grid">
+</style></head><body><nav id="site-nav" data-auth="anonymous"><a class="brand" href="/" aria-label="Ir al reporte"><img src="/images/uix-logo.png" alt="uix" width="62" height="22"><b>Originación Única · Reporte ejecutivo</b></a><div class="app-nav" aria-label="Navegación principal"><a href="/" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7"></path><path d="M5 10v10h14V10"></path><path d="M9 20v-6h6v6"></path></svg>Reporte</a><a href="/findings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><circle cx="11.5" cy="14.5" r="2.5"></circle><path d="m13.5 16.5 2 2"></path></svg>Hallazgos</a><a href="/dashboard/analytics"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>Analíticas</a><a href="/test-import"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 13V3"></path><path d="m8 7 4-4 4 4"></path><path d="M20 17.5A4.5 4.5 0 0 0 15.5 13h-1A6.5 6.5 0 1 0 4 19"></path></svg>Importar</a></div><div class="nav-actions"><span class="doc-meta"><a class="doc-link" href="#documentos">Documentos</a> · 5 agosto 2026</span><a class="login-link" href="/login">Iniciar sesión</a><div class="session-actions"><span class="status-pill"><i aria-hidden="true"></i>Online</span><div class="session-menu"><button class="session-trigger" type="button" aria-haspopup="menu" aria-expanded="false"><span class="session-avatar">A</span><span class="session-name">Usuario</span></button><div class="session-dropdown" role="menu"><div class="session-summary"><b class="session-full-name">Usuario</b><small class="session-email"></small><span class="session-role"></span></div><a class="session-link" href="/profile" role="menuitem">Mi Perfil</a><button class="session-logout" type="button" role="menuitem">Cerrar Sesión</button></div></div></div></div></nav><script>
+(function(){
+  var nav=document.getElementById('site-nav');
+  if(!nav||!window.fetch)return;
+  var trigger=nav.querySelector('.session-trigger'),
+      dropdown=nav.querySelector('.session-dropdown'),
+      avatar=nav.querySelector('.session-avatar'),
+      shortName=nav.querySelector('.session-name'),
+      fullName=nav.querySelector('.session-full-name'),
+      email=nav.querySelector('.session-email'),
+      role=nav.querySelector('.session-role'),
+      logout=nav.querySelector('.session-logout');
+
+  function setAnonymous(){
+    nav.setAttribute('data-auth','anonymous');
+    if(dropdown)dropdown.removeAttribute('data-open');
+    if(trigger)trigger.setAttribute('aria-expanded','false');
+  }
+  function closeMenu(){
+    if(dropdown)dropdown.removeAttribute('data-open');
+    if(trigger)trigger.setAttribute('aria-expanded','false');
+  }
+  function setText(el,value){if(el)el.textContent=value||''}
+
+  nav.setAttribute('data-auth','loading');
+
+  if(trigger&&dropdown){
+    trigger.addEventListener('click',function(){
+      var open=dropdown.getAttribute('data-open')==='true';
+      if(open)closeMenu();
+      else{
+        dropdown.setAttribute('data-open','true');
+        trigger.setAttribute('aria-expanded','true');
+      }
+    });
+    document.addEventListener('click',function(e){
+      if(!nav.contains(e.target))closeMenu();
+    });
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape')closeMenu();
+    });
+  }
+
+  if(logout){
+    logout.addEventListener('click',function(){
+      logout.disabled=true;
+      fetch('/api/auth/logout',{method:'POST',credentials:'same-origin'})
+        .finally(function(){window.location.href='/login'});
+    });
+  }
+
+  fetch('/api/auth/session',{
+    credentials:'same-origin',
+    cache:'no-store',
+    headers:{Accept:'application/json'}
+  }).then(function(res){
+    if(!res.ok)throw new Error('session unavailable');
+    return res.json();
+  }).then(function(data){
+    if(!data||!data.user){setAnonymous();return}
+    var user=data.user, name=user.name||user.email||'Usuario';
+    setText(avatar,name.charAt(0).toUpperCase());
+    setText(shortName,name);
+    setText(fullName,name);
+    setText(email,user.email||'');
+    setText(role,user.role?'Rol: '+user.role:'');
+    nav.setAttribute('data-auth','authenticated');
+  }).catch(setAnonymous);
+})();
+</script><section class="hero" id="portada"><span class="kicker">Decisión ejecutiva · Primero lenguaje, después sistema</span><h1>Del hallazgo<br><span>a la acción.</span></h1><p>Inventario integral de cuatro rondas de pruebas, listo para consulta y presentación sin conexión.</p><div class="stats"><span><b>176</b>observaciones</span><span><b>82</b>completadas</span><span><b>94</b>pendientes</span><span><b>173</b>evidencias</span></div><div class="sched"><span class="sched-t">Horarios de las próximas pruebas</span><div class="sched-grid">
 <div class="slot work"><em>Mañana</em><time datetime="09:00">9:00 – 14:00</time><span>Sesión de pruebas</span></div>
 <div class="slot rest"><em>Comida</em><time datetime="14:00">14:00 – 16:00</time><span>Receso</span></div>
 <div class="slot work"><em>Tarde</em><time datetime="16:00">16:00 – 19:00</time><span>Sesión de pruebas</span></div>

@@ -27,8 +27,8 @@ export function EvidenceGallery({
 
   if (error) {
     return (
-      <div className="p-4 bg-red-50 border border-red-200 rounded-lg dark:bg-red-950 dark:border-red-800">
-        <p className="text-red-900 dark:text-red-200">{error}</p>
+      <div className="p-4 bg-[#fdece8] border border-[#f3c7bb] rounded-lg">
+        <p className="text-[#8a3320]">{error}</p>
       </div>
     )
   }
@@ -36,15 +36,15 @@ export function EvidenceGallery({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#00a85a]" />
       </div>
     )
   }
 
   if (evidence.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-        No evidence files yet. Upload your first file to get started.
+      <div className="text-center py-8 text-[#65766e]">
+        Aún no hay evidencias. Sube el primer archivo para comenzar.
       </div>
     )
   }
@@ -58,8 +58,8 @@ export function EvidenceGallery({
       {/* Image Gallery Grid */}
       {imageEvidence.length > 0 && (
         <div>
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">
-            Images ({imageEvidence.length})
+          <h3 className="text-sm font-semibold text-[#17251f] mb-4">
+            Imágenes ({imageEvidence.length})
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {imageEvidence.map((item, index) => (
@@ -81,8 +81,8 @@ export function EvidenceGallery({
       {/* Other Files List */}
       {otherEvidence.length > 0 && (
         <div>
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">
-            Documents ({otherEvidence.length})
+          <h3 className="text-sm font-semibold text-[#17251f] mb-4">
+            Documentos ({otherEvidence.length})
           </h3>
           <div className="space-y-2">
             {otherEvidence.map((item) => (
