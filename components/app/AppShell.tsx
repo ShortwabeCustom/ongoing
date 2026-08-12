@@ -128,7 +128,11 @@ export function AppShell({
               {stats?.length ? (
                 <div className="pm-panel-dark grid grid-cols-2 gap-px overflow-hidden p-px">
                   {stats.map((stat) => (
-                    <div key={stat.label} className="bg-[rgba(13,51,40,0.86)] p-4">
+                    <div
+                      key={stat.label}
+                      className="bg-[rgba(13,51,40,0.86)] p-4 transition-all cursor-pointer hover:bg-[rgba(13,51,40,1)] hover:shadow-lg"
+                      title={`Click para filtrar por: ${stat.label}`}
+                    >
                       <div
                         className={cn(
                           'text-3xl font-semibold leading-none',

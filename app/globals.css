@@ -233,17 +233,78 @@
   }
 
   .pm-chip {
-    min-height: 32px;
-    border: 1px solid rgba(118, 141, 127, 0.24);
+    min-height: 36px;
+    border: 1px solid #dbe4dd;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.86);
-    color: var(--pm-deep);
+    background: #ffffff;
+    color: #17251f;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    transition: all 200ms ease;
+    cursor: pointer;
+  }
+
+  .pm-chip:hover {
+    border-color: #0369A1;
+    background: #f0f9ff;
+    color: #0369A1;
   }
 
   .pm-chip-active {
-    border-color: var(--pm-deep);
-    background: var(--pm-deep);
-    color: #fff;
+    border-color: #0369A1;
+    background: #0369A1;
+    color: #ffffff;
+    font-weight: 700;
+  }
+
+  /* Semantic color variants for status/priority chips */
+  .pm-chip-status-open {
+    --chip-border: #3B82F6;
+    --chip-bg-light: #EFF6FF;
+    --chip-bg-active: #3B82F6;
+    --chip-text: #1E40AF;
+  }
+
+  .pm-chip-status-progress {
+    --chip-border: #7C3AED;
+    --chip-bg-light: #F3E8FF;
+    --chip-bg-active: #7C3AED;
+    --chip-text: #581C87;
+  }
+
+  .pm-chip-status-resolved {
+    --chip-border: #10B981;
+    --chip-bg-light: #D1FAE5;
+    --chip-bg-active: #10B981;
+    --chip-text: #065F46;
+  }
+
+  .pm-chip-priority-critical {
+    --chip-border: #DC2626;
+    --chip-bg-light: #FEE2E2;
+    --chip-bg-active: #DC2626;
+    --chip-text: #7F1D1D;
+  }
+
+  .pm-chip-priority-high {
+    --chip-border: #F59E0B;
+    --chip-bg-light: #FEF3C7;
+    --chip-bg-active: #F59E0B;
+    --chip-text: #92400E;
+  }
+
+  .pm-chip-priority-medium {
+    --chip-border: #FBBF24;
+    --chip-bg-light: #FEF08A;
+    --chip-bg-active: #FBBF24;
+    --chip-text: #713F12;
+  }
+
+  .pm-chip-priority-low {
+    --chip-border: #10B981;
+    --chip-bg-light: #D1FAE5;
+    --chip-bg-active: #10B981;
+    --chip-text: #065F46;
   }
 
   .pm-input {

@@ -19,6 +19,8 @@ import {
   FINDING_PRIORITY_OPTIONS,
   PRIORITY_LABELS_ES,
   STATUS_LABELS_ES,
+  STATUS_COLORS,
+  PRIORITY_COLORS,
 } from '@/lib/constants/finding-options'
 import type { AdvancedFilterValues } from '@/lib/types/search'
 import { Search, X, ChevronDown, Filter, Clock3, Info, Plus, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -405,44 +407,56 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
 
         {/* Quick filters + Advanced button */}
         <div className="mt-4 flex flex-wrap items-center gap-2">
-            <div className="flex gap-1">
-              {FINDING_STATUS_OPTIONS.slice(0, 4).map((status) => (
-                <button
-                  key={status}
-                  onClick={() => {
-                    setStatusFilter((prev) =>
-                      prev.includes(status) ? prev.filter((s) => s !== status) : [...prev, status],
-                    )
-                    setIsOpen(true)
-                  }}
-                  className={cn(
-                    'pm-chip px-3 text-xs font-semibold transition-colors [@media(hover:hover)]:hover:border-[#052b20]',
-                    statusFilter.includes(status) && 'pm-chip-active',
-                  )}
-                >
-                  {STATUS_LABELS_ES[status] ?? status}
-                </button>
-              ))}
+            {/* Status filter pills */}
+            <div className="flex gap-1.5 items-center">
+              <span className="text-xs font-semibold text-[#65766e] uppercase tracking-wide">Estado:</span>
+              {FINDING_STATUS_OPTIONS.slice(0, 4).map((status) => {
+                const isActive = statusFilter.includes(status)
+                const colors = STATUS_COLORS[status] || 'bg-slate-100 text-slate-700 border-slate-300'
+                return (
+                  <button
+                    key={status}
+                    onClick={() => {
+                      setStatusFilter((prev) =>
+                        prev.includes(status) ? prev.filter((s) => s !== status) : [...prev, status],
+                      )
+                      setIsOpen(true)
+                    }}
+                    className={cn(
+                      'pm-chip text-xs transition-all',
+                      isActive ? colors : 'border-[#dbe4dd] bg-white text-[#17251f] hover:border-[#0369A1] hover:bg-[#f0f9ff]'
+                    )}
+                  >
+                    {STATUS_LABELS_ES[status] ?? status}
+                  </button>
+                )
+              })}
             </div>
 
-            <div className="flex gap-1">
-              {FINDING_PRIORITY_OPTIONS.map((priority) => (
-                <button
-                  key={priority}
-                  onClick={() => {
-                    setPriorityFilter((prev) =>
-                      prev.includes(priority) ? prev.filter((p) => p !== priority) : [...prev, priority],
-                    )
-                    setIsOpen(true)
-                  }}
-                  className={cn(
-                    'pm-chip px-3 text-xs font-semibold transition-colors [@media(hover:hover)]:hover:border-[#052b20]',
-                    priorityFilter.includes(priority) && 'pm-chip-active',
-                  )}
-                >
-                  {PRIORITY_LABELS_ES[priority] ?? priority}
-                </button>
-              ))}
+            {/* Priority filter pills */}
+            <div className="flex gap-1.5 items-center">
+              <span className="text-xs font-semibold text-[#65766e] uppercase tracking-wide">Prioridad:</span>
+              {FINDING_PRIORITY_OPTIONS.map((priority) => {
+                const isActive = priorityFilter.includes(priority)
+                const colors = PRIORITY_COLORS[priority] || 'bg-slate-100 text-slate-700 border-slate-300'
+                return (
+                  <button
+                    key={priority}
+                    onClick={() => {
+                      setPriorityFilter((prev) =>
+                        prev.includes(priority) ? prev.filter((p) => p !== priority) : [...prev, priority],
+                      )
+                      setIsOpen(true)
+                    }}
+                    className={cn(
+                      'pm-chip text-xs transition-all',
+                      isActive ? colors : 'border-[#dbe4dd] bg-white text-[#17251f] hover:border-[#0369A1] hover:bg-[#f0f9ff]'
+                    )}
+                  >
+                    {PRIORITY_LABELS_ES[priority] ?? priority}
+                  </button>
+                )
+              })}
             </div>
 
             {/* Advanced filters button */}
@@ -451,11 +465,16 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
                 setAdvancedPanelOpen(!advancedPanelOpen)
                 setHistoryOpen(false)
               }}
-              className="pm-chip inline-flex items-center gap-1 px-3 text-xs font-semibold transition-colors hover:border-[#052b20] focus-visible:ring-2 focus-visible:ring-[#00a85a]"
+              className={cn(
+                'pm-chip inline-flex items-center gap-1 text-xs transition-all focus-visible:ring-2 focus-visible:ring-[#00a85a]',
+                advancedPanelOpen || activeFilterCount > 0
+                  ? 'border-[#0369A1] bg-[#0369A1] text-white'
+                  : 'border-[#dbe4dd] bg-white text-[#17251f]'
+              )}
             >
-              <Filter className="w-3 h-3" />
+              <Filter className="w-3.5 h-3.5" />
               Filtros
-              {activeFilterCount > 0 && <span className="ml-1 font-bold text-[#00a85a]">+{activeFilterCount}</span>}
+              {activeFilterCount > 0 && <span className="ml-1 font-bold text-[#7bf0b1]">+{activeFilterCount}</span>}
             </button>
 
             {/* Search history button */}
@@ -464,7 +483,12 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
                 setHistoryOpen(!historyOpen)
                 setAdvancedPanelOpen(false)
               }}
-              className="pm-chip inline-flex items-center gap-1 px-3 text-xs font-semibold transition-colors hover:border-[#052b20] focus-visible:ring-2 focus-visible:ring-[#00a85a]"
+              className={cn(
+                'pm-chip inline-flex items-center gap-1 text-xs transition-all focus-visible:ring-2 focus-visible:ring-[#00a85a]',
+                historyOpen
+                  ? 'border-[#0369A1] bg-[#0369A1] text-white'
+                  : 'border-[#dbe4dd] bg-white text-[#17251f]'
+              )}
             >
               <Clock3 className="h-3.5 w-3.5" />
               Recientes
