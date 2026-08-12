@@ -17,7 +17,7 @@ interface FindingDetailWithEvidenceProps {
 
 const IMAGE_EVIDENCE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
-export async function FindingDetailWithEvidence({
+export function FindingDetailWithEvidence({
   finding,
 }: FindingDetailWithEvidenceProps) {
   const title = finding.title ?? finding.folio ?? `Hallazgo ${finding.id.slice(0, 8)}`
