@@ -244,11 +244,11 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
             />
           )}
 
-          <div className="space-y-2 p-3">
+          <div className="space-y-1 p-3">
             {data!.items.map((item) => (
               <div
                 key={item.id}
-                className="min-h-[44px] rounded-lg border border-transparent px-3 py-2.5 transition-colors active:bg-[#edf4ed] focus-visible:ring-2 focus-visible:ring-[#00a85a] [@media(hover:hover)]:hover:border-[#dbe4dd] [@media(hover:hover)]:hover:bg-white"
+                className="rounded-lg border border-[#dbe4dd] transition-all active:bg-[#edf4ed] focus-visible:ring-2 focus-visible:ring-[#00a85a] [@media(hover:hover)]:hover:border-[#0369A1] [@media(hover:hover)]:hover:shadow-md [@media(hover:hover)]:hover:bg-white"
               >
                 <SearchResultItem
                   {...item}

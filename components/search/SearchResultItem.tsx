@@ -7,7 +7,10 @@ import {
   INCIDENCE_TYPE_LABELS_ES,
   PRIORITY_LABELS_ES,
   STATUS_LABELS_ES,
+  SEVERITY_LABELS_ES,
+  SEVERITY_COLORS,
 } from '@/lib/constants/finding-options'
+import { cn } from '@/lib/utils'
 
 interface SearchResultItemProps {
   id: string
@@ -18,6 +21,7 @@ interface SearchResultItemProps {
   severity: string
   projectId: string
   assigneeId?: string
+  createdAt?: string | number
   experienceTags?: Array<{ experienceTag: string }> | string[]
   incidenceTypes?: Array<{ incidenceType: string }> | string[]
   selected: boolean
@@ -33,6 +37,44 @@ function readRelationValue(item: unknown, key: 'experienceTag' | 'incidenceType'
   return typeof value === 'string' ? value : undefined
 }
 
+function getSeverityBorderColor(severity: string): string {
+  switch (severity) {
+    case 'BLOCKER':
+      return 'border-l-red-600'
+    case 'MAJOR':
+      return 'border-l-orange-500'
+    case 'MINOR':
+      return 'border-l-yellow-500'
+    case 'COSMETIC':
+      return 'border-l-blue-500'
+    default:
+      return 'border-l-slate-300'
+  }
+}
+
+function formatTimeAgo(timestamp?: string | number): string {
+  if (!timestamp) return ''
+
+  let timestampMs: number
+  if (typeof timestamp === 'string') {
+    timestampMs = new Date(timestamp).getTime()
+  } else {
+    timestampMs = timestamp
+  }
+
+  const now = Date.now()
+  const diff = now - timestampMs
+  const seconds = Math.floor(diff / 1000)
+  const minutes = Math.floor(seconds / 60)
+  const hours = Math.floor(minutes / 60)
+  const days = Math.floor(hours / 24)
+
+  if (days > 0) return `Hace ${days}d`
+  if (hours > 0) return `Hace ${hours}h`
+  if (minutes > 0) return `Hace ${minutes}m`
+  return 'Ahora'
+}
+
 export function SearchResultItem({
   id,
   observation,
@@ -42,6 +84,7 @@ export function SearchResultItem({
   severity,
   projectId,
   assigneeId,
+  createdAt,
   experienceTags,
   incidenceTypes,
   selected,
@@ -60,13 +103,19 @@ export function SearchResultItem({
   const areaLabel =
     areaValues.map((tag) => EXPERIENCE_TAG_LABELS_ES[tag] ?? tag).join(', ') ||
     incidenceValues.map((type) => INCIDENCE_TYPE_LABELS_ES[type] ?? type).join(', ') ||
-    String(severity)
+    ''
+
+  const timeAgo = formatTimeAgo(createdAt)
+  const severityLabel = SEVERITY_LABELS_ES[severity] ?? severity
+  const statusLabel = STATUS_LABELS_ES[status] ?? status
+  const priorityLabel = PRIORITY_LABELS_ES[priority] ?? priority
 
   return (
-    <div className="flex items-start gap-3">
+    <div className="flex items-stretch gap-0">
+      {/* Checkbox */}
       {showCheckbox && (
         <label
-          className="flex items-center justify-center min-w-[44px] min-h-[44px] cursor-pointer shrink-0 mt-0.5"
+          className="flex items-center justify-center min-w-[44px] cursor-pointer shrink-0 bg-[#fafbf9] hover:bg-[#edf4ed] transition-colors"
           onClick={(e) => e.stopPropagation()}
         >
           <input
@@ -79,27 +128,53 @@ export function SearchResultItem({
         </label>
       )}
 
-      <div className="min-w-0 flex-1 border-l border-[#dbe4dd] pl-3">
+      {/* Content */}
+      <div
+        className={cn(
+          'min-w-0 flex-1 border-l-4 px-4 py-3.5 flex flex-col gap-2.5',
+          getSeverityBorderColor(severity),
+        )}
+      >
+        {/* Row 1: Severity Badge + Status */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <span
+            className={cn(
+              'inline-flex items-center px-2.5 py-1 rounded text-xs font-bold uppercase tracking-wide shrink-0',
+              SEVERITY_COLORS[severity] ?? 'bg-slate-100 text-slate-700 border-slate-200',
+            )}
+          >
+            {severityLabel}
+          </span>
+          <span className="text-xs font-semibold text-[#65766e]">{statusLabel}</span>
+        </div>
+
+        {/* Row 2: Title */}
         <Link
           href={`/findings/${id}`}
-          className="group/link flex items-start justify-between gap-3 text-base font-semibold leading-6 text-[#17251f] transition hover:text-[#087244] md:text-sm"
+          className="group/link flex items-start justify-between gap-3 min-w-0"
         >
           <span
-            className="line-clamp-2"
+            className="text-sm font-semibold leading-5 text-[#17251f] line-clamp-2 hover:text-[#087244] transition"
             dangerouslySetInnerHTML={{
               __html: displayObservation,
             }}
           />
-          <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-[#00a85a] opacity-0 transition group-hover/link:opacity-100" />
+          <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-[#00a85a] opacity-100 transition group-hover/link:opacity-100" />
         </Link>
 
-        <p className="mt-2 text-xs font-semibold text-[#65766e]">
-          {STATUS_LABELS_ES[status] ?? status}
-          <span className="px-1.5 text-[#a8bab0]">·</span>
-          {PRIORITY_LABELS_ES[priority] ?? priority}
-          <span className="px-1.5 text-[#a8bab0]">·</span>
-          {areaLabel}
-        </p>
+        {/* Row 3: Metadata - Area/Incidence */}
+        {areaLabel && (
+          <div className="text-xs text-[#65766e]">
+            📋 {areaLabel}
+          </div>
+        )}
+
+        {/* Row 4: Metadata - Time */}
+        {timeAgo && (
+          <div className="text-xs text-[#a8bab0]">
+            📅 {timeAgo}
+          </div>
+        )}
       </div>
     </div>
   )
