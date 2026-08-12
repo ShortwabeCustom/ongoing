@@ -1,6 +1,11 @@
+'use client'
+
 import { Finding, Evidence } from '@/lib/types'
-import { MapPin, AlertTriangle, Flag, ShieldAlert, User, CalendarDays, Hash, Workflow as WorkflowIcon } from 'lucide-react'
-import { FindingDetailContent } from '@/components/finding/FindingDetailContent'
+import { MapPin, AlertTriangle, Flag, ShieldAlert, User, CalendarDays, Hash, Workflow as WorkflowIcon, Pencil } from 'lucide-react'
+import { useState } from 'react'
+import { useAuth } from '@/hooks/useAuth'
+import { useLookups } from '@/lib/hooks/useLookups'
+import { EditFindingDialog } from '@/components/finding/EditFindingDialog'
 import { FindingScreensSection } from '@/components/finding/FindingScreensSection'
 import { FindingEvidenceSection } from '@/components/finding/FindingEvidenceSection'
 import {
@@ -20,6 +25,10 @@ const IMAGE_EVIDENCE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 export function FindingDetailWithEvidence({
   finding,
 }: FindingDetailWithEvidenceProps) {
+  const auth = useAuth()
+  const [editOpen, setEditOpen] = useState(false)
+  const { assignees } = useLookups(finding.projectId)
+  const canEdit = Boolean(auth.user?.role && ['OWNER', 'QA_LEAD'].includes(auth.user.role))
   const title = finding.title ?? finding.folio ?? `Hallazgo ${finding.id.slice(0, 8)}`
   const description = finding.description ?? finding.observation
   const areaValues = finding.experienceTags?.map((tag) => tag.experienceTag) ?? []
@@ -91,7 +100,16 @@ export function FindingDetailWithEvidence({
             </div>
           </div>
 
-          <FindingDetailContent finding={finding} />
+          {canEdit && (
+            <button
+              type="button"
+              onClick={() => setEditOpen(true)}
+              className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg bg-[#052b20] px-4 text-sm font-semibold text-white transition hover:bg-[#0b3e30] focus-visible:ring-2 focus-visible:ring-[#00a85a]"
+            >
+              <Pencil className="h-4 w-4" />
+              Editar hallazgo
+            </button>
+          )}
         </div>
       </section>
 
@@ -126,6 +144,13 @@ export function FindingDetailWithEvidence({
       <FindingEvidenceSection
         finding={finding}
         evidence={finding.evidence || []}
+      />
+
+      <EditFindingDialog
+        open={editOpen}
+        finding={finding}
+        assignees={assignees}
+        onClose={() => setEditOpen(false)}
       />
     </div>
   )
