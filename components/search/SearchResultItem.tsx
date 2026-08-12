@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, FileText, Calendar } from 'lucide-react'
 import {
   EXPERIENCE_TAG_LABELS_ES,
   INCIDENCE_TYPE_LABELS_ES,
@@ -164,15 +164,17 @@ export function SearchResultItem({
 
         {/* Row 3: Metadata - Area/Incidence */}
         {areaLabel && (
-          <div className="text-xs text-[#65766e]">
-            📋 {areaLabel}
+          <div className="flex items-center gap-1.5 text-xs text-[#65766e]">
+            <FileText className="h-3.5 w-3.5 shrink-0 text-[#a8bab0]" />
+            {areaLabel}
           </div>
         )}
 
         {/* Row 4: Metadata - Time */}
         {timeAgo && (
-          <div className="text-xs text-[#a8bab0]">
-            📅 {timeAgo}
+          <div className="flex items-center gap-1.5 text-xs text-[#a8bab0]">
+            <Calendar className="h-3.5 w-3.5 shrink-0 text-[#a8bab0]" />
+            {timeAgo}
           </div>
         )}
       </div>
