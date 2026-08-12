@@ -69,13 +69,19 @@ export function FindingDetailWithEvidence({
     )
   }
 
+  const createdDate = typeof finding.createdAt === 'string'
+    ? new Date(finding.createdAt).toLocaleDateString('es-ES')
+    : (finding.createdAt instanceof Date
+        ? finding.createdAt.toLocaleDateString('es-ES')
+        : '-')
+
   const metaFields = [
     { icon: MapPin, label: 'Área', value: area },
     { icon: AlertTriangle, label: 'Incidencia', value: incidenceTypes },
     { icon: Flag, label: 'Prioridad', value: PRIORITY_LABELS_ES[finding.priority] ?? finding.priority },
     { icon: ShieldAlert, label: 'Severidad', value: SEVERITY_LABELS_ES[finding.severity] ?? finding.severity },
     { icon: User, label: 'Responsable', value: assigneeName },
-    { icon: CalendarDays, label: 'Creado', value: new Date(finding.createdAt).toLocaleDateString('es-ES') },
+    { icon: CalendarDays, label: 'Creado', value: createdDate },
     { icon: Hash, label: 'Versión', value: finding.version.toString() },
     ...(finding.flowStep
       ? [{ icon: WorkflowIcon, label: 'Paso del flujo', value: finding.flowStep }]

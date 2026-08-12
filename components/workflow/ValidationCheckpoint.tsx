@@ -93,7 +93,7 @@ export function ValidationCheckpoint({
                     </p>
                     <p className="text-xs text-[#65766e]">
                       {val.validatedAt
-                        ? new Date(val.validatedAt).toLocaleDateString('es-ES')
+                        ? (typeof val.validatedAt === 'string' ? new Date(val.validatedAt).toLocaleDateString('es-ES') : (val.validatedAt instanceof Date ? val.validatedAt.toLocaleDateString('es-ES') : 'Pendiente'))
                         : 'Pendiente'}
                     </p>
                   </div>

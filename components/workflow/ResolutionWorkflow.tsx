@@ -113,7 +113,7 @@ export function ResolutionWorkflow({
                   <div className="flex-1">
                     <p className="truncate text-sm font-semibold text-[#17251f]">{res.description}</p>
                     <p className="text-xs text-[#65766e]">
-                      {new Date(res.createdAt).toLocaleDateString('es-ES')}
+                      {typeof res.createdAt === 'string' ? new Date(res.createdAt).toLocaleDateString('es-ES') : (res.createdAt instanceof Date ? res.createdAt.toLocaleDateString('es-ES') : '-')}
                     </p>
                   </div>
                   <WorkflowStateIndicator state={res.state} />

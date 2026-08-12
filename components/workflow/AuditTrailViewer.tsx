@@ -121,8 +121,8 @@ export function AuditTrailViewer({
                   )}
                 </div>
                 <span className="text-xs text-[#65766e]">
-                  {new Date(log.createdAt).toLocaleDateString('es-ES')} {' '}
-                  {new Date(log.createdAt).toLocaleTimeString('es-ES')}
+                  {typeof log.createdAt === 'string' ? new Date(log.createdAt).toLocaleDateString('es-ES') : (log.createdAt instanceof Date ? log.createdAt.toLocaleDateString('es-ES') : '-')} {' '}
+                  {typeof log.createdAt === 'string' ? new Date(log.createdAt).toLocaleTimeString('es-ES') : (log.createdAt instanceof Date ? log.createdAt.toLocaleTimeString('es-ES') : '-')}
                 </span>
               </div>
 

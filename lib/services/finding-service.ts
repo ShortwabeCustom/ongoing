@@ -379,13 +379,117 @@ export class FindingService {
   }
 
   /**
+   * Serialize dates in finding data for Server → Client boundary.
+   * Converts all Date objects to ISO 8601 strings.
+   */
+  private static serializeFinding(data: any): any {
+    if (!data) return data
+
+    const serialized = { ...data }
+
+    // Serialize top-level dates
+    if (serialized.createdAt instanceof Date) {
+      serialized.createdAt = serialized.createdAt.toISOString()
+    }
+    if (serialized.updatedAt instanceof Date) {
+      serialized.updatedAt = serialized.updatedAt.toISOString()
+    }
+    if (serialized.deletedAt instanceof Date) {
+      serialized.deletedAt = serialized.deletedAt.toISOString()
+    }
+    if (serialized.dueDate instanceof Date) {
+      serialized.dueDate = serialized.dueDate.toISOString()
+    }
+
+    // Serialize testSession dates
+    if (serialized.testSession) {
+      serialized.testSession = { ...serialized.testSession }
+      if (serialized.testSession.date instanceof Date) {
+        serialized.testSession.date = serialized.testSession.date.toISOString()
+      }
+    }
+
+    // Serialize evidence dates
+    if (Array.isArray(serialized.evidence)) {
+      serialized.evidence = serialized.evidence.map((ev: any) => {
+        const evCopy = { ...ev }
+        if (evCopy.createdAt instanceof Date) {
+          evCopy.createdAt = evCopy.createdAt.toISOString()
+        }
+        if (evCopy.uploadedAt instanceof Date) {
+          evCopy.uploadedAt = evCopy.uploadedAt.toISOString()
+        }
+        if (evCopy.urlExpiresAt instanceof Date) {
+          evCopy.urlExpiresAt = evCopy.urlExpiresAt.toISOString()
+        }
+        return evCopy
+      })
+    }
+
+    // Serialize resolutions dates
+    if (Array.isArray(serialized.resolutions)) {
+      serialized.resolutions = serialized.resolutions.map((res: any) => {
+        const resCopy = { ...res }
+        if (resCopy.createdAt instanceof Date) {
+          resCopy.createdAt = resCopy.createdAt.toISOString()
+        }
+        if (resCopy.updatedAt instanceof Date) {
+          resCopy.updatedAt = resCopy.updatedAt.toISOString()
+        }
+        return resCopy
+      })
+    }
+
+    // Serialize validations dates
+    if (Array.isArray(serialized.validations)) {
+      serialized.validations = serialized.validations.map((val: any) => {
+        const valCopy = { ...val }
+        if (valCopy.createdAt instanceof Date) {
+          valCopy.createdAt = valCopy.createdAt.toISOString()
+        }
+        if (valCopy.validatedAt instanceof Date) {
+          valCopy.validatedAt = valCopy.validatedAt.toISOString()
+        }
+        return valCopy
+      })
+    }
+
+    // Serialize comments dates
+    if (Array.isArray(serialized.comments)) {
+      serialized.comments = serialized.comments.map((com: any) => {
+        const comCopy = { ...com }
+        if (comCopy.createdAt instanceof Date) {
+          comCopy.createdAt = comCopy.createdAt.toISOString()
+        }
+        if (comCopy.updatedAt instanceof Date) {
+          comCopy.updatedAt = comCopy.updatedAt.toISOString()
+        }
+        return comCopy
+      })
+    }
+
+    // Serialize statusHistory dates
+    if (Array.isArray(serialized.statusHistory)) {
+      serialized.statusHistory = serialized.statusHistory.map((hist: any) => {
+        const histCopy = { ...hist }
+        if (histCopy.changedAt instanceof Date) {
+          histCopy.changedAt = histCopy.changedAt.toISOString()
+        }
+        return histCopy
+      })
+    }
+
+    return serialized
+  }
+
+  /**
    * Get finding with fresh signed URLs for evidence.
    */
   static async getFindingWithSignedUrls(id: string) {
     const finding = await this.getFinding(id)
 
     if (!finding || !finding.evidence) {
-      return finding
+      return this.serializeFinding(finding)
     }
 
     const { StorageService } = await import('@/lib/services/storage-service')
@@ -409,10 +513,10 @@ export class FindingService {
       }),
     )
 
-    return {
+    return this.serializeFinding({
       ...finding,
       evidence: evidenceWithUrls,
-    }
+    })
   }
 
   /**
