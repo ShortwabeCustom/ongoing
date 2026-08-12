@@ -30,7 +30,7 @@ type SearchFindingsProps = {
   presentation?: 'panel' | 'dropdown'
 }
 
-const PAGE_SIZE = 25
+const PAGE_SIZE = 15
 
 function getPaginationItems(currentPage: number, totalPages: number) {
   if (totalPages <= 8) {
@@ -246,7 +246,7 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
             />
           )}
 
-          <div className="space-y-1 p-3">
+          <div className="space-y-2 p-3">
             {data!.items.map((item) => (
               <div
                 key={item.id}
