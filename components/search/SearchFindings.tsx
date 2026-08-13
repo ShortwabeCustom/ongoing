@@ -78,8 +78,8 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
   const savedFilters = useSavedFilters()
   const { initialFilters: urlFilters, syncToUrl, clearUrl } = useUrlSync()
 
-  // FASE 14.1.2: Hydrate from URL on mount
-  // Dependency array is intentionally empty — we only hydrate on first mount
+  // FASE 14.1.3: Hydrate from URL on mount AND on URL changes (browser back/forward)
+  // This makes React state stay in sync with URL at all times
   useEffect(() => {
     const hasFilters = Boolean(
       urlFilters.q ||
@@ -118,9 +118,8 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
         })
       }
     }
-    // Disabling ESLint rule: only hydrate once on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    // FASE 14.1.3: Added urlFilters dependency so hydration runs when URL changes
+  }, [urlFilters])
 
   const searchQuery = useMemo(
     () => ({
@@ -1004,6 +1003,8 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
                     setOpenFilterSection(null)
                     setAdvancedPanelOpen(false)
                     setIsOpen(false)
+                    // FASE 14.1.3: Clear URL when clearing filters
+                    clearUrl()
                   }}
                   className="min-h-[44px] flex-1 rounded-lg bg-[#edf4ed] px-3 py-2.5 font-medium text-[#17251f] transition-colors active:bg-[#dbe4dd] focus-visible:ring-2 focus-visible:ring-[#00a85a]"
                 >
