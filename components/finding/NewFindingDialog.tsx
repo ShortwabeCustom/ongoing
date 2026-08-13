@@ -182,10 +182,10 @@ export function NewFindingDialog({
   }
 
   return (
-    <div className="fixed inset-0 z-[70] flex items-end justify-center bg-[#031b14]/58 px-3 py-4 backdrop-blur-sm sm:items-center">
+    <div className="fixed inset-0 z-[70] flex items-center justify-end bg-[#031b14]/58 backdrop-blur-[2px] animate-in fade-in-0 duration-300">
       <form
         onSubmit={handleSubmit}
-        className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-lg border border-[#dbe4dd] bg-white shadow-2xl"
+        className="max-h-screen w-full max-w-2xl overflow-y-auto border-l border-[#dbe4dd] bg-white shadow-2xl animate-in slide-in-from-right-0 duration-300"
       >
         <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-[#dbe4dd] bg-white px-5 py-4">
           <div>
