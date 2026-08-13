@@ -96,15 +96,9 @@ export function AdvancedFilterPanel({
   }
 
   const handleApply = () => {
-    // Normalize dates from 'YYYY-MM-DD' to ISO if needed
-    const normalized = { ...draft }
-    if (draft.dateFrom && !draft.dateFrom.includes('T')) {
-      normalized.dateFrom = new Date(draft.dateFrom).toISOString()
-    }
-    if (draft.dateTo && !draft.dateTo.includes('T')) {
-      normalized.dateTo = new Date(draft.dateTo).toISOString()
-    }
-    onApply(normalized)
+    // FASE 14.1.2: Dates are already in ISO UTC format from date inputs
+    // No additional normalization needed
+    onApply(draft)
   }
 
   const handleSaveFilter = async () => {
@@ -273,10 +267,10 @@ export function AdvancedFilterPanel({
                       onChange={(e) => {
                         const newDate = e.target.value
                         if (newDate) {
-                          const dateObj = new Date(newDate + 'T00:00:00')
+                          // FASE 14.1.2: Parse date as UTC (YYYY-MM-DD → YYYY-MM-DDTXX:00:00.000Z)
                           setDraft((prev) => ({
                             ...prev,
-                            dateFrom: dateObj.toISOString(),
+                            dateFrom: `${newDate}T00:00:00.000Z`,
                             datePreset: 'custom',
                           }))
                         }
@@ -292,10 +286,10 @@ export function AdvancedFilterPanel({
                       onChange={(e) => {
                         const newDate = e.target.value
                         if (newDate) {
-                          const dateObj = new Date(newDate + 'T23:59:59')
+                          // FASE 14.1.2: Parse date as UTC (YYYY-MM-DD → YYYY-MM-DDTXX:59:59.999Z)
                           setDraft((prev) => ({
                             ...prev,
-                            dateTo: dateObj.toISOString(),
+                            dateTo: `${newDate}T23:59:59.999Z`,
                             datePreset: 'custom',
                           }))
                         }

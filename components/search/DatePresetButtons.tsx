@@ -57,38 +57,50 @@ export function DatePresetButtons({
   )
 }
 
-// Utility: Calculate date range for preset
+// FASE 14.1.2: Calculate date range for preset (UTC-based)
+// All date calculations happen in UTC to ensure consistent behavior across timezones.
+// Product timezone: UTC (see docs/OPERATIONS/production_status.md for rationale)
 export function getDateRangeForPreset(preset: DatePreset): [string, string] {
-  const now = new Date()
-  const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0)
-  const endOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999)
+  const nowUtc = new Date()
+
+  const startOfDayUtc = (date: Date) => {
+    const iso = date.toISOString()
+    const [dateStr] = iso.split('T')
+    return `${dateStr}T00:00:00.000Z`
+  }
+
+  const endOfDayUtc = (date: Date) => {
+    const iso = date.toISOString()
+    const [dateStr] = iso.split('T')
+    return `${dateStr}T23:59:59.999Z`
+  }
 
   switch (preset) {
     case 'today': {
-      const start = startOfDay(now)
-      const end = endOfDay(now)
-      return [start.toISOString(), end.toISOString()]
+      const start = startOfDayUtc(nowUtc)
+      const end = endOfDayUtc(nowUtc)
+      return [start, end]
     }
     case 'yesterday': {
-      const yesterday = new Date(now)
-      yesterday.setDate(yesterday.getDate() - 1)
-      const start = startOfDay(yesterday)
-      const end = endOfDay(yesterday)
-      return [start.toISOString(), end.toISOString()]
+      const yesterday = new Date(nowUtc)
+      yesterday.setUTCDate(yesterday.getUTCDate() - 1)
+      const start = startOfDayUtc(yesterday)
+      const end = endOfDayUtc(yesterday)
+      return [start, end]
     }
     case 'last7days': {
-      const sevenDaysAgo = new Date(now)
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6)
-      const start = startOfDay(sevenDaysAgo)
-      const end = endOfDay(now)
-      return [start.toISOString(), end.toISOString()]
+      const sevenDaysAgo = new Date(nowUtc)
+      sevenDaysAgo.setUTCDate(sevenDaysAgo.getUTCDate() - 6)
+      const start = startOfDayUtc(sevenDaysAgo)
+      const end = endOfDayUtc(nowUtc)
+      return [start, end]
     }
     case 'last30days': {
-      const thirtyDaysAgo = new Date(now)
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 29)
-      const start = startOfDay(thirtyDaysAgo)
-      const end = endOfDay(now)
-      return [start.toISOString(), end.toISOString()]
+      const thirtyDaysAgo = new Date(nowUtc)
+      thirtyDaysAgo.setUTCDate(thirtyDaysAgo.getUTCDate() - 29)
+      const start = startOfDayUtc(thirtyDaysAgo)
+      const end = endOfDayUtc(nowUtc)
+      return [start, end]
     }
     case 'custom':
       return ['', '']

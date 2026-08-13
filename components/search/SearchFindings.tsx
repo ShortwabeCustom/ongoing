@@ -8,6 +8,7 @@ import { useBatchActions } from '@/lib/hooks/useBatchActions'
 import { useLookups } from '@/lib/hooks/useLookups'
 import { useSearchHistory } from '@/lib/hooks/useSearchHistory'
 import { useSavedFilters } from '@/lib/hooks/useSavedFilters'
+import { useUrlSync } from '@/lib/hooks/useUrlSync'
 import { NewFindingDialog } from '@/components/finding/NewFindingDialog'
 import { SearchResultItem } from './SearchResultItem'
 import { AdvancedFilterPanel } from './AdvancedFilterPanel'
@@ -75,6 +76,51 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
   const { assignees, projects, isLoading: lookupsLoading, error: lookupsError } = useLookups()
   const searchHistory = useSearchHistory()
   const savedFilters = useSavedFilters()
+  const { initialFilters: urlFilters, syncToUrl, clearUrl } = useUrlSync()
+
+  // FASE 14.1.2: Hydrate from URL on mount
+  // Dependency array is intentionally empty — we only hydrate on first mount
+  useEffect(() => {
+    const hasFilters = Boolean(
+      urlFilters.q ||
+      urlFilters.status?.length ||
+      urlFilters.priority?.length ||
+      urlFilters.severity?.length ||
+      urlFilters.assignee?.length ||
+      urlFilters.project?.length ||
+      urlFilters.dateType ||
+      urlFilters.dateFrom ||
+      urlFilters.dateTo ||
+      urlFilters.hasEvidence
+    )
+
+    if (hasFilters) {
+      if (urlFilters.q) setSearchTerm(urlFilters.q)
+      if (urlFilters.status?.length) setStatusFilter(urlFilters.status)
+      if (urlFilters.priority?.length) setPriorityFilter(urlFilters.priority)
+      if (
+        urlFilters.severity?.length ||
+        urlFilters.assignee?.length ||
+        urlFilters.project?.length ||
+        urlFilters.dateType ||
+        urlFilters.dateFrom ||
+        urlFilters.dateTo ||
+        urlFilters.hasEvidence
+      ) {
+        setAdvancedFilters({
+          severity: urlFilters.severity,
+          assignee: urlFilters.assignee,
+          project: urlFilters.project,
+          dateType: urlFilters.dateType,
+          dateFrom: urlFilters.dateFrom,
+          dateTo: urlFilters.dateTo,
+          hasEvidence: urlFilters.hasEvidence,
+        })
+      }
+    }
+    // Disabling ESLint rule: only hydrate once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const searchQuery = useMemo(
     () => ({
@@ -400,6 +446,9 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
                 setPriorityFilter([])
                 setAdvancedFilters({})
                 setIsOpen(false)
+                // FASE 14.1.2: Clear URL when clearing all filters
+                clearUrl()
+                setPage(1)
               }}
               className="absolute right-2 top-1/2 flex min-h-[44px] min-w-[44px] -translate-y-1/2 items-center justify-center text-[#65766e] transition-colors [@media(hover:hover)]:hover:text-[#052b20]"
             >
@@ -573,6 +622,9 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
               setAdvancedFilters(filters)
               setAdvancedPanelOpen(false)
               setIsOpen(true)
+              // FASE 14.1.2: Sync to URL after applying filters
+              syncToUrl(filters, searchTerm, statusFilter, priorityFilter)
+              setPage(1)  // Reset pagination when filters change
             }}
             onSaveAsNamedFilter={async (name, filters) => {
               await savedFilters.saveFilter(name, {
