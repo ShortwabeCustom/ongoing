@@ -60,11 +60,9 @@ export function DatePicker({ value, onChange, label, disabled = false }: DatePic
   useEffect(() => {
     if (isOpen && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect()
-      const calendarWidth = 320
-      const left = Math.max(0, rect.left + window.scrollX - (calendarWidth - rect.width) / 2)
       setPosition({
-        top: rect.bottom + window.scrollY + 6,
-        left,
+        top: rect.bottom + window.scrollY + 2,
+        left: rect.left + window.scrollX,
       })
     }
   }, [isOpen])
@@ -190,15 +188,16 @@ export function DatePicker({ value, onChange, label, disabled = false }: DatePic
         </div>
       </button>
 
-      {isOpen && typeof window !== 'undefined' && createPortal(
+      {isOpen && typeof window !== 'undefined' && buttonRef.current && createPortal(
         <div
           style={{
             position: 'fixed',
             top: `${position.top}px`,
             left: `${position.left}px`,
+            width: `${buttonRef.current.offsetWidth}px`,
             zIndex: 9999,
           }}
-          className="bg-white rounded-lg border border-[#dbe4dd] shadow-lg p-4 w-80"
+          className="bg-white rounded-lg border border-[#dbe4dd] shadow-lg p-4"
           onMouseDown={(e) => e.stopPropagation()}
         >
           {renderCalendar()}
