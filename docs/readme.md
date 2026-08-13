@@ -93,7 +93,16 @@ docs/
 │
 ├── backend/                        # Backend technical docs
 ├── frontend/                       # Frontend technical docs
-├── ARCHIVE/                        # Histórico (FASE 1-12)
+│
+├── ARCHIVE/                        # Historical documentation
+│   ├── FASE summaries (FASE_1_SUMMARY, etc)
+│   ├── BUGFIX_SUMMARY.md          # Session 4 critical bug fix
+│   ├── CHANGELOG_*.md             # Feature changelogs
+│   └── session-reports/           # Session deliverables
+│       ├── AUDIT_IMPORT_*.md
+│       ├── ETL_IMPORT_*.md
+│       └── IMPORT_COMPLETION_*.md
+│
 └── reference/                      # Additional resources
 ```
 
@@ -189,15 +198,21 @@ git log --oneline -10
 
 ## 📚 Documentación Antigua (Archivada)
 
-Los documentos de FASE 1-8 se encuentran en **[ARCHIVE/](./archive/)**:
-- `FASE_1_SUMMARY.md`
-- `FASE4_COMPLETE.md`
-- `FASE7_COMPLETION.md`
-- `FASE8_IMPLEMENTATION_GUIDE.md`
-- `SESSION_2026_08_09_SUMMARY.md`
-- y más...
+**FASE 1-12 historical docs**: [ARCHIVE/](./archive/)
+- FASE summaries, implementation guides, session summaries
+- Consulta solo si necesitas contexto histórico
 
-**Acceso**: Solo consulta si necesitas referencia histórica o contexto de decisiones antiguas.
+**Session Reports**: [ARCHIVE/session-reports/](./archive/session-reports/)
+- `AUDIT_IMPORT_PHASE_1_3.md` — Import validation audit
+- `ETL_IMPORT_REPORT_2026-08-13.md` — Session 6 ETL import (205 findings)
+- `IMPORT_COMPLETION_REPORT.md` — Import operations final status
+
+**Technical History**: [ARCHIVE/](./archive/)
+- `BUGFIX_SUMMARY.md` — Session 4 critical bug fix (React #441)
+- `CHANGELOG_DYNAMIC_REPORT.md` — Session 5 public report feature
+- `CHANGELOG_FASE_3_4.md` — FASE 3-4 changes
+
+**Acceso**: Consulta solo si necesitas referencia histórica o contexto de decisiones antiguas.
 
 ---
 

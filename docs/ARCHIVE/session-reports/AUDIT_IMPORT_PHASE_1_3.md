@@ -1,3 +1,8 @@
+---
+title: Import Audit Phase 1-3
+purpose: Audit results of ETL import validation
+---
+
 # 🔍 AUDITORÍA DE IMPORTACIÓN: FASE 1-3
 
 **Fecha**: 2026-08-12  

@@ -1,3 +1,8 @@
+---
+title: ETL Import Report (2026-08-13)
+purpose: Session 6 ETL import of 205 findings from Excel
+---
+
 # ETL IMPORT REPORT — Session 6
 
 **Project**: Pruebas María 2.0 (Evidence Management Platform)  

@@ -1,9 +1,14 @@
+---
+title: UI Importer Compatibility Guide
+purpose: Verify compatibility between manual import scripts and the UI importer
+audience: DevOps, QA, backend developers
+time: ⏱️ 10 minutes
+---
+
 # 🔄 Compatibilidad: Scripts Manuales vs UI Importer
 
 **Fecha**: 2026-08-12  
-**Status**: ✅ **100% Compatible**  
-
----
+**Status**: ✅ **100% Compatible**
 
 ## 📊 Resumen
 

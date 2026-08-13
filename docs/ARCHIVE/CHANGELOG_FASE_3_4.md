@@ -1,3 +1,8 @@
+---
+title: FASE 3-4 Changelog
+purpose: Historical changes from FASE 3-4 phases
+---
+
 # Changelog — FASE 3-4: Search UI Optimization & Accessibility
 
 **Date**: 2026-08-12  

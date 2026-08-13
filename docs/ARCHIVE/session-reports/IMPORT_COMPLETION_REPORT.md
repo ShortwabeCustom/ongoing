@@ -1,3 +1,8 @@
+---
+title: Import Completion Report
+purpose: Final status of import operations
+---
+
 # ✅ IMPORTACIÓN XLSX COMPLETADA - REPORTE FINAL
 
 **Fecha**: 12 de agosto, 2026  

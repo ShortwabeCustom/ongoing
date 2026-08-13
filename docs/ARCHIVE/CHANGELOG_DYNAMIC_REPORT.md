@@ -1,3 +1,8 @@
+---
+title: Dynamic Report Changelog
+purpose: Changes from Session 5: static app.html → live database queries
+---
+
 # Changelog — Dynamic Public Report (Session 6)
 
 **Date**: 2026-08-13  
