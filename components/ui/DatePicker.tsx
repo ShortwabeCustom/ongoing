@@ -60,9 +60,11 @@ export function DatePicker({ value, onChange, label, disabled = false }: DatePic
   useEffect(() => {
     if (isOpen && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect()
+      const calendarWidth = 320
+      const left = Math.max(0, rect.left + window.scrollX - (calendarWidth - rect.width) / 2)
       setPosition({
-        top: rect.bottom + window.scrollY + 8,
-        left: rect.left + window.scrollX,
+        top: rect.bottom + window.scrollY + 6,
+        left,
       })
     }
   }, [isOpen])
