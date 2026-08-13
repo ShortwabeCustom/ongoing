@@ -182,12 +182,12 @@ export function NewFindingDialog({
   }
 
   return (
-    <div className="fixed inset-0 z-[70] flex items-center justify-end bg-[#031b14]/58 backdrop-blur-[2px] animate-in fade-in-0 duration-300">
+    <div className="fixed inset-0 z-[70] flex items-stretch justify-end bg-[#031b14]/58 backdrop-blur-[2px] animate-in fade-in-0 duration-300">
       <form
         onSubmit={handleSubmit}
-        className="max-h-screen w-full max-w-2xl overflow-y-auto border-l border-[#dbe4dd] bg-white shadow-2xl animate-in slide-in-from-right-0 duration-300"
+        className="h-screen w-full max-w-2xl overflow-y-auto border-l border-[#dbe4dd] bg-white shadow-2xl animate-in slide-in-from-right-0 duration-300 flex flex-col"
       >
-        <div className="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-[#dbe4dd] bg-white px-5 py-4">
+        <div className="sticky top-0 z-10 flex shrink-0 items-start justify-between gap-4 border-b border-[#dbe4dd] bg-white px-5 py-4">
           <div>
             <h2 className="text-lg font-semibold text-[#17251f]">Nuevo hallazgo</h2>
             <p className="mt-1 text-sm text-[#65766e]">
@@ -204,7 +204,7 @@ export function NewFindingDialog({
           </button>
         </div>
 
-        <div className="space-y-5 px-5 py-5">
+        <div className="flex-1 space-y-5 overflow-y-auto px-5 py-5">
           {error && (
             <p className="rounded-lg border border-[#f6b5aa] bg-[#fff1ee] px-3 py-2 text-sm text-[#9b321f]">
               {error}
@@ -363,7 +363,7 @@ export function NewFindingDialog({
           </div>
         </div>
 
-        <div className="sticky bottom-0 flex flex-col-reverse gap-2 border-t border-[#dbe4dd] bg-white px-5 py-4 sm:flex-row sm:justify-end">
+        <div className="sticky bottom-0 shrink-0 flex flex-col-reverse gap-2 border-t border-[#dbe4dd] bg-white px-5 py-4 sm:flex-row sm:justify-end">
           <button
             type="button"
             onClick={close}
