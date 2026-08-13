@@ -176,6 +176,7 @@ export function DatePicker({ value, onChange, label, disabled = false }: DatePic
 
       <button
         ref={buttonRef}
+        type="button"
         onClick={() => setIsOpen(!isOpen)}
         onMouseDown={(e) => e.preventDefault()}
         disabled={disabled}
