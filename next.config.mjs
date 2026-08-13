@@ -6,23 +6,10 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  onDemandEntries: {
-    maxInactiveAge: 60 * 60 * 1000,
-    pagesBufferLength: 5,
-  },
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.optimization.splitChunks.cacheGroups = {
-        ...config.optimization.splitChunks.cacheGroups,
-        default: false,
-        vendors: false,
-      }
-    }
-    return config
-  },
   ...(process.env.NODE_ENV === 'production' && {
-    experimental: {
-      useTypeScriptCli: false,
+    onDemandEntries: {
+      maxInactiveAge: 60 * 60 * 1000,
+      pagesBufferLength: 5,
     },
   }),
   async rewrites() {
