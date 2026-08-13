@@ -125,7 +125,7 @@ function getUrlExpiryDate() {
   return new Date(Date.now() + STORAGE_CONFIG.SIGNED_URL_EXPIRY * 1000)
 }
 
-function isLegacyStorageKey(storageKey: string) {
+export function isLegacyStorageKey(storageKey: string) {
   return storageKey.startsWith('legacy/')
 }
 
