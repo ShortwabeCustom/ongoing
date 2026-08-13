@@ -47,7 +47,7 @@ export const FindingsQuerySchema = z.object({
     .transform(commaSeparatedArray)
     .transform((val) => val?.map((a) => a.toUpperCase()))
     .refine(
-      (val) => !val || val.every((tag) => ['UI', 'UX', 'COPY'].includes(tag)),
+      (val) => !val || val.every((tag) => ['UI', 'UX', 'COPY', 'DEV'].includes(tag)),
       'Invalid area value',
     ),
 
@@ -67,7 +67,7 @@ export const FindingsQuerySchema = z.object({
     .transform(commaSeparatedArray)
     .transform((val) => val?.map((item) => item.toUpperCase()))
     .refine(
-      (val) => !val || val.every((item) => ['UI', 'UX', 'COPY'].includes(item)),
+      (val) => !val || val.every((item) => ['UI', 'UX', 'COPY', 'DEV'].includes(item)),
       'Invalid experience tag value',
     ),
 

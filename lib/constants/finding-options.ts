@@ -17,7 +17,7 @@ export const FINDING_SEVERITY_OPTIONS = ['COSMETIC', 'MINOR', 'MAJOR', 'BLOCKER'
 
 export const INCIDENCE_TYPE_OPTIONS = ['DESIGN', 'FUNCTIONALITY', 'BUSINESS_RULE', 'COPY'] as const
 
-export const EXPERIENCE_TAG_OPTIONS = ['UI', 'UX', 'COPY'] as const
+export const EXPERIENCE_TAG_OPTIONS = ['UI', 'UX', 'COPY', 'DEV'] as const
 
 // Spanish labels
 export const STATUS_LABELS_ES: Record<string, string> = {
@@ -56,6 +56,7 @@ export const EXPERIENCE_TAG_LABELS_ES: Record<string, string> = {
   UI: 'UI',
   UX: 'UX',
   COPY: 'Copy',
+  DEV: 'Dev',
 }
 
 // Tailwind color classes for badges

@@ -13,7 +13,7 @@ export type FindingStatus =
   | 'BLOCKED'
   | 'REOPENED'
 
-export type ExperienceTag = 'UI' | 'UX' | 'COPY'
+export type ExperienceTag = 'UI' | 'UX' | 'COPY' | 'DEV'
 export type IncidenceType = 'DESIGN' | 'FUNCTIONALITY' | 'BUSINESS_RULE' | 'COPY'
 
 export interface NormalizedEvidenceRef {
@@ -84,6 +84,7 @@ const AREA_MAP: Record<
   ui: { incidenceTypes: ['DESIGN'], experienceTags: ['UI'] },
   ux: { incidenceTypes: ['DESIGN'], experienceTags: ['UX'] },
   copy: { incidenceTypes: ['COPY'], experienceTags: ['COPY'] },
+  dev: { incidenceTypes: ['FUNCTIONALITY'], experienceTags: ['DEV'] },
   funcionalidad: { incidenceTypes: ['FUNCTIONALITY'], experienceTags: [] },
   functionality: { incidenceTypes: ['FUNCTIONALITY'], experienceTags: [] },
   backend: {
