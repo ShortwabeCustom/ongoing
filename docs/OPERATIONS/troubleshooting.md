@@ -1,3 +1,10 @@
+---
+title: Troubleshooting
+purpose: Common issues and solutions
+audience: All developers
+time: ⏱️ varies
+---
+
 # 🐛 Troubleshooting Guide
 
 **Objetivo**: Resolver problemas comunes de setup y desarrollo

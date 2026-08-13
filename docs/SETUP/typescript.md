@@ -1,3 +1,10 @@
+---
+title: TypeScript Guide
+purpose: Type patterns & conventions
+audience: All developers
+time: ⏱️ 15 minutes
+---
+
 # 📘 TypeScript Patterns - Pruebas María 2.0
 
 Patrones y mejores prácticas de TypeScript en el proyecto.

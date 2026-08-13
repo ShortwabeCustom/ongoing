@@ -1,3 +1,10 @@
+---
+title: GitHub Secrets Setup
+purpose: Configure CI/CD secrets for deployment
+audience: DevOps & maintainers
+time: ⏱️ 5 minutes
+---
+
 # 🔐 GitHub Secrets Setup — Pruebas María 2.0
 
 **URL**: https://github.com/torrax/pruebas-maria/settings/secrets/actions

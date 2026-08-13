@@ -1,3 +1,10 @@
+---
+title: Deployment Guide
+purpose: How to deploy changes to production
+audience: DevOps & release managers
+time: ⏱️ 30 minutes
+---
+
 # 🚀 Deployment a Producción
 
 Guía para compilar y desplegar **Pruebas María 2.0** a producción.

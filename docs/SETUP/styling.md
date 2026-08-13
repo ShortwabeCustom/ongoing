@@ -1,3 +1,10 @@
+---
+title: Styling Guide
+purpose: Tailwind CSS patterns & design tokens
+audience: Frontend developers
+time: ⏱️ 10 minutes
+---
+
 # 🎨 Sistema de Estilos - Tailwind CSS
 
 Guía completa para trabajar con Tailwind CSS v4.3.3 en el proyecto.

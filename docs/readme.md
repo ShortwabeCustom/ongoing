@@ -17,9 +17,16 @@
 - **ROADMAP** 🛣️ [Próximas Fases](./phases/roadmap.md) — FASE 15+ planeado
 
 ### 🔧 Guías Prácticas
-- **[RBAC Testing Guide](./guides/rbac_testing.md)** — 5 endpoints + checklist de seguridad
-- **[Development Setup](./guides/development_setup.md)** — PostgreSQL, env vars, seeds
-- **[Troubleshooting](./guides/troubleshooting.md)** — npm, build, database issues
+
+**Getting Started (SETUP)**
+- **[Quick Start](./SETUP/quick_start.md)** — Setup en 5 pasos (15 min)
+- **[Development Setup](./SETUP/development_setup.md)** — PostgreSQL, env vars, seeds
+
+**Operations (OPERATIONS)**
+- **[Deployment Guide](./OPERATIONS/deployment.md)** — Deploy a producción
+- **[Production Runbook](./OPERATIONS/production_runbook.md)** — Incident response
+- **[RBAC Testing](./OPERATIONS/rbac_testing.md)** — Testing de permisos
+- **[Troubleshooting](./OPERATIONS/troubleshooting.md)** — Resolución de problemas
 
 ---
 
@@ -54,40 +61,40 @@
 | 12 | Advanced Search (Elasticsearch) | 32fa909 | Ago 10 |
 | 13 | Mobile Optimization (Touch-first) | 6739ab5 | Ago 10 |
 
-### Session 2: Deployment 🚀
-
-**Objetivo**: Desplegar a producción
-
-**Documentación**: Ver [doc./session_2/](./session_2/)
-- `MASTER_PROMPT_SESSION_2.md` — Plan de deployment 4 fases
-- `NEXT_SESSION_CHECKLIST.md` — Checklist pre-deploy
-
 ---
 
 ## 🗂️ Estructura de Documentación
 
 ```
 docs/
-├── README.md                    # ← Estás aquí (índice maestro)
-├── QUICK_START.md              # Setup 5 pasos + desarrollo
-├── FINAL_DEPLOYMENT_GUIDE.md   # Guía completa deployment
-├── ARCHITECTURE.md             # Arquitectura del sistema
-├── SECURITY_CHECKLIST.md       # Checklist de seguridad
-├── PRODUCTION_RUNBOOK.md       # Playbook incident response
-├── PRODUCTION_STATUS.md        # Status de producción
-├── RESUMEN_AVANCES_2026-08-11.md # Estado actual (completo)
-├── SESSION_2/
-│   ├── MASTER_PROMPT_SESSION_2.md
-│   └── NEXT_SESSION_CHECKLIST.md
+├── README.md                       # ← Estás aquí (índice maestro)
+│
+├── SETUP/                          # Getting started & development
+│   ├── quick_start.md             # Setup en 5 pasos (15 min)
+│   ├── development_setup.md       # Configuración local
+│   ├── github_secrets_setup.md    # CI/CD secrets
+│   ├── components.md              # Component reference
+│   ├── routing.md                 # Next.js routing patterns
+│   ├── styling.md                 # Tailwind CSS patterns
+│   └── typescript.md              # TypeScript conventions
+│
+├── OPERATIONS/                     # Running & maintaining
+│   ├── deployment.md              # Deploy a producción
+│   ├── production_status.md       # Monitor system health
+│   ├── production_runbook.md      # Incident response playbook
+│   ├── troubleshooting.md         # Troubleshooting guide
+│   ├── rbac_testing.md            # RBAC validation
+│   └── security_checklist.md      # Pre-deploy security checks
+│
 ├── PHASES/
-│   ├── FASE_13.md             # Mobile Optimization ✅
-│   ├── FASE_14.md             # Advanced Filters ✅
-│   └── ROADMAP.md             # Próximas fases
-├── GUIDES/
-│   ├── RBAC_TESTING.md        # Testing con 5 roles
-│   ├── DEVELOPMENT_SETUP.md   # Setup local
-│   └── TROUBLESHOOTING.md     # Resolución de problemas
-└── ARCHIVE/                   # Histórico (FASE 1-13, etc)
+│   ├── FASE_13.md                 # Mobile Optimization ✅
+│   ├── FASE_14.md                 # Advanced Filters ✅
+│   └── ROADMAP.md                 # Próximas fases
+│
+├── backend/                        # Backend technical docs
+├── frontend/                       # Frontend technical docs
+├── ARCHIVE/                        # Histórico (FASE 1-12)
+└── reference/                      # Additional resources
 ```
 
 ---
@@ -148,8 +155,8 @@ npm run dev
 
 ### 1️⃣ Lee Primero
 ```markdown
-- doc./quick_start.md           (5 min)
-- doc./phases/fase_14.md        (10 min si es FASE 14)
+- SETUP/quick_start.md           (15 min)
+- phases/fase_14.md              (10 min si es FASE 14)
 ```
 
 ### 2️⃣ Verifica Setup
@@ -217,21 +224,14 @@ Los documentos de FASE 1-8 se encuentran en **[ARCHIVE/](./archive/)**:
 
 ---
 
-## ✨ Session 2: Deployment
+## 🚀 Próximas Acciones
 
-**FASE 14 está COMPLETA. Próximo paso: Desplegar a producción.**
+**FASE 14 está COMPLETA ✅**
 
-**Pasos**:
-1. Obtener credenciales Cloudflare R2
-2. Actualizar GitHub Secrets (3-5 valores)
-3. Ejecutar deployment (Docker/PM2/Vercel)
-4. Verificar en producción
-
-**Duración estimada**: 90 min
-
-**Documentos clave**:
-- [MASTER_PROMPT_SESSION_2.md](./session_2/MASTER_PROMPT_SESSION_2.md) — Plan 4 fases
-- [FINAL_DEPLOYMENT_GUIDE.md](./final_deployment_guide.md) — Guía paso a paso
+**Para desplegar cambios**:
+- Revisa: [OPERATIONS/deployment.md](./OPERATIONS/deployment.md)
+- Validate: [OPERATIONS/security_checklist.md](./OPERATIONS/security_checklist.md)
+- Monitor: [OPERATIONS/production_status.md](./OPERATIONS/production_status.md)
 
 ---
 
@@ -243,6 +243,6 @@ Los documentos de FASE 1-8 se encuentran en **[ARCHIVE/](./archive/)**:
 
 ---
 
-**Documentación optimizada**: 2026-08-11  
-**Última revisión**: 2026-08-11  
-**Estado**: FASE 14 ✅ | Production Ready 🚀
+**Documentación reorganizada**: 2026-08-13 (Option A: DDD-based structure)
+**Última revisión**: 2026-08-13  
+**Estado**: FASE 14 ✅ | Production Ready 🚀 | Documentation refactored

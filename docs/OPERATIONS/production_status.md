@@ -1,3 +1,10 @@
+---
+title: Production Status
+purpose: Monitor system health & deployment status
+audience: DevOps & release managers
+time: ⏱️ 5 minutes
+---
+
 # 🚀 Pruebas María 2.0 — Production Status Report
 
 **Fecha**: 2026-08-11  

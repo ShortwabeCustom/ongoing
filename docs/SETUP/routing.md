@@ -1,3 +1,10 @@
+---
+title: Routing Guide
+purpose: Next.js routing patterns & conventions
+audience: Frontend developers
+time: ⏱️ 10 minutes
+---
+
 # 🛣️ Routing y Navegación - Next.js App Router
 
 Guía completa para trabajar con rutas en Next.js 16 (App Router).

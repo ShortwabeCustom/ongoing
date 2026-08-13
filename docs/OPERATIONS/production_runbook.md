@@ -1,3 +1,10 @@
+---
+title: Production Runbook
+purpose: Incident response & maintenance procedures
+audience: On-call engineers
+time: ⏱️ varies
+---
+
 # 📖 Pruebas María 2.0 — Production Runbook
 
 **Versión**: FASE 14 | **Última actualización**: 2026-08-11

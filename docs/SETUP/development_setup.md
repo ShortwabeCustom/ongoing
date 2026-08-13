@@ -1,3 +1,10 @@
+---
+title: Development Setup
+purpose: Configure local environment for development
+audience: Backend & Frontend developers
+time: ⏱️ 20 minutes
+---
+
 # 🛠️ Development Setup Guide
 
 **Duración**: 30 minutos | **Objetivo**: Setup local completo

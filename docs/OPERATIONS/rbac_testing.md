@@ -1,3 +1,10 @@
+---
+title: RBAC Testing Guide
+purpose: Test role-based access control
+audience: QA & backend developers
+time: ⏱️ 20 minutes
+---
+
 # 🔐 RBAC Testing Guide
 
 **Duración**: 15-20 minutos | **Objetivo**: Validar RBAC en 5 endpoints

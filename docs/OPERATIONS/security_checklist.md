@@ -1,3 +1,10 @@
+---
+title: Security Checklist
+purpose: Pre-deployment security validations
+audience: DevOps & security team
+time: ⏱️ 15 minutes
+---
+
 # 🔒 Pruebas María 2.0 — Security Checklist
 
 **Versión**: FASE 14 | **Última actualización**: 2026-08-11

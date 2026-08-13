@@ -1,9 +1,13 @@
+---
+title: Quick Start
+purpose: Get the project running in 5 steps
+audience: All developers (new & returning)
+time: ⏱️ 15 minutes
+---
+
 # 🚀 QUICK START — Pruebas María 2.0
 
-**Última actualización**: 2026-08-10  
-**Para**: Nuevas sesiones | Setup en 5 pasos | Próximos pasos
-
----
+**Última actualización**: 2026-08-10
 
 ## ⚡ Setup en 5 Pasos (15 min)
 

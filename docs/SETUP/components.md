@@ -1,3 +1,10 @@
+---
+title: Component Reference
+purpose: Guide to reusable React components
+audience: Frontend developers
+time: ⏱️ 15 minutes
+---
+
 # 🧩 Crear Componentes - Pruebas María 2.0
 
 Esta guía te enseña cómo crear componentes reutilizables de alta calidad.
