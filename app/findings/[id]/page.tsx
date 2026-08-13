@@ -5,6 +5,7 @@ import { getSession } from '@/lib/auth/lucia'
 import { FindingService } from '@/lib/services/finding-service'
 import { FindingDetailWithEvidence } from '@/components/finding/FindingDetailWithEvidence'
 import { FindingStatusActions } from '@/components/finding/FindingStatusActions'
+import { ActivityLog } from '@/components/finding/ActivityLog'
 import { ResolutionWorkflow, ValidationCheckpoint, AuditTrailViewer } from '@/components/workflow'
 import { AppShell } from '@/components/app/AppShell'
 import {
@@ -111,6 +112,11 @@ export default async function FindingDetailPage({ params }: PageProps) {
     >
       <div className="space-y-6">
         <FindingDetailWithEvidence finding={finding as any} />
+
+        <section className="pm-card p-6 md:p-8">
+          <h2 className="mb-4 text-xl font-bold text-[#17251f]">📋 Historial de actividades</h2>
+          <ActivityLog findingId={finding.id} />
+        </section>
 
         <section className="pm-card p-6 md:p-8">
           <ResolutionWorkflow finding={finding as any} />
