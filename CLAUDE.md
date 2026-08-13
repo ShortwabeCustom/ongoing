@@ -37,6 +37,7 @@
 |---------|-----------|
 | `/docs/PHASES/` | FASE 13, FASE 14, ROADMAP futuro |
 | `/docs/GUIDES/` | RBAC Testing, Setup, Troubleshooting |
+| `/docs/OPERATIONS/` | **Deployment, Production mode, Incidents** ⚠️ |
 | `/docs/ARCHIVE/` | FASE 1-8 (referencia histórica) |
 
 ---
@@ -79,6 +80,29 @@ git add .
 git commit -m "mensaje"
 git push
 ```
+
+### Production Deployment ⚠️ CRITICAL
+
+**IMPORTANTE**: Leer ANTES de cualquier deployment a producción.
+
+**Quick Start**:
+```bash
+npm run build          # Verificar build
+pm2 start ecosystem.config.js  # START con ecosystem config
+pm2 save              # Guardar estado
+```
+
+**Verification**:
+```bash
+# Verificar chunks (CRITICAL CHECK)
+bash -c 'ACTUAL=$(ls .next/static/chunks/app/findings/page-*.js | sed "s/.*page-//" | sed "s/.js//"); SERVED=$(curl -s https://uix.torrax.cloud/findings 2>/dev/null | grep -o "page-[a-f0-9]*\.js" | sed "s/.js//" | head -1); [ "$ACTUAL" = "$SERVED" ] && echo "✅ OK" || echo "❌ MISMATCH"'
+```
+
+**⚠️ CRITICAL RULES**:
+- ✅ SIEMPRE usar `ecosystem.config.js` para iniciar
+- ❌ NUNCA usar `npm run dev` en producción
+- ✅ SIEMPRE verificar chunks match después de restart
+- 📖 Ver: [docs/OPERATIONS/DEPLOYMENT_CHECKLIST.md](./docs/OPERATIONS/DEPLOYMENT_CHECKLIST.md)
 
 ---
 
@@ -169,9 +193,17 @@ git push
 - [docs/GUIDES/DEVELOPMENT_SETUP.md](./docs/GUIDES/DEVELOPMENT_SETUP.md) — Setup detallado
 - [docs/GUIDES/TROUBLESHOOTING.md](./docs/GUIDES/TROUBLESHOOTING.md) — Resolver problemas
 
+### 🚨 Deployment & Operations (CRITICAL)
+
+- [docs/OPERATIONS/DEPLOYMENT_CHECKLIST.md](./docs/OPERATIONS/DEPLOYMENT_CHECKLIST.md) — ⭐ **LEE ANTES DE DEPLOYEAR**
+- [docs/OPERATIONS/PRODUCTION_MODE_DEPLOYMENT.md](./docs/OPERATIONS/PRODUCTION_MODE_DEPLOYMENT.md) — Incident report & prevention
+- [ecosystem.config.js](./ecosystem.config.js) — PM2 production config (REQUIRED)
+
 ---
 
-**¿Listo?** → Abre [docs/QUICK_START.md](./docs/QUICK_START.md)
+**¿Listo para deployear?** → Lee [docs/OPERATIONS/DEPLOYMENT_CHECKLIST.md](./docs/OPERATIONS/DEPLOYMENT_CHECKLIST.md) primero
+
+**¿Primer setup?** → Abre [docs/QUICK_START.md](./docs/QUICK_START.md)
 
 <!-- BEGIN:nextjs-agent-rules -->
 
