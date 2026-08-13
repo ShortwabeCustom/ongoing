@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react'
 
 interface DatePickerProps {
@@ -39,7 +40,9 @@ export function DatePicker({ value, onChange, label, disabled = false }: DatePic
     const date = value ? new Date(value + 'T00:00:00') : new Date()
     return new Date(date.getFullYear(), date.getMonth(), 1)
   })
+  const [position, setPosition] = useState({ top: 0, left: 0 })
   const containerRef = useRef<HTMLDivElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -51,6 +54,16 @@ export function DatePicker({ value, onChange, label, disabled = false }: DatePic
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside)
       return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen])
+
+  useEffect(() => {
+    if (isOpen && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect()
+      setPosition({
+        top: rect.bottom + window.scrollY + 8,
+        left: rect.left + window.scrollX,
+      })
     }
   }, [isOpen])
 
@@ -160,6 +173,7 @@ export function DatePicker({ value, onChange, label, disabled = false }: DatePic
       )}
 
       <button
+        ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
         disabled={disabled}
         className="pm-input h-11 w-full px-3 text-sm font-normal focus:outline-none focus:ring-2 focus:ring-[#00a85a] flex items-center justify-between disabled:opacity-50 disabled:cursor-not-allowed"
@@ -172,10 +186,19 @@ export function DatePicker({ value, onChange, label, disabled = false }: DatePic
         </div>
       </button>
 
-      {isOpen && (
-        <div className="absolute top-full left-0 mt-2 z-50 bg-white rounded-lg border border-[#dbe4dd] shadow-lg p-4 w-80">
+      {isOpen && typeof window !== 'undefined' && createPortal(
+        <div
+          style={{
+            position: 'fixed',
+            top: `${position.top}px`,
+            left: `${position.left}px`,
+            zIndex: 9999,
+          }}
+          className="bg-white rounded-lg border border-[#dbe4dd] shadow-lg p-4 w-80"
+        >
           {renderCalendar()}
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   )
