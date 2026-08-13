@@ -6,6 +6,7 @@ import { AdvancedFilterValues, LookupOption } from '@/lib/types/search'
 import { FINDING_SEVERITY_OPTIONS, SEVERITY_LABELS_ES } from '@/lib/constants/finding-options'
 import { DateTypeSelector } from './DateTypeSelector'
 import { DatePresetButtons, getDateRangeForPreset } from './DatePresetButtons'
+import { dateStringToUTCRange } from '@/lib/utils/timezone'
 
 interface AdvancedFilterPanelProps {
   open: boolean
@@ -267,12 +268,18 @@ export function AdvancedFilterPanel({
                       onChange={(e) => {
                         const newDate = e.target.value
                         if (newDate) {
-                          // FASE 14.1.2: Parse date as UTC (YYYY-MM-DD → YYYY-MM-DDTXX:00:00.000Z)
-                          setDraft((prev) => ({
-                            ...prev,
-                            dateFrom: `${newDate}T00:00:00.000Z`,
-                            datePreset: 'custom',
-                          }))
+                          // FASE 14.1.3: Parse date as America/Mexico_City timezone
+                          // Convert to UTC range accounting for Mexico offset
+                          try {
+                            const [startUTC] = dateStringToUTCRange(newDate, 'America/Mexico_City')
+                            setDraft((prev) => ({
+                              ...prev,
+                              dateFrom: startUTC,
+                              datePreset: 'custom',
+                            }))
+                          } catch (err) {
+                            console.error('Invalid date format:', err)
+                          }
                         }
                       }}
                       className="w-full px-3 py-2 border border-[#dbe4dd] rounded text-sm"
@@ -286,12 +293,18 @@ export function AdvancedFilterPanel({
                       onChange={(e) => {
                         const newDate = e.target.value
                         if (newDate) {
-                          // FASE 14.1.2: Parse date as UTC (YYYY-MM-DD → YYYY-MM-DDTXX:59:59.999Z)
-                          setDraft((prev) => ({
-                            ...prev,
-                            dateTo: `${newDate}T23:59:59.999Z`,
-                            datePreset: 'custom',
-                          }))
+                          // FASE 14.1.3: Parse date as America/Mexico_City timezone
+                          // Convert to UTC range accounting for Mexico offset
+                          try {
+                            const [, endUTC] = dateStringToUTCRange(newDate, 'America/Mexico_City')
+                            setDraft((prev) => ({
+                              ...prev,
+                              dateTo: endUTC,
+                              datePreset: 'custom',
+                            }))
+                          } catch (err) {
+                            console.error('Invalid date format:', err)
+                          }
                         }
                       }}
                       className="w-full px-3 py-2 border border-[#dbe4dd] rounded text-sm"

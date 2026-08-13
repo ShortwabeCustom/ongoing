@@ -61,40 +61,54 @@ export function DatePresetButtons({
 // Dates are calculated in America/Mexico_City timezone (product timezone)
 // Then converted to UTC for API/storage
 // No hardcoded offsets; uses Intl.DateTimeFormat for accurate handling
-import { getTodayInTimezone, formatDayStartAsUTC, formatDayEndAsUTC } from '@/lib/utils/timezone'
+import { getTodayInTimezone, dateStringToUTCRange } from '@/lib/utils/timezone'
 
 export function getDateRangeForPreset(
   preset: DatePreset,
   timezone = 'America/Mexico_City'
 ): [string, string] {
-  // Get today's date in the product timezone
-  const today = getTodayInTimezone(timezone)
+  // Get today's date in the product timezone (returns UTC equivalent)
+  const todayUtc = getTodayInTimezone(timezone)
+
+  // Extract the calendar date from the UTC date
+  // (This is the date in the timezone, not UTC)
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: timezone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  })
+  const parts = formatter.formatToParts(todayUtc)
+  const year = parseInt(parts.find(p => p.type === 'year')?.value || '0')
+  const month = String(parts.find(p => p.type === 'month')?.value || '01')
+  const day = String(parts.find(p => p.type === 'day')?.value || '01')
+
+  const todayString = `${year}-${month}-${day}`
+
+  function dateStringMinusDays(dateStr: string, days: number): string {
+    const d = new Date(dateStr)
+    d.setDate(d.getDate() - days)
+    return d.toISOString().split('T')[0]
+  }
 
   switch (preset) {
     case 'today': {
-      const start = formatDayStartAsUTC(today)
-      const end = formatDayEndAsUTC(today)
-      return [start, end]
+      return dateStringToUTCRange(todayString, timezone)
     }
     case 'yesterday': {
-      const yesterday = new Date(today)
-      yesterday.setDate(yesterday.getDate() - 1)
-      const start = formatDayStartAsUTC(yesterday)
-      const end = formatDayEndAsUTC(yesterday)
-      return [start, end]
+      const yesterdayString = dateStringMinusDays(todayString, 1)
+      return dateStringToUTCRange(yesterdayString, timezone)
     }
     case 'last7days': {
-      const sevenDaysAgo = new Date(today)
-      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6)
-      const start = formatDayStartAsUTC(sevenDaysAgo)
-      const end = formatDayEndAsUTC(today)
+      const sevenDaysAgoString = dateStringMinusDays(todayString, 6)
+      const [start] = dateStringToUTCRange(sevenDaysAgoString, timezone)
+      const [, end] = dateStringToUTCRange(todayString, timezone)
       return [start, end]
     }
     case 'last30days': {
-      const thirtyDaysAgo = new Date(today)
-      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 29)
-      const start = formatDayStartAsUTC(thirtyDaysAgo)
-      const end = formatDayEndAsUTC(today)
+      const thirtyDaysAgoString = dateStringMinusDays(todayString, 29)
+      const [start] = dateStringToUTCRange(thirtyDaysAgoString, timezone)
+      const [, end] = dateStringToUTCRange(todayString, timezone)
       return [start, end]
     }
     case 'custom':
