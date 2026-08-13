@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { X, ChevronDown, Save } from 'lucide-react'
 import { AdvancedFilterValues, LookupOption } from '@/lib/types/search'
 import { FINDING_SEVERITY_OPTIONS, SEVERITY_LABELS_ES } from '@/lib/constants/finding-options'
+import { CreatedDateFilter } from './CreatedDateFilter'
 
 interface AdvancedFilterPanelProps {
   open: boolean
@@ -231,9 +232,29 @@ export function AdvancedFilterPanel({
               </div>
             </fieldset>
 
-            {/* Date Range */}
+            {/* Created Date - Test Sessions */}
+            <CreatedDateFilter
+              selectedDate={draft.dateFrom ? draft.dateFrom.split('T')[0] : undefined}
+              onSelectDate={(date) => {
+                // Set both dateFrom and dateTo to the same date to filter exactly that day
+                setDraft((prev) => ({
+                  ...prev,
+                  dateFrom: date,
+                  dateTo: date,
+                }))
+              }}
+              onClearDate={() => {
+                setDraft((prev) => ({
+                  ...prev,
+                  dateFrom: undefined,
+                  dateTo: undefined,
+                }))
+              }}
+            />
+
+            {/* Date Range (alternative) */}
             <fieldset>
-              <legend className="text-sm font-medium text-slate-900 mb-2">Rango de fechas</legend>
+              <legend className="text-sm font-medium text-slate-900 mb-2">Rango de fechas personalizado</legend>
               <div className="space-y-2">
                 <div>
                   <label className="text-xs text-slate-600">Desde</label>
