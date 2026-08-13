@@ -15,13 +15,6 @@ import {
 } from '@/lib/constants/finding-options'
 import { cn } from '@/lib/utils'
 
-type SessionOption = {
-  id: string
-  name: string
-  date?: string
-  environment?: string | null
-}
-
 type NewFindingDialogProps = {
   open: boolean
   projects: LookupOption[]
@@ -34,6 +27,10 @@ function toggleValue(values: string[], value: string) {
   return values.includes(value)
     ? values.filter((item) => item !== value)
     : [...values, value]
+}
+
+function getTodayISO() {
+  return new Date().toISOString().split('T')[0]
 }
 
 async function readApiError(response: Response) {
@@ -53,9 +50,7 @@ export function NewFindingDialog({
   onCreated,
 }: NewFindingDialogProps) {
   const [projectId, setProjectId] = useState('')
-  const [sessions, setSessions] = useState<SessionOption[]>([])
-  const [testSessionId, setTestSessionId] = useState('')
-  const [isLoadingSessions, setIsLoadingSessions] = useState(false)
+  const [createdDate, setCreatedDate] = useState(getTodayISO())
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [observation, setObservation] = useState('')
@@ -67,57 +62,16 @@ export function NewFindingDialog({
   const [assigneeId, setAssigneeId] = useState('')
 
   useEffect(() => {
-    if (!open) return
-    if (!projectId && projects[0]?.id) setProjectId(projects[0].id)
+    if (open) {
+      setCreatedDate(getTodayISO())
+      if (!projectId && projects[0]?.id) setProjectId(projects[0].id)
+    }
   }, [open, projectId, projects])
-
-  useEffect(() => {
-    if (!open || !projectId) {
-      setSessions([])
-      setTestSessionId('')
-      return
-    }
-
-    let cancelled = false
-
-    async function loadSessions() {
-      setIsLoadingSessions(true)
-      setError(null)
-
-      try {
-        const response = await fetch(`/api/projects/${projectId}/sessions?limit=100`)
-        if (!response.ok) throw new Error(await readApiError(response))
-
-        const result = await response.json()
-        const items: SessionOption[] = result.items ?? []
-
-        if (!cancelled) {
-          setSessions(items)
-          setTestSessionId((current) =>
-            items.some((item) => item.id === current) ? current : items[0]?.id ?? '',
-          )
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setSessions([])
-          setTestSessionId('')
-          setError(err instanceof Error ? err.message : 'No se pudieron cargar las sesiones')
-        }
-      } finally {
-        if (!cancelled) setIsLoadingSessions(false)
-      }
-    }
-
-    void loadSessions()
-
-    return () => {
-      cancelled = true
-    }
-  }, [open, projectId])
 
   if (!open) return null
 
   const resetForm = () => {
+    setCreatedDate(getTodayISO())
     setObservation('')
     setIncidenceTypes([])
     setExperienceTags([])
@@ -131,8 +85,8 @@ export function NewFindingDialog({
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    if (!projectId || !testSessionId) {
-      setError('Selecciona proyecto y sesión para crear el hallazgo')
+    if (!projectId || !createdDate) {
+      setError('Selecciona proyecto y fecha para crear el hallazgo')
       return
     }
 
@@ -146,7 +100,7 @@ export function NewFindingDialog({
 
     try {
       const payload = {
-        testSessionId,
+        createdDate: new Date(createdDate).toISOString(),
         observation,
         status: 'OPEN',
         priority,
@@ -230,23 +184,14 @@ export function NewFindingDialog({
             </label>
 
             <label className="space-y-2 text-sm font-semibold text-[#3d4d45]">
-              Sesión
-              <select
-                value={testSessionId}
-                onChange={(event) => setTestSessionId(event.target.value)}
+              Fecha de creación
+              <input
+                type="date"
+                value={createdDate}
+                onChange={(event) => setCreatedDate(event.target.value)}
                 className="pm-input h-11 w-full px-3 text-sm font-normal focus:outline-none focus:ring-2 focus:ring-[#00a85a]"
-                disabled={isLoadingSessions || sessions.length === 0}
                 required
-              >
-                <option value="">
-                  {isLoadingSessions ? 'Cargando sesiones...' : 'Selecciona sesión'}
-                </option>
-                {sessions.map((session) => (
-                  <option key={session.id} value={session.id}>
-                    {session.name}
-                  </option>
-                ))}
-              </select>
+              />
             </label>
           </div>
 
@@ -373,7 +318,7 @@ export function NewFindingDialog({
           </button>
           <button
             type="submit"
-            disabled={isSubmitting || isLoadingSessions || !projectId || !testSessionId}
+            disabled={isSubmitting || !projectId || !createdDate}
             className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-[#052b20] px-4 text-sm font-semibold text-white transition hover:bg-[#0b3e30] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}

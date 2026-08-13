@@ -178,8 +178,8 @@ model Finding {
   // Relationships
   projectId     String
   project       Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  testSessionId String
-  testSession   TestSession @relation(fields: [testSessionId], references: [id], onDelete: Cascade)
+  testSessionId String?
+  testSession   TestSession? @relation(fields: [testSessionId], references: [id], onDelete: SetNull)
 
   // Business Data
   folio       String?

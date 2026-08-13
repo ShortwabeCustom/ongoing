@@ -4,7 +4,8 @@ const idSchema = z.string().min(5, 'Invalid identifier')
 const optionalText = z.string().trim().max(500).optional().nullable()
 
 export const FindingCreateSchema = z.object({
-  testSessionId: idSchema,
+  createdDate: z.string().datetime().optional(),
+  testSessionId: idSchema.optional().nullable(),
   folio: z.string().trim().max(100).optional().nullable(),
   observation: z.string().min(5, 'Min 5 characters').max(2000, 'Max 2000 characters'),
   status: z.enum(['OPEN', 'TRIAGED', 'IN_PROGRESS', 'READY_FOR_VALIDATION', 'VALIDATED', 'CLOSED', 'BLOCKED', 'REOPENED']).optional(),

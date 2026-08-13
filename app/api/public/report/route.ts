@@ -69,7 +69,7 @@ export async function GET() {
       const orderedChips = [...designChips, ...copyChips]
 
       // Build metadata line: "{session name} · Fila {sourceRow} · {tags}"
-      const metaLine = [finding.testSession.name, finding.sourceRow ? `Fila ${finding.sourceRow}` : null, orderedChips.join(' · ')]
+      const metaLine = [finding.testSession?.name, finding.sourceRow ? `Fila ${finding.sourceRow}` : null, orderedChips.join(' · ')]
         .filter((p): p is string => p !== null)
         .join(' · ')
 

@@ -209,23 +209,27 @@ export class FindingService {
     const status = (input.status ?? 'OPEN') as FindingStatus
 
     const finding = await db.$transaction(async (tx) => {
-      const testSession = await tx.testSession.findFirst({
-        where: {
-          id: input.testSessionId,
-          projectId,
-          project: { deletedAt: null },
-        },
-        select: { id: true },
-      })
+      if (input.testSessionId) {
+        const testSession = await tx.testSession.findFirst({
+          where: {
+            id: input.testSessionId,
+            projectId,
+            project: { deletedAt: null },
+          },
+          select: { id: true },
+        })
 
-      if (!testSession) {
-        throw new Error('TEST_SESSION_NOT_FOUND')
+        if (!testSession) {
+          throw new Error('TEST_SESSION_NOT_FOUND')
+        }
       }
+
+      const createdAt = input.createdDate ? new Date(input.createdDate) : undefined
 
       const created = await tx.finding.create({
         data: {
           projectId,
-          testSessionId: input.testSessionId,
+          testSessionId: input.testSessionId ?? undefined,
           folio: input.folio ?? undefined,
           observation: input.observation,
           status,
@@ -238,6 +242,7 @@ export class FindingService {
           assigneeId: input.assigneeId ?? undefined,
           dueDate: input.dueDate ?? undefined,
           createdBy,
+          createdAt,
           incidenceTypes: {
             create: input.incidenceTypes.map((incidenceType) => ({ incidenceType })),
           },
