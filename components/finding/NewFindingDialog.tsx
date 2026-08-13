@@ -3,6 +3,7 @@
 import { type FormEvent, useEffect, useState } from 'react'
 import { Loader2, X } from 'lucide-react'
 import type { LookupOption } from '@/lib/types/search'
+import { DatePicker } from '@/components/ui/DatePicker'
 import {
   EXPERIENCE_TAG_LABELS_ES,
   EXPERIENCE_TAG_OPTIONS,
@@ -183,16 +184,11 @@ export function NewFindingDialog({
               </select>
             </label>
 
-            <label className="space-y-2 text-sm font-semibold text-[#3d4d45]">
-              Fecha de creación
-              <input
-                type="date"
-                value={createdDate}
-                onChange={(event) => setCreatedDate(event.target.value)}
-                className="pm-input h-11 w-full px-3 text-sm font-normal focus:outline-none focus:ring-2 focus:ring-[#00a85a]"
-                required
-              />
-            </label>
+            <DatePicker
+              label="Fecha de creación"
+              value={createdDate}
+              onChange={setCreatedDate}
+            />
           </div>
 
           <label className="space-y-2 text-sm font-semibold text-[#3d4d45]">
