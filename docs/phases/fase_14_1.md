@@ -1,8 +1,9 @@
 # FASE 14.1 — Date Intelligence & Filter UX
 
-**Status**: ✅ **COMPLETADA**  
+**Status**: ✅ **COMPLETADA + VALIDADA** (semantic fix in FASE 14.1.1)  
 **Fecha**: 2026-08-13  
 **Duración**: ~4 horas (Backend ~1h + Frontend ~2h + Testing ~1h)  
+**Validación**: ✅ FASE 14.1.1 — TestSession mapping rectified (2026-08-13)  
 **Build**: ✅ SUCCESS  
 **TypeScript**: ✅ CLEAN (0 errors)  
 **Lint**: ✅ PASS (no new issues)
