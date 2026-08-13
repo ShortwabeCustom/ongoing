@@ -195,6 +195,7 @@ export function DatePicker({ value, onChange, label, disabled = false }: DatePic
             zIndex: 9999,
           }}
           className="bg-white rounded-lg border border-[#dbe4dd] shadow-lg p-4 w-80"
+          onMouseDown={(e) => e.stopPropagation()}
         >
           {renderCalendar()}
         </div>,
