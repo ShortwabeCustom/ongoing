@@ -1,11 +1,17 @@
 // FASE 14: Advanced filters and batch actions types
+// FASE 14.1: Date intelligence types
+
+export type DateFilterType = 'created' | 'updated' | 'imported' | 'session'
+export type DatePreset = 'today' | 'yesterday' | 'last7days' | 'last30days' | 'custom'
 
 export interface AdvancedFilterValues {
   assignee?: string[]
   project?: string[]
   severity?: string[]
+  dateType?: DateFilterType
   dateFrom?: string
   dateTo?: string
+  datePreset?: DatePreset
   hasEvidence?: 'any' | 'with' | 'without'
 }
 

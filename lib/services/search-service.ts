@@ -106,10 +106,35 @@ function buildPostgresWhere(query: SearchQuery): Prisma.FindingWhereInput {
     where.projectId = { in: query.project }
   }
 
+  // FASE 14.1: Date filtering by type
   if (query.dateFrom || query.dateTo) {
-    where.createdAt = {}
-    if (query.dateFrom) where.createdAt.gte = new Date(query.dateFrom)
-    if (query.dateTo) where.createdAt.lte = new Date(query.dateTo)
+    const dateRange: Prisma.DateTimeFilter = {}
+    if (query.dateFrom) dateRange.gte = new Date(query.dateFrom)
+    if (query.dateTo) dateRange.lte = new Date(query.dateTo)
+
+    const dateType = query.dateType || 'created'
+
+    switch (dateType) {
+      case 'created':
+        where.createdAt = dateRange
+        break
+      case 'updated':
+        where.updatedAt = dateRange
+        break
+      case 'imported':
+        // Filter by ImportBatch.importedAt
+        // For findings without importBatchId, they won't match (created manually)
+        where.importBatch = {
+          importedAt: dateRange,
+        }
+        break
+      case 'session':
+        // Filter by TestSession.date
+        where.testSession = {
+          date: dateRange,
+        }
+        break
+    }
   }
 
   if (query.hasEvidence !== undefined && query.hasEvidence !== 'any') {
@@ -253,6 +278,12 @@ export class SearchService {
       return this.searchPostgres(query, 'Elasticsearch disabled; using PostgreSQL fallback')
     }
 
+    // FASE 14.1: If filtering by imported/session dates, use PostgreSQL directly
+    // (Elasticsearch index doesn't have these fields)
+    if (query.dateType === 'imported' || query.dateType === 'session') {
+      return this.searchPostgres(query, `Using PostgreSQL for dateType="${query.dateType}"`)
+    }
+
     const now = Date.now()
     if (now < elasticsearchUnavailableUntil) {
       return this.searchPostgres(query, 'Elasticsearch temporarily unavailable')
@@ -296,7 +327,7 @@ export class SearchService {
       filters.push({ terms: { projectId: query.project } })
     }
 
-    // FASE 14: Date range (supports both new and old param names)
+    // FASE 14.1: Date range filtering by type
     if (query.dateFrom || query.dateTo) {
       const rangeFilter: any = {}
       if (query.dateFrom) {
@@ -305,7 +336,10 @@ export class SearchService {
       if (query.dateTo) {
         rangeFilter.lte = new Date(query.dateTo).toISOString()
       }
-      filters.push({ range: { createdAt: rangeFilter } })
+
+      const dateType = query.dateType || 'created'
+      const dateField = dateType === 'updated' ? 'updatedAt' : 'createdAt'
+      filters.push({ range: { [dateField]: rangeFilter } })
     }
 
     // FASE 14: Filter by evidence presence

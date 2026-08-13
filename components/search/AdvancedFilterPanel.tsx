@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react'
 import { X, ChevronDown, Save } from 'lucide-react'
 import { AdvancedFilterValues, LookupOption } from '@/lib/types/search'
 import { FINDING_SEVERITY_OPTIONS, SEVERITY_LABELS_ES } from '@/lib/constants/finding-options'
-import { CreatedDateFilter } from './CreatedDateFilter'
+import { DateTypeSelector } from './DateTypeSelector'
+import { DatePresetButtons, getDateRangeForPreset } from './DatePresetButtons'
 
 interface AdvancedFilterPanelProps {
   open: boolean
@@ -137,8 +138,8 @@ export function AdvancedFilterPanel({
         {/* Bottom Sheet */}
         <div className="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl max-h-[85vh] z-[60] flex flex-col">
           {/* Header */}
-          <div className="sticky top-0 border-b border-slate-200 px-4 py-3 flex items-center justify-between bg-white rounded-t-2xl">
-            <h2 className="text-lg font-semibold">Filtros avanzados</h2>
+          <div className="sticky top-0 border-b border-[#dbe4dd] px-4 py-3 flex items-center justify-between bg-white rounded-t-2xl">
+            <h2 className="text-lg font-semibold text-[#17251f]">Filtros avanzados</h2>
             <button
               onClick={onClose}
               className="p-1 hover:bg-slate-100 rounded"
@@ -152,7 +153,7 @@ export function AdvancedFilterPanel({
           <div className="overflow-y-auto flex-1 px-4 py-4 space-y-4">
             {/* Assignees */}
             <fieldset>
-              <legend className="text-sm font-medium text-slate-900 mb-2">Asignado a</legend>
+              <legend className="text-sm font-semibold text-[#17251f] mb-2">Asignado a</legend>
               <div
                 className={`space-y-2 ${
                   disableExtendedFilters ? 'opacity-50 pointer-events-none' : ''
@@ -163,7 +164,7 @@ export function AdvancedFilterPanel({
                   placeholder="Buscar..."
                   value={assigneeSearch}
                   onChange={(e) => setAssigneeSearch(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
+                  className="w-full px-3 py-2 border border-[#dbe4dd] rounded text-sm"
                   disabled={lookupsLoading}
                 />
                 <div className="space-y-1 max-h-40 overflow-y-auto">
@@ -184,7 +185,7 @@ export function AdvancedFilterPanel({
 
             {/* Projects */}
             <fieldset>
-              <legend className="text-sm font-medium text-slate-900 mb-2">Proyecto</legend>
+              <legend className="text-sm font-semibold text-[#17251f] mb-2">Proyecto</legend>
               <div
                 className={`space-y-2 ${
                   disableExtendedFilters ? 'opacity-50 pointer-events-none' : ''
@@ -195,7 +196,7 @@ export function AdvancedFilterPanel({
                   placeholder="Buscar..."
                   value={projectSearch}
                   onChange={(e) => setProjectSearch(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
+                  className="w-full px-3 py-2 border border-[#dbe4dd] rounded text-sm"
                   disabled={lookupsLoading}
                 />
                 <div className="space-y-1 max-h-40 overflow-y-auto">
@@ -216,7 +217,7 @@ export function AdvancedFilterPanel({
 
             {/* Severity */}
             <fieldset>
-              <legend className="text-sm font-medium text-slate-900 mb-2">Severidad</legend>
+              <legend className="text-sm font-semibold text-[#17251f] mb-2">Severidad</legend>
               <div className="grid grid-cols-2 gap-2">
                 {FINDING_SEVERITY_OPTIONS.map((sev) => (
                   <label key={sev} className="flex items-center gap-2 cursor-pointer">
@@ -232,54 +233,83 @@ export function AdvancedFilterPanel({
               </div>
             </fieldset>
 
-            {/* Created Date - Test Sessions */}
-            <CreatedDateFilter
-              selectedDate={draft.dateFrom ? draft.dateFrom.split('T')[0] : undefined}
-              onSelectDate={(date) => {
-                // Set both dateFrom and dateTo to the same date to filter exactly that day
-                setDraft((prev) => ({
-                  ...prev,
-                  dateFrom: date,
-                  dateTo: date,
-                }))
-              }}
-              onClearDate={() => {
-                setDraft((prev) => ({
-                  ...prev,
-                  dateFrom: undefined,
-                  dateTo: undefined,
-                }))
-              }}
-            />
+            {/* FASE 14.1: Date Filtering */}
+            <div className="border-t border-[#dbe4dd] pt-4">
+              <DateTypeSelector
+                value={draft.dateType || 'created'}
+                onChange={(type) => setDraft((prev) => ({ ...prev, dateType: type }))}
+              />
 
-            {/* Date Range (alternative) */}
-            <fieldset>
-              <legend className="text-sm font-medium text-slate-900 mb-2">Rango de fechas personalizado</legend>
-              <div className="space-y-2">
-                <div>
-                  <label className="text-xs text-slate-600">Desde</label>
-                  <input
-                    type="date"
-                    value={draft.dateFrom ? draft.dateFrom.split('T')[0] : ''}
-                    onChange={(e) => setDraft((prev) => ({ ...prev, dateFrom: e.target.value }))}
-                    className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
+              {(draft.dateFrom || draft.dateTo) && (
+                <div className="mt-4">
+                  <DatePresetButtons
+                    selectedPreset={draft.datePreset}
+                    onSelectPreset={(preset) => {
+                      const [from, to] = getDateRangeForPreset(preset)
+                      setDraft((prev) => ({
+                        ...prev,
+                        dateFrom: from,
+                        dateTo: to,
+                        datePreset: preset,
+                      }))
+                    }}
+                    onShowCustom={() => {
+                      setDraft((prev) => ({
+                        ...prev,
+                        datePreset: 'custom',
+                      }))
+                    }}
                   />
                 </div>
-                <div>
-                  <label className="text-xs text-slate-600">Hasta</label>
-                  <input
-                    type="date"
-                    value={draft.dateTo ? draft.dateTo.split('T')[0] : ''}
-                    onChange={(e) => setDraft((prev) => ({ ...prev, dateTo: e.target.value }))}
-                    className="w-full px-3 py-2 border border-slate-300 rounded text-sm"
-                  />
+              )}
+
+              {(!draft.dateFrom || draft.datePreset === 'custom') && (
+                <div className="mt-4 space-y-3">
+                  <div>
+                    <label className="text-xs font-medium text-[#17251f]">Desde</label>
+                    <input
+                      type="date"
+                      value={draft.dateFrom ? draft.dateFrom.split('T')[0] : ''}
+                      onChange={(e) => {
+                        const newDate = e.target.value
+                        if (newDate) {
+                          const dateObj = new Date(newDate + 'T00:00:00')
+                          setDraft((prev) => ({
+                            ...prev,
+                            dateFrom: dateObj.toISOString(),
+                            datePreset: 'custom',
+                          }))
+                        }
+                      }}
+                      className="w-full px-3 py-2 border border-[#dbe4dd] rounded text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-[#17251f]">Hasta</label>
+                    <input
+                      type="date"
+                      value={draft.dateTo ? draft.dateTo.split('T')[0] : ''}
+                      onChange={(e) => {
+                        const newDate = e.target.value
+                        if (newDate) {
+                          const dateObj = new Date(newDate + 'T23:59:59')
+                          setDraft((prev) => ({
+                            ...prev,
+                            dateTo: dateObj.toISOString(),
+                            datePreset: 'custom',
+                          }))
+                        }
+                      }}
+                      className="w-full px-3 py-2 border border-[#dbe4dd] rounded text-sm"
+                    />
+                  </div>
                 </div>
-              </div>
-            </fieldset>
+              )}
+            </div>
 
             {/* Evidence */}
             <fieldset>
-              <legend className="text-sm font-medium text-slate-900 mb-2">Tiene evidencia</legend>
+              <legend className="text-sm font-semibold text-[#17251f] mb-2">Tiene evidencia</legend>
               <div className="space-y-1">
                 <label className="flex items-center gap-2 cursor-pointer py-1">
                   <input
@@ -340,7 +370,8 @@ export function AdvancedFilterPanel({
                 <button
                   onClick={handleSaveFilter}
                   disabled={!saveName.trim() || isSaving}
-                  className="px-3 py-2 bg-indigo-600 text-white rounded text-sm font-medium disabled:opacity-50"
+                  className="px-3 py-2 rounded text-sm font-medium disabled:opacity-50 text-white"
+                  style={{ backgroundColor: '#00a85a' }}
                 >
                   {isSaving ? 'Guardando...' : 'Guardar'}
                 </button>
@@ -367,13 +398,15 @@ export function AdvancedFilterPanel({
                 )}
                 <button
                   onClick={handleClear}
-                  className="flex-1 px-3 py-2 bg-slate-100 rounded text-sm font-medium hover:bg-slate-200 min-h-[44px]"
+                  className="flex-1 px-3 py-2 rounded text-sm font-medium min-h-[44px]"
+                  style={{ backgroundColor: '#f3f5ef', color: '#17251f' }}
                 >
                   Limpiar
                 </button>
                 <button
                   onClick={handleApply}
-                  className="flex-1 px-3 py-2 bg-indigo-600 text-white rounded text-sm font-medium hover:bg-indigo-700 min-h-[44px]"
+                  className="flex-1 px-3 py-2 text-white rounded text-sm font-medium min-h-[44px]"
+                  style={{ backgroundColor: '#00a85a' }}
                 >
                   Aplicar
                 </button>
@@ -389,8 +422,8 @@ export function AdvancedFilterPanel({
   return (
     <div className="absolute top-full right-0 mt-2 w-96 bg-white border border-slate-200 rounded-lg shadow-lg z-50 flex flex-col max-h-96">
       {/* Header */}
-      <div className="border-b border-slate-200 px-4 py-3 flex items-center justify-between">
-        <h2 className="text-sm font-semibold">Filtros avanzados</h2>
+      <div className="border-b border-[#dbe4dd] px-4 py-3 flex items-center justify-between">
+        <h2 className="text-sm font-semibold text-[#17251f]">Filtros avanzados</h2>
         <button
           onClick={onClose}
           className="p-1 hover:bg-slate-100 rounded"
@@ -406,7 +439,7 @@ export function AdvancedFilterPanel({
         <fieldset
           className={disableExtendedFilters ? 'opacity-50 pointer-events-none' : ''}
         >
-          <legend className="text-xs font-medium text-slate-900 mb-1">Asignado a</legend>
+          <legend className="text-xs font-semibold text-[#17251f] mb-1">Asignado a</legend>
           <div className="space-y-1 max-h-32 overflow-y-auto">
             {assigneeOptions.slice(0, 10).map((a) => (
               <label key={a.id} className="flex items-center gap-2 cursor-pointer py-0.5">
@@ -426,7 +459,7 @@ export function AdvancedFilterPanel({
         <fieldset
           className={disableExtendedFilters ? 'opacity-50 pointer-events-none' : ''}
         >
-          <legend className="text-xs font-medium text-slate-900 mb-1">Proyecto</legend>
+          <legend className="text-xs font-semibold text-[#17251f] mb-1">Proyecto</legend>
           <div className="space-y-1 max-h-32 overflow-y-auto">
             {projectOptions.slice(0, 10).map((p) => (
               <label key={p.id} className="flex items-center gap-2 cursor-pointer py-0.5">
@@ -444,7 +477,7 @@ export function AdvancedFilterPanel({
 
         {/* Severity */}
         <fieldset>
-          <legend className="text-xs font-medium text-slate-900 mb-1">Severidad</legend>
+          <legend className="text-xs font-semibold text-[#17251f] mb-1">Severidad</legend>
           <div className="grid grid-cols-2 gap-1">
             {FINDING_SEVERITY_OPTIONS.map((sev) => (
               <label key={sev} className="flex items-center gap-1 cursor-pointer py-0.5">
@@ -460,38 +493,73 @@ export function AdvancedFilterPanel({
           </div>
         </fieldset>
 
-        {/* Date Range */}
-        <fieldset>
-          <legend className="text-xs font-medium text-slate-900 mb-1">Rango de fechas</legend>
-          <div className="flex gap-2">
+        {/* FASE 14.1: Date Filtering (Desktop) */}
+        <fieldset className="border-t border-[#dbe4dd] pt-3">
+          <legend className="text-xs font-medium text-[#17251f] mb-2">Tipo de fecha</legend>
+          <select
+            value={draft.dateType || 'created'}
+            onChange={(e) => setDraft((prev) => ({ ...prev, dateType: e.target.value as any }))}
+            className="w-full px-2 py-1 border border-[#dbe4dd] rounded text-xs"
+          >
+            <option value="created">Fecha de creación</option>
+            <option value="updated">Última actualización</option>
+            <option value="imported">Fecha de carga</option>
+            <option value="session">Fecha de prueba</option>
+          </select>
+
+          <div className="mt-2 flex gap-1">
             <input
               type="date"
               value={draft.dateFrom ? draft.dateFrom.split('T')[0] : ''}
-              onChange={(e) => setDraft((prev) => ({ ...prev, dateFrom: e.target.value }))}
-              className="flex-1 px-2 py-1 border border-slate-300 rounded text-xs"
+              onChange={(e) => {
+                const newDate = e.target.value
+                if (newDate) {
+                  const dateObj = new Date(newDate + 'T00:00:00')
+                  setDraft((prev) => ({
+                    ...prev,
+                    dateFrom: dateObj.toISOString(),
+                    datePreset: 'custom',
+                  }))
+                }
+              }}
+              className="flex-1 px-2 py-1 border border-[#dbe4dd] rounded text-xs"
+              placeholder="Desde"
             />
-            <span className="px-1 py-1 text-xs text-slate-500">–</span>
+            <span className="px-1 py-1 text-xs text-[#65766e]">–</span>
             <input
               type="date"
               value={draft.dateTo ? draft.dateTo.split('T')[0] : ''}
-              onChange={(e) => setDraft((prev) => ({ ...prev, dateTo: e.target.value }))}
-              className="flex-1 px-2 py-1 border border-slate-300 rounded text-xs"
+              onChange={(e) => {
+                const newDate = e.target.value
+                if (newDate) {
+                  const dateObj = new Date(newDate + 'T23:59:59')
+                  setDraft((prev) => ({
+                    ...prev,
+                    dateTo: dateObj.toISOString(),
+                    datePreset: 'custom',
+                  }))
+                }
+              }}
+              className="flex-1 px-2 py-1 border border-[#dbe4dd] rounded text-xs"
+              placeholder="Hasta"
             />
           </div>
         </fieldset>
       </div>
 
       {/* Footer */}
-      <div className="border-t border-slate-200 px-4 py-2 flex gap-2 bg-slate-50">
+      <div className="border-t border-[#dbe4dd] px-4 py-2 flex gap-2" style={{ backgroundColor: '#f3f5ef' }}>
         <button
           onClick={handleClear}
-          className="flex-1 px-2 py-1.5 bg-slate-200 rounded text-xs font-medium hover:bg-slate-300 min-h-[36px]"
+          className="flex-1 px-2 py-1.5 rounded text-xs font-medium min-h-[36px]"
+          style={{ backgroundColor: '#e8ede9', color: '#17251f' }}
         >
           Limpiar
         </button>
         <button
           onClick={handleApply}
-          className="flex-1 px-2 py-1.5 bg-indigo-600 text-white rounded text-xs font-medium hover:bg-indigo-700 min-h-[36px]"
+          className="flex-1 px-2 py-1.5 text-white rounded text-xs font-medium min-h-[36px]"
+          style={{ backgroundColor: '#00a85a' }}
         >
           Aplicar
         </button>

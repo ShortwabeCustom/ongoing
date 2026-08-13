@@ -9,6 +9,7 @@ export type SearchQuery = {
   assigneeId?: string
   project?: string[]
   projectId?: string
+  dateType?: 'created' | 'updated' | 'imported' | 'session'
   dateFrom?: string
   dateTo?: string
   createdAfter?: string
@@ -74,6 +75,11 @@ export const SearchQuerySchema = z.object({
 
   projectId: z.string().optional(),
 
+  // FASE 14.1: Date type selector (default: 'created')
+  dateType: z
+    .enum(['created', 'updated', 'imported', 'session'])
+    .optional(),
+
   // FASE 14: Date range support
   dateFrom: z.string().datetime().optional(),
   dateTo: z.string().datetime().optional(),
@@ -114,5 +120,6 @@ export const SearchQuerySchema = z.object({
     project: data.project || (data.projectId ? [data.projectId] : undefined),
     dateFrom: data.dateFrom || data.createdAfter,
     dateTo: data.dateTo || data.createdBefore,
+    dateType: data.dateType || 'created',
   }
 })

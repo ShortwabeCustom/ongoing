@@ -84,6 +84,7 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
       severity: advancedFilters.severity,
       assignee: advancedFilters.assignee,
       project: advancedFilters.project,
+      dateType: advancedFilters.dateType,
       dateFrom: advancedFilters.dateFrom,
       dateTo: advancedFilters.dateTo,
       hasEvidence: advancedFilters.hasEvidence,
@@ -99,6 +100,7 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
       advancedFilters.severity,
       advancedFilters.assignee,
       advancedFilters.project,
+      advancedFilters.dateType,
       advancedFilters.dateFrom,
       advancedFilters.dateTo,
       advancedFilters.hasEvidence,
@@ -123,6 +125,7 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
     (advancedFilters.severity?.length || 0) +
     (advancedFilters.assignee?.length || 0) +
     (advancedFilters.project?.length || 0) +
+    (advancedFilters.dateType && advancedFilters.dateType !== 'created' ? 1 : 0) +
     (advancedFilters.dateFrom ? 1 : 0) +
     (advancedFilters.dateTo ? 1 : 0) +
     (advancedFilters.hasEvidence !== undefined && advancedFilters.hasEvidence !== 'any' ? 1 : 0)
@@ -505,6 +508,7 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
                 severity: advancedFilters.severity,
                 assignee: advancedFilters.assignee,
                 project: advancedFilters.project,
+                dateType: advancedFilters.dateType,
                 dateFrom: advancedFilters.dateFrom,
                 dateTo: advancedFilters.dateTo,
                 hasEvidence: advancedFilters.hasEvidence,
@@ -538,8 +542,10 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
               onRemoveDateRange={() =>
                 setAdvancedFilters((prev) => ({
                   ...prev,
+                  dateType: 'created',
                   dateFrom: undefined,
                   dateTo: undefined,
+                  datePreset: undefined,
                 }))
               }
               onRemoveEvidence={() =>
@@ -738,6 +744,7 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
                       severity: advancedFilters.severity,
                       assignee: advancedFilters.assignee,
                       project: advancedFilters.project,
+                      dateType: advancedFilters.dateType,
                       dateFrom: advancedFilters.dateFrom,
                       dateTo: advancedFilters.dateTo,
                       hasEvidence: advancedFilters.hasEvidence,
@@ -771,8 +778,10 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
                     onRemoveDateRange={() =>
                       setAdvancedFilters((prev) => ({
                         ...prev,
+                        dateType: 'created',
                         dateFrom: undefined,
                         dateTo: undefined,
+                        datePreset: undefined,
                       }))
                     }
                     onRemoveEvidence={() =>

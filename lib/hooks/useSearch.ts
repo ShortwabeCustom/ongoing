@@ -79,6 +79,8 @@ export function useSearch(query: Partial<SearchQuery>): UseSearchResult {
     // FASE 14: Advanced filters
     if (q.assignee?.length) params.append('assignee', q.assignee.join(','))
     if (q.project?.length) params.append('project', q.project.join(','))
+    // FASE 14.1: Date filtering
+    if (q.dateType && q.dateType !== 'created') params.append('dateType', q.dateType)
     if (q.dateFrom) params.append('dateFrom', q.dateFrom)
     if (q.dateTo) params.append('dateTo', q.dateTo)
     if (q.hasEvidence !== undefined && q.hasEvidence !== 'any') {
