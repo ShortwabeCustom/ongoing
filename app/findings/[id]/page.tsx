@@ -76,7 +76,7 @@ export default async function FindingDetailPage({ params }: PageProps) {
     return <MissingFindingDetail />
   }
 
-  const detailTitle = finding.folio ?? `Hallazgo ${finding.id.slice(0, 8)}`
+  const detailTitle = finding.folio ?? 'Hallazgo'
   const evidenceCount = finding.evidence?.length ?? 0
   const commentsCount = finding.comments?.length ?? 0
   const workflowCount = (finding.resolutions?.length ?? 0) + (finding.validations?.length ?? 0)

@@ -29,7 +29,7 @@ export function FindingDetailWithEvidence({
   const [editOpen, setEditOpen] = useState(false)
   const { assignees } = useLookups(finding.projectId)
   const canEdit = Boolean(auth.user?.role && ['OWNER', 'QA_LEAD'].includes(auth.user.role))
-  const title = finding.title ?? finding.folio ?? `Hallazgo ${finding.id.slice(0, 8)}`
+  const title = finding.title ?? finding.folio ?? 'Hallazgo'
   const description = finding.description ?? finding.observation
   const areaValues = finding.experienceTags?.map((tag) => tag.experienceTag) ?? []
   const incidenceValues = finding.incidenceTypes?.map((type) => type.incidenceType) ?? []
