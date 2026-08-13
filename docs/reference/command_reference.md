@@ -1,3 +1,10 @@
+---
+title: Command Reference
+purpose: Quick lookup for common development commands and patterns
+audience: All developers
+time: ⏱️ 5 minutes
+---
+
 # ⚡ Referencia Rápida - Comandos
 
 Consulta rápida de comandos y patrones más utilizados.

@@ -20,6 +20,7 @@
 
 **Getting Started (SETUP)**
 - **[Quick Start](./SETUP/quick_start.md)** — Setup en 5 pasos (15 min)
+- **[Command Reference](./reference/command_reference.md)** — Common commands & patterns
 - **[Development Setup](./SETUP/development_setup.md)** — PostgreSQL, env vars, seeds
 
 **Operations (OPERATIONS)**
