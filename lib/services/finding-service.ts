@@ -542,6 +542,34 @@ export class FindingService {
       })
     }
 
+    // Serialize creator dates
+    if (serialized.creator && typeof serialized.creator === 'object') {
+      serialized.creator = { ...serialized.creator }
+      if (serialized.creator.createdAt instanceof Date) {
+        serialized.creator.createdAt = serialized.creator.createdAt.toISOString()
+      }
+      if (serialized.creator.updatedAt instanceof Date) {
+        serialized.creator.updatedAt = serialized.creator.updatedAt.toISOString()
+      }
+      if (serialized.creator.deletedAt instanceof Date) {
+        serialized.creator.deletedAt = serialized.creator.deletedAt.toISOString()
+      }
+    }
+
+    // Serialize updater dates
+    if (serialized.updater && typeof serialized.updater === 'object') {
+      serialized.updater = { ...serialized.updater }
+      if (serialized.updater.createdAt instanceof Date) {
+        serialized.updater.createdAt = serialized.updater.createdAt.toISOString()
+      }
+      if (serialized.updater.updatedAt instanceof Date) {
+        serialized.updater.updatedAt = serialized.updater.updatedAt.toISOString()
+      }
+      if (serialized.updater.deletedAt instanceof Date) {
+        serialized.updater.deletedAt = serialized.updater.deletedAt.toISOString()
+      }
+    }
+
     return serialized
   }
 
