@@ -383,7 +383,13 @@ export class FindingService {
         },
         statusHistory: {
           orderBy: { changedAt: 'desc' },
-          include: {
+          select: {
+            id: true,
+            fromStatus: true,
+            toStatus: true,
+            reason: true,
+            changedAt: true,
+            changedBy: true,
             changer: { select: { id: true, email: true, name: true } },
           },
         },
@@ -479,6 +485,9 @@ export class FindingService {
         if (comCopy.updatedAt instanceof Date) {
           comCopy.updatedAt = comCopy.updatedAt.toISOString()
         }
+        if (comCopy.creator && comCopy.creator.createdAt instanceof Date) {
+          comCopy.creator = { ...comCopy.creator, createdAt: comCopy.creator.createdAt.toISOString() }
+        }
         return comCopy
       })
     }
@@ -489,6 +498,9 @@ export class FindingService {
         const histCopy = { ...hist }
         if (histCopy.changedAt instanceof Date) {
           histCopy.changedAt = histCopy.changedAt.toISOString()
+        }
+        if (histCopy.changer && histCopy.changer.createdAt instanceof Date) {
+          histCopy.changer = { ...histCopy.changer, createdAt: histCopy.changer.createdAt.toISOString() }
         }
         return histCopy
       })
