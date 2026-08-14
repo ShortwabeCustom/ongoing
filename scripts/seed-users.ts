@@ -6,58 +6,34 @@
 import { prisma } from '@/lib/prisma'
 import { hashPassword } from '@/lib/auth/password'
 
-const TEST_PASSWORD = 'TestPassword123'
-
 const testUsers = [
   {
-    email: 'owner@test.local',
-    name: 'Owner User',
+    email: 'alexis.pro_sk8@hotmail.com',
+    name: 'Alexis',
+    password: 'UIX-Owner-Alexis-2026-9Ls3',
     role: 'OWNER' as const,
   },
   {
-    email: 'qa-lead@test.local',
-    name: 'QA Lead',
-    role: 'QA_LEAD' as const,
-  },
-  {
-    email: 'designer@test.local',
-    name: 'Designer',
-    role: 'DESIGNER' as const,
-  },
-  {
-    email: 'developer@test.local',
-    name: 'Developer',
-    role: 'DEVELOPER' as const,
-  },
-  {
-    email: 'business@test.local',
-    name: 'Business Reviewer',
-    role: 'BUSINESS_REVIEWER' as const,
-  },
-  {
-    email: 'viewer@test.local',
-    name: 'Viewer',
-    role: 'VIEWER' as const,
-  },
-  {
-    email: 'ilse.garcia@test.local',
+    email: 'ilse.garcia@elektra.com.mx',
     name: 'Ilse García (Elektra)',
+    password: 'UIX-Owner-Ilse-2026-4Gx8',
     role: 'QA_LEAD' as const,
   },
   {
-    email: 'jonathan.ramos@test.local',
+    email: 'jonathan.ramos@elektra.com.mx',
     name: 'Jonathan Ramos (Elektra)',
+    password: 'UIX-Owner-Ramos-2026-7Qp9',
     role: 'DEVELOPER' as const,
   },
 ]
 
 async function main() {
   const db = prisma()
-  console.log('🌱 Seeding test users...')
+  console.log('🌱 Seeding production users...')
 
   for (const user of testUsers) {
     try {
-      const passwordHash = await hashPassword(TEST_PASSWORD)
+      const passwordHash = await hashPassword(user.password)
 
       const created = await db.user.upsert({
         where: { email: user.email },
@@ -76,12 +52,12 @@ async function main() {
     }
   }
 
-  console.log(`\n✨ Test users created! Password: ${TEST_PASSWORD}`)
+  console.log(`\n✨ Users created!`)
   console.log('\nLogin examples:')
   testUsers.forEach((user) => {
-    console.log(`  curl -X POST http://localhost:3000/api/auth/login \\
-    -H "Content-Type: application/json" \\
-    -d '{"email":"${user.email}","password":"${TEST_PASSWORD}"}'`)
+    console.log(`  Email: ${user.email}`)
+    console.log(`  Password: ${user.password}`)
+    console.log(`  Rol: ${user.role}\n`)
   })
 }
 
