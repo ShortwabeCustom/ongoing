@@ -152,8 +152,10 @@ export function NewFindingDialog({
           setEvidenceUploadError(uploadErrorMsg)
           setIsUploadingEvidence(false)
 
-          // Still allow user to close and access the finding
-          // They can retry from the finding detail page
+          // Close dialog anyway - user can retry from finding detail
+          resetForm()
+          onCreated({ id: created.id })
+          onClose()
         }
       } else {
         // No file, just created the finding
