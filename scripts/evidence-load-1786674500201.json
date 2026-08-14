@@ -1,0 +1,41 @@
+{
+  "timestamp": "2026-08-14T02:28:20.201Z",
+  "mode": "mock",
+  "summary": {
+    "created": 6,
+    "skipped": 0,
+    "errors": 0
+  },
+  "results": [
+    {
+      "fingerprint": "8abab28e80b9fbcf2d5b5585b8d159b8ed5f973aeb0891f90f0a0d1f09976d2e",
+      "action": "CREATED",
+      "evidenceId": "cmssbv7d60000nzacuysp6jfi"
+    },
+    {
+      "fingerprint": "33e39cdbd19f6f3cf585d6e91171249edd103dc04ad206eaa1039216ab0c6702",
+      "action": "CREATED",
+      "evidenceId": "cmssbv7e70001nzacaw4r89v3"
+    },
+    {
+      "fingerprint": "5c4c348dde8e2aad134465afe69f4ec63f7379d4d84c27309ee2f462853ab7f0",
+      "action": "CREATED",
+      "evidenceId": "cmssbv7ei0002nzacajm5dmdm"
+    },
+    {
+      "fingerprint": "1fb5152c50d5c22d2fab5f7d21460b647d840fa0f305cc9346d554fdc70cfe5b",
+      "action": "CREATED",
+      "evidenceId": "cmssbv7ev0003nzac41npuylm"
+    },
+    {
+      "fingerprint": "60eb68e696f8cb9b74bf9f58c83f39465636ea92df09d479d5bd912db814875e",
+      "action": "CREATED",
+      "evidenceId": "cmssbv7f50004nzacrwzcy2s5"
+    },
+    {
+      "fingerprint": "242148c78c71c6002564b776e2f86994af37b78b7ed9ecb9e7a62ee3066d6624",
+      "action": "CREATED",
+      "evidenceId": "cmssbv7fi0005nzac7rkw72fx"
+    }
+  ]
+}

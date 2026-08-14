@@ -1,0 +1,53 @@
+{
+  "timestamp": "2026-08-14T02:26:35.163Z",
+  "mode": "mock",
+  "summary": {
+    "created": 0,
+    "skipped": 0,
+    "errors": 6
+  },
+  "results": [
+    {
+      "fingerprint": "8abab28e80b9fbcf2d5b5585b8d159b8ed5f973aeb0891f90f0a0d1f09976d2e",
+      "action": "ERROR",
+      "errors": [
+        "PrismaClientValidationError: \nInvalid `prisma.evidence.create()` invocation in\n/var/www/uix.torrax.cloud/scripts/load-evidence-batch.ts:194:53\n\n  191 const mockUrl = `https://example.com/mock/${finding.id}/evidence.jpg?expires=${Date.now() + 86400000}`;\n  192 const mockKey = `findings/${finding.id}/mock-evidence.jpg`;\n  193 \n→ 194 const createdEvidence = await prisma.evidence.create({\n        data: {\n          findingId: \"22ab16c0-75ee-4478-93fd-430603ff91b8\",\n          originalFilename: \"evidence-16.jpg\",\n          mimeType: \"image/jpeg\",\n          fileSize: 0,\n          storageKey: \"findings/22ab16c0-75ee-4478-93fd-430603ff91b8/mock-evidence.jpg\",\n          url: \"https://example.com/mock/22ab16c0-75ee-4478-93fd-430603ff91b8/evidence.jpg?expires=1786760795049\",\n          urlExpiresAt: new Date(\"2026-08-15T02:26:35.050Z\"),\n          caption: \"Pantalla: ¡Marta, tú tienes el control... (Botón Pago adaptado)\",\n          uploadedBy: \"system\",\n          uploadedAt: new Date(\"2026-08-14T02:26:35.050Z\"),\n      +   type: EvidenceType\n        }\n      })\n\nArgument `type` is missing."
+      ]
+    },
+    {
+      "fingerprint": "33e39cdbd19f6f3cf585d6e91171249edd103dc04ad206eaa1039216ab0c6702",
+      "action": "ERROR",
+      "errors": [
+        "PrismaClientValidationError: \nInvalid `prisma.evidence.create()` invocation in\n/var/www/uix.torrax.cloud/scripts/load-evidence-batch.ts:194:53\n\n  191 const mockUrl = `https://example.com/mock/${finding.id}/evidence.jpg?expires=${Date.now() + 86400000}`;\n  192 const mockKey = `findings/${finding.id}/mock-evidence.jpg`;\n  193 \n→ 194 const createdEvidence = await prisma.evidence.create({\n        data: {\n          findingId: \"05362ed9-a982-48b8-9cec-e7fdc4332762\",\n          originalFilename: \"evidence-64.jpg\",\n          mimeType: \"image/jpeg\",\n          fileSize: 0,\n          storageKey: \"findings/05362ed9-a982-48b8-9cec-e7fdc4332762/mock-evidence.jpg\",\n          url: \"https://example.com/mock/05362ed9-a982-48b8-9cec-e7fdc4332762/evidence.jpg?expires=1786760795145\",\n          urlExpiresAt: new Date(\"2026-08-15T02:26:35.145Z\"),\n          caption: \"Diálogo modal: CTA debe permanecer deshabilitado\",\n          uploadedBy: \"system\",\n          uploadedAt: new Date(\"2026-08-14T02:26:35.145Z\"),\n      +   type: EvidenceType\n        }\n      })\n\nArgument `type` is missing."
+      ]
+    },
+    {
+      "fingerprint": "5c4c348dde8e2aad134465afe69f4ec63f7379d4d84c27309ee2f462853ab7f0",
+      "action": "ERROR",
+      "errors": [
+        "PrismaClientValidationError: \nInvalid `prisma.evidence.create()` invocation in\n/var/www/uix.torrax.cloud/scripts/load-evidence-batch.ts:194:53\n\n  191 const mockUrl = `https://example.com/mock/${finding.id}/evidence.jpg?expires=${Date.now() + 86400000}`;\n  192 const mockKey = `findings/${finding.id}/mock-evidence.jpg`;\n  193 \n→ 194 const createdEvidence = await prisma.evidence.create({\n        data: {\n          findingId: \"87308251-b868-47e1-9402-57984cd8fa4b\",\n          originalFilename: \"evidence-95.jpg\",\n          mimeType: \"image/jpeg\",\n          fileSize: 0,\n          storageKey: \"findings/87308251-b868-47e1-9402-57984cd8fa4b/mock-evidence.jpg\",\n          url: \"https://example.com/mock/87308251-b868-47e1-9402-57984cd8fa4b/evidence.jpg?expires=1786760795149\",\n          urlExpiresAt: new Date(\"2026-08-15T02:26:35.149Z\"),\n          caption: \"Interfaz horarios: Chips adaptación proporcional (10:30, 02:00, etc.)\",\n          uploadedBy: \"system\",\n          uploadedAt: new Date(\"2026-08-14T02:26:35.149Z\"),\n      +   type: EvidenceType\n        }\n      })\n\nArgument `type` is missing."
+      ]
+    },
+    {
+      "fingerprint": "1fb5152c50d5c22d2fab5f7d21460b647d840fa0f305cc9346d554fdc70cfe5b",
+      "action": "ERROR",
+      "errors": [
+        "PrismaClientValidationError: \nInvalid `prisma.evidence.create()` invocation in\n/var/www/uix.torrax.cloud/scripts/load-evidence-batch.ts:194:53\n\n  191 const mockUrl = `https://example.com/mock/${finding.id}/evidence.jpg?expires=${Date.now() + 86400000}`;\n  192 const mockKey = `findings/${finding.id}/mock-evidence.jpg`;\n  193 \n→ 194 const createdEvidence = await prisma.evidence.create({\n        data: {\n          findingId: \"a69e2a09-d51c-4092-840b-92010d6ebce7\",\n          originalFilename: \"evidence-35.jpg\",\n          mimeType: \"image/jpeg\",\n          fileSize: 0,\n          storageKey: \"findings/a69e2a09-d51c-4092-840b-92010d6ebce7/mock-evidence.jpg\",\n          url: \"https://example.com/mock/a69e2a09-d51c-4092-840b-92010d6ebce7/evidence.jpg?expires=1786760795152\",\n          urlExpiresAt: new Date(\"2026-08-15T02:26:35.152Z\"),\n          caption: \"Formulario: Input → textarea pregunta\",\n          uploadedBy: \"system\",\n          uploadedAt: new Date(\"2026-08-14T02:26:35.152Z\"),\n      +   type: EvidenceType\n        }\n      })\n\nArgument `type` is missing."
+      ]
+    },
+    {
+      "fingerprint": "60eb68e696f8cb9b74bf9f58c83f39465636ea92df09d479d5bd912db814875e",
+      "action": "ERROR",
+      "errors": [
+        "PrismaClientValidationError: \nInvalid `prisma.evidence.create()` invocation in\n/var/www/uix.torrax.cloud/scripts/load-evidence-batch.ts:194:53\n\n  191 const mockUrl = `https://example.com/mock/${finding.id}/evidence.jpg?expires=${Date.now() + 86400000}`;\n  192 const mockKey = `findings/${finding.id}/mock-evidence.jpg`;\n  193 \n→ 194 const createdEvidence = await prisma.evidence.create({\n        data: {\n          findingId: \"43f79c3f-9aa7-4b16-8267-9317cdf40b85\",\n          originalFilename: \"evidence-44.jpg\",\n          mimeType: \"image/jpeg\",\n          fileSize: 0,\n          storageKey: \"findings/43f79c3f-9aa7-4b16-8267-9317cdf40b85/mock-evidence.jpg\",\n          url: \"https://example.com/mock/43f79c3f-9aa7-4b16-8267-9317cdf40b85/evidence.jpg?expires=1786760795156\",\n          urlExpiresAt: new Date(\"2026-08-15T02:26:35.156Z\"),\n          caption: \"Pantalla $13,200: Ajustres padding en slider\",\n          uploadedBy: \"system\",\n          uploadedAt: new Date(\"2026-08-14T02:26:35.156Z\"),\n      +   type: EvidenceType\n        }\n      })\n\nArgument `type` is missing."
+      ]
+    },
+    {
+      "fingerprint": "242148c78c71c6002564b776e2f86994af37b78b7ed9ecb9e7a62ee3066d6624",
+      "action": "ERROR",
+      "errors": [
+        "PrismaClientValidationError: \nInvalid `prisma.evidence.create()` invocation in\n/var/www/uix.torrax.cloud/scripts/load-evidence-batch.ts:194:53\n\n  191 const mockUrl = `https://example.com/mock/${finding.id}/evidence.jpg?expires=${Date.now() + 86400000}`;\n  192 const mockKey = `findings/${finding.id}/mock-evidence.jpg`;\n  193 \n→ 194 const createdEvidence = await prisma.evidence.create({\n        data: {\n          findingId: \"2b9477ca-c239-45e9-84a2-4105f55ed8df\",\n          originalFilename: \"evidence-8.jpg\",\n          mimeType: \"image/jpeg\",\n          fileSize: 0,\n          storageKey: \"findings/2b9477ca-c239-45e9-84a2-4105f55ed8df/mock-evidence.jpg\",\n          url: \"https://example.com/mock/2b9477ca-c239-45e9-84a2-4105f55ed8df/evidence.jpg?expires=1786760795160\",\n          urlExpiresAt: new Date(\"2026-08-15T02:26:35.160Z\"),\n          caption: \"Pantalla \\\"Lo soñaste\\\": Estilo dropdown ($13,200)\",\n          uploadedBy: \"system\",\n          uploadedAt: new Date(\"2026-08-14T02:26:35.160Z\"),\n      +   type: EvidenceType\n        }\n      })\n\nArgument `type` is missing."
+      ]
+    }
+  ]
+}

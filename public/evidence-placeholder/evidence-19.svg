@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="800" fill="#f0f1f3"/>
+
+  <!-- Header Bar -->
+  <rect width="1200" height="100" fill="#059669"/>
+
+  <!-- Number Circle -->
+  <circle cx="120" cy="50" r="40" fill="white" opacity="0.3"/>
+  <text x="120" y="65" font-size="48" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">
+    19
+  </text>
+
+  <!-- Title -->
+  <text x="50" y="65" font-size="42" font-weight="bold" fill="white" font-family="Arial">
+    EVIDENCIA
+  </text>
+
+  <!-- Main Content Box -->
+  <rect x="40" y="130" width="1120" height="630" fill="white" stroke="#059669" stroke-width="3" rx="8"/>
+
+  <!-- Content Area -->
+  <g>
+    <!-- Large Icon/Number -->
+    <circle cx="200" cy="250" r="60" fill="#059669" opacity="0.1"/>
+    <text x="200" y="275" font-size="80" font-weight="bold" fill="#059669" text-anchor="middle" font-family="Arial" opacity="0.3">
+      19
+    </text>
+
+    <!-- Info Text -->
+    <text x="320" y="230" font-size="28" font-weight="bold" fill="#1f2937" font-family="Arial">
+      Hallazgo #{num}
+    </text>
+    <text x="320" y="270" font-size="16" fill="#6b7280" font-family="Arial">
+      Evidencia Placeholder
+    </text>
+
+    <!-- Metadata Grid -->
+    <line x1="60" y1="330" x2="1140" y2="330" stroke="#e5e7eb" stroke-width="1"/>
+
+    <text x="60" y="370" font-size="14" font-weight="bold" fill="#6b7280" font-family="Arial">
+      TIPO:
+    </text>
+    <text x="200" y="370" font-size="14" fill="#374151" font-family="Arial">
+      IMAGE / SVG
+    </text>
+
+    <text x="60" y="420" font-size="14" font-weight="bold" fill="#6b7280" font-family="Arial">
+      ESTADO:
+    </text>
+    <rect x="200" y="405" width="16" height="16" fill="#059669"/>
+    <text x="230" y="420" font-size="14" fill="#374151" font-family="Arial">
+      Cargada
+    </text>
+
+    <text x="600" y="370" font-size="14" font-weight="bold" fill="#6b7280" font-family="Arial">
+      FORMATO:
+    </text>
+    <text x="740" y="370" font-size="14" fill="#374151" font-family="Arial">
+      SVG (Placeholder)
+    </text>
+
+    <text x="600" y="420" font-size="14" font-weight="bold" fill="#6b7280" font-family="Arial">
+      TAMAÑO:
+    </text>
+    <text x="740" y="420" font-size="14" fill="#374151" font-family="Arial">
+      2.4 KB
+    </text>
+
+    <!-- Progress Bar -->
+    <line x1="60" y1="480" x2="1140" y2="480" stroke="#e5e7eb" stroke-width="1"/>
+    <rect x="60" y="520" width="1080" height="8" fill="#f3f4f6" rx="4"/>
+    <rect x="60" y="520" width="379" height="8" fill="#059669" rx="4"/>
+    <text x="60" y="560" font-size="12" fill="#9ca3af" font-family="Arial">
+      Progreso: 97%
+    </text>
+  </g>
+
+  <!-- Footer -->
+  <rect x="40" y="730" width="1120" height="30" fill="#059669" opacity="0.05" rx="4"/>
+  <text x="60" y="752" font-size="12" fill="#9ca3af" font-family="Arial">
+    Pruebas María 2.0 · Evidence Placeholder #19
+  </text>
+</svg>
