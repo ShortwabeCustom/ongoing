@@ -6,7 +6,8 @@ import type { LookupOption } from '@/lib/types/search'
 import type { SupportLink } from '@/lib/validators/finding'
 import { DatePicker } from '@/components/ui/DatePicker'
 import { SupportLinkInput } from '@/components/ui/SupportLinkInput'
-import { EvidenceUploader } from '@/components/evidence/EvidenceUploader'
+import { EvidenceSelector } from '@/components/evidence/EvidenceSelector'
+import { EvidenceClient } from '@/lib/api/evidence-client'
 import {
   EXPERIENCE_TAG_LABELS_ES,
   EXPERIENCE_TAG_OPTIONS,
@@ -66,8 +67,9 @@ export function NewFindingDialog({
   const [flowStep, setFlowStep] = useState('')
   const [assigneeId, setAssigneeId] = useState('')
   const [supportLinks, setSupportLinks] = useState<SupportLink[]>([])
-  const [createdFindingId, setCreatedFindingId] = useState<string | null>(null)
-  const [showEvidenceUploader, setShowEvidenceUploader] = useState(false)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const [isUploadingEvidence, setIsUploadingEvidence] = useState(false)
+  const [evidenceUploadError, setEvidenceUploadError] = useState<string | null>(null)
 
   useEffect(() => {
     if (open) {
@@ -88,8 +90,9 @@ export function NewFindingDialog({
     setFlowStep('')
     setAssigneeId('')
     setSupportLinks([])
-    setCreatedFindingId(null)
-    setShowEvidenceUploader(false)
+    setSelectedFile(null)
+    setIsUploadingEvidence(false)
+    setEvidenceUploadError(null)
     setError(null)
   }
 
@@ -108,6 +111,7 @@ export function NewFindingDialog({
 
     setIsSubmitting(true)
     setError(null)
+    setEvidenceUploadError(null)
 
     try {
       const payload = {
@@ -132,39 +136,42 @@ export function NewFindingDialog({
       if (!response.ok) throw new Error(await readApiError(response))
 
       const created = await response.json()
-      setCreatedFindingId(created.id)
-      setShowEvidenceUploader(true)
       setIsSubmitting(false)
+
+      // If file is selected, upload it automatically
+      if (selectedFile) {
+        setIsUploadingEvidence(true)
+        try {
+          await EvidenceClient.upload(selectedFile, created.id)
+          // Success - both finding and evidence created
+          resetForm()
+          onCreated({ id: created.id })
+          onClose()
+        } catch (uploadErr) {
+          // Finding created but evidence failed
+          const uploadErrorMsg = uploadErr instanceof Error ? uploadErr.message : 'No se pudo subir la evidencia'
+          setEvidenceUploadError(uploadErrorMsg)
+          setIsUploadingEvidence(false)
+
+          // Still allow user to close and access the finding
+          // They can retry from the finding detail page
+        }
+      } else {
+        // No file, just created the finding
+        resetForm()
+        onCreated({ id: created.id })
+        onClose()
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No se pudo crear el hallazgo')
       setIsSubmitting(false)
     }
   }
 
-  const handleEvidenceSuccess = (evidence: Evidence) => {
-    // Evidence uploaded, can upload more or close
-  }
-
-  const handleEvidenceError = (error: string) => {
-    setError(error)
-  }
-
-  const finishCreating = () => {
-    resetForm()
-    if (createdFindingId) {
-      onCreated({ id: createdFindingId })
-    }
-    onClose()
-  }
-
   const close = () => {
-    if (isSubmitting) return
-    if (showEvidenceUploader && createdFindingId) {
-      finishCreating()
-    } else {
-      resetForm()
-      onClose()
-    }
+    if (isSubmitting || isUploadingEvidence) return
+    resetForm()
+    onClose()
   }
 
   return (
@@ -175,20 +182,17 @@ export function NewFindingDialog({
       >
         <div className="sticky top-0 z-10 flex shrink-0 items-start justify-between gap-4 border-b border-[#dbe4dd] bg-white px-5 py-4">
           <div>
-            <h2 className="text-lg font-semibold text-[#17251f]">
-              {showEvidenceUploader ? 'Subir evidencia' : 'Nuevo hallazgo'}
-            </h2>
+            <h2 className="text-lg font-semibold text-[#17251f]">Nuevo hallazgo</h2>
             <p className="mt-1 text-sm text-[#65766e]">
-              {showEvidenceUploader
-                ? 'Adjunta archivos de soporte (opcional). Puedes agregar más desde el detalle.'
-                : 'Registra la observación y después podrás adjuntar evidencias.'}
+              Registra la observación y adjunta evidencia (opcional).
             </p>
           </div>
           <button
             type="button"
             onClick={close}
+            disabled={isSubmitting || isUploadingEvidence}
             aria-label="Cerrar"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-[#65766e] transition hover:bg-[#edf4ed] hover:text-[#17251f]"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-[#65766e] transition hover:bg-[#edf4ed] hover:text-[#17251f] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <X className="h-5 w-5" />
           </button>
@@ -201,15 +205,16 @@ export function NewFindingDialog({
             </p>
           )}
 
-          {showEvidenceUploader && createdFindingId ? (
-            <EvidenceUploader
-              findingId={createdFindingId}
-              onSuccess={handleEvidenceSuccess}
-              onError={handleEvidenceError}
-              compact={false}
-            />
-          ) : (
-            <>
+          {evidenceUploadError && (
+            <div className="rounded-lg border border-[#f6b5aa] bg-[#fff1ee] px-3 py-2 text-sm text-[#9b321f] space-y-2">
+              <p>
+                ✓ Hallazgo creado, pero no pudimos adjuntar la evidencia.
+              </p>
+              <p className="text-xs">{evidenceUploadError}</p>
+              <p className="text-xs">Puedes intentar adjuntarla nuevamente desde el detalle del hallazgo.</p>
+            </div>
+          )}
+
           <div className="grid gap-4 md:grid-cols-2">
             <label className="space-y-2 text-sm font-semibold text-[#3d4d45]">
               Proyecto
@@ -347,32 +352,39 @@ export function NewFindingDialog({
             </label>
           </div>
 
+          <div className="border-t-2 border-dashed border-[#dbe4dd] pt-5">
+            <EvidenceSelector
+              file={selectedFile}
+              onFileChange={setSelectedFile}
+              onError={(err) => setEvidenceUploadError(err)}
+              helperText="Adjunta una captura, imagen o documento que ayude a contextualizar el hallazgo."
+            />
+          </div>
+
           <SupportLinkInput
             links={supportLinks}
             onChange={setSupportLinks}
           />
-            </>
-          )}
         </div>
 
         <div className="sticky bottom-0 shrink-0 flex flex-col-reverse gap-2 border-t border-[#dbe4dd] bg-white px-5 py-4 sm:flex-row sm:justify-end">
           <button
             type="button"
             onClick={close}
-            className="inline-flex h-10 items-center justify-center rounded-lg border border-[#dbe4dd] px-4 text-sm font-semibold text-[#17251f] transition hover:bg-[#edf4ed]"
+            disabled={isSubmitting || isUploadingEvidence}
+            className="inline-flex h-10 items-center justify-center rounded-lg border border-[#dbe4dd] px-4 text-sm font-semibold text-[#17251f] transition hover:bg-[#edf4ed] disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {showEvidenceUploader ? 'Finalizar' : 'Cancelar'}
+            Cancelar
           </button>
-          {!showEvidenceUploader && (
-            <button
-              type="submit"
-              disabled={isSubmitting || !projectId || !createdDate}
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-[#052b20] px-4 text-sm font-semibold text-white transition hover:bg-[#0b3e30] disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
-              Crear hallazgo
-            </button>
-          )}
+          <button
+            type="submit"
+            disabled={isSubmitting || isUploadingEvidence || !projectId || !createdDate}
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-[#052b20] px-4 text-sm font-semibold text-white transition hover:bg-[#0b3e30] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
+            {isUploadingEvidence && <Loader2 className="h-4 w-4 animate-spin" />}
+            {isSubmitting || isUploadingEvidence ? 'Guardando...' : 'Crear hallazgo'}
+          </button>
         </div>
       </form>
     </div>
