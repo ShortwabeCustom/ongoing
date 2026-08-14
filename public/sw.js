@@ -107,7 +107,11 @@ self.addEventListener("message", (event) => {
     self.skipWaiting();
   }
   if (event.data.type === "TRIGGER_SYNC") {
-    processSyncQueue(event.ports[0]);
+    event.waitUntil(
+      processSyncQueue(event.ports[0]).catch((err) => {
+        console.error("Sync processing error:", err);
+      })
+    );
   }
 });
 
