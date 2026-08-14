@@ -574,6 +574,26 @@ export class FindingService {
       }
     }
 
+    // Serialize incidenceTypes (junction table records)
+    if (Array.isArray(serialized.incidenceTypes)) {
+      serialized.incidenceTypes = serialized.incidenceTypes.map((item: any) => {
+        const copy = { ...item }
+        if (copy.createdAt instanceof Date) copy.createdAt = copy.createdAt.toISOString()
+        if (copy.updatedAt instanceof Date) copy.updatedAt = copy.updatedAt.toISOString()
+        return copy
+      })
+    }
+
+    // Serialize experienceTags (junction table records)
+    if (Array.isArray(serialized.experienceTags)) {
+      serialized.experienceTags = serialized.experienceTags.map((item: any) => {
+        const copy = { ...item }
+        if (copy.createdAt instanceof Date) copy.createdAt = copy.createdAt.toISOString()
+        if (copy.updatedAt instanceof Date) copy.updatedAt = copy.updatedAt.toISOString()
+        return copy
+      })
+    }
+
     return serialized
   }
 
