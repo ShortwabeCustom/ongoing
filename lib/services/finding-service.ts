@@ -402,6 +402,7 @@ export class FindingService {
             title: true,
             url: true,
             createdAt: true,
+            updatedAt: true,
           },
         },
       },
@@ -521,6 +522,9 @@ export class FindingService {
         const linkCopy = { ...link }
         if (linkCopy.createdAt instanceof Date) {
           linkCopy.createdAt = linkCopy.createdAt.toISOString()
+        }
+        if (linkCopy.updatedAt instanceof Date) {
+          linkCopy.updatedAt = linkCopy.updatedAt.toISOString()
         }
         if (linkCopy.creator && typeof linkCopy.creator === 'object') {
           linkCopy.creator = { ...linkCopy.creator }
@@ -773,6 +777,7 @@ export class FindingService {
               title: true,
               url: true,
               createdAt: true,
+              updatedAt: true,
             },
           },
         },
