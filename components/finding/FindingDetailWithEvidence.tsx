@@ -8,6 +8,7 @@ import { useLookups } from '@/lib/hooks/useLookups'
 import { EditFindingDialog } from '@/components/finding/EditFindingDialog'
 import { FindingScreensSection } from '@/components/finding/FindingScreensSection'
 import { FindingEvidenceSection } from '@/components/finding/FindingEvidenceSection'
+import { SupportLinksList } from '@/components/finding/SupportLinksList'
 import {
   EXPERIENCE_TAG_LABELS_ES,
   INCIDENCE_TYPE_LABELS_ES,
@@ -150,6 +151,10 @@ export function FindingDetailWithEvidence({
       <FindingEvidenceSection
         finding={finding}
         evidence={finding.evidence || []}
+      />
+
+      <SupportLinksList
+        links={(finding as any).supportLinks || []}
       />
 
       <EditFindingDialog

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Loader2, X } from 'lucide-react'
 import type { Finding } from '@/lib/types'
 import type { LookupOption } from '@/lib/types/search'
+import type { SupportLink } from '@/lib/validators/finding'
 import {
   EXPERIENCE_TAG_LABELS_ES,
   EXPERIENCE_TAG_OPTIONS,
@@ -16,6 +17,7 @@ import {
   SEVERITY_LABELS_ES,
 } from '@/lib/constants/finding-options'
 import { cn } from '@/lib/utils'
+import { SupportLinkInput } from '@/components/ui/SupportLinkInput'
 
 type EditFindingDialogProps = {
   open: boolean
@@ -55,6 +57,7 @@ export function EditFindingDialog({
   const [severity, setSeverity] = useState(finding.severity)
   const [flowStep, setFlowStep] = useState(finding.flowStep ?? '')
   const [assigneeId, setAssigneeId] = useState(finding.assigneeId ?? '')
+  const [supportLinks, setSupportLinks] = useState<SupportLink[]>([])
 
   useEffect(() => {
     if (!open) return
@@ -66,6 +69,7 @@ export function EditFindingDialog({
     setAssigneeId(finding.assigneeId ?? '')
     setIncidenceTypes(finding.incidenceTypes?.map((item) => item.incidenceType) ?? [])
     setExperienceTags(finding.experienceTags?.map((item) => item.experienceTag) ?? [])
+    setSupportLinks((finding as any).supportLinks ?? [])
     setError(null)
   }, [open, finding])
 
@@ -93,6 +97,7 @@ export function EditFindingDialog({
           severity,
           incidenceTypes,
           experienceTags,
+          supportLinks: supportLinks.length > 0 ? supportLinks : undefined,
           flowStep: flowStep || null,
           assigneeId: assigneeId || null,
         }),
@@ -253,6 +258,13 @@ export function EditFindingDialog({
                 className="pm-input h-11 w-full px-3 text-sm font-normal focus:outline-none focus:ring-2 focus:ring-[#00a85a]"
               />
             </label>
+          </div>
+
+          <div className="border-t-2 border-dashed border-[#dbe4dd] pt-5">
+            <SupportLinkInput
+              links={supportLinks}
+              onChange={setSupportLinks}
+            />
           </div>
         </div>
 

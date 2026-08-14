@@ -395,6 +395,15 @@ export class FindingService {
         },
         experienceTags: true,
         incidenceTypes: true,
+        supportLinks: {
+          orderBy: { createdAt: 'asc' },
+          select: {
+            id: true,
+            title: true,
+            url: true,
+            createdAt: true,
+          },
+        },
       },
     })
   }
@@ -716,11 +725,26 @@ export class FindingService {
         }
       }
 
+      if (updates.supportLinks) {
+        await tx.supportLink.deleteMany({ where: { findingId: id } })
+        if (updates.supportLinks.length > 0) {
+          await tx.supportLink.createMany({
+            data: updates.supportLinks.map((link) => ({
+              findingId: id,
+              title: link.title ?? null,
+              url: link.url,
+              createdBy: updatedBy,
+            })),
+          })
+        }
+      }
+
       const after = await tx.finding.findUnique({
         where: { id },
         include: {
           incidenceTypes: true,
           experienceTags: true,
+          supportLinks: true,
         },
       })
 
