@@ -251,10 +251,20 @@ export class FindingService {
                 create: input.experienceTags.map((experienceTag) => ({ experienceTag })),
               }
             : undefined,
+          supportLinks: input.supportLinks?.length
+            ? {
+                create: input.supportLinks.map((link) => ({
+                  title: link.title ?? undefined,
+                  url: link.url,
+                  createdBy,
+                })),
+              }
+            : undefined,
         },
         include: {
           incidenceTypes: true,
           experienceTags: true,
+          supportLinks: true,
           evidence: true,
           creator: { select: { id: true, email: true, name: true } },
           assignee: { select: { id: true, email: true, name: true } },

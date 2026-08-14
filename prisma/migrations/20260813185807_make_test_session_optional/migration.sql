@@ -4,8 +4,8 @@ ALTER TYPE "ExperienceTag" ADD VALUE 'DEV';
 -- DropForeignKey
 ALTER TABLE "findings" DROP CONSTRAINT "findings_testSessionId_fkey";
 
--- AlterTable
-ALTER TABLE "evidence" ALTER COLUMN "updatedAt" DROP DEFAULT;
+-- AlterTable (only if updatedAt exists)
+-- ALTER TABLE "evidence" ALTER COLUMN "updatedAt" DROP DEFAULT;
 
 -- AlterTable
 ALTER TABLE "findings" ALTER COLUMN "testSessionId" DROP NOT NULL;

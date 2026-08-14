@@ -41,6 +41,7 @@ model User {
   // Evidence and comments
   evidence              Evidence[]
   evidenceDeleted       Evidence[]        @relation("EvidenceDeletedBy")
+  supportLinks          SupportLink[]
   comments              Comment[]
 
   // Resolutions and validations
@@ -223,6 +224,7 @@ model Finding {
   incidenceTypes  FindingIncidenceType[]
   experienceTags  FindingExperienceTag[]
   evidence        Evidence[]
+  supportLinks    SupportLink[]
   resolutions     Resolution[]
   validations     Validation[]
   comments        Comment[]
@@ -358,6 +360,28 @@ enum EvidenceType {
   DOCUMENT
   FIGMA_URL
   EXTERNAL_URL
+}
+
+// ============================================================================
+// SUPPORT LINKS
+// ============================================================================
+
+model SupportLink {
+  id        String   @id @default(cuid())
+  findingId String
+  finding   Finding  @relation(fields: [findingId], references: [id], onDelete: Cascade)
+
+  title     String?  // Optional title
+  url       String   // The support link URL
+
+  createdBy String
+  creator   User   @relation(fields: [createdBy], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([findingId])
+  @@index([createdBy])
+  @@map("support_links")
 }
 
 // ============================================================================

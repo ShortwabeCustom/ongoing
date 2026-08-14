@@ -3,6 +3,11 @@ import { z } from 'zod'
 const idSchema = z.string().min(5, 'Invalid identifier')
 const optionalText = z.string().trim().max(500).optional().nullable()
 
+export const SupportLinkSchema = z.object({
+  title: z.string().trim().max(200).optional().nullable(),
+  url: z.string().url('URL inválida').max(2000),
+})
+
 export const FindingCreateSchema = z.object({
   createdDate: z.string().datetime().optional(),
   testSessionId: idSchema.optional().nullable(),
@@ -16,6 +21,7 @@ export const FindingCreateSchema = z.object({
   dueDate: z.coerce.date().optional().nullable(),
   incidenceTypes: z.array(z.enum(['DESIGN', 'FUNCTIONALITY', 'BUSINESS_RULE', 'COPY'])).min(1, 'Select at least one type'),
   experienceTags: z.array(z.enum(['UI', 'UX', 'COPY', 'DEV'])).optional(),
+  supportLinks: z.array(SupportLinkSchema).optional(),
   previousScreen: optionalText,
   currentScreen: optionalText,
   flowStep: optionalText,
@@ -45,6 +51,7 @@ export const FindingFilterSchema = z.object({
   offset: z.number().int().min(0).default(0),
 })
 
+export type SupportLink = z.infer<typeof SupportLinkSchema>
 export type FindingCreate = z.infer<typeof FindingCreateSchema>
 export type FindingUpdate = z.infer<typeof FindingUpdateSchema>
 export type FindingStatusTransition = z.infer<typeof FindingStatusTransitionSchema>

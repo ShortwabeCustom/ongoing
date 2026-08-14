@@ -3,7 +3,10 @@
 import { type FormEvent, useEffect, useState } from 'react'
 import { Loader2, X } from 'lucide-react'
 import type { LookupOption } from '@/lib/types/search'
+import type { SupportLink } from '@/lib/validators/finding'
 import { DatePicker } from '@/components/ui/DatePicker'
+import { SupportLinkInput } from '@/components/ui/SupportLinkInput'
+import { EvidenceUploader } from '@/components/evidence/EvidenceUploader'
 import {
   EXPERIENCE_TAG_LABELS_ES,
   EXPERIENCE_TAG_OPTIONS,
@@ -15,6 +18,7 @@ import {
   SEVERITY_LABELS_ES,
 } from '@/lib/constants/finding-options'
 import { cn } from '@/lib/utils'
+import type { Evidence } from '@/lib/types'
 
 type NewFindingDialogProps = {
   open: boolean
@@ -61,6 +65,9 @@ export function NewFindingDialog({
   const [severity, setSeverity] = useState('MINOR')
   const [flowStep, setFlowStep] = useState('')
   const [assigneeId, setAssigneeId] = useState('')
+  const [supportLinks, setSupportLinks] = useState<SupportLink[]>([])
+  const [createdFindingId, setCreatedFindingId] = useState<string | null>(null)
+  const [showEvidenceUploader, setShowEvidenceUploader] = useState(false)
 
   useEffect(() => {
     if (open) {
@@ -80,6 +87,9 @@ export function NewFindingDialog({
     setSeverity('MINOR')
     setFlowStep('')
     setAssigneeId('')
+    setSupportLinks([])
+    setCreatedFindingId(null)
+    setShowEvidenceUploader(false)
     setError(null)
   }
 
@@ -108,6 +118,7 @@ export function NewFindingDialog({
         severity,
         incidenceTypes,
         experienceTags,
+        supportLinks: supportLinks.length > 0 ? supportLinks : undefined,
         flowStep: flowStep || undefined,
         assigneeId: assigneeId || undefined,
       }
@@ -121,19 +132,39 @@ export function NewFindingDialog({
       if (!response.ok) throw new Error(await readApiError(response))
 
       const created = await response.json()
-      resetForm()
-      onCreated(created)
+      setCreatedFindingId(created.id)
+      setShowEvidenceUploader(true)
+      setIsSubmitting(false)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'No se pudo crear el hallazgo')
-    } finally {
       setIsSubmitting(false)
     }
   }
 
+  const handleEvidenceSuccess = (evidence: Evidence) => {
+    // Evidence uploaded, can upload more or close
+  }
+
+  const handleEvidenceError = (error: string) => {
+    setError(error)
+  }
+
+  const finishCreating = () => {
+    resetForm()
+    if (createdFindingId) {
+      onCreated({ id: createdFindingId })
+    }
+    onClose()
+  }
+
   const close = () => {
     if (isSubmitting) return
-    resetForm()
-    onClose()
+    if (showEvidenceUploader && createdFindingId) {
+      finishCreating()
+    } else {
+      resetForm()
+      onClose()
+    }
   }
 
   return (
@@ -144,9 +175,13 @@ export function NewFindingDialog({
       >
         <div className="sticky top-0 z-10 flex shrink-0 items-start justify-between gap-4 border-b border-[#dbe4dd] bg-white px-5 py-4">
           <div>
-            <h2 className="text-lg font-semibold text-[#17251f]">Nuevo hallazgo</h2>
+            <h2 className="text-lg font-semibold text-[#17251f]">
+              {showEvidenceUploader ? 'Subir evidencia' : 'Nuevo hallazgo'}
+            </h2>
             <p className="mt-1 text-sm text-[#65766e]">
-              Registra la observación y después podrás adjuntar evidencias desde el detalle.
+              {showEvidenceUploader
+                ? 'Adjunta archivos de soporte (opcional). Puedes agregar más desde el detalle.'
+                : 'Registra la observación y después podrás adjuntar evidencias.'}
             </p>
           </div>
           <button
@@ -166,6 +201,15 @@ export function NewFindingDialog({
             </p>
           )}
 
+          {showEvidenceUploader && createdFindingId ? (
+            <EvidenceUploader
+              findingId={createdFindingId}
+              onSuccess={handleEvidenceSuccess}
+              onError={handleEvidenceError}
+              compact={false}
+            />
+          ) : (
+            <>
           <div className="grid gap-4 md:grid-cols-2">
             <label className="space-y-2 text-sm font-semibold text-[#3d4d45]">
               Proyecto
@@ -302,6 +346,13 @@ export function NewFindingDialog({
               />
             </label>
           </div>
+
+          <SupportLinkInput
+            links={supportLinks}
+            onChange={setSupportLinks}
+          />
+            </>
+          )}
         </div>
 
         <div className="sticky bottom-0 shrink-0 flex flex-col-reverse gap-2 border-t border-[#dbe4dd] bg-white px-5 py-4 sm:flex-row sm:justify-end">
@@ -310,16 +361,18 @@ export function NewFindingDialog({
             onClick={close}
             className="inline-flex h-10 items-center justify-center rounded-lg border border-[#dbe4dd] px-4 text-sm font-semibold text-[#17251f] transition hover:bg-[#edf4ed]"
           >
-            Cancelar
+            {showEvidenceUploader ? 'Finalizar' : 'Cancelar'}
           </button>
-          <button
-            type="submit"
-            disabled={isSubmitting || !projectId || !createdDate}
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-[#052b20] px-4 text-sm font-semibold text-white transition hover:bg-[#0b3e30] disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
-            Crear hallazgo
-          </button>
+          {!showEvidenceUploader && (
+            <button
+              type="submit"
+              disabled={isSubmitting || !projectId || !createdDate}
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-[#052b20] px-4 text-sm font-semibold text-white transition hover:bg-[#0b3e30] disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
+              Crear hallazgo
+            </button>
+          )}
         </div>
       </form>
     </div>
