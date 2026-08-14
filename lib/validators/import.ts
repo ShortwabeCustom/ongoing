@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-const MAX_FILE_SIZE = parseInt(process.env.NEXT_PUBLIC_IMPORT_MAX_FILE_SIZE || '52428800', 10) // 50MB default
+const MAX_FILE_SIZE = parseInt(process.env.NEXT_PUBLIC_IMPORT_MAX_FILE_SIZE || '104857600', 10) // 100MB default
 
 export const ImportPreviewSchema = z.object({
   file: z

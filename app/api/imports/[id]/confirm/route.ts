@@ -4,6 +4,13 @@ import { ImportService } from '@/lib/services/import-service'
 import { getSession } from '@/lib/auth/lucia'
 
 export const dynamic = 'force-dynamic'
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '100mb',
+    },
+  },
+}
 
 export async function POST(
   request: NextRequest,

@@ -2,6 +2,7 @@
 const nextConfig = {
   experimental: {
     useTypeScriptCli: false,
+    isrMemoryCacheSize: 0, // Disable ISR cache to save memory for large uploads
   },
   images: {
     unoptimized: true,
@@ -12,6 +13,9 @@ const nextConfig = {
       pagesBufferLength: 5,
     },
   }),
+  serverRuntimeConfig: {
+    maxRequestBodySize: '100mb',
+  },
   async rewrites() {
     return {
       // Serve the offline-ready report bundle (public/app.html) at the site root.
