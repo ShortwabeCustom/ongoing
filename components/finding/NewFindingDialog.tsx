@@ -19,7 +19,6 @@ import {
   SEVERITY_LABELS_ES,
 } from '@/lib/constants/finding-options'
 import { cn } from '@/lib/utils'
-import type { Evidence } from '@/lib/types'
 
 type NewFindingDialogProps = {
   open: boolean
