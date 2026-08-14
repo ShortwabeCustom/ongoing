@@ -1,8 +1,11 @@
 import { nanoid } from 'nanoid'
 import { type EvidenceType } from '@/lib/generated/prisma/client'
 import { getDb } from '@/lib/db-lazy'
-import { S3StorageClient } from '@/lib/storage/s3-client'
+import { FileStorageClient } from '@/lib/storage/file-client'
 import { STORAGE_CONFIG } from '@/lib/storage/storage-config'
+
+// Use FileStorageClient (local storage) instead of S3
+const StorageClient = FileStorageClient
 
 export interface UploadFileInput {
   buffer: Buffer
@@ -155,14 +158,14 @@ export class StorageService {
     )
 
     try {
-      await S3StorageClient.uploadFile(
+      await StorageClient.uploadFile(
         STORAGE_CONFIG.BUCKET,
         storageKey,
         buffer,
         validated.mimeType,
       )
 
-      const url = await S3StorageClient.generateSignedUrl(
+      const url = await StorageClient.generateSignedUrl(
         STORAGE_CONFIG.BUCKET,
         storageKey,
         STORAGE_CONFIG.SIGNED_URL_EXPIRY,
@@ -219,7 +222,7 @@ export class StorageService {
       }
     } catch (error) {
       try {
-        await S3StorageClient.deleteFile(STORAGE_CONFIG.BUCKET, storageKey)
+        await StorageClient.deleteFile(STORAGE_CONFIG.BUCKET, storageKey)
       } catch (cleanupError) {
         console.error('Failed to clean up uploaded object after metadata error:', cleanupError)
       }
@@ -273,7 +276,7 @@ export class StorageService {
 
   static async objectExists(storageKey: string): Promise<boolean> {
     if (isLegacyStorageKey(storageKey)) return true
-    return S3StorageClient.exists(STORAGE_CONFIG.BUCKET, storageKey)
+    return StorageClient.exists(STORAGE_CONFIG.BUCKET, storageKey)
   }
 
   /**
@@ -303,7 +306,7 @@ export class StorageService {
       }
     }
 
-    const url = await S3StorageClient.generateSignedUrl(
+    const url = await StorageClient.generateSignedUrl(
       STORAGE_CONFIG.BUCKET,
       evidence.storageKey,
       STORAGE_CONFIG.SIGNED_URL_EXPIRY,
@@ -377,7 +380,7 @@ export class StorageService {
 
     let url = evidence.url || ''
     if (!isLegacyStorageKey(evidence.storageKey)) {
-      url = await S3StorageClient.generateSignedUrl(
+      url = await StorageClient.generateSignedUrl(
         STORAGE_CONFIG.BUCKET,
         evidence.storageKey,
         STORAGE_CONFIG.SIGNED_URL_EXPIRY,
