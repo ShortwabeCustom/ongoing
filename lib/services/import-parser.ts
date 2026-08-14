@@ -78,14 +78,15 @@ async function parseCsv(file: File): Promise<ParsedImportFile> {
   }
 }
 
-async function parseXlsx(file: File): Promise<ParsedImportFile> {
+async function parseXlsx(file: File, maxPreviewRows: number = 1000): Promise<ParsedImportFile> {
   const buffer = Buffer.from(await file.arrayBuffer())
 
-  // Use lightweight XLSX parser for better performance on large files
+  // Use lightweight XLSX parser with minimal options for max performance
   const workbook = XLSX.read(buffer, {
     cellFormula: false,
     cellStyles: false,
-  } as XLSX.ParsingOptions)
+    blankCells: false,
+  } as any)
 
   const sheets: ParsedImportSheet[] = []
 
@@ -93,11 +94,15 @@ async function parseXlsx(file: File): Promise<ParsedImportFile> {
     const worksheet = workbook.Sheets[sheetName]
     if (!worksheet) continue
 
-    // Convert to array of arrays for easier processing
+    // Get range to avoid parsing entire sheet
     const range = XLSX.utils.decode_range(worksheet['!ref'] || 'A1')
-    const rows: Array<Array<string>> = []
+    const maxRowToProcess = Math.min(range.e.r, maxPreviewRows + 10) // +10 for headers
 
-    for (let row = range.s.r; row <= range.e.r; row++) {
+    let headerRowIndex = 0
+    let headers: string[] = []
+
+    // Find headers by scanning first rows only
+    for (let row = range.s.r; row <= Math.min(range.e.r, 50); row++) {
       const rowData: Array<string> = []
       for (let col = range.s.c; col <= range.e.c; col++) {
         const cellAddr = XLSX.utils.encode_cell({ r: row, c: col })
@@ -105,18 +110,11 @@ async function parseXlsx(file: File): Promise<ParsedImportFile> {
         const value = cell?.v ?? ''
         rowData.push(cellToString(value))
       }
-      rows.push(rowData)
-    }
 
-    // Find header row
-    let headerRowIndex = 0
-    let headers: string[] = []
-
-    for (let i = 0; i < rows.length; i++) {
-      const candidateHeaders = rows[i].map(cleanHeader)
+      const candidateHeaders = rowData.map(cleanHeader)
       if (candidateHeaders.some(Boolean)) {
         headers = candidateHeaders
-        headerRowIndex = i
+        headerRowIndex = row
         break
       }
     }
@@ -131,12 +129,20 @@ async function parseXlsx(file: File): Promise<ParsedImportFile> {
       continue
     }
 
-    // Extract data rows
+    // Extract data rows - LIMITED to preview size for performance
     const dataRows: ParsedImportSheet['rows'] = []
-    for (let i = headerRowIndex + 1; i < rows.length; i++) {
-      const rowData = rows[i]
-      const data: RawImportRow = {}
+    let rowCount = 0
 
+    for (let row = headerRowIndex + 1; row <= maxRowToProcess && rowCount < maxPreviewRows; row++) {
+      const rowData: Array<string> = []
+      for (let col = range.s.c; col <= range.e.c; col++) {
+        const cellAddr = XLSX.utils.encode_cell({ r: row, c: col })
+        const cell = worksheet[cellAddr]
+        const value = cell?.v ?? ''
+        rowData.push(cellToString(value))
+      }
+
+      const data: RawImportRow = {}
       headers.forEach((header, index) => {
         if (header && rowData[index]) {
           data[header] = rowData[index]
@@ -144,15 +150,20 @@ async function parseXlsx(file: File): Promise<ParsedImportFile> {
       })
 
       if (!rowIsEmpty(data)) {
-        dataRows.push({ sourceRow: i + 1, data })
+        dataRows.push({ sourceRow: row + 1, data })
+        rowCount++
       }
     }
+
+    // Warn if file is larger than preview
+    const totalRows = range.e.r - headerRowIndex
+    const warnings = totalRows > maxPreviewRows ? [`Preview limited to ${maxPreviewRows} rows (file has ${totalRows} data rows)`] : []
 
     sheets.push({
       name: sheetName,
       headers: headers.filter(Boolean),
       rows: dataRows,
-      embeddedImageCount: 0, // XLSX doesn't have image metadata easily accessible
+      embeddedImageCount: 0,
     })
   }
 
