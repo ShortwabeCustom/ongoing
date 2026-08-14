@@ -1,5 +1,6 @@
 import ExcelJS from 'exceljs'
 import Papa from 'papaparse'
+import * as XLSX from 'xlsx'
 
 export type RawImportRow = Record<string, string | undefined>
 
@@ -78,78 +79,88 @@ async function parseCsv(file: File): Promise<ParsedImportFile> {
 }
 
 async function parseXlsx(file: File): Promise<ParsedImportFile> {
-  const workbook = new ExcelJS.Workbook()
   const buffer = Buffer.from(await file.arrayBuffer())
 
-  // Optimize for large files: disable unused features
-  await workbook.xlsx.load(buffer as any, {
-    entries: 'emit',
-    hyperlinks: 'ignore',
-  } as any)
+  // Use lightweight XLSX parser for better performance on large files
+  const workbook = XLSX.read(buffer, {
+    cellFormula: false,
+    cellStyles: false,
+  } as XLSX.ParsingOptions)
 
   const sheets: ParsedImportSheet[] = []
 
-  workbook.worksheets.forEach((worksheet) => {
-    let headerRowNumber = 0
-    let headers: string[] = []
+  for (const sheetName of workbook.SheetNames) {
+    const worksheet = workbook.Sheets[sheetName]
+    if (!worksheet) continue
 
-    worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
-      if (headerRowNumber) return
+    // Convert to array of arrays for easier processing
+    const range = XLSX.utils.decode_range(worksheet['!ref'] || 'A1')
+    const rows: Array<Array<string>> = []
 
-      const values = Array.isArray(row.values) ? row.values.slice(1) : []
-      const candidateHeaders = values.map(cellToString)
-      if (candidateHeaders.some(Boolean)) {
-        headerRowNumber = rowNumber
-        headers = candidateHeaders.map(cleanHeader)
+    for (let row = range.s.r; row <= range.e.r; row++) {
+      const rowData: Array<string> = []
+      for (let col = range.s.c; col <= range.e.c; col++) {
+        const cellAddr = XLSX.utils.encode_cell({ r: row, c: col })
+        const cell = worksheet[cellAddr]
+        const value = cell?.v ?? ''
+        rowData.push(cellToString(value))
       }
-    })
-
-    if (!headerRowNumber || headers.length === 0) {
-      sheets.push({
-        name: worksheet.name,
-        headers: [],
-        rows: [],
-        embeddedImageCount: worksheet.getImages().length,
-      })
-      return
+      rows.push(rowData)
     }
 
-    const rows: ParsedImportSheet['rows'] = []
-    worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
-      if (rowNumber <= headerRowNumber) return
+    // Find header row
+    let headerRowIndex = 0
+    let headers: string[] = []
 
-      const values = Array.isArray(row.values) ? row.values.slice(1) : []
+    for (let i = 0; i < rows.length; i++) {
+      const candidateHeaders = rows[i].map(cleanHeader)
+      if (candidateHeaders.some(Boolean)) {
+        headers = candidateHeaders
+        headerRowIndex = i
+        break
+      }
+    }
+
+    if (headers.length === 0) {
+      sheets.push({
+        name: sheetName,
+        headers: [],
+        rows: [],
+        embeddedImageCount: 0,
+      })
+      continue
+    }
+
+    // Extract data rows
+    const dataRows: ParsedImportSheet['rows'] = []
+    for (let i = headerRowIndex + 1; i < rows.length; i++) {
+      const rowData = rows[i]
       const data: RawImportRow = {}
 
       headers.forEach((header, index) => {
-        if (!header) return
-        const value = cellToString(values[index])
-        if (value) data[header] = value
+        if (header && rowData[index]) {
+          data[header] = rowData[index]
+        }
       })
 
       if (!rowIsEmpty(data)) {
-        rows.push({ sourceRow: rowNumber, data })
+        dataRows.push({ sourceRow: i + 1, data })
       }
-    })
+    }
 
     sheets.push({
-      name: worksheet.name,
+      name: sheetName,
       headers: headers.filter(Boolean),
-      rows,
-      embeddedImageCount: worksheet.getImages().length,
+      rows: dataRows,
+      embeddedImageCount: 0, // XLSX doesn't have image metadata easily accessible
     })
-  })
+  }
 
   return {
     fileName: file.name,
     fileType: 'xlsx',
     sheets,
-    warnings: sheets
-      .filter((sheet) => sheet.embeddedImageCount > 0)
-      .map(
-        (sheet) =>
-          `${sheet.name}: ${sheet.embeddedImageCount} embedded image(s) detected; row mapping requires a real workbook validation pass.`,
-      ),
+    warnings: [],
   }
 }
 
