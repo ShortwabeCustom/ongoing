@@ -515,12 +515,24 @@ export class FindingService {
       })
     }
 
-    // Serialize supportLinks dates
+    // Serialize supportLinks dates (including nested creator dates)
     if (Array.isArray(serialized.supportLinks)) {
       serialized.supportLinks = serialized.supportLinks.map((link: any) => {
         const linkCopy = { ...link }
         if (linkCopy.createdAt instanceof Date) {
           linkCopy.createdAt = linkCopy.createdAt.toISOString()
+        }
+        if (linkCopy.creator && typeof linkCopy.creator === 'object') {
+          linkCopy.creator = { ...linkCopy.creator }
+          if (linkCopy.creator.createdAt instanceof Date) {
+            linkCopy.creator.createdAt = linkCopy.creator.createdAt.toISOString()
+          }
+          if (linkCopy.creator.updatedAt instanceof Date) {
+            linkCopy.creator.updatedAt = linkCopy.creator.updatedAt.toISOString()
+          }
+          if (linkCopy.creator.deletedAt instanceof Date) {
+            linkCopy.creator.deletedAt = linkCopy.creator.deletedAt.toISOString()
+          }
         }
         return linkCopy
       })
@@ -755,7 +767,14 @@ export class FindingService {
         include: {
           incidenceTypes: true,
           experienceTags: true,
-          supportLinks: true,
+          supportLinks: {
+            select: {
+              id: true,
+              title: true,
+              url: true,
+              createdAt: true,
+            },
+          },
         },
       })
 
