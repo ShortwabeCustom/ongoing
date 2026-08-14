@@ -403,6 +403,10 @@ export class FindingService {
             url: true,
             createdAt: true,
             updatedAt: true,
+            createdBy: true,
+            creator: {
+              select: { id: true, email: true, name: true, createdAt: true, updatedAt: true, deletedAt: true },
+            },
           },
         },
       },
