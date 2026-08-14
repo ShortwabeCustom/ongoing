@@ -81,7 +81,11 @@ async function parseXlsx(file: File): Promise<ParsedImportFile> {
   const workbook = new ExcelJS.Workbook()
   const buffer = Buffer.from(await file.arrayBuffer())
 
-  await workbook.xlsx.load(buffer as any)
+  // Optimize for large files: disable unused features
+  await workbook.xlsx.load(buffer as any, {
+    entries: 'emit',
+    hyperlinks: 'ignore',
+  } as any)
 
   const sheets: ParsedImportSheet[] = []
 

@@ -5,6 +5,7 @@ import { getDb } from '@/lib/db-lazy'
 import { getSession } from '@/lib/auth/lucia'
 
 export const dynamic = 'force-dynamic'
+export const maxDuration = 300 // 5 minutes for large file processing
 export const config = {
   api: {
     bodyParser: {
