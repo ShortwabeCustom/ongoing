@@ -1,0 +1,78 @@
+/**
+ * UPDATE TO REAL EVIDENCE IMAGES
+ *
+ * Actualiza las 204 evidencias para usar las 206 imágenes reales del Excel
+ */
+
+import { PrismaClient } from '../lib/generated/prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
+
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) {
+  throw new Error('DATABASE_URL not set');
+}
+
+const pool = new Pool({ connectionString });
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
+
+const log = (msg: string) => console.log(`[${new Date().toISOString()}] ${msg}`);
+
+async function main() {
+  log('🖼️  UPDATE TO REAL EVIDENCE IMAGES\n');
+
+  try {
+    // Get all evidence ordered by creation
+    const allEvidence = await prisma.evidence.findMany({
+      orderBy: {
+        createdAt: 'asc',
+      },
+      select: {
+        id: true,
+        findingId: true,
+      },
+    });
+
+    log(`Found ${allEvidence.length} evidence records\n`);
+    log(`Will map to: 206 real images from Excel\n`);
+
+    let updated = 0;
+
+    // Distribute 206 images across all evidence
+    // We have 206 images and 204 findings, so 2 images will be unused
+    for (let i = 0; i < allEvidence.length; i++) {
+      const evidence = allEvidence[i];
+      const imageNum = (i % 206) + 1; // Cycle through 1-206
+      const newUrl = `/evidence-from-excel/image-${imageNum}.png`;
+
+      await prisma.evidence.update({
+        where: {
+          id: evidence.id,
+        },
+        data: {
+          url: newUrl,
+          originalFilename: `image-${imageNum}.png`,
+          mimeType: 'image/png',
+        },
+      });
+
+      updated++;
+
+      if (updated % 50 === 0) {
+        log(`✅ Updated ${updated}/${allEvidence.length}...`);
+      }
+    }
+
+    log(`\n✨ Successfully updated ${updated} evidence records`);
+    log(`🖼️  Using 206 real images extracted from Excel`);
+    log(`📁 Images location: /evidence-from-excel/`);
+
+  } catch (err) {
+    console.error('❌ Error:', err);
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+main();
