@@ -515,6 +515,17 @@ export class FindingService {
       })
     }
 
+    // Serialize supportLinks dates
+    if (Array.isArray(serialized.supportLinks)) {
+      serialized.supportLinks = serialized.supportLinks.map((link: any) => {
+        const linkCopy = { ...link }
+        if (linkCopy.createdAt instanceof Date) {
+          linkCopy.createdAt = linkCopy.createdAt.toISOString()
+        }
+        return linkCopy
+      })
+    }
+
     return serialized
   }
 
