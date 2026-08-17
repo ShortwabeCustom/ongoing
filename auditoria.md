@@ -1054,10 +1054,104 @@ Tres commits, cada uno con una naturaleza de cambio distinta:
 
 **Correspondencia commit ↔ código desplegado**: `git diff HEAD --stat` (después del 3er commit) → **vacío**. El árbol de trabajo no cambió entre el deploy de §12 y estos commits — son exactamente el mismo código, ahora versionado. `git diff --stat 074c47d8 HEAD` → 23 ficheros, 2079 inserciones/58 borrados, coincide con "14 modificados + 9 nuevos" más los 3 ficheros de esta sesión (`CLAUDE.md` ya contado, `docker-compose.app.yml`/`deploy.yml` ya contados — el total de 23 incluye todo).
 
-**Sin `git push`** — conforme a la instrucción de detenerse ahí; el remoto (`github.com/ShortwabeCustom/ongoing`) queda con 3 commits pendientes de subir hasta que se decida.
+**Sin `git push`** en el momento en que se escribió esta sección — conforme a la instrucción de detenerse ahí; el remoto (`github.com/ShortwabeCustom/ongoing`) quedó con 3 commits pendientes de subir hasta que se decidiera. Ver §13.5: el push se completó poco después, en la misma jornada.
 
-**Nota**: esta propia sección (§13) se añadió a `auditoria.md` *después* del primer commit, así que existe como cambio sin commitear adicional — no se creó un 4to commit para ella sin que se pida explícitamente, ya que los 3 commits de arriba cubren exactamente lo que se pidió (código desplegado + correcciones aprobadas).
+**Nota**: esta propia sección (§13) se añadió a `auditoria.md` *después* del primer commit, así que existe como cambio sin commitear adicional — no se creó un 4to commit para ella sin que se pida explícitamente, ya que los 3 commits de arriba cubren exactamente lo que se pidió (código desplegado + correcciones aprobadas). Ese 4º commit documental sí se hizo después, ver §13.5.
+
+### 13.5 Push completado — 2026-08-17
+
+Se configuró autenticación dedicada: clave SSH ED25519 exclusiva (`~/.ssh/uix_github_deploy`, deploy key con permiso de escritura registrada solo en `ShortwabeCustom/ongoing`, sin tocar ninguna otra identidad del host), alias `github-uix` en `~/.ssh/config`, y `origin` re-apuntado a `git@github-uix:ShortwabeCustom/ongoing.git`. Autenticación confirmada (`ssh -T git@github-uix` → `"Hi ShortwabeCustom/ongoing! You've successfully authenticated"`).
+
+Se añadió un 4º commit documental, `docs(audit): document P0-B deployment and hostname verification` (`0e50589`), revisado línea por línea antes de commitear para confirmar ausencia de contraseñas, `DATABASE_URL` completo, valores de `AUTH_SECRET`/VAPID, cookies o session tokens — limpio.
+
+**Push**: `git push origin main` → `074c47d..0e50589  main -> main` (fast-forward, sin `--force`, sin rebase, sin amend). Verificado: `git rev-parse HEAD` == `git rev-parse origin/main` == `0e50589359fd4350eb309e397f2d7f3faf2f054b`.
+
+Commits finales en `origin/main`: `884617b` (fix RBAC/auth), `8990579` (limpieza de secretos en compose/CI), `7eadd0b` (fix del chequeo de chunks), `0e50589` (documentación). Smoke final tras el push (sin rebuild ni restart): `/api/health`→200, `/findings` anónimo→307→`/login`, `/api/search/findings` anónimo→401, chequeo de chunks→OK, pm2 sin reinicios.
 
 ---
 
-*Informe de auditoría y remediación. §9 = P0-A (backup/restore, verificado). §10-§11 = P0-B (contención C-06/C-03/C-04 + `/api/imports/[id]`), código verificado end-to-end. §12 = deploy ejecutado y verificado en producción, 2026-08-17. §13 = deuda operativa cerrada (hostname canónico, chequeo de chunks corregido, 3 commits locales sin push). El resto del plan (C-01, C-02, C-05, P1-P3) sigue pendiente, conforme al encargo.*
+## 14. P0-C · C-05 — Actualización parcial corrompe datos silenciosamente — 2026-08-17 (código listo, SIN commit, SIN deploy)
+
+**Estado**: cambios en el árbol de trabajo, revisados y verificados de forma independiente. Producción intacta (`findings=0, users=1, audit_logs=0`), pm2 sin reinicios, `HEAD == origin/main` sin tocar.
+
+### 14.1 Causa raíz — re-verificada en HEAD actual, no asumida
+
+`lib/validators/finding.ts:30-34` construía `FindingUpdateSchema` como `FindingCreateSchema.omit({testSessionId:true}).extend({version}).partial()`. `.partial()` en Zod hace opcional un campo con `.default()` pero **no elimina el default** — así que un `PATCH` que omite `severity`/`effort` los recibía rellenos con los defaults de CREATE (`MINOR`, `M`). Reproducido en vivo antes de tocar nada:
+```
+FindingUpdateSchema.parse({ version: 3, priority: "HIGH" })
+  -> {"priority":"HIGH","severity":"MINOR","effort":"M","version":3}   // MAL: severity/effort inventados
+```
+Zod en uso: **4.4.3** (verificado, no asumido). Matiz que corrige el diagnóstico original: `lib/services/finding-service.ts` ya construía el `data` de Prisma con guardas correctas — el problema era enteramente del validador, que le entregaba al servicio claves que el usuario nunca envió.
+
+### 14.2 Fix aplicado
+
+- `lib/validators/finding.ts`: `FindingUpdateSchema` reescrito como `z.object({...})` **independiente**, todos los campos `.optional()`, **sin ningún `.default()`**. `FindingCreateSchema` sin cambios de comportamiento (sigue con sus defaults).
+- `lib/services/finding-service.ts`: `hasOwn` → `isPresent` (además de `hasOwnProperty`, exige `!== undefined`), aplicado a los 11 campos escalares y a la detección de cambio de `assigneeId` para la entrada de auditoría. Cierra además un sub-bug latente: un `undefined` explícito de un llamador interno convertía silenciosamente un campo nullable en `NULL`.
+- `app/api/findings/[id]/route.ts`: **sin cambios** — no hacía falta.
+
+Verificado tras el fix (reproducido de forma independiente, no solo confiado del reporte):
+```
+FindingUpdateSchema.parse({ version: 3, priority: "HIGH" }) -> {"version":3,"priority":"HIGH"}
+FindingUpdateSchema.parse({ version: 3 })                   -> {"version":3}
+FindingCreateSchema.parse({observation:"...", incidenceTypes:["DESIGN"]})
+  -> sigue incluyendo priority=MEDIUM, severity=MINOR, effort=M (CREATE intacto)
+```
+
+### 14.3 Hallazgo nuevo importante: la mitigación de la auditoría original era incorrecta
+
+El informe original de C-05 decía *"Hoy la UI envía siempre el formulario completo, lo que enmascara el fallo"*. **Falso, verificado**: `components/finding/EditFindingDialog.tsx:93-103` **no incluye `effort`** en el cuerpo del `PATCH` (envía `version, observation, priority, severity, incidenceTypes, experienceTags, supportLinks, flowStep, assigneeId` — falta `effort`, `status`, `folio`, `previousScreen`, `currentScreen`, `dueDate`). Esto significa que **C-05 degradaba `effort` a `M` en cada edición hecha desde la interfaz de producción**, no solo en llamadas parciales hipotéticas de clientes externos. Eleva la severidad real del hallazgo original.
+
+### 14.4 Tests y verificación
+
+3 ficheros nuevos, 42 tests (`lib/validators/__tests__/finding-update.test.ts`, `app/api/findings/[id]/__tests__/route.test.ts`, `lib/services/__tests__/finding-service-update.test.ts`), cubriendo los 10 casos pedidos más auditoría. Antes del fix: 19 de 35 fallaban (verificado contra HEAD sin modificar). Después: 42/42 pasan.
+
+**Verificado de forma independiente** (no solo tomado del informe del agente): `git diff` de los 2 ficheros modificados revisado línea por línea — limpio y minimalista. `vitest run` ejecutado por mi cuenta: **142 tests pasan**, 15 ficheros verdes, único rojo `useRealtime.test.ts` (deuda preexistente familia B-03, ya conocida). Reproducción de Zod before/after ejecutada por mi cuenta con resultados idénticos a los reportados. `EditFindingDialog.tsx` leído directamente para confirmar el hallazgo de §14.3.
+
+`tsc --noEmit`: 22 errores antes y después (0 nuevos). `npm run lint`: 355 antes y después (0 nuevos; los 5 ficheros propios del fix, 0 avisos). `npm run build`: exit 0, sin avisos nuevos.
+
+### 14.5 Impacto transversal
+
+- **Bulk update** (`app/api/findings/bulk-update/route.ts`): sin impacto — usa su propio `BulkUpdateSchema` independiente, sin `.default()`, nunca pasó por el esquema roto.
+- **Offline sync**: corrección del propio reporte original — `offline-sync-service.ts` es solo caché IndexedDB del cliente; quien reproduce mutaciones es `sync-queue-processor.ts`, que hace `fetch()` genérico contra los mismos endpoints. Una edición parcial encolada offline **sí sufría la misma corrupción** al sincronizar; con el fix, queda correcta.
+- Único consumidor de `FindingUpdateSchema` en todo el repo: la ruta de PATCH. Único caller adicional del servicio: `transitionFinding` (solo pasa `{status}`, no afectado).
+
+### 14.6 AuditLog
+
+El diff de auditoría ahora refleja solo cambios reales — antes, un `PATCH` de solo `priority` generaba una entrada que mostraba `severity`/`effort` como "cambiados" cuando no lo estaban (certificando como intencionada una corrupción no pedida). Además, ya no se emiten entradas `ASSIGN` espurias cuando `assigneeId` no viene en el payload.
+
+### 14.7 Otros hallazgos nuevos, fuera de alcance, documentados sin tocar
+
+1. `bulk-update` no tiene bloqueo optimista (`updateMany` sin filtro por `version`) ni escribe en `audit_logs`/`finding_status_history` — única ruta de mutación de hallazgos sin rastro de auditoría.
+2. C-01 reproducido de nuevo tal cual (error React #31 en `AuditTrailViewer` tras cualquier edición) — confirma que sigue abierto, sin relación con la corrección de datos de C-05.
+
+### 14.8 Riesgos restantes
+
+Ninguno dentro del alcance de C-05. Contrato de PATCH cubierto por 42 tests más verificación E2E aislada (clúster PostgreSQL desechable restaurado desde el backup P0-A, navegador real, 0 `pageerror`, `version` incrementa exactamente +1).
+
+### 14.9 git diff --stat
+
+```
+ lib/services/finding-service.ts | 36 +++++++++++--------
+ lib/validators/finding.ts       | 77 ++++++++++++++++++++++++++++++++++-------
+ 2 files changed, 86 insertions(+), 27 deletions(-)
+```
+Más 3 ficheros de test nuevos sin trackear (790 líneas). Sin `git add`/`commit`/`push`. `HEAD` sigue en `0e50589`, igual que `origin/main`.
+
+### 14.10 Plan de deploy (preparado, NO ejecutado)
+
+Mismo runbook que §12, con el chequeo de chunks ya corregido de §13. Diferencia clave: el smoke de regresión específico de C-05 (`PATCH` parcial → confirmar campos omitidos intactos + `version`+1 exacto por SQL) **requiere un hallazgo real**, y producción tiene 0 hoy — se omite hasta que haya datos, con la cobertura ya demostrada en el entorno aislado como equivalente. El resto del smoke (contrato de P0-B: anónimo bloqueado, OWNER con acceso, `/api/health`/`/api/public/report` sin cambios) se repite igual.
+
+### 14.11 Rollback
+
+Solo código, cero escrituras de datos en esta fase (sin cambios de esquema ni migraciones):
+```bash
+git checkout HEAD -- lib/validators/finding.ts lib/services/finding-service.ts
+rm -rf "app/api/findings/[id]/__tests__" lib/validators/__tests__ \
+       lib/services/__tests__/finding-service-update.test.ts
+npm run build && pm2 restart uix-torrax-cloud --update-env
+```
+Nota de orden: revertir este fix reabre C-05, y con el hallazgo de §14.3 eso significa volver a degradar `effort` en cada edición por la UI — si hiciera falta revertir, conviene congelar ediciones hasta rehacerlo.
+
+---
+
+*Informe de auditoría y remediación. §9 = P0-A (backup/restore, verificado). §10-§11 = P0-B (contención C-06/C-03/C-04 + `/api/imports/[id]`), código verificado end-to-end. §12 = deploy ejecutado y verificado en producción, 2026-08-17. §13 = deuda operativa cerrada, 4 commits pushed a `origin/main`. §14 = P0-C (C-05, corrupción por PATCH parcial), código verificado end-to-end, sin commit ni deploy. Pendiente: C-01, C-02, A-02, P1-P3.*
