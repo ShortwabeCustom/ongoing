@@ -8,6 +8,7 @@ import { FindingStatusActions } from '@/components/finding/FindingStatusActions'
 import { ActivityLog } from '@/components/finding/ActivityLog'
 import { ResolutionWorkflow, ValidationCheckpoint, AuditTrailViewer } from '@/components/workflow'
 import { AppShell } from '@/components/app/AppShell'
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary'
 import {
   PRIORITY_LABELS_ES,
   STATUS_LABELS_ES,
@@ -126,8 +127,18 @@ export default async function FindingDetailPage({ params }: PageProps) {
           <ValidationCheckpoint finding={finding as any} />
         </section>
 
+        {/*
+          C-01: el visor de auditoría lleva su propio límite de error. Antes, un
+          fallo de render aquí subía hasta `app/findings/[id]/error.tsx` y dejaba
+          el hallazgo entero inaccesible; ahora degrada sólo esta tarjeta.
+        */}
         <section className="pm-card p-6 md:p-8">
-          <AuditTrailViewer findingId={finding.id} compact />
+          <ErrorBoundary
+            title="Auditoría"
+            message="No pudimos mostrar el historial de auditoría de este hallazgo. El resto del detalle sigue disponible."
+          >
+            <AuditTrailViewer findingId={finding.id} compact />
+          </ErrorBoundary>
         </section>
       </div>
     </AppShell>

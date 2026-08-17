@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { WorkflowClient } from '@/lib/api/workflow-client'
 import { AuditLogFilter } from '@/lib/validators/workflow'
 import { toast } from '@/components/ui/use-toast'
+import { getAuditChanges } from '@/lib/utils/audit-format'
 
 interface AuditTrailViewerProps {
   findingId: string
@@ -11,12 +12,50 @@ interface AuditTrailViewerProps {
   compact?: boolean
 }
 
+type AuditLogEntry = {
+  id: string
+  action: string
+  actor?: { id?: string; name?: string; email?: string } | null
+  createdAt: string | Date
+  before?: unknown
+  after?: unknown
+}
+
+/**
+ * C-01 · Lista de cambios de una entrada de auditoría.
+ *
+ * Antes, este bloque insertaba `before` y `value` directamente como hijos de
+ * React. Cuando el snapshot traía un array de objetos (`incidenceTypes`,
+ * `experienceTags`, `supportLinks`) React lanzaba el error #31 y derribaba todo
+ * el detalle del hallazgo.
+ *
+ * Ahora los valores pasan siempre por `getAuditChanges`, que garantiza strings.
+ */
+function AuditChangeList({ before, after }: { before: unknown; after: unknown }) {
+  const changes = getAuditChanges(before, after)
+
+  if (changes.length === 0) {
+    return <div>Sin cambios en los campos auditados</div>
+  }
+
+  return (
+    <div>
+      <span>Cambios: </span>
+      {changes.map((change) => (
+        <div key={change.key}>
+          {change.key}: {change.before} → {change.after}
+        </div>
+      ))}
+    </div>
+  )
+}
+
 export function AuditTrailViewer({
   findingId,
   limit = 50,
   compact = false,
 }: AuditTrailViewerProps) {
-  const [logs, setLogs] = useState<any[]>([])
+  const [logs, setLogs] = useState<AuditLogEntry[]>([])
   const [total, setTotal] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
   const [filter, setFilter] = useState<Partial<AuditLogFilter>>({
@@ -126,21 +165,10 @@ export function AuditTrailViewer({
                 </span>
               </div>
 
-              {(log.before || log.after) && (
+              {(log.before != null || log.after != null) && (
                 <div className="rounded bg-[#f7faf5] p-2 text-xs text-[#65766e]">
-                  {log.before && log.after ? (
-                    <div>
-                      <span>Cambios: </span>
-                      {Object.entries(log.after).map(([key, value]) => {
-                        const before = log.before?.[key]
-                        if (before === value) return null
-                        return (
-                          <div key={key}>
-                            {key}: {before} → {value}
-                          </div>
-                        )
-                      })}
-                    </div>
+                  {log.before != null && log.after != null ? (
+                    <AuditChangeList before={log.before} after={log.after} />
                   ) : (
                     <div>Sin cambios registrados</div>
                   )}
