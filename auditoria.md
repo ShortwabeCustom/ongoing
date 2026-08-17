@@ -1154,4 +1154,142 @@ Nota de orden: revertir este fix reabre C-05, y con el hallazgo de §14.3 eso si
 
 ---
 
-*Informe de auditoría y remediación. §9 = P0-A (backup/restore, verificado). §10-§11 = P0-B (contención C-06/C-03/C-04 + `/api/imports/[id]`), código verificado end-to-end. §12 = deploy ejecutado y verificado en producción, 2026-08-17. §13 = deuda operativa cerrada, 4 commits pushed a `origin/main`. §14 = P0-C (C-05, corrupción por PATCH parcial), código verificado end-to-end, sin commit ni deploy. Pendiente: C-01, C-02, A-02, P1-P3.*
+## 15. P0-C — Commit, push y deploy — 2026-08-17 (EN PRODUCCIÓN, VERIFICADO)
+
+**Resultado: todo en verde, sin rollback.** Ningún criterio de reversión se cumplió.
+
+### 15.1 Commits y push
+
+| Commit | Hash | Contenido |
+|---|---|---|
+| `fix(findings): preserve omitted fields on partial updates` | **`f78f5f8`** | Solo `lib/validators/finding.ts`, `lib/services/finding-service.ts` + los 3 ficheros de test de C-05 |
+| `docs(audit): document P0-C partial update remediation` | **`e41017e`** | Solo `auditoria.md` |
+
+`git diff origin/main..HEAD --stat` antes del push: exactamente 6 ficheros, nada inesperado. Push limpio: `0e50589..e41017e main -> main` (fast-forward, sin `--force`/amend/rebase).
+
+### 15.2 Quality gate sobre el estado exacto commiteado
+
+| Gate | Resultado | Línea base §14.4 |
+|---|---|---|
+| `tsc --noEmit` | 22 errores (0 en los 5 ficheros de C-05) | 22 — **0 nuevos** |
+| `npm run lint` | 355 problemas (0 en los ficheros de C-05) | 355 — **0 nuevos** |
+| `vitest run` | **142 pasan**, 15 ficheros verdes | igual |
+| `npm run build` | exit 0, sin avisos nuevos | igual |
+
+`useRealtime.test.ts` re-confirmado como deuda preexistente sobre un `git worktree` limpio de `origin/main` — falla idéntico.
+
+### 15.3 Deploy y smoke — verificado también de forma independiente por mí
+
+`BUILD_ID`: `pffSRxp_DkMfAqIhe9sk-` (P0-B) → **`VXJq_i-Lb-1axr5E9CTdL`** (este deploy). pm2: PID `31778` → **`41898`**, `online`, restart count 1→2 (el esperado). `/api/health`→200, `/login`→200, `/findings` anónimo→307→`/login`, `/api/search/findings` anónimo→401, chequeo de chunks→OK. Sin migraciones (`prisma migrate` no se ejecutó — C-05 no toca el schema).
+
+### 15.4 Smoke funcional de C-05 — PATCH real por la ruta de producción
+
+Cuenta temporal `audit-p0c-qalead-20260817@audit.local`, rol **QA_LEAD** (deliberado: `DESIGNER`/`DEVELOPER` pueden crear pero no editar, per M-08 — usar esos roles habría dado un 403 ajeno a C-05).
+
+**PATCH #1** — `{"version":1,"priority":"HIGH"}`:
+```
+antes  : version=1 priority=MEDIUM severity=MAJOR effort=L
+después: version=2 priority=HIGH   severity=MAJOR effort=L    ← severity y effort intactos
+```
+**PATCH #2** — `{"version":2,"severity":"BLOCKER"}`:
+```
+después: version=3 priority=HIGH severity=BLOCKER effort=L    ← priority y effort intactos
+```
+Confirmado por las 4 fuentes independientes (respuesta del PATCH, `GET` posterior, fila de PostgreSQL, entrada de `audit_logs`) en ambos casos — coinciden exactamente. `version` incrementó +1 exacto cada vez. Bajo el código anterior, el PATCH #1 habría escrito `severity=MINOR, effort=M` silenciosamente.
+
+También probados en vivo: `version` obsoleta → 409 `VERSION_MISMATCH`; `priority:"URGENTE"` → 400; cero mutaciones en ambos casos.
+
+**AuditLog**: PATCH #1 marca solo `priority` como cambiado; PATCH #2 marca solo `severity`. Exactamente 3 filas de auditoría (`CREATE`, `UPDATE`, `UPDATE`) — sin entradas `ASSIGN`/`STATUS_CHANGE` espurias.
+
+### 15.5 Cleanup — verificado
+
+Transacción: `findingsDeleted=1, auditLogsDeleted=3, statusHistoryDeleted=1, projectMembersDeleted=1, userDeleted=1`. Verificación posterior (re-confirmada por mí de forma independiente): `users=1` (solo OWNER), `findings=0`, `sessions=0`, `audit_logs=0` — exactamente la línea base, cero residuales `AUDIT-*`. Checksum del backup P0-A re-verificado sin cambios.
+
+### 15.6 Desviaciones registradas
+
+- La cuenta temporal necesitó una fila en `project_members` (RBAC de proyecto, no relacionado con C-05) — creada y limpiada.
+- `DELETE /api/findings/{id}` es borrado lógico (`deletedAt`); para devolver `findings` a 0 se usó una transacción SQL acotada, como en fases anteriores.
+- El chequeo de chunks es evidencia débil esta vez (la página `/login` no cambió, mismo hash que en §13.3) — la prueba fuerte de que el código nuevo está en vivo es el comportamiento observado (`severity`/`effort` preservados) más el `BUILD_ID` nuevo.
+
+### 15.7 Hallazgos nuevos, fuera de alcance, documentados sin tocar
+
+1. **Asimetría en el snapshot de AuditLog**: `updateFinding` omite `supportLinks` del snapshot `before` pero lo incluye en `after`, así que **toda** entrada `UPDATE` muestra un cambio fantasma `supportLinks: undefined -> []`. Misma familia de problema que C-05 (certifica un cambio que no ocurrió) pero sin corrupción de datos reales. No corregido.
+2. **`/api/findings/[id]/validations` sigue devolviendo 500** ante payload inválido — confirma que A-03 sigue abierto, preexistente, no relacionado con este deploy.
+3. Reconfirmados sin tocar: `bulk-update` sin bloqueo optimista ni auditoría; **C-01 sigue abierto**.
+
+**C-01 y C-02 no se iniciaron, conforme a la instrucción.**
+
+---
+
+## 16. P1-A · C-01 — `AuditTrailViewer` derriba el detalle del hallazgo — 2026-08-17 (código listo, SIN commit, SIN deploy)
+
+**Estado**: cambios en el árbol de trabajo, revisados y verificados de forma independiente. `HEAD == origin/main == e41017e`. Producción intacta (`findings=0, users=1`), pm2 PID `41898` sin reinicios en todo el ejercicio.
+
+### 16.1 Causa raíz reconfirmada — con una corrección al informe original
+
+`components/workflow/AuditTrailViewer.tsx:134-142` (antes del fix) insertaba `before`/`value` directamente como hijos de React en `{key}: {before} → {value}`. Los snapshots de `lib/services/finding-service.ts` (`toAuditJson(current)`/`toAuditJson(after)`) son la fila completa vía Prisma, incluidas las tablas join como arrays de objetos.
+
+**Corrección importante**: C-01 no es específico de `incidenceTypes` como decía el informe original — revienta con **cualquier** campo de tipo objeto/array-de-objetos que `Object.entries` encuentre primero. En la reproducción de esta fase el error real citó `experienceTags` (`{findingId, experienceTag}`), no `incidenceTypes`. Hoy hay **tres** campos vulnerables (`incidenceTypes`, `experienceTags`, `supportLinks`) y cualquier campo futuro del mismo tipo lo sería también.
+
+**Segundo defecto en las mismas líneas, no documentado antes**: `before === value` es igualdad por referencia — para arrays/objetos es *siempre* `false`, así que toda entrada `UPDATE` marcaba `incidenceTypes`/`experienceTags` como "cambiados" sin haberlo hecho, aunque no reventara.
+
+Confirmado por SQL que el dato en PostgreSQL siempre fue correcto — sigue siendo estrictamente un problema de presentación, tal como concluyó la auditoría original.
+
+### 16.2 Fix aplicado
+
+- **`lib/utils/audit-format.ts`** (nuevo): `formatAuditValue()` — convierte cualquier valor en string, nunca lanza, nunca produce `"[object Object]"`; presentadores de dominio para `incidenceTypes`/`experienceTags`/`supportLinks`/`evidence`, fallback genérico con `JSON.stringify` canónico (claves ordenadas, referencias circulares detectadas, truncado a 200 caracteres) para formas desconocidas. `auditValuesEqual()` — igualdad por valor, corrige el segundo defecto de §16.1. `getAuditChanges()` — diff presentable entre `before`/`after`.
+- **`components/ui/ErrorBoundary.tsx`** (nuevo): el repo no tenía ningún límite de error de cliente (0 resultados de grep) — solo el `error.tsx` de segmento que cubre toda la página. Boundary mínimo, de props serializables, usable desde un Server Component.
+- **`components/workflow/AuditTrailViewer.tsx`**: extraído `AuditChangeList`, usa `getAuditChanges`; `useState<any[]>` → `useState<AuditLogEntry[]>`.
+- **`app/findings/[id]/page.tsx`**: envuelve el visor en el nuevo `ErrorBoundary` — un fallo del historial ahora degrada solo esa tarjeta, no todo el detalle.
+- **`FindingService` no se tocó**: la causa está en el consumo, no en la serialización; cambiar el snapshot habría alterado datos históricos ya escritos sin arreglar los hallazgos ya "ladrillados", que con este fix se recuperan solos sin tocar una fila.
+
+### 16.3 Verificación — independiente, no solo tomada del informe del agente
+
+Revisé el diff completo de los 2 ficheros modificados línea por línea y el contenido de `lib/utils/audit-format.ts` — diseño limpio, minimalista, con las garantías del contrato (siempre string, determinista, sin ocultar campos) verificables en el propio código. Ejecuté `vitest run` yo mismo:
+
+```
+Test Files  1 failed | 18 passed (19)
+     Tests  186 passed (186)
+```
+(142 de P0-C + 44 nuevos de C-01. Único rojo: `useRealtime.test.ts`, deuda preexistente ya conocida — no relacionada.) `tsc`/`lint`/`build`: 0 nuevos según el informe del agente (22 errores y 355 problemas preexistentes, ambos sin cambios; diff limpio, sin motivo de duda dado el tamaño acotado del cambio).
+
+**Antes del fix** (tests escritos primero, ejecutados contra código sin modificar): 7 de 16 tests nuevos fallaban con el error real `Objects are not valid as a React child`. Después: 44/44 pasan.
+
+### 16.4 E2E aislado
+
+Clúster PostgreSQL desechable restaurado desde el backup P0-A, app aislada en scratchpad, Chromium real, etiqueta `AUDIT-P1A-AUDIT-TRAIL-20260817`. Flujo completo (crear → editar → guardar → recargar → verificar → editar de nuevo → recargar → verificar historial): **22/22 checks OK**, 0 React #31, 0 `pageerror`, 0 error boundary global. El hallazgo que quedaba "ladrillado" con el código anterior vuelve a abrirse y muestra su historial. C-05 verificado de paso (`effort` intacto en las 3 entradas de auditoría, `version` +1 exacto). Limpieza determinista confirmada, producción re-verificada sin cambios.
+
+### 16.5 Riesgos y hallazgos nuevos, documentados sin tocar
+
+1. **`.next/BUILD_ID` en disco ya no corresponde al proceso vivo** — el `npm run build` de la fase de verificación reescribió `.next` (`CwGJtq7ti5yeowOZxIKQ3` en disco vs. `VXJq_i-Lb-1axr5E9CTdL` sirviendo). Confirmado por mí: `pm2` sigue sirviendo el chunk de P0-C sin cambios. Mitigado por `autorestart: false` (M-12) — un `pm2 restart` accidental desplegaría P1-A sin revisión. Mismo patrón que quedó tras P0-C.
+2. **La asimetría de `supportLinks` (§14.7/§15.7) sigue abierta y ahora es visible**: toda entrada `UPDATE` muestra `supportLinks: (sin dato) → (lista vacía)`, un cambio fantasma legible pero no real. Fuera de alcance, no corregido.
+3. **Hallazgo nuevo, fuera de alcance**: en `/login`, una imagen decorativa de portada intercepta los eventos de puntero sobre el botón de submit (Playwright no pudo pulsarlo por coordenadas). Huele a problema de `z-index`, emparentado con M-05/M-06. No corregido.
+4. Reconfirmado sin tocar: A-03 (validaciones devuelven 500), `bulk-update` sin bloqueo optimista ni auditoría.
+
+### 16.6 git diff --stat
+
+```
+ app/findings/[id]/page.tsx               | 13 ++++++-
+ components/workflow/AuditTrailViewer.tsx | 58 +++++++++++++++++++++++---------
+ 2 files changed, 55 insertions(+), 16 deletions(-)
+```
+Más `lib/utils/audit-format.ts` y `components/ui/ErrorBoundary.tsx` (código nuevo) + 3 ficheros de test (730 líneas). `auditoria.md` en `git status` es la §15 de P0-C, ya pendiente de antes — no tocada en esta fase. Sin `git add`/`commit`/`push`.
+
+### 16.7 Plan de deploy y rollback
+
+Mismo runbook que §12/§15. Sin migraciones (P1-A no toca el esquema). El smoke funcional de C-01 requiere un hallazgo real editado tras el deploy — producción tiene `findings=0` hoy, igual que para el smoke de C-05 en su momento. Rollback solo de código (cero escrituras de datos): revertir los 2 ficheros modificados + borrar los 2 nuevos → build → restart. Nota de orden: revertir reabre C-01 completo — todo hallazgo editado vuelve a quedar inaccesible permanentemente hasta borrar sus filas de `audit_logs`.
+
+### 16.8 Añadido durante el cierre (posterior a la verificación de §16.3)
+
+Al preparar el commit se comprobó que **ninguna prueba cubría directamente el aislamiento del `ErrorBoundary`**: las 44 de §16.3 demuestran que el formateador ya no lanza, pero ninguna demuestra la segunda garantía del fix — que si el visor lanza *igualmente*, degrada sólo su tarjeta y no derriba el detalle. Es justo la propiedad que convierte C-01 en un fallo no recurrente, así que se añadió `components/workflow/__tests__/audit-trail-error-boundary.test.tsx` (4 pruebas):
+
+- **control** — sin fallo, la auditoría se muestra y el texto degradado no aparece (evita una prueba que pasaría aunque el boundary degradase siempre);
+- **payload hostil** — snapshot con un getter que lanza al ser leído. El formateador real no puede protegerse de esto: la excepción ocurre al *acceder* a la propiedad, antes de que exista un valor que formatear. Es la demostración de que el boundary se gana su sitio;
+- **fallo simulado del formateador** — representa cualquier regresión futura dentro de `audit-format.ts`;
+- **secciones hermanas vivas** — se verifican los nodos del DOM, no sólo el texto, para descartar restos de un árbol ya desmontado.
+
+En los tres casos de fallo las secciones hermanas siguen montadas y sólo la tarjeta de auditoría muestra su estado degradado. Contadores actualizados: **48 pruebas nuevas de C-01** (no 44) y **4 ficheros de test**; suite total **190 pasan**, 19 ficheros verdes, único rojo `useRealtime.test.ts` (deuda preexistente, sin cambios). `tsc` 22 y `lint` 355 se mantienen idénticos, 0 en ficheros de C-01.
+
+---
+
+*Informe de auditoría y remediación. §9 = P0-A (backup/restore, verificado). §10-§11 = P0-B (contención C-06/C-03/C-04 + `/api/imports/[id]`), código verificado end-to-end. §12-§13 = P0-B desplegado y pusheado a `origin/main`. §14-§15 = P0-C (C-05, corrupción por PATCH parcial), desplegado y verificado en producción. §16 = P1-A (C-01, `AuditTrailViewer` derriba el detalle), código verificado end-to-end, sin commit ni deploy. Pendiente: C-02, A-02, P2-P3.*
