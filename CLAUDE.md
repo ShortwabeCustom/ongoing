@@ -95,8 +95,38 @@ pm2 save              # Guardar estado
 **Verification**:
 ```bash
 # Verificar chunks (CRITICAL CHECK)
-bash -c 'ACTUAL=$(ls .next/static/chunks/app/findings/page-*.js | sed "s/.*page-//" | sed "s/.js//"); SERVED=$(curl -s https://uix.torrax.cloud/findings 2>/dev/null | grep -o "page-[a-f0-9]*\.js" | sed "s/.js//" | head -1); [ "$ACTUAL" = "$SERVED" ] && echo "✅ OK" || echo "❌ MISMATCH"'
+#
+# Notas (P0-B, 2026-08-17, ver auditoria.md §10-§12):
+# - Se usa /login en vez de /findings: /findings ahora exige sesión por diseño
+#   (redirect 307 -> /login para anónimos), así que un curl anónimo ya no ve el
+#   chunk embebido en esa ruta. /login es pública y estática.
+# - Hostname CANÓNICO real de producción: uix.productdesign.mx (único server_name
+#   configurado en nginx, único hostname con certificado TLS válido — verificado
+#   contra /etc/nginx/sites-enabled y el certificado servido, no asumido de la doc).
+#   uix.torrax.cloud resuelve por DNS a este mismo host pero NO tiene vhost ni
+#   certificado propios: cualquier cliente TLS estricto (curl sin -k, navegadores)
+#   falla ahí con "no alternative certificate subject name matches". No usar ese
+#   hostname para verificación — ver hallazgo operativo abajo.
+# - La versión anterior de este check tenía un bug de `sed`: extraía el hash del
+#   fichero local (`ACTUAL`) pero NO le quitaba el prefijo "page-" al hash servido
+#   (`SERVED`), así que comparaba "abc123..." contra "page-abc123..." y SIEMPRE
+#   daba MISMATCH, incluso con un deploy perfecto. Corregido abajo: ambos lados se
+#   normalizan igual, y el script devuelve exit code != 0 en caso de mismatch real
+#   (antes el comando de una sola línea nunca fallaba con código de salida != 0).
+bash -c '
+set -euo pipefail
+HOST="https://uix.productdesign.mx"
+LOCAL_FILE=$(ls .next/static/chunks/app/login/page-*.js 2>/dev/null | head -1)
+if [ -z "$LOCAL_FILE" ]; then echo "❌ No hay build local (.next/static/chunks/app/login/page-*.js)"; exit 1; fi
+ACTUAL=$(basename "$LOCAL_FILE" .js | sed "s/^page-//")
+HTML=$(curl -fsS "$HOST/login") || { echo "❌ No se pudo obtener $HOST/login"; exit 1; }
+SERVED=$(echo "$HTML" | grep -oE "/_next/static/chunks/app/login/page-[a-f0-9]+\.js" | head -1 | sed -E "s#.*/page-([a-f0-9]+)\.js#\1#")
+if [ -z "$SERVED" ]; then echo "❌ No se encontró chunk page-*.js de /login en la respuesta"; exit 1; fi
+if [ "$ACTUAL" = "$SERVED" ]; then echo "✅ OK (chunk $ACTUAL)"; exit 0; else echo "❌ MISMATCH (local=$ACTUAL servido=$SERVED)"; exit 1; fi
+'
 ```
+
+**Hallazgo operativo separado (no corregido aquí, requiere decisión de infraestructura)**: `uix.torrax.cloud` — el hostname usado en el nombre del proceso pm2 (`uix-torrax-cloud`), en gran parte de la documentación y en `auditoria.md` — **no tiene vhost ni certificado TLS propio configurado en este host**. Resuelve por DNS a la misma IP que `uix.productdesign.mx`, pero nginx solo tiene `server_name uix.productdesign.mx`, así que cualquier petición TLS a `uix.torrax.cloud` recibe el certificado de `uix.productdesign.mx` (único bloque HTTPS configurado, actúa como default implícito del socket 443) y falla la validación en cualquier cliente estricto. No se ha tocado infraestructura para corregir esto — requiere decidir cuál es el dominio de producto real y, si es `uix.torrax.cloud`, emitir un certificado para él (p. ej. `certbot --nginx -d uix.torrax.cloud`) o renombrar todo lo que asume ese hostname.
 
 **⚠️ CRITICAL RULES**:
 - ✅ SIEMPRE usar `ecosystem.config.js` para iniciar
