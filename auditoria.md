@@ -999,10 +999,65 @@ La prueba real de que el código nuevo está en vivo es más fuerte que este che
 
 Nada del alcance excluido fue tocado: sin C-01/C-02/C-05, sin P1-P3, sin rotación de OWNER ni de secretos inactivos, sin `git add`/`commit`/`push`.
 
-### 12.8 Decisión pendiente
+### 12.8 Decisión pendiente (resuelta en §13)
 
 Corregir (o no) el `sed` del chequeo de chunks en `CLAUDE.md:101` y decidir el hostname canónico del certificado TLS — ninguna de las dos cosas afecta la seguridad del deploy ya realizado, son solo higiene de la propia herramienta de verificación.
 
 ---
 
-*Informe de auditoría y remediación. §9 = P0-A (backup/restore, verificado). §10-§11 = P0-B (contención C-06/C-03/C-04 + `/api/imports/[id]`), código verificado end-to-end. §12 = **deploy ejecutado y verificado en producción, 2026-08-17**. El resto del plan (C-01, C-02, C-05, P1-P3) sigue pendiente, conforme al encargo.*
+## 13. CIERRE DE DEUDA OPERATIVA + COMMITS — 2026-08-17 (SIN PUSH)
+
+### 13.1 Hostname canónico de producción, verificado contra configuración real (no asumido de la doc)
+
+- **Hostname canónico**: `uix.productdesign.mx` — único `server_name` configurado en nginx (`/etc/nginx/sites-enabled/uix.productdesign.mx`), único hostname con certificado válido.
+- **Hostnames alternativos configurados**: ninguno. `uix.torrax.cloud` (usado en el nombre del proceso pm2, `CLAUDE.md`, y buena parte de la documentación) **resuelve por DNS a la misma IP** (`46.225.236.4`) pero **no tiene vhost propio en nginx**. Al no haber `default_server` explícito en el socket 443, el único bloque HTTPS configurado (`uix.productdesign.mx`) actúa como default implícito — por eso cualquier petición TLS a `uix.torrax.cloud` recibe ese certificado, que no lo ampara.
+- **Certificado presentado**: Let's Encrypt, `CN=uix.productdesign.mx`, emitido 2026-08-16 16:11 UTC, expira 2026-11-14.
+- **SANs del certificado**: uno solo — `DNS:uix.productdesign.mx`. No es un certificado multi-dominio.
+- **Upstream/puerto real**: `proxy_pass http://127.0.0.1:3000` — coincide exactamente con el puerto real de pm2 (`ecosystem.config.js`, `PORT: 3000`).
+
+**Verificado en vivo, sin `-k`**: `curl https://uix.productdesign.mx/login` → `200`. `curl https://uix.torrax.cloud/login` → falla con `SSL: no alternative certificate subject name matches target host name 'uix.torrax.cloud'` (error 60) — el fallo es real y no se ha ocultado ni evitado.
+
+**Hallazgo operativo separado, no corregido** (per instrucción explícita de no tocar infraestructura sin decisión): `uix.torrax.cloud` es el hostname asumido en el nombre del proceso pm2 y en gran parte de la documentación, pero no funciona por HTTPS con validación estricta. Requiere decidir: ¿el dominio de producto real es `uix.productdesign.mx` (y hay que renombrar todo lo que asume `torrax.cloud`), o `uix.torrax.cloud` debería tener su propio certificado (`certbot --nginx -d uix.torrax.cloud`)? No se ha cambiado nada de nginx/certbot.
+
+### 13.2 Los dos defectos del check original, confirmados
+
+**a) Problema TLS/hostname**: el check apuntaba a `https://uix.torrax.cloud`, que falla la validación TLS por lo descrito en §13.1 — el `curl` sin `-k` nunca llega a completar la petición.
+
+**b) Extracción incorrecta por `sed`**: `ACTUAL` se calculaba con `sed "s/.*page-//"` (quita todo hasta `page-` inclusive, deja solo el hash), pero `SERVED` solo tenía `sed "s/.js//"` (nunca le quitaba el prefijo `page-`). Comparaba `"abc123..."` contra `"page-abc123..."` — **siempre `MISMATCH`, incluso con un deploy perfecto**. Confirmado reproduciendo el bug de forma aislada antes de corregirlo.
+
+### 13.3 Check nuevo — probado y en PASS contra producción
+
+Reemplazado en `CLAUDE.md` por un script que: usa `uix.productdesign.mx` (canónico), normaliza el hash igual en ambos lados, usa la ruta completa (`/_next/static/chunks/app/login/page-...\.js`) para no ambigüedad si hubiera otros chunks `page-*` en la misma respuesta, distingue "no se pudo conectar" de "mismatch real", y **devuelve `exit 1` en caso de fallo** (el comando anterior de una sola línea nunca fallaba con código de salida distinto de cero).
+
+**Probado tres veces**:
+1. Contra producción real, tal cual quedó en `CLAUDE.md`, copiado literalmente del fichero → `✅ OK (chunk ff17aa1979de3dde)`, `exit 0`.
+2. Simulando un build viejo (hash local sustituido por uno falso) → `❌ MISMATCH`, `exit 1` — confirma que el check sí detecta un mismatch real.
+3. Re-ejecutado después de los 3 commits de §13.4 (sin rebuild ni restart) → `✅ OK`, `exit 0` — sin cambios, como se esperaba.
+
+No se usó `-k`/`--insecure` en ningún momento — el fallo TLS contra `uix.torrax.cloud` se dejó fallar y se documentó como hallazgo separado (§13.1), no se ocultó.
+
+### 13.4 Commits — código desplegado + correcciones aprobadas, SIN PUSH
+
+Identidad de git configurada localmente (`user.name`/`user.email`, solo en este repo) para que coincidiera con la ya usada en todo el historial del proyecto (`Alexis <alexis.pro_sk8@hotmail.com>`) — no se tocó configuración global.
+
+Tres commits, cada uno con una naturaleza de cambio distinta:
+
+| Commit | Hash | Contenido |
+|---|---|---|
+| `fix(security): enforce authenticated access to protected resources` | `884617b9ecf60ba192e30472f12c802d64110e49` | Los 14 ficheros modificados + 9 nuevos que ya estaban desplegados en producción desde §12 (RBAC, proxy, page guards, los 4 endpoints corregidos, `seed-users.ts`, tests) + `auditoria.md` |
+| `chore(security): remove hardcoded secrets from compose and CI configs` | `8990579b999d241ddc691eab2ce44fd7e6ec526a` | `docker-compose.app.yml`, `.github/workflows/deploy.yml`, `.gitignore` (regla de `backups/*.dump`) |
+| `docs(ops): fix broken production chunk-verification check` | `7eadd0bf5aed16729076c0a8dd511019c5d527a7` | Solo `CLAUDE.md` |
+
+**`git status` final**: `On branch main. Your branch is ahead of 'origin/main' by 3 commits. nothing to commit, working tree clean.`
+
+**Antes de commitear se confirmó**: `.env` y el `.dump` de P0-A aparecen como `!!` (ignorados) en `git status --ignored` — no entraron en ningún commit. Barrido de `auditoria.md` en busca de contraseñas/valores sensibles en texto plano → limpio. Sin ficheros temporales (`scripts/tmp-audit-viewer.ts` del deploy ya había sido borrado por el agente que lo creó, y nunca se llegó a stagear).
+
+**Correspondencia commit ↔ código desplegado**: `git diff HEAD --stat` (después del 3er commit) → **vacío**. El árbol de trabajo no cambió entre el deploy de §12 y estos commits — son exactamente el mismo código, ahora versionado. `git diff --stat 074c47d8 HEAD` → 23 ficheros, 2079 inserciones/58 borrados, coincide con "14 modificados + 9 nuevos" más los 3 ficheros de esta sesión (`CLAUDE.md` ya contado, `docker-compose.app.yml`/`deploy.yml` ya contados — el total de 23 incluye todo).
+
+**Sin `git push`** — conforme a la instrucción de detenerse ahí; el remoto (`github.com/ShortwabeCustom/ongoing`) queda con 3 commits pendientes de subir hasta que se decida.
+
+**Nota**: esta propia sección (§13) se añadió a `auditoria.md` *después* del primer commit, así que existe como cambio sin commitear adicional — no se creó un 4to commit para ella sin que se pida explícitamente, ya que los 3 commits de arriba cubren exactamente lo que se pidió (código desplegado + correcciones aprobadas).
+
+---
+
+*Informe de auditoría y remediación. §9 = P0-A (backup/restore, verificado). §10-§11 = P0-B (contención C-06/C-03/C-04 + `/api/imports/[id]`), código verificado end-to-end. §12 = deploy ejecutado y verificado en producción, 2026-08-17. §13 = deuda operativa cerrada (hostname canónico, chequeo de chunks corregido, 3 commits locales sin push). El resto del plan (C-01, C-02, C-05, P1-P3) sigue pendiente, conforme al encargo.*
