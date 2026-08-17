@@ -25,8 +25,15 @@ const FINDING_TRANSITIONS: Record<FindingStatus, FindingStatus[]> = {
   REOPENED: ['IN_PROGRESS', 'REOPENED'],
 }
 
-function hasOwn<T extends object>(object: T, key: keyof T) {
-  return Object.prototype.hasOwnProperty.call(object, key)
+/**
+ * C-05 — Un campo cuenta como "enviado" sólo si la clave está presente Y su valor
+ * no es `undefined`. `undefined` explícito se trata como omisión (no cambiar),
+ * nunca como borrado; para limpiar un campo nullable hay que mandar `null`.
+ * Esto es lo que mantiene la invariante «clave ausente ⇒ el `data` de Prisma no
+ * lleva la clave ⇒ la BD conserva su valor anterior».
+ */
+function isPresent<T extends object, K extends keyof T>(object: T, key: K) {
+  return Object.prototype.hasOwnProperty.call(object, key) && object[key] !== undefined
 }
 
 function toAuditJson(value: unknown): Prisma.InputJsonValue | undefined {
@@ -757,17 +764,18 @@ export class FindingService {
         updatedBy,
       }
 
-      if (hasOwn(updates, 'folio')) data.folio = updates.folio ?? null
-      if (hasOwn(updates, 'observation') && updates.observation !== undefined) data.observation = updates.observation
-      if (hasOwn(updates, 'status') && updates.status !== undefined) data.status = updates.status as FindingStatus
-      if (hasOwn(updates, 'priority') && updates.priority !== undefined) data.priority = updates.priority as FindingPriority
-      if (hasOwn(updates, 'severity') && updates.severity !== undefined) data.severity = updates.severity as FindingSeverity
-      if (hasOwn(updates, 'effort') && updates.effort !== undefined) data.effort = updates.effort as FindingEffort
-      if (hasOwn(updates, 'previousScreen')) data.previousScreen = updates.previousScreen ?? null
-      if (hasOwn(updates, 'currentScreen')) data.currentScreen = updates.currentScreen ?? null
-      if (hasOwn(updates, 'flowStep')) data.flowStep = updates.flowStep ?? null
-      if (hasOwn(updates, 'assigneeId')) data.assigneeId = updates.assigneeId ?? null
-      if (hasOwn(updates, 'dueDate')) data.dueDate = updates.dueDate ?? null
+      // Sólo las claves realmente presentes en la petición entran en `data`.
+      if (isPresent(updates, 'folio')) data.folio = updates.folio ?? null
+      if (isPresent(updates, 'observation')) data.observation = updates.observation
+      if (isPresent(updates, 'status')) data.status = updates.status as FindingStatus
+      if (isPresent(updates, 'priority')) data.priority = updates.priority as FindingPriority
+      if (isPresent(updates, 'severity')) data.severity = updates.severity as FindingSeverity
+      if (isPresent(updates, 'effort')) data.effort = updates.effort as FindingEffort
+      if (isPresent(updates, 'previousScreen')) data.previousScreen = updates.previousScreen ?? null
+      if (isPresent(updates, 'currentScreen')) data.currentScreen = updates.currentScreen ?? null
+      if (isPresent(updates, 'flowStep')) data.flowStep = updates.flowStep ?? null
+      if (isPresent(updates, 'assigneeId')) data.assigneeId = updates.assigneeId ?? null
+      if (isPresent(updates, 'dueDate')) data.dueDate = updates.dueDate ?? null
 
       const updated = await tx.finding.updateMany({
         where: {
@@ -858,7 +866,7 @@ export class FindingService {
         })
       }
 
-      if (hasOwn(updates, 'assigneeId') && updates.assigneeId !== current.assigneeId) {
+      if (isPresent(updates, 'assigneeId') && (updates.assigneeId ?? null) !== current.assigneeId) {
         await tx.auditLog.create({
           data: {
             entityType: 'Finding',
