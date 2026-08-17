@@ -11,8 +11,8 @@
 ### 1. ✅ PostgreSQL Configuration
 - **Container**: Docker `finanzas_hogar_db`
 - **Database**: `pruebas_maria_dev`
-- **User**: `torrax_user` | Password: `TorraxDev123!`
-- **Connection**: `postgresql://torrax_user:TorraxDev123!@localhost:5432/pruebas_maria_dev?schema=public`
+- **User**: `torrax_user` | Password: `<DEV_DB_PASSWORD>`
+- **Connection**: `postgresql://torrax_user:<DEV_DB_PASSWORD>@localhost:5432/pruebas_maria_dev?schema=public`
 
 ### 2. ✅ Prisma Migrations
 **Fixed Issues**:
@@ -61,7 +61,7 @@ Password: TestPassword123 (Argon2d hash)
 
 ### .env Updated
 ```
-DATABASE_URL="postgresql://torrax_user:TorraxDev123!@localhost:5432/pruebas_maria_dev?schema=public"
+DATABASE_URL="postgresql://torrax_user:<DEV_DB_PASSWORD>@localhost:5432/pruebas_maria_dev?schema=public"
 ```
 
 ---
@@ -93,7 +93,7 @@ DATABASE_URL="postgresql://torrax_user:TorraxDev123!@localhost:5432/pruebas_mari
 
 **Setup Required**:
 ```bash
-export DATABASE_URL="postgresql://torrax_user:TorraxDev123!@localhost:5432/pruebas_maria_dev?schema=public"
+export DATABASE_URL="postgresql://torrax_user:<DEV_DB_PASSWORD>@localhost:5432/pruebas_maria_dev?schema=public"
 npm run dev  # Server runs on port 3001 (or available port)
 ```
 

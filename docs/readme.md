@@ -115,9 +115,9 @@ docs/
 ```bash
 BD: pruebas_maria_dev
 User: torrax_user
-Password: TorraxDev123!
+Password: <DEV_DB_PASSWORD>
 Host: localhost:5432
-DATABASE_URL=postgresql://torrax_user:TorraxDev123!@localhost:5432/pruebas_maria_dev?schema=public
+DATABASE_URL=postgresql://torrax_user:<DEV_DB_PASSWORD>@localhost:5432/pruebas_maria_dev?schema=public
 ```
 
 ### Test Users (6 roles)
@@ -172,7 +172,7 @@ npm run dev
 ### 2️⃣ Verifica Setup
 ```bash
 # PostgreSQL corriendo
-psql postgresql://torrax_user:TorraxDev123!@localhost:5432/pruebas_maria_dev -c "SELECT COUNT(*) FROM users;"
+psql postgresql://torrax_user:<DEV_DB_PASSWORD>@localhost:5432/pruebas_maria_dev -c "SELECT COUNT(*) FROM users;"
 
 # Elasticsearch corriendo
 curl http://localhost:9200/_cluster/health

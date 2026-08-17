@@ -43,7 +43,7 @@ brew install postgresql
 brew services start postgresql
 
 # Crear usuario + base de datos
-psql postgres -c "CREATE USER torrax_user WITH PASSWORD 'TorraxDev123!';"
+psql postgres -c "CREATE USER torrax_user WITH PASSWORD '<DEV_DB_PASSWORD>';"
 psql postgres -c "CREATE DATABASE pruebas_maria_dev OWNER torrax_user;"
 
 # Verificar
@@ -56,7 +56,7 @@ psql -U torrax_user -d pruebas_maria_dev -c "SELECT 1;"
 sudo apt-get install postgresql postgresql-contrib
 
 # Crear usuario
-sudo -u postgres psql -c "CREATE USER torrax_user WITH PASSWORD 'TorraxDev123!';"
+sudo -u postgres psql -c "CREATE USER torrax_user WITH PASSWORD '<DEV_DB_PASSWORD>';"
 sudo -u postgres psql -c "CREATE DATABASE pruebas_maria_dev OWNER torrax_user;"
 
 # Verificar
@@ -67,9 +67,9 @@ psql -U torrax_user -h localhost -d pruebas_maria_dev -c "SELECT 1;"
 ```bash
 # Crear archivo .env.local
 cat > .env.local << 'EOF'
-DATABASE_URL=postgresql://torrax_user:TorraxDev123!@localhost:5432/pruebas_maria_dev?schema=public
+DATABASE_URL=postgresql://torrax_user:<DEV_DB_PASSWORD>@localhost:5432/pruebas_maria_dev?schema=public
 POSTGRES_USER=torrax_user
-POSTGRES_PASSWORD=TorraxDev123!
+POSTGRES_PASSWORD=<DEV_DB_PASSWORD>
 POSTGRES_DB=pruebas_maria_dev
 EOF
 
@@ -78,7 +78,7 @@ docker-compose up -d
 
 # Verificar
 docker-compose ps
-psql postgresql://torrax_user:TorraxDev123!@localhost:5432/pruebas_maria_dev -c "SELECT 1;"
+psql postgresql://torrax_user:<DEV_DB_PASSWORD>@localhost:5432/pruebas_maria_dev -c "SELECT 1;"
 ```
 
 ---
@@ -88,7 +88,7 @@ psql postgresql://torrax_user:TorraxDev123!@localhost:5432/pruebas_maria_dev -c 
 ### Crear .env.local
 ```bash
 # Database
-DATABASE_URL=postgresql://torrax_user:TorraxDev123!@localhost:5432/pruebas_maria_dev?schema=public
+DATABASE_URL=postgresql://torrax_user:<DEV_DB_PASSWORD>@localhost:5432/pruebas_maria_dev?schema=public
 
 # Auth (Lucia)
 NEXTAUTH_SECRET=your-secret-key-here-min-32-chars

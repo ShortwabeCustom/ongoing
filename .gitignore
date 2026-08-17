@@ -33,5 +33,13 @@ coverage
 .nyc_output
 
 # Backups locales (nunca a git)
-backups/*.dump
-backups/*.sql.gz
+# Amplio a propósito: ningún artefacto runtime de backup (.sql, .dump, .sql.gz,
+# .tar, .tar.gz, etc.) debe poder entrar al repo. Se ignora todo el contenido de
+# backups/. No hay fichero estructural versionado en backups/, así que no se
+# declara ninguna excepción.
+backups/
+
+# Evidence runtime subida por la app (nunca a git).
+# NOTA: public/evidence-from-excel/ y public/images/ son assets LEGACY
+# versionados a propósito y NO se ven afectados por esta regla.
+public/evidence/

@@ -11,7 +11,7 @@ const DB_CONFIG = {
   host: 'localhost',
   port: 5432,
   user: 'torrax_user',
-  password: 'TorraxDev123!',
+  password: process.env.PGPASSWORD,
   database: 'pruebas_maria_dev'
 };
 

@@ -300,7 +300,7 @@ COMMIT;
 
 ### Step 3: Restore from Backup (if needed)
 ```bash
-PGPASSWORD='TorraxDev123!' psql -h localhost -U torrax_user -d pruebas_maria_dev \
+PGPASSWORD='<DEV_DB_PASSWORD>' psql -h localhost -U torrax_user -d pruebas_maria_dev \
   < /var/backups/uix/findings/findings-backup-2026-08-13T01-01-28-944Z.sql
 ```
 

@@ -14,7 +14,7 @@ time: ⏱️ 15 minutes
 ### 1️⃣ Verificar Dependencias
 ```bash
 # PostgreSQL corriendo
-psql postgresql://torrax_user:TorraxDev123!@localhost:5432/pruebas_maria_dev -c "SELECT COUNT(*) FROM users;"
+psql postgresql://torrax_user:<DEV_DB_PASSWORD>@localhost:5432/pruebas_maria_dev -c "SELECT COUNT(*) FROM users;"
 
 # Elasticsearch corriendo
 curl http://localhost:9200/_cluster/health
@@ -81,12 +81,12 @@ open http://localhost:3001
 ```bash
 Database: pruebas_maria_dev
 User: torrax_user
-Password: TorraxDev123!
+Password: <DEV_DB_PASSWORD>
 Host: localhost:5432
 Port: 5432
 
 # Connection String
-DATABASE_URL=postgresql://torrax_user:TorraxDev123!@localhost:5432/pruebas_maria_dev?schema=public
+DATABASE_URL=postgresql://torrax_user:<DEV_DB_PASSWORD>@localhost:5432/pruebas_maria_dev?schema=public
 ```
 
 ### Test Users (6 roles, password: TestPassword123)

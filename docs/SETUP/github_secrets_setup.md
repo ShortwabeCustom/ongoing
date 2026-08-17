@@ -24,7 +24,7 @@ Add these secrets to GitHub repository settings. Replace placeholders with actua
   
 - **Name**: `DATABASE_URL`
   - **Value**: `postgresql://DB_USER:DB_PASSWORD@host:port/pruebas_maria_prod?schema=public`
-  - Example: `postgresql://torrax_user:Pass123!@db.example.com:5432/pruebas_maria_prod?schema=public`
+  - Example: `postgresql://torrax_user:<DB_PASSWORD>@db.example.com:5432/pruebas_maria_prod?schema=public`
 
 ### Authentication
 - **Name**: `AUTH_SECRET`

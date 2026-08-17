@@ -42,7 +42,7 @@ FASE9_ENTRY_POINT.md
 
 ### 2️⃣ Verifica Setup
 ```bash
-export DATABASE_URL="postgresql://torrax_user:TorraxDev123!@localhost:5432/pruebas_maria_dev?schema=public"
+export DATABASE_URL="postgresql://torrax_user:<DEV_DB_PASSWORD>@localhost:5432/pruebas_maria_dev?schema=public"
 npm run dev  # Puerto 3001
 ```
 
@@ -63,7 +63,7 @@ FASE9_MASTER_PROMPT.md (400+ líneas, completo)
 ### PostgreSQL
 ```
 BD: pruebas_maria_dev
-User: torrax_user:TorraxDev123!
+User: torrax_user:<DEV_DB_PASSWORD>
 Host: localhost:5432
 ```
 

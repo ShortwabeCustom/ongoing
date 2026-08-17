@@ -75,7 +75,7 @@ docker-compose ps | grep postgres
 2. ¿DATABASE_URL correcto?
 ```bash
 echo $DATABASE_URL
-# Debe ser: postgresql://torrax_user:TorraxDev123!@localhost:5432/pruebas_maria_dev?schema=public
+# Debe ser: postgresql://torrax_user:<DEV_DB_PASSWORD>@localhost:5432/pruebas_maria_dev?schema=public
 ```
 
 3. ¿Base de datos existe?
