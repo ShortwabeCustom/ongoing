@@ -35,6 +35,7 @@
 
 | Carpeta | Contenido |
 |---------|-----------|
+| `/docs/DECISIONS/` | **ADRs — decisiones de arquitectura** (ADR-001: Evidence Storage / P1-B) |
 | `/docs/PHASES/` | FASE 13, FASE 14, ROADMAP futuro |
 | `/docs/GUIDES/` | RBAC Testing, Setup, Troubleshooting |
 | `/docs/OPERATIONS/` | **Deployment, Production mode, Incidents** ⚠️ |

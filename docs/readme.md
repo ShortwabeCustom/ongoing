@@ -16,6 +16,9 @@
 - **FASE 14** ✅ [Advanced Filters & Batch](./phases/fase_14.md) — Backend ✅ | Frontend ✅ | Production Ready
 - **ROADMAP** 🛣️ [Próximas Fases](./phases/roadmap.md) — FASE 15+ planeado
 
+### 🏛️ Decisiones de Arquitectura (ADR)
+- **ADR-001** ✅ Accepted — [Evidence Storage and Authorized File Delivery (P1-B)](./DECISIONS/ADR-001-evidence-storage-and-authorized-file-delivery.md) — diseño aprobado, **no implementado todavía**
+
 ### 🔧 Guías Prácticas
 
 **Getting Started (SETUP)**
@@ -86,6 +89,9 @@ docs/
 │   ├── troubleshooting.md         # Troubleshooting guide
 │   ├── rbac_testing.md            # RBAC validation
 │   └── security_checklist.md      # Pre-deploy security checks
+│
+├── DECISIONS/                      # Architecture Decision Records (ADR)
+│   └── ADR-001-evidence-storage-and-authorized-file-delivery.md
 │
 ├── PHASES/
 │   ├── FASE_13.md                 # Mobile Optimization ✅
