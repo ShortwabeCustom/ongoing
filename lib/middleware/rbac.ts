@@ -19,8 +19,16 @@ export async function checkRBAC(
   } = options;
 
   const session = await getSession();
+  const user = session?.user;
 
-  if (requireAuth && !session?.user) {
+  // INVARIANTE DE SEGURIDAD (C-03):
+  // una lista `allowedRoles` no vacía IMPLICA sesión obligatoria. `requireAuth: false`
+  // solo puede abrir una ruta al anonimato si NO se declara ningún rol permitido.
+  // Antes, `requireAuth: false` + `allowedRoles` no vacío saltaba la comprobación de rol
+  // por completo (`if (allowedRoles.length > 0 && user)`) y dejaba la ruta totalmente pública.
+  const sessionRequired = requireAuth || allowedRoles.length > 0;
+
+  if (sessionRequired && !user) {
     return {
       valid: false,
       error: NextResponse.json(
@@ -30,10 +38,8 @@ export async function checkRBAC(
     };
   }
 
-  const user = session?.user;
-
-  if (allowedRoles.length > 0 && user) {
-    if (!allowedRoles.includes(user.role as UserRole)) {
+  if (allowedRoles.length > 0) {
+    if (!user || !allowedRoles.includes(user.role as UserRole)) {
       return {
         valid: false,
         error: NextResponse.json(

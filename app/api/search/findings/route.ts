@@ -7,9 +7,9 @@ import { apiSuccess, apiError, ApiError } from '@/lib/utils/api-response'
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
-  // FASE 12: RBAC validation (allow unauthenticated for public search)
+  // C-03: la búsqueda exige sesión. Mismo conjunto de roles que el resto de lecturas de
+  // hallazgos (`GET /api/findings`, `GET /api/findings/[id]`): VIEW_ALL_FINDINGS.
   const { valid, error } = await checkRBAC(request, {
-    requireAuth: false,
     allowedRoles: RBAC_PERMISSIONS.VIEW_ALL_FINDINGS,
   })
   if (!valid) return error

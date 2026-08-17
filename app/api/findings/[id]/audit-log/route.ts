@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { AuditService } from '@/lib/services/audit-service'
 import { AuditLogFilterSchema } from '@/lib/validators/workflow'
 import { apiSuccess, apiError } from '@/lib/utils/api-response'
+import { checkRBAC, RBAC_PERMISSIONS } from '@/lib/middleware/rbac'
 
 function parseIntegerParam(value: string | null) {
   if (!value) return undefined
@@ -13,6 +14,13 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  // C-04: esta ruta no comprobaba sesión ni rol y filtraba actor, email y diffs completos.
+  // Se cablea el permiso VIEW_AUDIT_LOG_ANY, definido pero sin usar hasta ahora (M-07).
+  const { valid, error } = await checkRBAC(request, {
+    allowedRoles: RBAC_PERMISSIONS.VIEW_AUDIT_LOG_ANY,
+  })
+  if (!valid) return error
+
   try {
     const { id: findingId } = await params
     const { searchParams } = new URL(request.url)

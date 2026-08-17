@@ -1,10 +1,13 @@
 import { AppShell } from '@/components/app/AppShell'
 import { SearchFindings } from '@/components/search/SearchFindings'
 import { getInventoryStats } from '@/lib/services/inventory-stats'
+import { requirePageSession } from '@/lib/auth/page-guard'
 
 export const dynamic = 'force-dynamic'
 
 export default async function SearchPage() {
+  await requirePageSession()
+
   const stats = await getInventoryStats()
 
   return (

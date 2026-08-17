@@ -2,6 +2,7 @@ import { SearchFindings } from '@/components/search/SearchFindings'
 import { Suspense } from 'react'
 import { AppShell } from '@/components/app/AppShell'
 import { getInventoryStats } from '@/lib/services/inventory-stats'
+import { requirePageSession } from '@/lib/auth/page-guard'
 
 export const dynamic = 'force-dynamic'
 
@@ -14,6 +15,8 @@ function FindingsLoading() {
 }
 
 export default async function FindingsPage() {
+  await requirePageSession()
+
   const stats = await getInventoryStats()
 
   return (
