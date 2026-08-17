@@ -31,3 +31,7 @@ tsconfig.tsbuildinfo
 # Testing
 coverage
 .nyc_output
+
+# Backups locales (nunca a git)
+backups/*.dump
+backups/*.sql.gz

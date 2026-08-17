@@ -41,13 +41,17 @@ jobs:
 
     env:
       NODE_ENV: production
+      # DATABASE_URL/ELASTICSEARCH_URL: apuntan a los contenedores de servicio efímeros
+      # definidos arriba (solo viven durante este job); no son credenciales de producción.
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/pruebas_maria_ci?schema=public
       ELASTICSEARCH_URL: http://localhost:9200
-      AUTH_SECRET: ci-auth-secret-change-in-production-32chars
+      # P0-B (2026-08-17): AUTH_SECRET y las credenciales S3 eran literales en el working
+      # tree (aunque de CI, no de producción); se sustituyen por GitHub Secrets.
+      AUTH_SECRET: ${{ secrets.CI_AUTH_SECRET }}
       S3_ENDPOINT: http://localhost:9000
       S3_BUCKET: ci-evidence
-      S3_ACCESS_KEY_ID: ci-access-key
-      S3_SECRET_ACCESS_KEY: ci-secret-key
+      S3_ACCESS_KEY_ID: ${{ secrets.CI_S3_ACCESS_KEY_ID }}
+      S3_SECRET_ACCESS_KEY: ${{ secrets.CI_S3_SECRET_ACCESS_KEY }}
       NEXT_PUBLIC_API_URL: http://localhost:3000
       NEXT_PUBLIC_APP_URL: http://localhost:3000
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
