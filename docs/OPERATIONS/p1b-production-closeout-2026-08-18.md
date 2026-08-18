@@ -171,6 +171,26 @@ La entrega SMTP queda bloqueada por sender/OAuth y por la creación root-owned d
 normal de Microsoft. Por ello `ALERT_DELIVERY_VERIFIED=NO` y el gate general sigue
 cerrado.
 
+### Arquitectura sprint posterior — PENDIENTE DE CUTOVER
+
+La política diaria anterior fue reemplazada por decisión humana: backup primario
+en VPS cada 15 días, RPO primario 15 días, 26 checkpoints retenidos sin borrado y
+off-host Mac asíncrono best effort. Se prepararon y validaron un servicio/timer
+systemd, el creador primario independiente y el pull-only del Mac.
+
+La instalación en `/etc/systemd/system` requiere privilegios administrativos que no
+están disponibles en la ejecución desatendida (`sudo -n=NO`). Por preservación del
+servicio, el LaunchAgent anterior sigue activo hasta el cutover. En consecuencia:
+
+```text
+VPS_BACKUP_SERVICE_INSTALLED=NO
+VPS_BACKUP_TIMER_INSTALLED=NO
+VPS_AUTOMATED_PATH_OBSERVED=NO
+OFF_HOST_SYNC_OBSERVED=NO_FOR_NEW_ARCHITECTURE
+RETENTION_POLICY_APPROVED=YES
+RETENTION_DELETE_ENABLED=NO
+```
+
 ## Decisión de gates
 
 | Gate | Estado | Razón |

@@ -4,16 +4,22 @@
 
 ```text
 BACKUP_POLICY_EXISTS=YES
-BACKUP_POLICY_APPROVED=PARTIAL
+BACKUP_POLICY_APPROVED=YES
 BACKUP_POLICY_IMPLEMENTED=NO
-RPO_TARGET=PENDIENTE_APROBACION_HUMANA
-RTO_TARGET=PENDIENTE_APROBACION_HUMANA
+BACKUP_PRIMARY_LOCATION=VPS
+BACKUP_FREQUENCY=every_15_days
+PRIMARY_BACKUP_RPO_TARGET=15_days
+RTO_TARGET=4h
+SPRINT_BACKUPS_RETAINED=26
+RETENTION_POLICY_APPROVED=YES
+RETENTION_DELETE_ENABLED=NO
+OFF_HOST_RPO_TARGET=best_effort
 ```
 
-La generación y monitorización no destructiva están aprobadas e implementadas. La
-retención destructiva continúa pendiente porque los valores siguen marcados como
-`PENDIENTE_APROBACION_HUMANA` en la decisión documental previa. Este documento no
-autoriza eliminación de backups ni apertura de purge.
+Una decisión humana posterior reemplazó la frecuencia diaria por checkpoints de
+sprint cada 15 días y convirtió el VPS en ubicación primaria independiente del Mac.
+La política de conservar 26 checkpoints está aprobada, pero el borrado continúa
+explícitamente deshabilitado. Este documento no autoriza eliminación ni purge.
 
 ```text
 BACKUP_RESPONSIBLE=Alexis Valdez Cortez
@@ -48,29 +54,52 @@ Un backup incompleto de cualquiera de los dos componentes se considera fallido.
 
 | Campo | Propuesta | Estado |
 |---|---|---|
-| Frecuencia | diaria, inicio 02:00 UTC; adicional antes de releases/migraciones | HUMAN_APPROVED |
-| Retención | 35 diarios, 12 semanales y 12 mensuales | PENDIENTE_APROBACION_HUMANA |
+| Frecuencia | cada 15 días; además antes de release, migración o cambio de alto riesgo | HUMAN_APPROVED |
+| Retención | 26 checkpoints de sprint | HUMAN_APPROVED; DELETE_DISABLED |
 | Responsable | Alexis Valdez Cortez | HUMAN_APPROVED |
 | Suplente | ninguno; modo operador único | HUMAN_APPROVED_RISK_ACCEPTED |
-| RPO target | 24 horas | HUMAN_APPROVED |
+| RPO primario | 15 días | HUMAN_APPROVED |
 | RTO target | 4 horas | HUMAN_APPROVED |
 | Restore periódico | trimestral y después de cambios materiales de DB/storage/auth | HUMAN_APPROVED |
 | Canal de alertas | email a `alexis.pro_sk8@hotmail.com`, SMTP seguro con OAuth2 | HUMAN_APPROVED; SECRET_PENDING |
 
-La retención propuesta no debe aplicarse retroactivamente ni borrar snapshots
-existentes hasta contar con aprobación, inventario de paths exactos y verificación
-de que ninguna copia es única.
+La retención no debe borrar snapshots existentes hasta una aprobación destructiva
+posterior. Durante esta etapa sólo se permite inventario, clasificación y dry-run.
 
-## Implementación observada — 2026-08-18
+## Arquitectura sprint aprobada y estado de cutover
 
-La automatización instalada usa un LaunchAgent en el Mac porque el mecanismo
+El VPS debe crear DB, storage, manifest, SHA-256, verificación y `SUCCESS` sin
+depender del Mac. Un timer systemd diario persistente comprueba si han transcurrido
+15 días; así se representa el intervalo real sin confundirlo con los días 1/16 del
+mes y se recupera una comprobación perdida tras reboot. El Mac sólo lista recovery
+points `PRIMARY_BACKUP=PASS`, hace pull asíncrono, verifica hashes y escribe
+`OFF_HOST_SUCCESS` local.
+
+```text
+PRIMARY_BACKUP_LOCATION=VPS
+OFF_HOST_STRATEGY=Mac_zero_cost
+OFF_HOST_DIRECTION=Mac_pulls_from_VPS
+OFF_HOST_RPO_TARGET=best_effort
+OFF_HOST_DEPENDS_ON_MAC_AVAILABILITY=YES
+OFF_HOST_AVAILABILITY_RISK=ACCEPTED
+```
+
+Los scripts v2 y unidades validadas están preparados en el VPS, pero el cutover
+requiere instalar unidades en `/etc/systemd/system`, habilitar el timer y arrancar
+una corrida observada. `sudo` no interactivo no está disponible. Hasta ese paso se
+preserva el LaunchAgent diario anterior para no dejar el proyecto sin scheduler;
+queda `SUPERSEDED_PENDING_CUTOVER` y no representa el estado objetivo.
+
+## Implementación diaria anterior — SUPERSEDED_PENDING_CUTOVER
+
+La automatización anterior usa un LaunchAgent en el Mac porque el mecanismo
 off-host verificado es un pull por SSH/rsync. A las 20:00 de la zona local UTC−06
 ejecuta el recovery point de las 02:00 UTC. El mismo job crea el snapshot en el VPS,
 copia al Mac, verifica hashes en ambos extremos y sólo entonces escribe `SUCCESS` y
 heartbeat. Un monitor cada 15 minutos detecta backup ausente después de 26 horas y
 restore vencido después del trimestre; los eventos se conservan en un spool `0700`.
 
-La corrida observada válida fue `p1b-auto-20260818T175747Z`: DB, storage, manifest,
+La corrida histórica válida fue `p1b-auto-20260818T175747Z`: DB, storage, manifest,
 hash origen, copia off-host, hash destino y heartbeat fueron PASS. Los inventarios
 pre-política existen en ambos extremos. `RETENTION_DELETE_ENABLED=NO` y ningún
 backup histórico fue eliminado.
@@ -129,11 +158,11 @@ credenciales efímeras, y storage Linux aislado con directorios `0700`, ficheros
 
 ## Condiciones para implementación
 
-Antes de declarar la política completamente implementada falta: aprobación explícita
-de la retención destructiva en la documentación vigente; sender/app OAuth; creación
-root-owned del secreto; conexión del spool al emisor; y una única prueba SMTP real.
+Antes de declarar la política completamente implementada falta: cutover systemd y
+corrida primaria observada sin Mac; pull posterior observado; sender/app OAuth;
+creación root-owned del secreto; conexión del spool al emisor; y una prueba SMTP.
 
 ```text
-BACKUP_POLICY_APPROVED=PARTIAL
+BACKUP_POLICY_APPROVED=YES
 BACKUP_POLICY_IMPLEMENTED=NO
 ```

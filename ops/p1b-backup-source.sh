@@ -69,41 +69,43 @@ create_backup() {
     sha256sum --check --status SHA256SUMS
   )
   chmod 600 "$snapshot"/*
-  printf 'BACKUP_ID=%s\n' "$backup_id"
-}
-
-finalize_backup() {
-  local backup_id=${1:-} snapshot completed
-  valid_id "$backup_id"
-  snapshot=$backup_root/$backup_id
-  [[ -f $snapshot/INCOMPLETE && ! -e $snapshot/SUCCESS ]]
-  (cd "$snapshot" && sha256sum --check --status SHA256SUMS)
   completed=$(date -u +%Y-%m-%dT%H:%M:%SZ)
   printf '%s\n' \
     "TIMESTAMP_UTC=$completed" \
     'OVERALL_STATUS=PASS' \
     "BACKUP_ID=$backup_id" \
+    'PRIMARY_BACKUP=PASS' \
     'DB_PHASE=PASS' \
     'STORAGE_PHASE=PASS' \
+    'MANIFEST_PHASE=PASS' \
     'SOURCE_HASH_PHASE=PASS' \
-    'OFF_HOST_PHASE=PASS' \
-    'OFF_HOST_HASH_PHASE=PASS' > "$snapshot/SUCCESS"
+    'OFF_HOST_COPY=PENDING' > "$snapshot/SUCCESS"
   chmod 600 "$snapshot/SUCCESS"
   unlink "$snapshot/INCOMPLETE"
   printf '%s\n' \
     "TIMESTAMP_UTC=$completed" \
     'OVERALL_STATUS=PASS' \
     "BACKUP_ID=$backup_id" \
+    'PRIMARY_BACKUP=PASS' \
     'DB_PHASE=PASS' \
     'STORAGE_PHASE=PASS' \
+    'MANIFEST_PHASE=PASS' \
     'SOURCE_HASH_PHASE=PASS' \
-    'OFF_HOST_PHASE=PASS' \
-    'OFF_HOST_HASH_PHASE=PASS' > "$backup_root/.p1b-last-success"
-  chmod 600 "$backup_root/.p1b-last-success"
+    'OFF_HOST_COPY=PENDING' > "$backup_root/.p1b-primary-last-success"
+  chmod 600 "$backup_root/.p1b-primary-last-success"
+  printf 'BACKUP_ID=%s\n' "$backup_id"
+}
+
+list_valid() {
+  local snapshot
+  for snapshot in "$backup_root"/p1b-auto-*; do
+    [[ -d $snapshot && -f $snapshot/SUCCESS && ! -e $snapshot/INCOMPLETE ]] || continue
+    basename "$snapshot"
+  done
 }
 
 case ${1:-} in
   create) create_backup ;;
-  finalize) finalize_backup "${2:-}" ;;
-  *) echo 'usage: p1b-backup-source.sh create|finalize BACKUP_ID' >&2; exit 64 ;;
+  list-valid) list_valid ;;
+  *) echo 'usage: p1b-backup-source.sh create|list-valid' >&2; exit 64 ;;
 esac

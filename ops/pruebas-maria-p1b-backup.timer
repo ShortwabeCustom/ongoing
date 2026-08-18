@@ -1,0 +1,11 @@
+[Unit]
+Description=Check every day whether the 15-day P1-B sprint backup is due
+
+[Timer]
+OnCalendar=*-*-* 02:00:00 UTC
+Persistent=true
+RandomizedDelaySec=5m
+Unit=pruebas-maria-p1b-backup.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,22 @@
+[Unit]
+Description=Pruebas Maria P1-B primary recovery point
+After=network-online.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=alexis
+Group=alexis
+WorkingDirectory=/var/www/apps/uix
+Environment=P1B_FORCE_BACKUP=0
+ExecStart=/home/alexis/bin/p1b-primary-backup-schedule.sh
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/alexis/backups/pruebas-maria
+ReadOnlyPaths=/var/www/apps/uix /var/lib/pruebas-maria/evidence
+
+[Install]
+WantedBy=multi-user.target

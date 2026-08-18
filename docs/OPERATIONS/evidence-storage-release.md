@@ -15,9 +15,11 @@ RECONCILIATION_GRACE_MINUTES=30
 RECONCILIATION_PROD_READY=NO
 DR_POSTGRES16_DOCKER_LINUX=PASS
 BACKUP_POLICY_EXISTS=YES
-BACKUP_POLICY_APPROVED=PARTIAL
+BACKUP_POLICY_APPROVED=YES
 BACKUP_POLICY_IMPLEMENTED=NO
-AUTOMATED_BACKUP_OBSERVED=PASS
+VPS_BACKUP_SERVICE_INSTALLED=NO
+VPS_BACKUP_TIMER_INSTALLED=NO
+VPS_AUTOMATED_PATH_OBSERVED=NO
 ALERT_DELIVERY_VERIFIED=NO
 BACKUP_RESTORE_VERIFIED=NO
 PURGE_GATE=CLOSED
@@ -72,10 +74,11 @@ restaurada, GET 200, Range 206, anónimo 401 y bytes MATCH. El RTO observado des
 la creación del entorno hasta el smoke fue 8 segundos; el RPO observado para la
 Evidence objetivo en el checkpoint del snapshot fue 0 segundos.
 
-El requisito técnico DR y una corrida automática completa están satisfechos.
+El requisito técnico DR y una corrida del mecanismo diario anterior están satisfechos.
 `BACKUP_RESTORE_VERIFIED=NO` permanece fail-closed porque la entrega SMTP no está
-provisionada/verificada y la retención destructiva sigue pendiente. Véase
-[`p1b-backup-policy.md`](./p1b-backup-policy.md). RPO 24h y RTO 4h están aprobados.
+provisionada/verificada y el cutover al backup primario VPS cada 15 días no está
+activado. Véase [`p1b-backup-policy.md`](./p1b-backup-policy.md). El RPO primario
+aprobado es 15 días; el off-host es best effort; RTO permanece en 4h.
 
 ## Política de backup P1-B — PROPUESTA, no implementada
 
