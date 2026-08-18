@@ -6,6 +6,7 @@ Estado operativo actual:
 RUNTIME_CANONICAL=PM2_SOURCE
 PACKAGE_MANAGER_CANONICAL=npm
 NODE_RELEASE=20.20.2
+PRISMA_BASELINE_RESOLVED=NO
 PURGE_GATE=CLOSED
 BACKUP_RESTORE_VERIFIED=NO
 DEPLOY_READY=NO
@@ -16,6 +17,37 @@ NPM_LEGACY_PEER_DEPS=true
 `RECONCILIATION_GRACE_MINUTES=30` es el valor operativo aprobado para el release de P1-B; no es un default hardcodeado en la aplicación. Este documento no autoriza producción por sí solo.
 
 La aplicación productiva actual usa PM2 sobre un source checkout y `npm start`. Docker queda documentado pero no es el runtime canónico actual. `NPM_LEGACY_PEER_DEPS=true` es deuda técnica temporal: `@base-ui/react@1.7.0` exige `date-fns@^4`, mientras la aplicación permanece deliberadamente en `date-fns@3`; debe retirarse después de revisar ese upgrade mayor.
+
+## Transición one-time del baseline Prisma
+
+`PRISMA_BASELINE_RESOLVED` permanece en `NO`. Antes del primer
+`prisma migrate deploy` en producción con la historia squashed, y solo después
+de contar con la readiness de backup/restore correspondiente, comprobar que no
+existe drift:
+
+```bash
+npm exec -- prisma migrate diff \
+  --exit-code \
+  --from-config-datasource \
+  --to-schema prisma/schema.prisma
+```
+
+El comando debe devolver exit code 0. Después se debe registrar exactamente una
+vez el baseline ya existente en producción, sin ejecutar su SQL:
+
+```bash
+npm exec -- prisma migrate resolve \
+  --applied 000000000000_squashed_migrations
+```
+
+Finalmente, verificar la historia activa:
+
+```bash
+npm exec -- prisma migrate deploy
+```
+
+`migrate resolve` es una transición humana y controlada; no debe incorporarse
+al deploy general ni ejecutarse sobre una base vacía.
 
 ## Provisioning y preflight
 

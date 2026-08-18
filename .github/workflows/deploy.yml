@@ -97,13 +97,20 @@ jobs:
       - name: Run tests
         run: npm test
 
-      - name: Build application
-        run: npm run build
+      - name: Run database migrations
+        run: npm exec -- prisma migrate deploy
         env:
           NODE_ENV: production
 
-      - name: Run database migrations
-        run: npm exec -- prisma migrate deploy
+      - name: Verify Prisma schema drift
+        run: >-
+          npm exec -- prisma migrate diff
+          --exit-code
+          --from-config-datasource
+          --to-schema prisma/schema.prisma
+
+      - name: Build application
+        run: npm run build
         env:
           NODE_ENV: production
 
