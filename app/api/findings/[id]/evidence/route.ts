@@ -3,6 +3,7 @@ import { apiError, ApiError, apiSuccess } from '@/lib/utils/api-response'
 import { StorageService } from '@/lib/services/storage-service'
 import { uploadEvidenceSchema } from '@/lib/validators/evidence'
 import { STORAGE_CONFIG } from '@/lib/storage/storage-config'
+import { StorageError } from '@/lib/storage/storage-errors'
 import { checkRBAC, RBAC_PERMISSIONS } from '@/lib/middleware/rbac'
 
 export const dynamic = 'force-dynamic'
@@ -58,6 +59,21 @@ export async function POST(
 
     return apiSuccess(result, 201)
   } catch (error) {
+    // Cualquier fallo del almacén privado se colapsa en un 500 genérico: no se
+    // filtran rutas, errno (EEXIST, EACCES…) ni detalles del filesystem. La
+    // causa se conserva solo en el log del servidor.
+    if (error instanceof StorageError) {
+      console.error('[findings/:id/evidence] storage failure:', error)
+      return apiError(
+        new ApiError(
+          'STORAGE_UNAVAILABLE',
+          'Evidence storage is unavailable',
+          undefined,
+          500,
+        ),
+      )
+    }
+
     if (error instanceof Error) {
       if (error.message === 'FILE_TOO_LARGE') {
         const maxSizeMB = STORAGE_CONFIG.MAX_FILE_SIZE / (1024 * 1024)

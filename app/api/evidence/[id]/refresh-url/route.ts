@@ -32,6 +32,19 @@ export async function POST(
         )
       }
 
+      // Runtime PENDING: la evidencia existe pero su upload no se confirmó
+      // (ADR-001 D5.1), así que todavía no es entregable.
+      if (error.message === 'UPLOAD_INCOMPLETE') {
+        return apiError(
+          new ApiError(
+            'UPLOAD_INCOMPLETE',
+            'Evidence upload has not been confirmed yet',
+            undefined,
+            409,
+          ),
+        )
+      }
+
       if (error.message === 'UNSIGNED_LEGACY_EVIDENCE') {
         return apiError(
           new ApiError(

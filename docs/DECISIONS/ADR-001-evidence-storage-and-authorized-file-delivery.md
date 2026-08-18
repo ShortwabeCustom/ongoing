@@ -108,9 +108,9 @@ petición, antes de emitir byte alguno.
 No existe ninguna otra vía de entrega para evidencia de runtime: ni ruta estática, ni
 enlace directo al filesystem, ni exposición a través del reporte público (D8).
 
-### D3 · `FileStorageClient` como frontera estricta, con `resolveSafePath` obligatorio; sin driver abstraction
+### D3 · `PrivateFileStore` como frontera estricta, con `resolveSafePath` obligatorio; sin driver abstraction
 
-`FileStorageClient` es la **frontera estricta y única** para toda manipulación de
+`PrivateFileStore` es la **frontera estricta y única** para toda manipulación de
 rutas y de filesystem. Ninguna otra capa —route handlers, servicios, UI— importa
 `fs` o `path`, construye rutas de fichero ni recibe una ruta procedente del cliente.
 
@@ -163,7 +163,7 @@ un **readiness marker**:
 |---|---|---|
 | **FASE 0** | Validar configuración de storage **antes de crear ninguna fila** | Config inválida ⇒ falla aquí, sin escritura en BD (D14) |
 | **FASE 1** | Transacción: `Evidence.create(url = null, …)` — **sin `AuditLog` CREATE** | Fila **PENDING** |
-| **FASE 2** | `FileStorageClient.put` | Bytes escritos atómicamente (D15-bis) |
+| **FASE 2** | `PrivateFileStore.put` | Bytes escritos atómicamente (D15-bis) |
 | **FASE 3** | Transacción: `Evidence.update(url = "/api/evidence/{id}/file")` **+ `AuditLog` CREATE** | Fila **CONFIRMED** |
 
 **Solo la FASE 3 produce una Evidence CONFIRMED.** El `AuditLog` de creación se emite
@@ -292,10 +292,10 @@ Revierte un **soft delete** cuando los bytes **todavía existen** en el almacén
 | Evidence **ya activa** | **no-op idempotente**, exit 0, **sin auditoría duplicada** |
 | Finding inexistente o inactivo | `FINDING_INACTIVE`, **sin escritura** |
 | `storageKey` legacy (no runtime) | rechazado (D9) |
-| `FileStorageClient.exists(storageKey)` = `false` | `OBJECT_ALREADY_PURGED`, exit != 0, **sin escritura en BD** |
+| `PrivateFileStore.exists(storageKey)` = `false` | `OBJECT_ALREADY_PURGED`, exit != 0, **sin escritura en BD** |
 | `deletedAt` fuera de la ventana de 30 días | **permitido**, con `warning` / `outsideRetentionWindow` |
 
-Requiere que `FileStorageClient.exists(storageKey)` sea **`true`**: sin bytes no hay
+Requiere que `PrivateFileStore.exists(storageKey)` sea **`true`**: sin bytes no hay
 restore lógico posible, y el caso se reporta como `OBJECT_ALREADY_PURGED` en lugar de
 dejar una fila activa apuntando a un objeto ausente.
 
@@ -413,7 +413,7 @@ reproducción parcial, reanudación).
 - **Rango no satisfacible ⇒ 416**, con `Content-Range: bytes */{total}`.
 - **`Cache-Control: private, no-store` también en las respuestas 206.**
 
-**La semántica HTTP de `Range` vive en el Route Handler.** `FileStorageClient` expone
+**La semántica HTTP de `Range` vive en el Route Handler.** `PrivateFileStore` expone
 únicamente `stat` y `getStream(start, end)` —byte ranges sobre el stream— y **no
 implementa HTTP Range**.
 
@@ -552,7 +552,7 @@ Condiciones acumulativas para entregar bytes:
 - el **finding está activo** (`deletedAt == null`);
 - la evidencia es **runtime, no legacy** (D9);
 - **`url != null`** (D5.1);
-- la lectura se hace vía **`FileStorageClient.stat` / `getStream`** (D3);
+- la lectura se hace vía **`PrivateFileStore.stat` / `getStream`** (D3);
 - respuesta con **`Cache-Control: private, no-store`**;
 - **Range/206** según D13;
 - si el storage es inválido, la ruta señala **indisponibilidad**, **nunca degradación
@@ -920,7 +920,7 @@ Inventario **previsto**, no modificado por este ADR:
 | Fichero / área | Naturaleza del cambio previsto | Decisiones |
 |---|---|---|
 | Módulo de configuración de storage | Resolución y validación de `EVIDENCE_STORAGE_DIR`; lazy, memoizada en éxito y error; fail closed | D1, D14 |
-| `lib/storage/file-client.ts` — `FileStorageClient` | Frontera estricta; `resolveSafePath`; `put`/`getStream(start,end)`/`stat`/`exists`/`delete`; permisos; escritura atómica y temporales. **No implementa HTTP Range** | D3, D13, D15, D15-bis |
+| `lib/storage/private-file-store.ts` — `PrivateFileStore` | Frontera estricta; `resolveSafePath`; `put`/`getStream(start,end)`/`stat`/`exists`/`delete`; permisos; escritura atómica y temporales. **No implementa HTTP Range** | D3, D13, D15, D15-bis |
 | `app/api/evidence/[id]/file/route.ts` | **Nuevo** — entrega autenticada; semántica HTTP `Range` (200/206/416); `Cache-Control: private, no-store` | D2, D13, §3.1 |
 | `app/api/evidence/upload/route.ts` + servicio de upload | Máquina de estados FASE 0–3; `url` y `AuditLog` CREATE solo en FASE 3 | D5, D14 |
 | `app/api/evidence/[id]/route.ts` + servicio de delete | Soft delete alineado con el ciclo de vida | D6 |

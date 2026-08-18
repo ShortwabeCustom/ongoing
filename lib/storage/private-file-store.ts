@@ -7,9 +7,9 @@
  * Esta clase es la ÚNICA frontera de path/fs del almacén privado: ninguna otra
  * capa construye rutas de fichero, resuelve paths ni llama a `fs` directamente.
  *
- * DORMANT en P1-B.1: no tiene ningún caller productivo. `StorageService` sigue
- * usando `FileStorageClient` (el cliente legacy sobre `public/evidence`, roto
- * por C-02). La conmutación ocurre en P1-B.2, junto con la máquina FASE 0-3.
+ * Desde P1-B.2 es el almacén productivo de la evidencia de runtime:
+ * `StorageService` escribe aquí siguiendo la máquina FASE 0-3 (D5.2). El
+ * cliente antiguo sobre `public/evidence` queda sin caller productivo.
  *
  * NO existe `getStream` todavía: se añade en P1-B.3, con READ y HTTP Range.
  */
@@ -18,23 +18,12 @@ import { randomBytes } from 'node:crypto'
 import { constants as fsConstants, promises as fs, type Stats } from 'node:fs'
 import path from 'node:path'
 import { InvalidStorageKeyError, StorageIOError, errnoOf } from './storage-errors'
+import { isLegacyStorageKey } from './storage-key'
 import {
   REQUIRED_DIR_MODE,
   REQUIRED_FILE_MODE,
   getEvidenceStorageRoot,
 } from './storage-root'
-
-/**
- * Prefijo de las claves legacy.
- *
- * DEUDA TEMPORAL: `isLegacyStorageKey` vive hoy en
- * `lib/services/storage-service.ts`, que importa Prisma y `db-lazy`. Importarlo
- * desde aquí arrastraría toda esa dependencia a un módulo puro de filesystem.
- * En P1-B.2, al refactorizar `storage-service`, ambas comprobaciones deben
- * unificarse en una sola fuente. Mientras tanto la definición se duplica
- * deliberadamente, y es un prefijo literal de una línea.
- */
-const LEGACY_KEY_PREFIX = 'legacy/'
 
 // NUL y caracteres de control C0 (0x00-0x1f), DEL (0x7f) y C1 (0x80-0x9f).
 // eslint-disable-next-line no-control-regex
@@ -43,10 +32,6 @@ const WINDOWS_DRIVE = /^[A-Za-z]:/
 
 /** Patrón exacto de los temporales de escritura atómica (D15-bis.2). */
 export const TEMP_FILE_PATTERN = /^\.tmp-[A-Za-z0-9_-]+\.part$/
-
-function isLegacyKey(key: string): boolean {
-  return key.startsWith(LEGACY_KEY_PREFIX)
-}
 
 /**
  * Resuelve una clave de almacenamiento a una ruta absoluta segura dentro de
@@ -112,7 +97,7 @@ export function resolveSafePath(root: string, key: unknown): string {
 
   // (f) Legacy sobre la FORMA CANÓNICA: el almacén privado no sirve material
   //     legacy en ninguna de sus representaciones equivalentes (D9).
-  if (isLegacyKey(canonical)) {
+  if (isLegacyStorageKey(canonical)) {
     throw new InvalidStorageKeyError('Las claves legacy no pertenecen al almacén privado.')
   }
 
