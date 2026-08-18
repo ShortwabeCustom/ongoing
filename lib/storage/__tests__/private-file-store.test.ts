@@ -287,23 +287,37 @@ describe('cleanup de temporales D15-bis.2', () => {
     expect(fs.existsSync(second)).toBe(false)
   })
 
-  it('continúa después de un error individual de lstat', async () => {
+  it.each([
+    ['primera', 1],
+    ['segunda', 2],
+  ] as const)('continúa cuando falla la %s entrada procesada por lstat', async (_label, failingCall) => {
     const first = path.join(root, '.tmp-a.part')
     const second = path.join(root, '.tmp-b.part')
     fs.writeFileSync(first, 'a', { mode: 0o600 })
     fs.writeFileSync(second, 'b', { mode: 0o600 })
+    const old = new Date(0)
+    fs.utimesSync(first, old, old)
+    fs.utimesSync(second, old, old)
     const originalLstat = fs.promises.lstat.bind(fs.promises)
+    let candidateCall = 0
     const lstat = vi.spyOn(fs.promises, 'lstat').mockImplementation(async (target) => {
-      if (target === first) throw Object.assign(new Error('lstat failed'), { code: 'EIO' })
+      if (target === first || target === second) {
+        candidateCall += 1
+        if (candidateCall === failingCall) {
+          throw Object.assign(new Error('lstat failed'), { code: 'EIO' })
+        }
+      }
       return originalLstat(target)
     })
 
-    const result = await PrivateFileStore.cleanupTemporaries({ cutoff: new Date(), execute: true })
+    const result = await PrivateFileStore.cleanupTemporaries({
+      cutoff: new Date('2026-08-18T00:00:00.000Z'),
+      execute: true,
+    })
 
     lstat.mockRestore()
     expect(result).toMatchObject({ scanned: 1, cleaned: 1, failed: 1 })
-    expect(fs.existsSync(first)).toBe(true)
-    expect(fs.existsSync(second)).toBe(false)
+    expect([first, second].filter((target) => fs.existsSync(target))).toHaveLength(1)
   })
 
   it('registra fallo de subdirectorio y continúa con otros candidatos', async () => {
