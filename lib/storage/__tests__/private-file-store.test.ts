@@ -217,3 +217,197 @@ describe('fail-closed con configuración inválida (D14.3)', () => {
     await expect(PrivateFileStore.delete(KEY)).rejects.toThrow(/no puede estar dentro/)
   })
 })
+
+describe('cleanup de temporales D15-bis.2', () => {
+  it('dry-run no borra y execute elimina solo temporales válidos antiguos', async () => {
+    const dir = path.join(root, 'findings/f1/e1')
+    fs.mkdirSync(dir, { recursive: true, mode: 0o700 })
+    for (const part of ['findings', 'findings/f1', 'findings/f1/e1']) fs.chmodSync(path.join(root, part), 0o700)
+    const old = path.join(dir, '.tmp-AbC_123.part')
+    const recent = path.join(dir, '.tmp-recent.part')
+    const near = path.join(dir, '.tmp-a.part.bak')
+    const final = path.join(dir, 'final.png')
+    for (const file of [old, recent, near, final]) fs.writeFileSync(file, 'x', { mode: 0o600 })
+    fs.utimesSync(old, new Date(0), new Date(0))
+    const cutoff = new Date(Date.now() - 60_000)
+
+    const dry = await PrivateFileStore.cleanupTemporaries({ cutoff })
+    expect(dry.scanned).toBe(1)
+    expect(fs.existsSync(old)).toBe(true)
+
+    const run = await PrivateFileStore.cleanupTemporaries({ cutoff, execute: true })
+    expect(run.cleaned).toBe(1)
+    expect(fs.existsSync(old)).toBe(false)
+    expect(fs.existsSync(recent)).toBe(true)
+    expect(fs.existsSync(near)).toBe(true)
+    expect(fs.existsSync(final)).toBe(true)
+  })
+
+  it('no sigue symlinks ni borra directorios con nombre temporal', async () => {
+    const outside = path.join(makeValidRoot(), 'outside')
+    fs.writeFileSync(outside, 'secret', { mode: 0o600 })
+    fs.symlinkSync(outside, path.join(root, '.tmp-link.part'))
+    fs.mkdirSync(path.join(root, '.tmp-dir.part'), { mode: 0o700 })
+    await PrivateFileStore.cleanupTemporaries({ cutoff: new Date(), execute: true })
+    expect(fs.readFileSync(outside, 'utf8')).toBe('secret')
+    expect(fs.lstatSync(path.join(root, '.tmp-link.part')).isSymbolicLink()).toBe(true)
+    expect(fs.statSync(path.join(root, '.tmp-dir.part')).isDirectory()).toBe(true)
+  })
+
+  it('incluye exactamente mtime === cutoff', async () => {
+    const target = path.join(root, '.tmp-boundary.part')
+    const cutoff = new Date('2026-08-17T12:00:00.000Z')
+    fs.writeFileSync(target, 'x', { mode: 0o600 })
+    fs.utimesSync(target, cutoff, cutoff)
+
+    const result = await PrivateFileStore.cleanupTemporaries({ cutoff, execute: true })
+
+    expect(result).toMatchObject({ scanned: 1, cleaned: 1, failed: 0 })
+    expect(fs.existsSync(target)).toBe(false)
+  })
+
+  it('continúa después de un error individual de unlink', async () => {
+    const first = path.join(root, '.tmp-a.part')
+    const second = path.join(root, '.tmp-b.part')
+    fs.writeFileSync(first, 'a', { mode: 0o600 })
+    fs.writeFileSync(second, 'b', { mode: 0o600 })
+    const unlink = vi.spyOn(fs.promises, 'unlink')
+    const realUnlink = unlink.getMockImplementation()
+    unlink.mockImplementation(async (target) => {
+      if (target === first) throw Object.assign(new Error('unlink failed'), { code: 'EIO' })
+      if (realUnlink) return realUnlink(target)
+      return fs.promises.rm(target)
+    })
+
+    const result = await PrivateFileStore.cleanupTemporaries({ cutoff: new Date(), execute: true })
+
+    unlink.mockRestore()
+    expect(result).toMatchObject({ scanned: 2, cleaned: 1, failed: 1 })
+    expect(fs.existsSync(first)).toBe(true)
+    expect(fs.existsSync(second)).toBe(false)
+  })
+
+  it('continúa después de un error individual de lstat', async () => {
+    const first = path.join(root, '.tmp-a.part')
+    const second = path.join(root, '.tmp-b.part')
+    fs.writeFileSync(first, 'a', { mode: 0o600 })
+    fs.writeFileSync(second, 'b', { mode: 0o600 })
+    const originalLstat = fs.promises.lstat.bind(fs.promises)
+    const lstat = vi.spyOn(fs.promises, 'lstat').mockImplementation(async (target) => {
+      if (target === first) throw Object.assign(new Error('lstat failed'), { code: 'EIO' })
+      return originalLstat(target)
+    })
+
+    const result = await PrivateFileStore.cleanupTemporaries({ cutoff: new Date(), execute: true })
+
+    lstat.mockRestore()
+    expect(result).toMatchObject({ scanned: 1, cleaned: 1, failed: 1 })
+    expect(fs.existsSync(first)).toBe(true)
+    expect(fs.existsSync(second)).toBe(false)
+  })
+
+  it('registra fallo de subdirectorio y continúa con otros candidatos', async () => {
+    const blocked = path.join(root, 'blocked')
+    const candidate = path.join(root, '.tmp-after.part')
+    fs.mkdirSync(blocked, { mode: 0o700 })
+    fs.writeFileSync(path.join(blocked, '.tmp-inside.part'), 'x', { mode: 0o600 })
+    fs.writeFileSync(candidate, 'x', { mode: 0o600 })
+    const originalReaddir = fs.promises.readdir.bind(fs.promises)
+    const readdir = vi.spyOn(fs.promises, 'readdir').mockImplementation(async (target, options) => {
+      if (target === blocked) throw Object.assign(new Error('readdir failed'), { code: 'EACCES' })
+      return originalReaddir(target, options as { withFileTypes: true })
+    }) as ReturnType<typeof vi.spyOn>
+
+    const result = await PrivateFileStore.cleanupTemporaries({ cutoff: new Date(), execute: true })
+
+    readdir.mockRestore()
+    expect(result).toMatchObject({ cleaned: 1, failed: 1 })
+    expect(fs.existsSync(path.join(blocked, '.tmp-inside.part'))).toBe(true)
+    expect(fs.existsSync(candidate)).toBe(false)
+  })
+})
+
+describe('storage release preflight', () => {
+  it('comprueba hard links y limpia completamente su artefacto controlado', async () => {
+    await expect(PrivateFileStore.preflight()).resolves.toBeUndefined()
+    expect(fs.readdirSync(root).filter((name) => name.startsWith('.preflight-'))).toEqual([])
+  })
+
+  it('cierra el handle y limpia si falla después de abrir source', async () => {
+    const originalOpen = fs.promises.open.bind(fs.promises)
+    let close: ReturnType<typeof vi.spyOn> | undefined
+    const open = vi.spyOn(fs.promises, 'open').mockImplementationOnce(async (...args) => {
+      const handle = await originalOpen(...args)
+      close = vi.spyOn(handle, 'close')
+      vi.spyOn(handle, 'writeFile').mockRejectedValueOnce(Object.assign(new Error('write failed'), { code: 'EIO' }))
+      return handle
+    })
+
+    await expect(PrivateFileStore.preflight()).rejects.toBeInstanceOf(StorageIOError)
+
+    open.mockRestore()
+    expect(close).toHaveBeenCalledTimes(1)
+    expect(fs.readdirSync(root).filter((name) => name.startsWith('.preflight-'))).toEqual([])
+  })
+
+  it('un fallo de fsync rechaza y limpia', async () => {
+    const originalOpen = fs.promises.open.bind(fs.promises)
+    const open = vi.spyOn(fs.promises, 'open').mockImplementationOnce(async (...args) => {
+      const handle = await originalOpen(...args)
+      vi.spyOn(handle, 'sync').mockRejectedValueOnce(Object.assign(new Error('sync failed'), { code: 'EIO' }))
+      return handle
+    })
+    await expect(PrivateFileStore.preflight()).rejects.toBeInstanceOf(StorageIOError)
+    open.mockRestore()
+    expect(fs.readdirSync(root).filter((name) => name.startsWith('.preflight-'))).toEqual([])
+  })
+
+  it('un fallo de hard link limpia source', async () => {
+    const link = vi.spyOn(fs.promises, 'link').mockRejectedValueOnce(Object.assign(new Error('link failed'), { code: 'EIO' }))
+    await expect(PrivateFileStore.preflight()).rejects.toBeInstanceOf(StorageIOError)
+    link.mockRestore()
+    expect(fs.readdirSync(root).filter((name) => name.startsWith('.preflight-'))).toEqual([])
+  })
+
+  it('un fallo de inode limpia source y linked', async () => {
+    const originalLstat = fs.promises.lstat.bind(fs.promises)
+    const lstat = vi.spyOn(fs.promises, 'lstat').mockImplementation(async (target) => {
+      const stats = await originalLstat(target)
+      if (path.basename(String(target)) === 'linked') return Object.assign(Object.create(Object.getPrototypeOf(stats)), stats, { ino: stats.ino + 1 })
+      return stats
+    })
+    await expect(PrivateFileStore.preflight()).rejects.toBeInstanceOf(StorageIOError)
+    lstat.mockRestore()
+    expect(fs.readdirSync(root).filter((name) => name.startsWith('.preflight-'))).toEqual([])
+  })
+
+  it('rechaza si unlink de cleanup falla con error distinto de ENOENT', async () => {
+    const originalUnlink = fs.promises.unlink.bind(fs.promises)
+    const unlink = vi.spyOn(fs.promises, 'unlink').mockImplementation(async (target) => {
+      if (path.basename(String(target)) === 'linked') throw Object.assign(new Error('unlink failed'), { code: 'EIO' })
+      return originalUnlink(target)
+    })
+    await expect(PrivateFileStore.preflight()).rejects.toBeInstanceOf(StorageIOError)
+    unlink.mockRestore()
+  })
+
+  it('rechaza si rmdir de cleanup falla', async () => {
+    const rmdir = vi.spyOn(fs.promises, 'rmdir').mockRejectedValueOnce(Object.assign(new Error('rmdir failed'), { code: 'EIO' }))
+    await expect(PrivateFileStore.preflight()).rejects.toBeInstanceOf(StorageIOError)
+    rmdir.mockRestore()
+  })
+
+  it('tolera ENOENT durante cleanup como éxito idempotente', async () => {
+    const originalUnlink = fs.promises.unlink.bind(fs.promises)
+    const unlink = vi.spyOn(fs.promises, 'unlink').mockImplementation(async (target) => {
+      if (path.basename(String(target)) === 'linked') {
+        await originalUnlink(target)
+        throw Object.assign(new Error('already absent'), { code: 'ENOENT' })
+      }
+      return originalUnlink(target)
+    })
+    await expect(PrivateFileStore.preflight()).resolves.toBeUndefined()
+    unlink.mockRestore()
+    expect(fs.readdirSync(root).filter((name) => name.startsWith('.preflight-'))).toEqual([])
+  })
+})

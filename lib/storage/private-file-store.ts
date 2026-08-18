@@ -16,6 +16,7 @@
 
 import { randomBytes } from 'node:crypto'
 import { constants as fsConstants, promises as fs, type Stats } from 'node:fs'
+import type { FileHandle } from 'node:fs/promises'
 import path from 'node:path'
 import type { Readable } from 'node:stream'
 import { InvalidStorageKeyError, StorageIOError, errnoOf } from './storage-errors'
@@ -484,6 +485,99 @@ export class PrivateFileStore {
     } catch (error) {
       if (errnoOf(error) === 'ENOENT') return
       throw ioError('No se pudo eliminar el objeto de evidencia.', error)
+    }
+  }
+
+  /** Limpia exclusivamente temporales huérfanos D15-bis.2; nunca objetos finales. */
+  static async cleanupTemporaries(options: { cutoff: Date; execute?: boolean }): Promise<{
+    scanned: number; cleaned: number; skipped: number; failed: number
+  }> {
+    if (!(options.cutoff instanceof Date) || Number.isNaN(options.cutoff.getTime())) {
+      throw new Error('cutoff must be a valid Date')
+    }
+    const root = this.root()
+    const result = { scanned: 0, cleaned: 0, skipped: 0, failed: 0 }
+
+    async function visit(dir: string): Promise<void> {
+      let entries
+      try {
+        entries = await fs.readdir(dir, { withFileTypes: true })
+      } catch {
+        result.failed += 1
+        return
+      }
+      for (const entry of entries) {
+        const target = path.join(dir, entry.name)
+        let stats: Stats
+        try {
+          stats = await fs.lstat(target)
+        } catch (error) {
+          if (errnoOf(error) !== 'ENOENT') result.failed += 1
+          continue
+        }
+        if (stats.isSymbolicLink()) { result.skipped += 1; continue }
+        if (stats.isDirectory()) { await visit(target); continue }
+        if (!TEMP_FILE_PATTERN.test(entry.name) || !stats.isFile() || stats.mtime > options.cutoff) {
+          result.skipped += 1
+          continue
+        }
+        result.scanned += 1
+        if (!options.execute) continue
+        try {
+          await fs.unlink(target)
+          result.cleaned += 1
+        } catch (error) {
+          if (errnoOf(error) === 'ENOENT') result.cleaned += 1
+          else result.failed += 1
+        }
+      }
+    }
+
+    await visit(root)
+    return result
+  }
+
+  /** Preflight controlado: valida escritura y hard links sin tocar Evidence. */
+  static async preflight(): Promise<void> {
+    const root = this.root()
+    const dir = path.join(root, `.preflight-${randomBytes(12).toString('base64url')}`)
+    const source = path.join(dir, 'source')
+    const linked = path.join(dir, 'linked')
+    let handle: FileHandle | undefined
+    let primaryError: unknown
+    let cleanupError: unknown
+
+    const rememberCleanupError = (error: unknown): void => {
+      if (errnoOf(error) !== 'ENOENT' && cleanupError === undefined) cleanupError = error
+    }
+
+    try {
+      await fs.mkdir(dir, { mode: REQUIRED_DIR_MODE })
+      await fs.chmod(dir, REQUIRED_DIR_MODE)
+      handle = await fs.open(source, fsConstants.O_CREAT | fsConstants.O_EXCL | fsConstants.O_WRONLY | fsConstants.O_NOFOLLOW, REQUIRED_FILE_MODE)
+      await handle.writeFile('preflight')
+      await handle.sync()
+      await handle.chmod(REQUIRED_FILE_MODE)
+      await handle.close()
+      handle = undefined
+      await fs.link(source, linked)
+      const [a, b] = await Promise.all([fs.lstat(source), fs.lstat(linked)])
+      if (!a.isFile() || !b.isFile() || a.ino !== b.ino) throw containmentError('El filesystem no confirmó el hard link de preflight.')
+    } catch (error) {
+      primaryError = error
+    } finally {
+      if (handle) await handle.close().catch(rememberCleanupError)
+      await fs.unlink(linked).catch(rememberCleanupError)
+      await fs.unlink(source).catch(rememberCleanupError)
+      await fs.rmdir(dir).catch(rememberCleanupError)
+    }
+
+    if (primaryError !== undefined) {
+      if (primaryError instanceof StorageIOError) throw primaryError
+      throw new StorageIOError('Falló el preflight controlado del almacén.')
+    }
+    if (cleanupError !== undefined) {
+      throw new StorageIOError('Falló la limpieza controlada del preflight.')
     }
   }
 }

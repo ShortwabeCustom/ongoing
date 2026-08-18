@@ -144,6 +144,9 @@ function runtimeEvidenceUrl(evidenceId: string): string {
   return `/api/evidence/${evidenceId}/file`
 }
 
+export const EVIDENCE_RETENTION_DAYS = 30
+export const EVIDENCE_RETENTION_MS = EVIDENCE_RETENTION_DAYS * 24 * 60 * 60 * 1000
+
 export class StorageService {
   /**
    * Sube una evidencia de runtime siguiendo la máquina de estados de
@@ -221,7 +224,9 @@ export class StorageService {
     const url = runtimeEvidenceUrl(evidenceId)
     const confirmed = await db.$transaction(async (tx) => {
       const updated = await tx.evidence.update({
-        where: { id: evidenceId },
+        // Revalidar estado al obtener el row lock: un soft delete concurrente
+        // nunca puede ser seguido por una resurrección de la URL.
+        where: { id: evidenceId, deletedAt: null },
         data: { url },
       })
 
@@ -270,6 +275,7 @@ export class StorageService {
   static async deleteEvidence(evidenceId: string, deletedBy?: string): Promise<void> {
     const db = getDb()
     const deletedAt = new Date()
+    const purgeAfter = new Date(deletedAt.getTime() + EVIDENCE_RETENTION_MS)
 
     await db.$transaction(async (tx) => {
       const evidence = await tx.evidence.findUnique({
@@ -279,14 +285,15 @@ export class StorageService {
       if (!evidence) throw new Error('NOT_FOUND')
       if (evidence.deletedAt) throw new Error('ALREADY_DELETED')
 
-      await tx.evidence.update({
-        where: { id: evidenceId },
+      const deleted = await tx.evidence.updateMany({
+        where: { id: evidenceId, deletedAt: null },
         data: {
           deletedAt,
           deletedBy: deletedBy ?? null,
           url: null,
         },
       })
+      if (deleted.count === 0) throw new Error('ALREADY_DELETED')
 
       await tx.auditLog.create({
         data: {
@@ -300,8 +307,10 @@ export class StorageService {
             deletedAt: evidence.deletedAt,
           },
           after: {
+            phase: 'SOFT_DELETE',
             deletedAt,
             retainedObject: true,
+            purgeAfter,
           },
         },
       })

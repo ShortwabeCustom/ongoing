@@ -12,6 +12,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 const mockEvidence = vi.hoisted(() => ({
   create: vi.fn(),
   update: vi.fn(),
+  updateMany: vi.fn(),
   findFirst: vi.fn(),
   findUnique: vi.fn(),
 }))
@@ -64,6 +65,7 @@ function createdRow(overrides: Record<string, unknown> = {}) {
     caption: 'una captura',
     createdBy: 'user_1',
     createdAt: new Date('2026-08-17T10:00:00Z'),
+    deletedAt: null,
     ...overrides,
   }
 }
@@ -76,6 +78,7 @@ beforeEach(() => {
   mockEvidence.update.mockImplementation(async ({ where, data }: any) =>
     createdRow({ id: where.id, url: data.url }),
   )
+  mockEvidence.updateMany.mockResolvedValue({ count: 1 })
   mockStore.put.mockResolvedValue(undefined)
   mockStore.stat.mockResolvedValue({ size: PNG.length })
   mockAuditLog.create.mockResolvedValue({})
@@ -184,7 +187,7 @@ describe('FASE 3 — confirmación', () => {
     const evidenceId = mockEvidence.create.mock.calls[0][0].data.id
     const createdKey = mockEvidence.create.mock.calls[0][0].data.storageKey
     expect(mockEvidence.update).toHaveBeenCalledWith({
-      where: { id: evidenceId },
+      where: { id: evidenceId, deletedAt: null },
       data: { url: `/api/evidence/${evidenceId}/file` },
     })
 
@@ -215,6 +218,16 @@ describe('FASE 3 — confirmación', () => {
     expect(mockStore.put).toHaveBeenCalledTimes(1)
     expect(mockAuditLog.create).not.toHaveBeenCalled()
     expect((mockStore as Record<string, unknown>).delete).toBeUndefined()
+  })
+
+  it('un CAS miss por soft-delete aborta antes de stat, audit y success', async () => {
+    const casMiss = Object.assign(new Error('Record to update not found.'), { code: 'P2025' })
+    mockEvidence.update.mockRejectedValue(casMiss)
+
+    await expect(StorageService.uploadFile(INPUT)).rejects.toBe(casMiss)
+
+    expect(mockStore.stat).not.toHaveBeenCalled()
+    expect(mockAuditLog.create).not.toHaveBeenCalled()
   })
 
   it('si falla el AuditLog, la transacción revierte y la evidencia queda PENDING', async () => {
@@ -250,6 +263,57 @@ describe('FASE 3 — confirmación', () => {
     expect(mockStore.stat).toHaveBeenCalledTimes(1)
     expect(mockAuditLog.create).toHaveBeenCalledTimes(1)
     expect(result.url).toBe(`/api/evidence/${result.id}/file`)
+  })
+})
+
+describe('soft delete D6.1', () => {
+  it('retiene bytes, usa CAS y audita purgeAfter a 30 días', async () => {
+    const deleted = createdRow({ id: 'ev_1', storageKey: 'findings/find_1/ev_1/captura.png' })
+    mockEvidence.findUnique.mockResolvedValue(deleted)
+
+    await StorageService.deleteEvidence('ev_1', 'user_1')
+
+    expect(mockEvidence.updateMany).toHaveBeenCalledWith({
+      where: { id: 'ev_1', deletedAt: null },
+      data: { deletedAt: expect.any(Date), deletedBy: 'user_1', url: null },
+    })
+    expect((mockStore as Record<string, unknown>).delete).toBeUndefined()
+    const audit = mockAuditLog.create.mock.calls[0][0].data
+    expect(audit).toMatchObject({
+      action: 'DELETE', actorId: 'user_1',
+      after: { phase: 'SOFT_DELETE', retainedObject: true },
+    })
+    expect(audit.after.purgeAfter.getTime() - audit.after.deletedAt.getTime()).toBe(30 * 24 * 60 * 60 * 1000)
+  })
+
+  it('segundo delete o CAS perdido devuelve ALREADY_DELETED sin audit', async () => {
+    mockEvidence.findUnique.mockResolvedValue(createdRow({ deletedAt: new Date() }))
+    await expect(StorageService.deleteEvidence('ev_1', 'user_1')).rejects.toThrow('ALREADY_DELETED')
+    expect(mockAuditLog.create).not.toHaveBeenCalled()
+
+    vi.clearAllMocks()
+    mockEvidence.findUnique.mockResolvedValue(createdRow())
+    mockEvidence.updateMany.mockResolvedValue({ count: 0 })
+    await expect(StorageService.deleteEvidence('ev_1', 'user_1')).rejects.toThrow('ALREADY_DELETED')
+    expect(mockAuditLog.create).not.toHaveBeenCalled()
+  })
+
+  it('dos intentos CAS producen un solo SOFT_DELETE lógico', async () => {
+    mockEvidence.findUnique.mockResolvedValue(createdRow())
+    mockEvidence.updateMany
+      .mockResolvedValueOnce({ count: 1 })
+      .mockResolvedValueOnce({ count: 0 })
+
+    await expect(StorageService.deleteEvidence('ev_1', 'user_1')).resolves.toBeUndefined()
+    await expect(StorageService.deleteEvidence('ev_1', 'user_1')).rejects.toThrow('ALREADY_DELETED')
+
+    expect(mockAuditLog.create).toHaveBeenCalledTimes(1)
+    expect(mockAuditLog.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        action: 'DELETE',
+        after: expect.objectContaining({ phase: 'SOFT_DELETE' }),
+      }),
+    })
   })
 })
 

@@ -268,6 +268,10 @@ cerrando la parte de huérfanos permanentes de A-02.
 Una evidencia es elegible para purge físico cuando `deletedAt <= now - 30d` **y** no
 es legacy (D9).
 
+El soft delete usa una actualización condicional `deletedAt === null`. FASE 3 también
+exige `deletedAt === null` al adquirir el row lock, de modo que una confirmación de upload
+concurrente no puede reponer la URL después del borrado lógico.
+
 #### 6.2 Idempotencia y clasificación de errores
 
 - **`ENOENT` en el delete es un éxito idempotente**: el objetivo del purge es que los
@@ -288,6 +292,12 @@ El purgado físico se registra con **`AuditAction.DELETE`** y
 Ese `AuditLog` **no se duplica** si ya existe para la misma evidencia y fase — la
 idempotencia del purge alcanza también al registro de auditoría.
 
+Restore y purge se excluyen mediante el row lock de la Evidence y revalidación condicional
+del estado. Restore activa la fila y vuelve a comprobar el objeto bajo ese lock antes de
+auditar; purge conserva el estado borrado bajo lock, comprueba que no exista ya un audit
+`PHYSICAL_PURGE`, elimina el objeto y audita antes del commit. Si restore gana, el CAS del
+purge falla; si purge gana, el `stat` del restore impide activar una fila sin bytes.
+
 #### 6.4 Ejecución y gate
 
 - El purge lo ejecuta un **cron del host**, **no un `setInterval` dentro de Next/PM2**:
@@ -296,6 +306,8 @@ idempotencia del purge alcanza también al registro de auditoría.
   vida del servidor web.
 - El purge **se despliega desactivado** y permanece así hasta que se satisfaga el gate
   de backup + restore probado (D6-bis.B).
+- Mientras el gate siga cerrado, el CLI solo permite dry-run y rechaza `--execute` antes
+  de validar storage o consultar la BD.
 
 ### D6-bis · Restore operativo
 
