@@ -1,8 +1,10 @@
 {
   "name": "my-project",
   "version": "0.1.0",
-  "packageManager": "pnpm@10.33.0",
   "private": true,
+  "engines": {
+    "node": ">=20.19 <21"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",
@@ -26,10 +28,12 @@
     "clsx": "^2.1.1",
     "cookie": "^1.1.1",
     "date-fns": "^3.6.0",
+    "dotenv": "^17.4.2",
     "exceljs": "^4.4.0",
     "idb": "^8.0.3",
     "lucia": "^3.2.2",
     "lucide-react": "^1.16.0",
+    "jiti": "^2.7.0",
     "nanoid": "^5.0.7",
     "next": "16.3.0",
     "oslo": "^1.2.1",
@@ -53,6 +57,7 @@
     "@prisma/cli": "3.0.0-beta.30",
     "@tailwindcss/postcss": "^4.3.3",
     "@testing-library/react": "^16.3.2",
+    "@testing-library/dom": "^10.4.1",
     "@types/node": "^24",
     "@types/papaparse": "^5.5.2",
     "@types/pg": "8.21.0",
@@ -70,9 +75,7 @@
     "typescript-eslint": "^8.67.0",
     "vitest": "^4.1.10"
   },
-  "pnpm": {
-    "overrides": {
-      "hono": "4.12.25"
-    }
+  "overrides": {
+    "hono": "4.13.2"
   }
 }

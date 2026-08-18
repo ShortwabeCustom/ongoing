@@ -11,6 +11,7 @@ import { getDb } from '@/lib/db-lazy'
 import { type FindingStatusTransition, type FindingCreate, type FindingUpdate } from '@/lib/validators/finding'
 import { FindingsQuery, parseSort } from '@/lib/validators/query'
 import { SearchService } from '@/lib/services/search-service'
+import { LEGACY_STORAGE_KEY_PREFIX } from '@/lib/storage/storage-key'
 
 type FindingPatch = Omit<FindingUpdate, 'version'>
 
@@ -343,7 +344,20 @@ export class FindingService {
           select: { id: true, email: true, name: true },
         },
         evidence: {
-          where: { deletedAt: null },
+          // La evidencia de runtime en estado PENDING (`url === null`, upload no
+          // confirmado — ADR-001 D5.1/D5.3) NO debe aparecer en el detalle: es
+          // una fila cuyo objeto puede no existir, y mostrarla produciría una
+          // tarjeta rota que afirma tener un adjunto inexistente.
+          //
+          // Legacy conserva su semántica: una legacy sin `url` sigue siendo
+          // visible, como hasta ahora (D9).
+          where: {
+            deletedAt: null,
+            OR: [
+              { storageKey: { startsWith: LEGACY_STORAGE_KEY_PREFIX } },
+              { url: { not: null } },
+            ],
+          },
           orderBy: { createdAt: 'desc' },
           select: {
             id: true,
