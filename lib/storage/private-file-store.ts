@@ -17,6 +17,7 @@
 import { randomBytes } from 'node:crypto'
 import { constants as fsConstants, promises as fs, type Stats } from 'node:fs'
 import path from 'node:path'
+import type { Readable } from 'node:stream'
 import { InvalidStorageKeyError, StorageIOError, errnoOf } from './storage-errors'
 import { isLegacyStorageKey } from './storage-key'
 import {
@@ -243,6 +244,34 @@ async function lstatObject(
   return stats
 }
 
+/**
+ * Invariantes que debe cumplir el objeto final para poder LEERSE (D15).
+ *
+ * Se aplica sobre unos `Stats` ya obtenidos —da igual si de `lstat` o de un
+ * `fstat` sobre un descriptor abierto—, de modo que la misma regla vale para
+ * `stat()` y para `getStream()`.
+ */
+function assertReadableObject(stats: Stats): void {
+  if (stats.isSymbolicLink()) {
+    throw containmentError(
+      'El objeto de evidencia es un enlace simbólico: el almacén no lo sigue.',
+    )
+  }
+  if (!stats.isFile()) {
+    throw containmentError('El objeto de evidencia no es un fichero regular.')
+  }
+  if (!ownerIsProcessUser(stats.uid)) {
+    throw containmentError(
+      'El objeto de evidencia no pertenece al usuario que ejecuta el proceso.',
+    )
+  }
+  if ((stats.mode & 0o777) !== REQUIRED_FILE_MODE) {
+    throw containmentError(
+      `El objeto de evidencia tiene permisos 0${(stats.mode & 0o777).toString(8)} en lugar de 0600.`,
+    )
+  }
+}
+
 /** Nombre de temporal compatible con `TEMP_FILE_PATTERN`. */
 function tempName(): string {
   return `.tmp-${randomBytes(12).toString('base64url')}.part`
@@ -329,7 +358,15 @@ export class PrivateFileStore {
     await fs.unlink(tempPath).catch(() => {})
   }
 
-  /** Metadatos del objeto. Base para la entrega por rangos de P1-B.3. */
+  /**
+   * Metadatos del objeto para LECTURA.
+   *
+   * Aplica los invariantes completos de D15 —fichero regular, owner del
+   * proceso, modo exacto 0600, symlink rechazado— y devuelve el tamaño REAL del
+   * filesystem, que es el único autoritativo para `Content-Length` y para el
+   * cálculo de rangos (`Evidence.fileSize` en BD es un campo independiente que
+   * podría divergir).
+   */
   static async stat(key: unknown): Promise<StoredObjectStat> {
     const root = this.root()
     const filePath = resolveSafePath(root, key)
@@ -342,7 +379,68 @@ export class PrivateFileStore {
     if (stats === 'missing') {
       throw new StorageIOError('El objeto de evidencia no existe.', { errno: 'ENOENT' })
     }
+    assertReadableObject(stats)
     return { size: stats.size, mtimeMs: stats.mtimeMs }
+  }
+
+  /**
+   * Abre el objeto para lectura y devuelve un stream, opcionalmente acotado a
+   * `[start, end]` (ambos inclusivos).
+   *
+   * SIN VENTANA TOCTOU EN EL COMPONENTE FINAL. La secuencia es deliberada:
+   *
+   *   1. `resolveSafePath` + `walkDirChain` — defensas de ruta ya existentes;
+   *   2. `open(path, O_RDONLY | O_NOFOLLOW)` — si el destino final es un
+   *      symlink, `open` falla con `ELOOP`; nunca se sigue;
+   *   3. `handle.stat()` — `fstat(2)` sobre ESE descriptor. No puede referirse a
+   *      otro inodo, así que los invariantes se comprueban sobre exactamente el
+   *      fichero que se va a leer;
+   *   4. `handle.createReadStream()` — deriva del descriptor ya abierto. NO se
+   *      vuelve a resolver la ruta.
+   *
+   * Sustituir el objeto por un symlink entre (3) y (4) no tiene efecto: el
+   * descriptor ya apunta al inodo original. El riesgo TOCTOU de los directorios
+   * intermedios sigue siendo el aceptado en D15 (root 0700, process-owned).
+   *
+   * El stream devuelto es PROPIETARIO del descriptor (`autoClose`). Si alguna
+   * validación falla después del `open`, el handle se cierra antes de lanzar.
+   */
+  static async getStream(
+    key: unknown,
+    start?: number,
+    end?: number,
+  ): Promise<{ stream: Readable; size: number }> {
+    const root = this.root()
+    const filePath = resolveSafePath(root, key)
+
+    if ((await walkDirChain(root, path.dirname(filePath), { create: false })) === 'missing') {
+      throw new StorageIOError('El objeto de evidencia no existe.', { errno: 'ENOENT' })
+    }
+
+    let handle: Awaited<ReturnType<typeof fs.open>>
+    try {
+      handle = await fs.open(filePath, fsConstants.O_RDONLY | fsConstants.O_NOFOLLOW)
+    } catch (error) {
+      // ELOOP => el destino final es un symlink. ENOENT => objeto ausente.
+      if (errnoOf(error) === 'ELOOP') {
+        throw containmentError(
+          'El objeto de evidencia es un enlace simbólico: el almacén no lo sigue.',
+        )
+      }
+      throw ioError('No se pudo abrir el objeto de evidencia.', error)
+    }
+
+    try {
+      const stats = await handle.stat()
+      assertReadableObject(stats)
+      const stream = handle.createReadStream({ start, end, autoClose: true })
+      return { stream, size: stats.size }
+    } catch (error) {
+      // Cerrar SIEMPRE antes de propagar: un descriptor filtrado agota el proceso.
+      await handle.close().catch(() => {})
+      if (error instanceof StorageIOError) throw error
+      throw ioError('No se pudo leer el objeto de evidencia.', error)
+    }
   }
 
   /**

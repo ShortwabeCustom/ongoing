@@ -417,6 +417,49 @@ reproducción parcial, reanudación).
 únicamente `stat` y `getStream(start, end)` —byte ranges sobre el stream— y **no
 implementa HTTP Range**.
 
+##### Alcance de `Range`: un solo rango
+
+- Se sirve **como máximo UN rango**. Los **rangos múltiples** (`bytes=0-1,4-5`) **NO
+  se soportan**: se **ignora** la cabecera y se devuelve **200 con la representación
+  completa**. **No se emite `multipart/byteranges`.**
+- Distinción normativa (RFC 9110 §14.2): un `Range` **malformado o de unidad
+  desconocida** se **ignora** ⇒ **200 completo**; un `Range` **bien formado pero no
+  satisfacible** ⇒ **416**. No son el mismo caso.
+- **`bytes=-0`** (sufijo de longitud cero) **no es satisfacible** ⇒ **416**.
+- Un **sufijo mayor que el objeto** devuelve el objeto completo, con estado **206**.
+
+##### Objeto de tamaño cero
+
+- Sin `Range` ⇒ **200** con `Content-Length: 0`.
+- Con un `Range` único y bien formado ⇒ **416** con `Content-Range: bytes */0`.
+- Con un `Range` malformado o múltiple ⇒ se ignora ⇒ **200** con cuerpo vacío.
+
+##### Apertura del objeto en READ
+
+La lectura **no puede** basarse en `lstat(path)` seguido de abrir por *pathname*: entre
+ambas operaciones el objeto final podría sustituirse por un enlace simbólico. El
+contrato es:
+
+1. `open(path, O_RDONLY | O_NOFOLLOW)` — un symlink en el componente final hace fallar
+   la apertura (`ELOOP`); nunca se sigue;
+2. `fstat` **sobre ese descriptor** — no puede referirse a otro inodo;
+3. verificación de invariantes sobre esos `Stats`: **fichero regular**, **owner igual
+   al usuario del proceso** y **modo exacto `0600`** (D15);
+4. creación del stream **desde el descriptor ya abierto**, sin volver a resolver la
+   ruta.
+
+Si cualquier validación posterior a la apertura falla, el descriptor **se cierra antes
+de propagar el error**. El stream devuelto es propietario del descriptor (`autoClose`).
+
+El `Content-Length` y el cálculo de rangos usan el **tamaño real del filesystem**, no
+`Evidence.fileSize`: son campos independientes que podrían divergir.
+
+**Consistencia entre el tamaño de las cabeceras y el del objeto servido**: si el tamaño
+obtenido por la apertura efectiva (`getStream` / `fstat`) difiere del que se usó
+previamente para resolver el `Range` y construir las cabeceras, la respuesta **falla
+cerrada antes de emitir un solo byte**. Nunca se sirven `Content-Length` ni
+`Content-Range` calculados sobre un objeto distinto del que se entrega.
+
 ### D14 · Configuración `EVIDENCE_STORAGE_DIR` fail-closed y memoizada por proceso
 
 #### 14.1 Momento y memoización
