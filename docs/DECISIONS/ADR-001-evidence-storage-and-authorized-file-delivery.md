@@ -467,15 +467,49 @@ escribible** por el proceso, y estar **fuera de las zonas prohibidas** de D1
 #### 15-bis.1 Escritura atómica
 
 - El temporal se crea **dentro de `findings/{findingId}/{evidenceId}/`** — el mismo
-  directorio de destino, para que el `rename` sea atómico dentro del mismo filesystem.
+  directorio de destino, de modo que temporal y final comparten **directorio y
+  filesystem**, condición necesaria para que la publicación por hard link funcione.
 - Nombre del temporal: **`.tmp-{nanoid}.part`**.
-- Apertura con flag **`wx`** — falla si ya existe, evitando colisiones y reutilización.
+- Apertura con **`O_CREAT | O_EXCL | O_WRONLY | O_NOFOLLOW`** — falla si ya existe,
+  evitando colisiones y reutilización, y sin seguir enlaces simbólicos.
 - **Mode `0600` en la creación más `chmod` exacto** (D15).
-- Secuencia: **`write` → `fsync` → `rename`**.
-- Si algo falla **antes del `rename`**, se hace **cleanup best-effort del temporal**.
+- Secuencia: **`write` → `fsync` → `link(temp, final)` → `unlink(temp)`**.
+- Si algo falla **antes del `link`**, se hace **cleanup best-effort del temporal**.
 
 Nunca se escribe directamente sobre la ruta final: un fallo a mitad de subida no puede
 dejar un fichero final truncado.
+
+##### Publicación no-clobber por hard link
+
+La publicación **no usa `rename`**. `rename(2)` **reemplaza atómicamente un destino
+existente**, lo que permite un overwrite silencioso: dos escritores concurrentes sobre la
+misma clave terminan ambos con éxito y gana el último, sin que ninguno lo advierta. No hay
+variante portable de `rename` que falle si el destino existe (`renameat2` con
+`RENAME_NOREPLACE` es específico de Linux y no está expuesto por Node).
+
+`link(2)` sí crea la entrada final de forma **atómica** y **falla con `EEXIST`** si ya
+existe. Ése es el mecanismo adoptado.
+
+**Invariantes congelados**:
+
+- **La `storageKey` de runtime es INMUTABLE.** Publicada una vez, su contenido no cambia.
+- **Nunca se sobrescribe un objeto final existente.**
+- **`EEXIST` al publicar ⇒ fallo no-clobber**, propagado conservando ese errno.
+- Ante **dos `put` concurrentes sobre la misma clave, exactamente uno publica**; el otro
+  falla. Nunca ambos con éxito.
+- **Temporal y final residen en el mismo directorio y filesystem** (`link` no cruza
+  filesystems).
+- Si el proceso **muere entre el `link` y el `unlink`**: el objeto final está **completo y
+  publicado**, y el temporal queda **huérfano**, a cargo del cleanup de D15-bis.2.
+- Un **fallo al eliminar el temporal después de una publicación exitosa NO convierte el
+  `put` en fallo**: el objeto final ya está publicado correctamente. El temporal queda para
+  el cleanup posterior.
+- Se mantienen los **permisos `0600`/`0700`** y **todas las defensas contra symlinks**
+  (D3, D15): el destino final se comprueba con `lstat` y nunca se sigue ni se sobrescribe un
+  enlace simbólico.
+
+No se introducen lock files, placeholders del fichero final, `copyFile`, reintentos que
+sobrescriban, idempotencia por hash de contenido ni dependencias nativas para `renameat2`.
 
 #### 15-bis.2 Cleanup de temporales
 
@@ -734,11 +768,12 @@ alcance.
 | R6 | Regresión en el reporte público | Regla única de renderizabilidad para lista y contador; anonimato, ISR 180 y contrato intactos (D8) |
 | R7 | Daño colateral sobre evidencia legacy | Legacy explícitamente intacto y excluido de almacén privado y purge (D9) |
 | R8 | Range mal implementado corrompe media | 200/206/416 y cabeceras definidas; Range en el handler, byte-range en el cliente (D13) |
-| R9 | Escritura no atómica deja evidencia truncada | `wx` + `write` + `fsync` + `rename`; `url` solo tras confirmar (D15-bis.1, D5.2) |
+| R9 | Escritura no atómica deja evidencia truncada | `O_EXCL|O_NOFOLLOW` + `write` + `fsync` + `link` + `unlink`; `url` solo tras confirmar (D15-bis.1, D5.2) |
 | R10 | Fila confirmada sin bytes entregables (repetir C-02) | Upload invertido: `url` y `AuditLog` CREATE solo en FASE 3 (D5.2) |
 | R11 | Objeto final huérfano por muerte de proceso entre FASE 2 y 3 | Reconocido explícitamente como modo de fallo; conciliación por `url === null && deletedAt === null` con grace period (D5.3, D5.4) |
 | R12 | Purge marca como purgado lo que falló | `ENOENT` = éxito; el resto lanza; lote acumula errores y sale != 0; entradas con error siguen elegibles sin cota (D6.2) |
 | R13 | Evidencia legible por otros usuarios del host | `0700`/`0600`, owner = usuario de ejecución, `chmod` explícito frente al umask, backup con confidencialidad equivalente (D15) |
+| R14 | Overwrite silencioso de una evidencia ya publicada | `storageKey` inmutable; publicación por `link`, que falla con `EEXIST` en lugar de reemplazar; `rename` explícitamente descartado (D15-bis.1) |
 
 ---
 
@@ -764,7 +799,8 @@ Ejes a cubrir cuando se implemente P1-B (ninguno implementado a fecha de este AD
 | **Negativo crítico — soft-deleted (D5.4, §4.1)** | Una fila con `deletedAt != null` **nunca** entra en la conciliación de PENDING, aunque tenga `url === null` |
 | **Negativo crítico — legacy (D5.4, D9)** | Una fila **legacy** con `url === null` y `deletedAt === null` **nunca** es tocada por la conciliación |
 | **DELETE (§3.3)** | 204 + `url = null` + `AuditAction.DELETE` con `after.phase = "SOFT_DELETE"`, `after.retainedObject = true`, `after.purgeAfter = deletedAt + 30d`; **segundo DELETE → 410 `ALREADY_DELETED`**; objeto físico permanece; durante la retención `GET` → 404 |
-| Atomicidad (D15-bis.1) | Fallo antes del `rename` no deja fichero final; temporal limpiado best-effort; flag `wx` impide colisión |
+| Atomicidad (D15-bis.1) | Fallo antes del `link` no deja fichero final; temporal limpiado best-effort; `O_EXCL` impide colisión de temporales |
+| **No-clobber (D15-bis.1)** | Segundo `put` sobre una clave ya publicada → rechazado con errno **`EEXIST`**, el objeto final **no cambia**; concurrentes → **exactamente uno** publica y el otro falla `EEXIST`, contenido final íntegramente de uno de los dos, nunca mezclado ni ambos con éxito; el temporal del escritor rechazado se limpia best-effort; fallo del `unlink` **tras** un `link` exitoso ⇒ el `put` sigue siendo **éxito** y el temporal queda para D15-bis.2; un symlink en el destino final nunca se sigue ni se sobrescribe |
 | Cleanup (D15-bis.2) | Solo casa `^\.tmp-[A-Za-z0-9_-]+\.part$`; nombres cercanos que no casan (`.tmp-.part`, `.tmp-a.part.bak`, `tmp-a.part`) → intactos; temporal fuera del grace → eliminado; temporal reciente → conservado; symlink → no seguido; no-regular → ignorado; fichero final → intacto; fichero ajeno al patrón → intacto; almacén inválido → aborta sin borrar; **errores acumulados, lote continúa, exit != 0, reintento posterior sin cota**; temporales **no** generan `AuditLog` |
 | Permisos (D15) | Root y subdirs `0700`; ficheros `0600`; determinista bajo umask permisivo; root preexistente inseguro → fail closed; la app nunca hace `chown` |
 | Fail closed (D14) | Root ausente/relativo/no-directorio/sin R/W → fallo cerrado; root dentro de repo, build, `public/`, `/tmp`, `/var/tmp` → rechazado; validación no ocurre en `next build`; resultado memoizado en éxito y error; upload falla antes de crear Evidence; READ señala unavailable; purge/restore/conciliación exit != 0 sin escrituras en BD |
