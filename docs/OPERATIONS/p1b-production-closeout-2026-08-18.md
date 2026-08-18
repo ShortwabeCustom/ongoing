@@ -112,6 +112,37 @@ RTO_TARGET=PENDIENTE
 El RPO observado significa que la Evidence objetivo y sus bytes estaban presentes
 en el checkpoint verificado; no constituye un objetivo organizacional aprobado.
 
+### Ejercicio formal Docker/Linux posterior — CONFIRMADO
+
+El `2026-08-18` se repitió el restore usando el snapshot off-host existente, sin
+crear un backup nuevo. Docker Desktop ejecutó containers Linux `arm64`; PostgreSQL
+reportó `16.15 (Debian 16.15-1.pgdg13+2)`. La app se construyó desde el commit exacto
+`9dedc78f07becf071b7c86a94a394cfa0cc0f22b` y se conectó sólo a la DB y al volumen
+DR, ambos aislados.
+
+| Verificación formal | Resultado |
+|---|---|
+| PostgreSQL 16 container Linux | PASS |
+| pg_restore, schema e historial Prisma | PASS |
+| Evidence smoke + Finding + URL + `deletedAt=null` | PASS |
+| storage Linux privado | PASS |
+| root/subdirectorios `0700`, ficheros `0600`, UID/GID del proceso `1001:1001` | PASS |
+| sesión restaurada y `/api/auth/session` | PASS |
+| GET autenticado | 200 |
+| bytes descargados | MATCH |
+| Range `bytes=0-7` | 206 |
+| GET sin sesión | 401 |
+
+```text
+RPO_OBSERVED=0s para la Evidence objetivo en el checkpoint del snapshot
+RTO_OBSERVED=8s desde creación del entorno Docker hasta smoke PASS
+```
+
+Container de app, container PostgreSQL, volumen, red y credenciales efímeras fueron
+eliminados de forma dirigida. El informe preservado es
+`DR-DOCKER-EXERCISE-20260818T170810Z.txt`, SHA-256
+`c8cb8af2054514c4098c5aba606108007d702f211f6da7d5082e9f49a3bd6344`.
+
 ## Retención y monitorización — PENDIENTE
 
 No se encontró crontab del usuario ni timer específico para backup de
@@ -120,10 +151,11 @@ genérico de dpkg; `pg_basebackup@.timer` estaba deshabilitado. La retención re
 manual y existen varios snapshots preservados, pero no hay frecuencia, ventana de
 retención, responsable ni alerta P1-B implementados.
 
-PROPUESTA: backup diario conjunto DB+storage, SHA-256 en origen y off-host,
-FileVault/cifrado verificado, alertas por ausencia/fallo/hash y restore autenticado
-periódico. Responsable, suplente, retención y objetivos RPO/RTO requieren aprobación
-explícita. No se autoriza borrar backups para implantarla.
+La propuesta detallada se registró en
+[`p1b-backup-policy.md`](./p1b-backup-policy.md). Responsable nominal, suplente,
+frecuencia, retención, canal de alertas y objetivos RPO/RTO requieren aprobación;
+después debe implementarse y observarse una ejecución automática completa. No se
+autoriza borrar backups para implantarla.
 
 ## Decisión de gates
 
@@ -132,8 +164,9 @@ explícita. No se autoriza borrar backups para implantarla.
 | Runtime P1-B | PASS | commit, PM2, HTTP, storage y smoke verificados |
 | Prisma baseline | PASS | resuelto, sin pendientes ni drift |
 | Backup post-P1-B | PASS | DB+storage+hashes+off-host cifrado |
-| Restore técnico compensatorio | PASS parcial | extremo a extremo, pero PostgreSQL nativo |
-| DR D6-bis.B | FAIL CLOSED | Docker obligatorio no satisfecho y política operativa ausente |
+| Restore formal Docker/Linux | PASS | PostgreSQL 16.15, app y storage Linux, auth y bytes |
+| DR técnico D6-bis.B | PASS | ejercicio formal reproducible e informe con SHA-256 |
+| Política P1-B | PENDIENTE | propuesta no aprobada ni implementada |
 | Reconciliation producción | CLOSED | Evidence histórica requiere decisión de adopción |
 | Purge | CLOSED | requiere DR completo y aprobación humana posterior separada |
 
@@ -157,10 +190,9 @@ PURGE_CRON_INSTALLED=NO
 
 ## Próximos pasos humanos
 
-1. Proporcionar un host Linux con Docker o autorizar una ventana separada de
-   instalación; repetir el restore con PostgreSQL 16 Docker y el mismo smoke.
-2. Aprobar e implementar frecuencia, responsable, monitorización y retención P1-B;
-   definir objetivos RPO/RTO.
+1. Aprobar e implementar frecuencia, responsable, suplente, monitorización y
+   retención P1-B; observar al menos una ejecución automática completa.
+2. Aprobar objetivos RPO/RTO y el canal operativo de alertas.
 3. Tomar una decisión explícita de adopción para `ExMYccC4uoFhJf1gP8Lyi` antes de
    considerar reconciliation `--execute`.
 4. Revisar el PR documental. Incluso tras cerrar DR, abrir purge requiere una

@@ -13,6 +13,10 @@ P1B_PRODUCTION_FUNCTIONAL_SMOKE=PASS
 PUBLIC_RUNTIME_EVIDENCE_EXPOSURE=CONTAINED
 RECONCILIATION_GRACE_MINUTES=30
 RECONCILIATION_PROD_READY=NO
+DR_POSTGRES16_DOCKER_LINUX=PASS
+BACKUP_POLICY_EXISTS=YES
+BACKUP_POLICY_APPROVED=NO
+BACKUP_POLICY_IMPLEMENTED=NO
 BACKUP_RESTORE_VERIFIED=NO
 PURGE_GATE=CLOSED
 PURGE_EXECUTED=NO
@@ -59,36 +63,24 @@ Contiene un `pg_dump` custom sin owner/privilegios, el storage privado completo,
 manifest, hashes y el informe DR. Los hashes se verificaron en origen y off-host;
 FileVault estaba activo en el destino Mac.
 
-El restore compensatorio aislado con PostgreSQL 16 nativo fue PASS para DB,
-`_prisma_migrations`, metadata, Finding, storage, owner/modos, sesión restaurada,
-GET 200, Range 206, anónimo 401 y bytes MATCH. Sin embargo,
-`BACKUP_RESTORE_VERIFIED=NO` por dos requisitos obligatorios no satisfechos:
+El restore formal se repitió en Docker Desktop sobre container Linux con PostgreSQL
+16.15 y una app Linux del commit de release. Fueron PASS: restore de DB, schema,
+`_prisma_migrations`, metadata/Finding, storage Linux, owner/modos, sesión
+restaurada, GET 200, Range 206, anónimo 401 y bytes MATCH. El RTO observado desde
+la creación del entorno hasta el smoke fue 8 segundos; el RPO observado para la
+Evidence objetivo en el checkpoint del snapshot fue 0 segundos.
 
-1. el host Linux no dispone de Docker y el restore exigido no se ejecutó en un
-   contenedor PostgreSQL 16;
-2. no existe una política P1-B implementada de frecuencia, retención,
-   monitorización y responsable. No hay crontab del usuario ni timer específico.
-
-No se debe reinterpretar el fallback nativo como cumplimiento del gate. Para
-cerrarlo, repetir el mismo procedimiento en PostgreSQL 16 Docker y aprobar e
-implementar una política operativa. Los objetivos organizacionales permanecen
-`RPO_TARGET=PENDIENTE` y `RTO_TARGET=PENDIENTE`.
+El requisito técnico DR está satisfecho. `BACKUP_RESTORE_VERIFIED=NO` permanece
+fail-closed únicamente porque la política P1-B todavía no está aprobada ni
+implementada. Véase [`p1b-backup-policy.md`](./p1b-backup-policy.md). Los targets
+organizacionales `RPO_TARGET` y `RTO_TARGET` permanecen pendientes de aprobación.
 
 ## Política de backup P1-B — PROPUESTA, no implementada
 
-La siguiente propuesta no autoriza borrados ni declara una política vigente:
-
-- backup diario de PostgreSQL y storage privado, con manifest y SHA-256;
-- copia off-host cifrada y verificación de hashes después de cada copia;
-- alerta por backup ausente, comando fallido, hash inválido o copia off-host
-  incompleta;
-- responsable y suplente explícitos, aún por designar;
-- retención y objetivos RPO/RTO definidos y aprobados antes de automatizar;
-- restore aislado periódico que incluya GET autenticado de una Evidence.
-
-La retención real actual es manual: existen snapshots preservados, sin borrado
-automatizado ni ventana formal. No borrar backups previos para implantar esta
-propuesta.
+La propuesta completa está en [`p1b-backup-policy.md`](./p1b-backup-policy.md).
+Frecuencia, retención, responsables, canal de alertas y targets RPO/RTO requieren
+aprobación humana. La retención real continúa siendo manual; no borrar backups
+previos para implantar la propuesta.
 
 ## Operaciones fail-closed
 
@@ -97,8 +89,9 @@ propuesta.
 - Restore lógico: el CLI sin `--execute` es dry-run; cualquier ejecución requiere
   una aprobación específica y sus precondiciones.
 - Cleanup de temporales: dry-run por defecto y separado del ciclo de Evidence.
-- Purge: permanece cerrado aunque el DR técnico parcial haya pasado. No instalar
-  cron ni usar `--execute` hasta un DR gate completo y aprobación humana posterior.
+- Purge: permanece cerrado aunque el DR técnico formal haya pasado. No instalar
+  cron ni usar `--execute` hasta aprobar/implementar la política y obtener una
+  aprobación humana posterior separada.
 
 ## Excepción histórica y contención C-02
 
