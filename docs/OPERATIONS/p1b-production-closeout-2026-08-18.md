@@ -171,22 +171,30 @@ La entrega SMTP queda bloqueada por sender/OAuth y por la creación root-owned d
 normal de Microsoft. Por ello `ALERT_DELIVERY_VERIFIED=NO` y el gate general sigue
 cerrado.
 
-### Arquitectura sprint posterior — PENDIENTE DE CUTOVER
+### Arquitectura sprint posterior — CUTOVER PASS
 
 La política diaria anterior fue reemplazada por decisión humana: backup primario
 en VPS cada 15 días, RPO primario 15 días, 26 checkpoints retenidos sin borrado y
 off-host Mac asíncrono best effort. Se prepararon y validaron un servicio/timer
 systemd, el creador primario independiente y el pull-only del Mac.
 
-La instalación en `/etc/systemd/system` requiere privilegios administrativos que no
-están disponibles en la ejecución desatendida (`sudo -n=NO`). Por preservación del
-servicio, el LaunchAgent anterior sigue activo hasta el cutover. En consecuencia:
+Las unidades fueron instaladas manualmente. El timer quedó enabled/active con próxima
+ejecución `2026-08-19 02:01:50 UTC`; el servicio terminó `Result=success` y status 0.
+El recovery point `p1b-auto-20260818T182104Z` verificó DB, storage, manifest,
+SHA-256, `SUCCESS`, ausencia de `INCOMPLETE`, permisos `0700/0600` y heartbeat.
+
+El pull-only Mac detectó ese recovery point, lo copió sin sobrescribir otros,
+verificó SHA-256 y creó `OFF_HOST_SUCCESS`. Sólo después se descargó el LaunchAgent
+primario anterior; su plist se preservó deshabilitado. El nuevo agente off-host
+corrió con exit 0 y no genera backups.
 
 ```text
-VPS_BACKUP_SERVICE_INSTALLED=NO
-VPS_BACKUP_TIMER_INSTALLED=NO
-VPS_AUTOMATED_PATH_OBSERVED=NO
-OFF_HOST_SYNC_OBSERVED=NO_FOR_NEW_ARCHITECTURE
+VPS_BACKUP_SERVICE_INSTALLED=YES
+VPS_BACKUP_TIMER_INSTALLED=YES
+VPS_AUTOMATED_PATH_OBSERVED=YES
+MAC_PRIMARY_BACKUP_DEPENDENCY=NO
+OFF_HOST_SYNC_OBSERVED=PASS
+OFF_HOST_HASH_VERIFY=PASS
 RETENTION_POLICY_APPROVED=YES
 RETENTION_DELETE_ENABLED=NO
 ```

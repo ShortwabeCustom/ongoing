@@ -3,7 +3,7 @@ set -euo pipefail
 umask 077
 
 remote_host=experiments-01
-remote_script=/home/alexis/bin/p1b-backup-source.sh
+remote_script=/home/alexis/bin/p1b-backup-source-v2.sh
 remote_root=/home/alexis/backups/pruebas-maria
 offhost_root=/Users/alexisvaldez/Backups/pruebas-maria
 state_root=/Users/alexisvaldez/Library/Application\ Support/PruebasMaria/backup
@@ -32,13 +32,17 @@ for backup_id in "${backup_ids[@]}"; do
   if [[ -f $destination/OFF_HOST_SUCCESS ]]; then
     continue
   fi
-  [[ ! -e $destination ]] || { fail_event HASH_INVALID; exit 66; }
-  mkdir -m 700 "$destination"
-  copied=NO
-  for attempt in 1 2; do
-    if rsync -a --chmod=Du=rwx,Dgo=,Fu=rw,Fgo= "$remote_host:$remote_root/$backup_id/" "$destination/"; then copied=YES; break; fi
-  done
-  [[ $copied == YES ]]
+  if [[ -d $destination ]]; then
+    [[ -f $destination/SHA256SUMS ]] || { fail_event HASH_INVALID; exit 66; }
+  else
+    [[ ! -e $destination ]] || { fail_event HASH_INVALID; exit 66; }
+    mkdir -m 700 "$destination"
+    copied=NO
+    for attempt in 1 2; do
+      if rsync -a --chmod=Du=rwx,Dgo=,Fu=rw,Fgo= "$remote_host:$remote_root/$backup_id/" "$destination/"; then copied=YES; break; fi
+    done
+    [[ $copied == YES ]]
+  fi
   (cd "$destination" && sha256sum --check --status SHA256SUMS) || { fail_event HASH_INVALID; exit 67; }
   now=$(date -u +%Y-%m-%dT%H:%M:%SZ)
   printf '%s\n' \

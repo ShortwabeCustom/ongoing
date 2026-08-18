@@ -5,7 +5,7 @@
 ```text
 BACKUP_POLICY_EXISTS=YES
 BACKUP_POLICY_APPROVED=YES
-BACKUP_POLICY_IMPLEMENTED=NO
+BACKUP_POLICY_IMPLEMENTED=PARTIAL_SMTP_PENDING
 BACKUP_PRIMARY_LOCATION=VPS
 BACKUP_FREQUENCY=every_15_days
 PRIMARY_BACKUP_RPO_TARGET=15_days
@@ -66,7 +66,7 @@ Un backup incompleto de cualquiera de los dos componentes se considera fallido.
 La retención no debe borrar snapshots existentes hasta una aprobación destructiva
 posterior. Durante esta etapa sólo se permite inventario, clasificación y dry-run.
 
-## Arquitectura sprint aprobada y estado de cutover
+## Arquitectura sprint aprobada — CUTOVER PASS
 
 El VPS debe crear DB, storage, manifest, SHA-256, verificación y `SUCCESS` sin
 depender del Mac. Un timer systemd diario persistente comprueba si han transcurrido
@@ -84,13 +84,16 @@ OFF_HOST_DEPENDS_ON_MAC_AVAILABILITY=YES
 OFF_HOST_AVAILABILITY_RISK=ACCEPTED
 ```
 
-Los scripts v2 y unidades validadas están preparados en el VPS, pero el cutover
-requiere instalar unidades en `/etc/systemd/system`, habilitar el timer y arrancar
-una corrida observada. `sudo` no interactivo no está disponible. Hasta ese paso se
-preserva el LaunchAgent diario anterior para no dejar el proyecto sin scheduler;
-queda `SUPERSEDED_PENDING_CUTOVER` y no representa el estado objetivo.
+El servicio y timer systemd están instalados; el timer está enabled y active. La
+corrida observada por la misma unidad produjo `p1b-auto-20260818T182104Z` con DB,
+storage, manifest, hash origen, `SUCCESS` y heartbeat PASS. El Mac hizo después el
+pull independiente, verificó SHA-256 y creó `OFF_HOST_SUCCESS`.
 
-## Implementación diaria anterior — SUPERSEDED_PENDING_CUTOVER
+El LaunchAgent primario anterior fue descargado y su plist preservado como
+`.disabled`; el agente restante sólo hace pull cada seis horas. Por tanto el backup
+primario ya no depende de la disponibilidad del Mac.
+
+## Implementación diaria anterior — SUPERSEDED_AND_DISABLED
 
 La automatización anterior usa un LaunchAgent en el Mac porque el mecanismo
 off-host verificado es un pull por SSH/rsync. A las 20:00 de la zona local UTC−06
@@ -158,11 +161,11 @@ credenciales efímeras, y storage Linux aislado con directorios `0700`, ficheros
 
 ## Condiciones para implementación
 
-Antes de declarar la política completamente implementada falta: cutover systemd y
-corrida primaria observada sin Mac; pull posterior observado; sender/app OAuth;
-creación root-owned del secreto; conexión del spool al emisor; y una prueba SMTP.
+Antes de declarar la política completamente implementada falta únicamente el gate
+separado de alertas: sender/app OAuth, secreto root-owned, conexión del spool al
+emisor y una prueba SMTP real.
 
 ```text
 BACKUP_POLICY_APPROVED=YES
-BACKUP_POLICY_IMPLEMENTED=NO
+BACKUP_POLICY_IMPLEMENTED=PARTIAL_SMTP_PENDING
 ```
