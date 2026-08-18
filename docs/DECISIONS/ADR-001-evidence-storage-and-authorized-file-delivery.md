@@ -164,11 +164,17 @@ un **readiness marker**:
 | **FASE 0** | Validar configuración de storage **antes de crear ninguna fila** | Config inválida ⇒ falla aquí, sin escritura en BD (D14) |
 | **FASE 1** | Transacción: `Evidence.create(url = null, …)` — **sin `AuditLog` CREATE** | Fila **PENDING** |
 | **FASE 2** | `PrivateFileStore.put` | Bytes escritos atómicamente (D15-bis) |
-| **FASE 3** | Transacción: `Evidence.update(url = "/api/evidence/{id}/file")` **+ `AuditLog` CREATE** | Fila **CONFIRMED** |
+| **FASE 3** | Transacción: `Evidence.update(url = "/api/evidence/{id}/file")` → `PrivateFileStore.stat(storageKey)` → **`AuditLog` CREATE** | Fila **CONFIRMED** |
 
 **Solo la FASE 3 produce una Evidence CONFIRMED.** El `AuditLog` de creación se emite
 exclusivamente en FASE 3: una evidencia que nunca llegó a ser entregable no genera un
 registro de creación que afirme lo contrario.
+
+El `update` ocurre antes del `stat` para adquirir o esperar el row lock. La revalidación
+del objeto final sucede dentro de esa misma transacción, antes del `AuditLog` y del commit:
+si el objeto ya no existe, FASE 3 revierte y la fila permanece PENDING. Esta comprobación
+impide que un rollback concurrente de D5.4 permita confirmar una fila cuyo objeto fue
+eliminado.
 
 Esto invierte el orden defectuoso de C-02 (fila y URL primero, bytes después): la URL
 solo se promete cuando los bytes ya están confirmados en disco.
@@ -194,7 +200,10 @@ AND NOT isLegacyStorageKey(storageKey)
 AND createdAt <= now - gracePeriod
 ```
 
-y **elimina el objeto (final o temporal) y la fila**.
+y **elimina el objeto final identificado por `storageKey`, si existe, y la fila PENDING**.
+La ausencia del objeto final (`ENOENT`) es éxito idempotente. Los temporales huérfanos
+`.tmp-*.part` pertenecen exclusivamente al cleanup separado de D15-bis.2: D5.4 no puede
+derivar sus nombres aleatorios desde `storageKey` y no los elimina directamente.
 
 Las cuatro condiciones son restrictivas por separado:
 
@@ -208,6 +217,23 @@ Las cuatro condiciones son restrictivas por separado:
   subidas en curso.
 
 Registra **`AuditAction.DELETE`** con **`after.phase = "INCOMPLETE_UPLOAD_CLEANUP"`**.
+
+**CONFIRMADO — ejecución segura:** la fila se vuelve a reclamar mediante una eliminación
+condicional dentro de una transacción, revalidando en ese instante las cuatro condiciones
+anteriores. Si la condición ya no se cumple (por ejemplo, FASE 3 la confirmó o fue
+soft-deleted), no se toca el objeto ni se crea `AuditLog`. El borrado mediante
+`PrivateFileStore.delete` y la creación del audit ocurren antes del commit de esa misma
+transacción; `ENOENT` es éxito idempotente y cualquier otro fallo de storage revierte la BD.
+FASE 3, por su parte, vuelve a comprobar el objeto después de adquirir el row lock y antes
+del audit/commit, cerrando el caso en que D5.4 borra el objeto pero su transacción revierte.
+
+**CONFIRMADO — operativa:** el comando es dry-run salvo que se indique explícitamente
+`--execute`, procesa en lotes acotados y continúa tras fallos individuales, pero termina con
+exit code distinto de cero si hubo alguno. El dry-run no borra objetos, filas ni audits.
+
+**PENDIENTE — grace period operativo:** este ADR todavía no fija un valor numérico. Hasta
+que operaciones lo determine, el núcleo recibe un cutoff explícito y el CLI exige
+`--grace-minutes <entero positivo>` sin default; omitirlo falla cerrado y sin escrituras.
 
 Ese `AuditLog` es **distinto** del cleanup de ficheros `.tmp` (D15-bis.2): un temporal
 de filesystem sin `Evidence` asociada **no genera `AuditLog`**. Solo la desaparición de

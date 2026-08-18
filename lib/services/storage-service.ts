@@ -225,6 +225,11 @@ export class StorageService {
         data: { url },
       })
 
+      // El update obtiene/espera el row lock antes de comprobar los bytes. Así,
+      // un rollback concurrente de D5.4 no puede dejar CONFIRMED una fila cuyo
+      // objeto final ya fue eliminado.
+      await PrivateFileStore.stat(storageKey)
+
       await tx.auditLog.create({
         data: {
           entityType: 'Evidence',

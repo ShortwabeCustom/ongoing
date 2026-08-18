@@ -17,7 +17,7 @@ const mockEvidence = vi.hoisted(() => ({
 }))
 const mockFinding = vi.hoisted(() => ({ findFirst: vi.fn() }))
 const mockAuditLog = vi.hoisted(() => ({ create: vi.fn() }))
-const mockStore = vi.hoisted(() => ({ put: vi.fn(), exists: vi.fn() }))
+const mockStore = vi.hoisted(() => ({ put: vi.fn(), stat: vi.fn(), exists: vi.fn() }))
 const mockRoot = vi.hoisted(() => ({ getEvidenceStorageRoot: vi.fn() }))
 
 const db = {
@@ -77,6 +77,7 @@ beforeEach(() => {
     createdRow({ id: where.id, url: data.url }),
   )
   mockStore.put.mockResolvedValue(undefined)
+  mockStore.stat.mockResolvedValue({ size: PNG.length })
   mockAuditLog.create.mockResolvedValue({})
 })
 
@@ -177,10 +178,11 @@ describe('FASE 2 — publicación de bytes', () => {
 })
 
 describe('FASE 3 — confirmación', () => {
-  it('fija la URL exacta y emite AuditLog CREATE en la MISMA transacción', async () => {
+  it('hace update → stat → AuditLog CREATE, en ese orden y en la MISMA transacción', async () => {
     await StorageService.uploadFile(INPUT)
 
     const evidenceId = mockEvidence.create.mock.calls[0][0].data.id
+    const createdKey = mockEvidence.create.mock.calls[0][0].data.storageKey
     expect(mockEvidence.update).toHaveBeenCalledWith({
       where: { id: evidenceId },
       data: { url: `/api/evidence/${evidenceId}/file` },
@@ -193,6 +195,13 @@ describe('FASE 3 — confirmación', () => {
       action: 'CREATE',
       actorId: 'user_1',
     })
+
+    const updateOrder = mockEvidence.update.mock.invocationCallOrder[0]
+    const statOrder = mockStore.stat.mock.invocationCallOrder[0]
+    const auditOrder = mockAuditLog.create.mock.invocationCallOrder[0]
+    expect(updateOrder).toBeLessThan(statOrder)
+    expect(statOrder).toBeLessThan(auditOrder)
+    expect(mockStore.stat).toHaveBeenCalledWith(createdKey)
 
     // Dos transacciones: FASE 1 y FASE 3.
     expect(db.$transaction).toHaveBeenCalledTimes(2)
@@ -214,6 +223,33 @@ describe('FASE 3 — confirmación', () => {
     await expect(StorageService.uploadFile(INPUT)).rejects.toThrow('audit down')
     // El update se intentó dentro de la tx que revierte; no hay confirmación.
     expect(mockStore.put).toHaveBeenCalledTimes(1)
+  })
+
+  it('si stat falla tras el update, FASE 3 rechaza sin AuditLog ni cleanup aplicativo', async () => {
+    mockStore.stat.mockRejectedValue(Object.assign(new Error('missing'), { code: 'ENOENT' }))
+
+    await expect(StorageService.uploadFile(INPUT)).rejects.toThrow('missing')
+
+    expect(mockEvidence.update).toHaveBeenCalledTimes(1)
+    expect(mockStore.stat).toHaveBeenCalledTimes(1)
+    expect(mockAuditLog.create).not.toHaveBeenCalled()
+    expect((mockStore as Record<string, unknown>).delete).toBeUndefined()
+    expect((mockEvidence as Record<string, unknown>).deleteMany).toBeUndefined()
+  })
+
+  it('un rollback de D5.4 que dejó PENDING sin objeto no puede ser confirmado después', async () => {
+    mockStore.stat.mockRejectedValue(Object.assign(new Error('object removed by reconciliation'), { code: 'ENOENT' }))
+
+    await expect(StorageService.uploadFile(INPUT)).rejects.toThrow('object removed by reconciliation')
+    expect(mockEvidence.update).toHaveBeenCalledTimes(1)
+    expect(mockAuditLog.create).not.toHaveBeenCalled()
+  })
+
+  it('con stat exitoso conserva la respuesta CONFIRMED normal', async () => {
+    const result = await StorageService.uploadFile(INPUT)
+    expect(mockStore.stat).toHaveBeenCalledTimes(1)
+    expect(mockAuditLog.create).toHaveBeenCalledTimes(1)
+    expect(result.url).toBe(`/api/evidence/${result.id}/file`)
   })
 })
 
