@@ -322,21 +322,28 @@ describe('cleanup de temporales D15-bis.2', () => {
 
   it('registra fallo de subdirectorio y continúa con otros candidatos', async () => {
     const blocked = path.join(root, 'blocked')
+    const blockedCandidate = path.join(blocked, '.tmp-inside.part')
     const candidate = path.join(root, '.tmp-after.part')
     fs.mkdirSync(blocked, { mode: 0o700 })
-    fs.writeFileSync(path.join(blocked, '.tmp-inside.part'), 'x', { mode: 0o600 })
+    fs.writeFileSync(blockedCandidate, 'x', { mode: 0o600 })
     fs.writeFileSync(candidate, 'x', { mode: 0o600 })
+    const old = new Date(0)
+    fs.utimesSync(blockedCandidate, old, old)
+    fs.utimesSync(candidate, old, old)
     const originalReaddir = fs.promises.readdir.bind(fs.promises)
     const readdir = vi.spyOn(fs.promises, 'readdir').mockImplementation(async (target, options) => {
       if (target === blocked) throw Object.assign(new Error('readdir failed'), { code: 'EACCES' })
       return originalReaddir(target, options as { withFileTypes: true })
     }) as ReturnType<typeof vi.spyOn>
 
-    const result = await PrivateFileStore.cleanupTemporaries({ cutoff: new Date(), execute: true })
+    const result = await PrivateFileStore.cleanupTemporaries({
+      cutoff: new Date('2026-08-18T00:00:00.000Z'),
+      execute: true,
+    })
 
     readdir.mockRestore()
     expect(result).toMatchObject({ cleaned: 1, failed: 1 })
-    expect(fs.existsSync(path.join(blocked, '.tmp-inside.part'))).toBe(true)
+    expect(fs.existsSync(blockedCandidate)).toBe(true)
     expect(fs.existsSync(candidate)).toBe(false)
   })
 })
