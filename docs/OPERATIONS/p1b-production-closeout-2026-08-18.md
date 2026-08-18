@@ -171,6 +171,12 @@ La entrega SMTP queda bloqueada por sender/OAuth y por la creación root-owned d
 normal de Microsoft. Por ello `ALERT_DELIVERY_VERIFIED=NO` y el gate general sigue
 cerrado.
 
+El sender OAuth2 quedó implementado y desplegado sin secretos. La frontera restante
+es humana: registrar una app Microsoft para cuentas personales, otorgar únicamente
+el permiso delegado SMTP.Send, completar device consent y permitir que el helper
+root-owned almacene el refresh token directamente. No se ejecutó autorización ni se
+envió correo durante esta fase.
+
 ### Arquitectura sprint posterior — CUTOVER PASS
 
 La política diaria anterior fue reemplazada por decisión humana: backup primario

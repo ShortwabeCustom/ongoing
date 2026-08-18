@@ -165,6 +165,34 @@ Antes de declarar la política completamente implementada falta únicamente el g
 separado de alertas: sender/app OAuth, secreto root-owned, conexión del spool al
 emisor y una prueba SMTP real.
 
+## SMTP OAuth2 — implementación preparada, autorización humana pendiente
+
+Microsoft confirma para Outlook.com `smtp-mail.outlook.com:587`, STARTTLS y OAuth2.
+El permiso delegado mínimo es `https://outlook.office.com/SMTP.Send`; se solicita
+también `offline_access` para renovación. No se usa Basic Auth, contraseña normal,
+app password, client secret ni permisos tenant-wide.
+
+Referencias oficiales:
+
+- [OAuth para IMAP/POP/SMTP](https://learn.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how-to-authenticate-an-imap-pop-smtp-application-by-using-oauth)
+- [Configuración SMTP de Outlook.com](https://support.microsoft.com/en-us/office/pop-imap-and-smtp-settings-for-outlook-com-d088b986-291d-42b8-9564-9c414e2aa040)
+
+`ops/p1b-smtp-alert.py` implementa device flow para cuentas personales, refresh de
+token, STARTTLS, XOAUTH2, prueba única y entrega idempotente de un evento mediante
+marcador `.delivered`. El refresh token sólo se escribe en
+`/etc/pruebas-maria/backup-alert.env`, root:root `0600`; el sender devuelve exit no
+cero y no marca entrega ante cualquier fallo.
+
+Estado actual real:
+
+```text
+MICROSOFT_APP_REGISTERED=NO
+OAUTH_CONSENT_COMPLETED=NO
+REFRESH_TOKEN_PROVISIONED=NO
+ALERT_SPOOL_INTEGRATED=NO
+ALERT_DELIVERY_VERIFIED=NO
+```
+
 ```text
 BACKUP_POLICY_APPROVED=YES
 BACKUP_POLICY_IMPLEMENTED=PARTIAL_SMTP_PENDING

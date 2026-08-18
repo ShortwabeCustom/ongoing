@@ -84,6 +84,10 @@ provisionada/verificada. Véase
 [`p1b-backup-policy.md`](./p1b-backup-policy.md). El RPO primario
 aprobado es 15 días; el off-host es best effort; RTO permanece en 4h.
 
+El sender SMTP OAuth2 está preparado, pero app registration, consentimiento y
+refresh token siguen pendientes de una acción humana directa con Microsoft. No se
+debe cambiar `ALERT_DELIVERY_VERIFIED` hasta una transacción SMTP real.
+
 ## Política de backup P1-B — PROPUESTA, no implementada
 
 La propuesta completa está en [`p1b-backup-policy.md`](./p1b-backup-policy.md).
