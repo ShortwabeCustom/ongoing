@@ -1,13 +1,16 @@
-name: Deploy Production
+name: Validate Release
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
-  build-test-deploy:
+  validate:
     runs-on: ubuntu-latest
 
     services:
@@ -40,7 +43,6 @@ jobs:
           - 9200:9200
 
     env:
-      NODE_ENV: production
       # DATABASE_URL/ELASTICSEARCH_URL: apuntan a los contenedores de servicio efímeros
       # definidos arriba (solo viven durante este job); no son credenciales de producción.
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/pruebas_maria_ci?schema=public
@@ -59,47 +61,63 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-
-      - name: Enable pnpm
-        run: corepack enable
+          node-version: '20.20.2'
+          cache: npm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile --prod=false
+        run: npm ci
 
       - name: Generate Prisma client
-        run: pnpm exec prisma generate
+        run: npm exec -- prisma generate
 
-      - name: Run linter
-        run: pnpm run lint
+      - name: Legacy lint debt (non-blocking)
+        run: npm run lint
+        continue-on-error: true
+
+      - name: Lint changed JavaScript and TypeScript
+        env:
+          LINT_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          set -euo pipefail
+          base="$LINT_BASE_SHA"
+          if [[ ! "$base" =~ ^[0-9a-f]{40}$ ]] || ! git cat-file -e "$base^{commit}"; then
+            base="$(git rev-parse HEAD^)"
+          fi
+          mapfile -d '' files < <(git diff --diff-filter=ACMR --name-only -z "$base" "$GITHUB_SHA" -- '*.js' '*.cjs' '*.mjs' '*.ts' '*.tsx')
+          if ((${#files[@]})); then
+            npm exec -- eslint -- "${files[@]}"
+          fi
+
+      - name: Run tests
+        run: npm test
 
       - name: Build application
-        run: pnpm run build
+        run: npm run build
+        env:
+          NODE_ENV: production
 
       - name: Run database migrations
-        run: pnpm exec prisma migrate deploy
+        run: npm exec -- prisma migrate deploy
+        env:
+          NODE_ENV: production
 
       - name: Check Elasticsearch indices
         run: |
           curl -s -X GET "http://localhost:9200/_cat/indices" || echo "ES may need index initialization"
 
-      - name: Deploy to production
-        if: success()
-        run: |
-          echo "✅ All checks passed. Ready for deployment."
-          echo "Next: Manual deployment or CD pipeline integration"
-
-      - name: Notify deployment
+      - name: Notify validation
         if: always() && env.SLACK_WEBHOOK_URL != ''
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
           text: |
-            Pruebas María Deploy: ${{ job.status }}
+            Pruebas María release validation: ${{ job.status }}
             Commit: ${{ github.sha }}
             Branch: ${{ github.ref }}
         env:

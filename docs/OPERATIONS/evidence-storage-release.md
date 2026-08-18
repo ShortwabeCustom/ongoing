@@ -3,17 +3,23 @@
 Estado operativo actual:
 
 ```text
+RUNTIME_CANONICAL=PM2_SOURCE
+PACKAGE_MANAGER_CANONICAL=npm
+NODE_RELEASE=20.20.2
 PURGE_GATE=CLOSED
 BACKUP_RESTORE_VERIFIED=NO
 DEPLOY_READY=NO
 RECONCILIATION_GRACE_MINUTES=30
+NPM_LEGACY_PEER_DEPS=true
 ```
 
 `RECONCILIATION_GRACE_MINUTES=30` es el valor operativo aprobado para el release de P1-B; no es un default hardcodeado en la aplicación. Este documento no autoriza producción por sí solo.
 
+La aplicación productiva actual usa PM2 sobre un source checkout y `npm start`. Docker queda documentado pero no es el runtime canónico actual. `NPM_LEGACY_PEER_DEPS=true` es deuda técnica temporal: `@base-ui/react@1.7.0` exige `date-fns@^4`, mientras la aplicación permanece deliberadamente en `date-fns@3`; debe retirarse después de revisar ese upgrade mayor.
+
 ## Provisioning y preflight
 
-- Confirmar el runtime real (PM2 con source checkout o imagen Docker) y el usuario del job.
+- Confirmar el usuario del proceso PM2 y el cwd del source checkout.
 - Provisionar `EVIDENCE_STORAGE_DIR` absoluto, durable, fuera del repo/build/`public`, `/tmp` y `/var/tmp`.
 - Owner igual al usuario del proceso; directorio `0700`; ficheros `0600`; nunca ejecutar `chown` desde la app.
 - Tras restart, ejecutar manualmente `node scripts/run-ts.cjs scripts/preflight-evidence-storage.ts`. El preflight crea y limpia únicamente un subdirectorio `.preflight-*`, y comprueba escritura, fsync y hard links.
@@ -47,6 +53,6 @@ La mera existencia del directorio o un `pg_dump` local no abre el gate. Purge no
 
 ## Pendientes de release
 
-- Confirmar PM2/source checkout frente a Docker como runtime canónico.
-- Corregir la contradicción `pnpm@10.33.0`/`pnpm-lock.yaml` frente al `package-lock.json` existente.
-- Si Docker es canónico, empaquetar `scripts/`, `lib/`, runner y configuración de jobs antes de declarar los CLIs disponibles.
+- Validar `npm ci`, tests, lint y build en Node 20.20.2 Linux mediante CI.
+- Provisionar y verificar storage/backup/restore en el host antes de cambiar `DEPLOY_READY`.
+- Docker sigue siendo no canónico y no empaqueta los CLIs operativos P1-B.

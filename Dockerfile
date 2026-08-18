@@ -1,34 +1,32 @@
 # Pruebas María 2.0 — Production Dockerfile
 
 # Stage 1: Build
-FROM node:20-alpine AS builder
+FROM node:20.20.2-alpine AS builder
 
 WORKDIR /app
 
 # Install build dependencies
 RUN apk add --no-cache python3 make g++
-RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
-
 # Copy package files
-COPY package.json pnpm-lock.yaml ./
+COPY package.json package-lock.json .npmrc ./
 
 # Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN npm ci
 
 # Copy source code
 COPY . .
 
 # Generate Prisma client
-RUN pnpm exec prisma generate
+RUN npm exec -- prisma generate
 
 # Build Next.js application
-RUN pnpm run build
+RUN npm run build
 
 # Prune dependencies for production
-RUN pnpm prune --prod
+RUN npm prune --omit=dev
 
 # Stage 2: Runtime
-FROM node:20-alpine
+FROM node:20.20.2-alpine
 
 WORKDIR /app
 
