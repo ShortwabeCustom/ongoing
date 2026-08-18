@@ -4,16 +4,31 @@
 
 ```text
 BACKUP_POLICY_EXISTS=YES
-BACKUP_POLICY_APPROVED=NO
+BACKUP_POLICY_APPROVED=PARTIAL
 BACKUP_POLICY_IMPLEMENTED=NO
 RPO_TARGET=PENDIENTE_APROBACION_HUMANA
 RTO_TARGET=PENDIENTE_APROBACION_HUMANA
 ```
 
-Este documento es una **PROPUESTA**. No autoriza automatizaciones, eliminación de
-backups, cambios de producción ni apertura de purge. Los valores propuestos deben
-ser aprobados y los responsables deben aceptar formalmente su función antes de
-considerar satisfecha la política exigida por D6-bis.B.
+La generación y monitorización no destructiva están aprobadas e implementadas. La
+retención destructiva continúa pendiente porque los valores siguen marcados como
+`PENDIENTE_APROBACION_HUMANA` en la decisión documental previa. Este documento no
+autoriza eliminación de backups ni apertura de purge.
+
+```text
+BACKUP_RESPONSIBLE=Alexis Valdez Cortez
+BACKUP_DEPUTY=NONE
+SINGLE_OPERATOR_MODE=YES
+SINGLE_OPERATOR_RISK=ACCEPTED
+BACKUP_ALERT_CHANNEL=Email
+ALERT_RECIPIENT=alexis.pro_sk8@hotmail.com
+ALERT_DELIVERY_METHOD=SMTP_OAUTH2_REQUIRED
+```
+
+El riesgo aceptado es que no existe un segundo administrador humano si el operador
+principal no está disponible. Backups automáticos, copia cifrada off-host, hashes,
+alertas email, runbook y restores trimestrales son controles compensatorios, no un
+reemplazo de un suplente.
 
 ## Alcance confirmado
 
@@ -33,18 +48,38 @@ Un backup incompleto de cualquiera de los dos componentes se considera fallido.
 
 | Campo | Propuesta | Estado |
 |---|---|---|
-| Frecuencia | diaria, inicio 02:00 UTC; adicional antes de releases/migraciones | PENDIENTE_APROBACION_HUMANA |
+| Frecuencia | diaria, inicio 02:00 UTC; adicional antes de releases/migraciones | HUMAN_APPROVED |
 | Retención | 35 diarios, 12 semanales y 12 mensuales | PENDIENTE_APROBACION_HUMANA |
-| Responsable | owner operativo de Pruebas María, persona nominal por designar | PENDIENTE_APROBACION_HUMANA |
-| Suplente | SRE/infra de guardia, persona nominal por designar | PENDIENTE_APROBACION_HUMANA |
-| RPO target | 24 horas | PENDIENTE_APROBACION_HUMANA |
-| RTO target | 4 horas | PENDIENTE_APROBACION_HUMANA |
-| Restore periódico | trimestral y después de cambios materiales de DB/storage/auth | PENDIENTE_APROBACION_HUMANA |
-| Canal de alertas | canal operativo y escalación fuera de banda, por designar | PENDIENTE_APROBACION_HUMANA |
+| Responsable | Alexis Valdez Cortez | HUMAN_APPROVED |
+| Suplente | ninguno; modo operador único | HUMAN_APPROVED_RISK_ACCEPTED |
+| RPO target | 24 horas | HUMAN_APPROVED |
+| RTO target | 4 horas | HUMAN_APPROVED |
+| Restore periódico | trimestral y después de cambios materiales de DB/storage/auth | HUMAN_APPROVED |
+| Canal de alertas | email a `alexis.pro_sk8@hotmail.com`, SMTP seguro con OAuth2 | HUMAN_APPROVED; SECRET_PENDING |
 
 La retención propuesta no debe aplicarse retroactivamente ni borrar snapshots
 existentes hasta contar con aprobación, inventario de paths exactos y verificación
 de que ninguna copia es única.
+
+## Implementación observada — 2026-08-18
+
+La automatización instalada usa un LaunchAgent en el Mac porque el mecanismo
+off-host verificado es un pull por SSH/rsync. A las 20:00 de la zona local UTC−06
+ejecuta el recovery point de las 02:00 UTC. El mismo job crea el snapshot en el VPS,
+copia al Mac, verifica hashes en ambos extremos y sólo entonces escribe `SUCCESS` y
+heartbeat. Un monitor cada 15 minutos detecta backup ausente después de 26 horas y
+restore vencido después del trimestre; los eventos se conservan en un spool `0700`.
+
+La corrida observada válida fue `p1b-auto-20260818T175747Z`: DB, storage, manifest,
+hash origen, copia off-host, hash destino y heartbeat fueron PASS. Los inventarios
+pre-política existen en ambos extremos. `RETENTION_DELETE_ENABLED=NO` y ningún
+backup histórico fue eliminado.
+
+La entrega email no está instalada ni verificada. Outlook.com exige autenticación
+moderna/OAuth2; no se habilitará autenticación básica ni se usará la contraseña
+normal. Falta provisionar identidad emisora y OAuth en
+`/etc/pruebas-maria/backup-alert.env`, root:root `0600`. El template versionado sólo
+contiene nombres de variables en `ops/backup-alert.env.example`.
 
 ## Ejecución y verificación propuestas
 
@@ -94,12 +129,11 @@ credenciales efímeras, y storage Linux aislado con directorios `0700`, ficheros
 
 ## Condiciones para implementación
 
-Se requieren decisiones humanas explícitas sobre frecuencia, retención, RPO, RTO,
-responsable nominal, suplente nominal, canal de alertas y presupuesto/destino
-off-host. Después deben implementarse y observarse al menos una ejecución automática
-completa y su alerta de heartbeat antes de declarar:
+Antes de declarar la política completamente implementada falta: aprobación explícita
+de la retención destructiva en la documentación vigente; sender/app OAuth; creación
+root-owned del secreto; conexión del spool al emisor; y una única prueba SMTP real.
 
 ```text
-BACKUP_POLICY_APPROVED=YES
-BACKUP_POLICY_IMPLEMENTED=YES
+BACKUP_POLICY_APPROVED=PARTIAL
+BACKUP_POLICY_IMPLEMENTED=NO
 ```

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>Label</key><string>com.pruebasmaria.p1b-backup</string>
+  <key>ProgramArguments</key><array><string>/Users/alexisvaldez/Library/Application Support/PruebasMaria/backup/p1b-backup-offhost.sh</string></array>
+  <key>StartCalendarInterval</key><dict><key>Hour</key><integer>20</integer><key>Minute</key><integer>0</integer></dict>
+  <key>StandardOutPath</key><string>/Users/alexisvaldez/Library/Logs/PruebasMaria/p1b-backup.out.log</string>
+  <key>StandardErrorPath</key><string>/Users/alexisvaldez/Library/Logs/PruebasMaria/p1b-backup.err.log</string>
+</dict></plist>

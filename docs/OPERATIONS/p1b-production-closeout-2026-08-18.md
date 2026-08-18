@@ -157,6 +157,20 @@ frecuencia, retención, canal de alertas y objetivos RPO/RTO requieren aprobaci�
 después debe implementarse y observarse una ejecución automática completa. No se
 autoriza borrar backups para implantarla.
 
+### Automatización observada — CONFIRMADO
+
+Se instaló el job diario completo mediante LaunchAgent del Mac, conservando el
+pull SSH/rsync ya verificado. La corrida válida `p1b-auto-20260818T175747Z` pasó:
+dump DB, archive privado, manifest, hash origen, copia off-host, hash destino,
+marcadores `SUCCESS` y heartbeat. Un monitor de 15 minutos terminó con exit 0 y
+aplica umbral de ausencia de 26 horas y restore vencido trimestral. Se generaron
+inventarios pre-política y `RETENTION_DELETE_ENABLED=NO`; no se borró ningún backup.
+
+La entrega SMTP queda bloqueada por sender/OAuth y por la creación root-owned de
+`/etc/pruebas-maria/backup-alert.env`. No se usará autenticación básica ni password
+normal de Microsoft. Por ello `ALERT_DELIVERY_VERIFIED=NO` y el gate general sigue
+cerrado.
+
 ## Decisión de gates
 
 | Gate | Estado | Razón |
@@ -167,6 +181,8 @@ autoriza borrar backups para implantarla.
 | Restore formal Docker/Linux | PASS | PostgreSQL 16.15, app y storage Linux, auth y bytes |
 | DR técnico D6-bis.B | PASS | ejercicio formal reproducible e informe con SHA-256 |
 | Política P1-B | PENDIENTE | propuesta no aprobada ni implementada |
+| Backup automático observado | PASS | `p1b-auto-20260818T175747Z`, ambos extremos |
+| Alertas email | PENDIENTE | identidad OAuth/secreto root-owned no provisionados |
 | Reconciliation producción | CLOSED | Evidence histórica requiere decisión de adopción |
 | Purge | CLOSED | requiere DR completo y aprobación humana posterior separada |
 

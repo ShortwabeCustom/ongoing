@@ -15,8 +15,10 @@ RECONCILIATION_GRACE_MINUTES=30
 RECONCILIATION_PROD_READY=NO
 DR_POSTGRES16_DOCKER_LINUX=PASS
 BACKUP_POLICY_EXISTS=YES
-BACKUP_POLICY_APPROVED=NO
+BACKUP_POLICY_APPROVED=PARTIAL
 BACKUP_POLICY_IMPLEMENTED=NO
+AUTOMATED_BACKUP_OBSERVED=PASS
+ALERT_DELIVERY_VERIFIED=NO
 BACKUP_RESTORE_VERIFIED=NO
 PURGE_GATE=CLOSED
 PURGE_EXECUTED=NO
@@ -70,10 +72,10 @@ restaurada, GET 200, Range 206, anónimo 401 y bytes MATCH. El RTO observado des
 la creación del entorno hasta el smoke fue 8 segundos; el RPO observado para la
 Evidence objetivo en el checkpoint del snapshot fue 0 segundos.
 
-El requisito técnico DR está satisfecho. `BACKUP_RESTORE_VERIFIED=NO` permanece
-fail-closed únicamente porque la política P1-B todavía no está aprobada ni
-implementada. Véase [`p1b-backup-policy.md`](./p1b-backup-policy.md). Los targets
-organizacionales `RPO_TARGET` y `RTO_TARGET` permanecen pendientes de aprobación.
+El requisito técnico DR y una corrida automática completa están satisfechos.
+`BACKUP_RESTORE_VERIFIED=NO` permanece fail-closed porque la entrega SMTP no está
+provisionada/verificada y la retención destructiva sigue pendiente. Véase
+[`p1b-backup-policy.md`](./p1b-backup-policy.md). RPO 24h y RTO 4h están aprobados.
 
 ## Política de backup P1-B — PROPUESTA, no implementada
 
