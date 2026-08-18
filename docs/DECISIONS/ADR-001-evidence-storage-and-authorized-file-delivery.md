@@ -1046,3 +1046,18 @@ Inventario **previsto**, no modificado por este ADR:
 - `auditoria.md` §9 — P0-A, criterio de backup/restore verificado
 - `auditoria.md` §18.11 — seguimiento P1-B (C-02 + A-02)
 - Commit `169f004` — *security: contain tracked evidence and leaked dev credentials*
+
+---
+
+## 16. Implementation / Production status — 2026-08-18
+
+Esta nota no modifica el snapshot histórico de decisiones anterior. El diseño fue
+posteriormente implementado y desplegado en producción en el commit
+`9dedc78f07becf071b7c86a94a394cfa0cc0f22b`. El baseline Prisma quedó resuelto sin
+ejecutar su SQL, el storage privado fue provisionado y el smoke funcional P1-B fue
+PASS.
+
+El detalle verificable, el incidente contenido, el backup post-P1-B y los blockers
+del DR gate están registrados en
+[`../OPERATIONS/p1b-production-closeout-2026-08-18.md`](../OPERATIONS/p1b-production-closeout-2026-08-18.md).
+`PURGE_GATE` permanece `CLOSED`; esta nota no autoriza purge ni reconciliation.
