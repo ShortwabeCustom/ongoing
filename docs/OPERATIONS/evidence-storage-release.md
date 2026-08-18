@@ -5,7 +5,7 @@ Estado operativo actual:
 ```text
 RUNTIME_CANONICAL=PM2_SOURCE
 PACKAGE_MANAGER_CANONICAL=npm
-NODE_RELEASE=20.20.2
+NODE_RELEASE=24.19.0
 PRISMA_BASELINE_RESOLVED=NO
 PURGE_GATE=CLOSED
 BACKUP_RESTORE_VERIFIED=NO
@@ -85,6 +85,6 @@ La mera existencia del directorio o un `pg_dump` local no abre el gate. Purge no
 
 ## Pendientes de release
 
-- Validar `npm ci`, tests, lint y build en Node 20.20.2 Linux mediante CI.
+- Validar `npm ci`, tests, lint y build en Node 24.19.0 Linux mediante CI.
 - Provisionar y verificar storage/backup/restore en el host antes de cambiar `DEPLOY_READY`.
 - Docker sigue siendo no canónico y no empaqueta los CLIs operativos P1-B.

@@ -1,7 +1,7 @@
 # Pruebas María 2.0 — Production Dockerfile
 
 # Stage 1: Build
-FROM node:20.20.2-alpine AS builder
+FROM node:24.19.0-alpine AS builder
 
 WORKDIR /app
 
@@ -26,7 +26,7 @@ RUN npm run build
 RUN npm prune --omit=dev
 
 # Stage 2: Runtime
-FROM node:20.20.2-alpine
+FROM node:24.19.0-alpine
 
 WORKDIR /app
 
