@@ -20,7 +20,7 @@ const STATE_COLORS: Record<ResolutionState, string> = {
 
 const STATE_LABELS: Record<ResolutionState, string> = {
   OPEN: 'Abierto',
-  TRIAGED: 'Clasificado',
+  TRIAGED: 'Triado',
   INVESTIGATING: 'Investigando',
   PROPOSED: 'Propuesto',
   APPROVED: 'Aprobado',
