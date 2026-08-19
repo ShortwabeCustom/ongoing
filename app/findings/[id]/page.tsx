@@ -96,30 +96,33 @@ export default async function FindingDetailPage({ params }: PageProps) {
         { label: 'Evidencias', value: evidenceCount, tone: 'coral' },
         { label: 'Workflow', value: workflowCount + commentsCount, tone: 'white' },
       ]}
-      actions={
-        <>
-          <Link
-            href="/findings"
-            className="inline-flex h-10 items-center rounded-full bg-white px-4 text-sm font-semibold text-[#052b20] transition hover:bg-[#7bf0b1]"
-          >
-            Volver al inventario
-          </Link>
-          <FindingStatusActions
-            findingId={finding.id}
-            status={finding.status}
-            version={finding.version}
-          />
-          {['OWNER', 'QA_LEAD'].includes(session.user.role) && (
-            <DeleteFindingButton
-              findingId={finding.id}
-              observation={finding.observation}
-            />
-          )}
-        </>
-      }
     >
       <div className="space-y-6">
-        <FindingDetailWithEvidence finding={finding as any} />
+        <FindingDetailWithEvidence
+          finding={finding as any}
+          actions={
+            <>
+              <Link
+                href="/findings"
+                className="inline-flex min-h-11 items-center rounded-full border border-[#dbe4dd] bg-white px-4 text-sm font-semibold text-[#052b20] transition hover:border-[#b9dcca] hover:bg-[#e0f5e9] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00a85a] focus-visible:ring-offset-2"
+              >
+                Volver al inventario
+              </Link>
+              <FindingStatusActions
+                findingId={finding.id}
+                status={finding.status}
+                version={finding.version}
+                appearance="light"
+              />
+              {['OWNER', 'QA_LEAD'].includes(session.user.role) && (
+                <DeleteFindingButton
+                  findingId={finding.id}
+                  observation={finding.observation}
+                />
+              )}
+            </>
+          }
+        />
 
         <section className="pm-card p-6 md:p-8">
           <ResolutionWorkflow finding={finding as any} />
