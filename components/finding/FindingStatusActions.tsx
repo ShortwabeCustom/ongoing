@@ -13,7 +13,7 @@ type FindingStatusActionsProps = {
 
 const TRANSITIONS: Record<FindingStatus, FindingStatus[]> = {
   OPEN: ['TRIAGED'],
-  TRIAGED: ['IN_PROGRESS', 'OPEN', 'BLOCKED'],
+  TRIAGED: ['IN_PROGRESS', 'CLOSED', 'OPEN', 'BLOCKED'],
   IN_PROGRESS: ['READY_FOR_VALIDATION', 'BLOCKED'],
   READY_FOR_VALIDATION: ['VALIDATED', 'IN_PROGRESS'],
   VALIDATED: ['CLOSED', 'REOPENED'],
@@ -24,11 +24,11 @@ const TRANSITIONS: Record<FindingStatus, FindingStatus[]> = {
 
 const LABELS: Record<FindingStatus, string> = {
   OPEN: 'Abierto',
-  TRIAGED: 'Clasificado',
+  TRIAGED: 'Triado',
   IN_PROGRESS: 'En progreso',
-  READY_FOR_VALIDATION: 'Por validar',
+  READY_FOR_VALIDATION: 'Listo para validar',
   VALIDATED: 'Validado',
-  CLOSED: 'Cerrado',
+  CLOSED: 'Completado',
   BLOCKED: 'Bloqueado',
   REOPENED: 'Reabierto',
 }
