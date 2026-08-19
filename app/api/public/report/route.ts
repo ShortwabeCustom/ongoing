@@ -8,9 +8,8 @@ export const revalidate = 180 // 3 minutes ISR cache
 /**
  * Definición única de evidencia confirmada que puede mostrarse en el reporte.
  *
- * La lista y `evidenceCount` DEBEN compartir esta misma regla; si divergen, el
- * contador filtraría la existencia de evidencia privada por un endpoint
- * anónimo.
+ * La lista usa esta regla para no dibujar archivos incompletos. El KPI replica
+ * deliberadamente el inventario de `/findings`: toda evidencia activa.
  *
  *   evidence.deletedAt == null
  *   AND finding.deletedAt == null      <- se añade abajo donde haga falta
@@ -36,11 +35,7 @@ export async function GET() {
       db.finding.count({ where: { deletedAt: null } }),
       db.finding.count({ where: { deletedAt: null, status: { in: ['VALIDATED', 'CLOSED'] } } }),
       db.finding.count({ where: { deletedAt: null, status: { in: ['OPEN', 'TRIAGED', 'IN_PROGRESS', 'READY_FOR_VALIDATION', 'BLOCKED', 'REOPENED'] } } }),
-      // MISMA regla que la lista, más el finding activo (que en la lista ya
-      // garantiza la query padre).
-      db.evidence.count({
-        where: { ...PUBLICLY_RENDERABLE_EVIDENCE, finding: { deletedAt: null } },
-      }),
+      db.evidence.count({ where: { deletedAt: null } }),
       db.testSession.findMany({
         select: { id: true, name: true, date: true, _count: { select: { findings: { where: { deletedAt: null } } } } },
         orderBy: { date: 'asc' },

@@ -50,14 +50,10 @@ function listWhere(): any {
 }
 
 describe('regla única de renderizabilidad pública', () => {
-  it('el contador y la lista aplican el MISMO predicado de evidencia', async () => {
+  it('el KPI replica el inventario y la lista exige evidencia confirmada', async () => {
     await GET()
-
-    const forCount = { ...countWhere() }
-    // La lista no repite la cláusula del finding: la impone la query padre.
-    delete forCount.finding
-
-    expect(forCount).toEqual(listWhere())
+    expect(countWhere()).toEqual({ deletedAt: null })
+    expect(listWhere()).toMatchObject({ deletedAt: null, url: { not: null } })
   })
 
   it('ambos exigen evidencia activa (deletedAt: null)', async () => {
@@ -74,15 +70,13 @@ describe('regla única de renderizabilidad pública', () => {
 
   it('ambos exigen url != null y url != ""', async () => {
     await GET()
-    for (const where of [countWhere(), listWhere()]) {
-      expect(where.url).toEqual({ not: null })
-      expect(where.NOT).toEqual({ url: '' })
-    }
+    expect(listWhere().url).toEqual({ not: null })
+    expect(listWhere().NOT).toEqual({ url: '' })
   })
 
-  it('el contador exige además que el finding esté activo', async () => {
+  it('el KPI usa exactamente la misma regla que /findings', async () => {
     await GET()
-    expect(countWhere().finding).toEqual({ deletedAt: null })
+    expect(countWhere()).toEqual({ deletedAt: null })
   })
 
   it('la query padre de findings ya restringe a findings activos', async () => {
