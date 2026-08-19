@@ -22,7 +22,7 @@ export const EXPERIENCE_TAG_OPTIONS = ['UI', 'UX', 'COPY', 'DEV'] as const
 // Spanish labels
 export const STATUS_LABELS_ES: Record<string, string> = {
   OPEN: 'Abierto',
-  TRIAGED: 'Triado',
+  TRIAGED: 'Clasificado',
   IN_PROGRESS: 'En progreso',
   READY_FOR_VALIDATION: 'Listo para validar',
   VALIDATED: 'Validado',

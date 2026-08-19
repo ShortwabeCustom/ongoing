@@ -9,6 +9,7 @@ import { useLookups } from '@/lib/hooks/useLookups'
 import { useSearchHistory } from '@/lib/hooks/useSearchHistory'
 import { useSavedFilters } from '@/lib/hooks/useSavedFilters'
 import { useUrlSync } from '@/lib/hooks/useUrlSync'
+import { useClearSelectionOnChange } from '@/lib/hooks/useClearSelectionOnChange'
 import { NewFindingDialog } from '@/components/finding/NewFindingDialog'
 import { SearchResultItem } from './SearchResultItem'
 import { AdvancedFilterPanel } from './AdvancedFilterPanel'
@@ -20,8 +21,6 @@ import {
   FINDING_PRIORITY_OPTIONS,
   PRIORITY_LABELS_ES,
   STATUS_LABELS_ES,
-  STATUS_COLORS,
-  PRIORITY_COLORS,
 } from '@/lib/constants/finding-options'
 import type { AdvancedFilterValues } from '@/lib/types/search'
 import { Search, X, ChevronDown, Filter, Clock3, Info, Plus, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -73,7 +72,7 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
   const containerRef = useRef<HTMLDivElement>(null)
 
   const batchActions = useBatchActions()
-  const { assignees, projects, isLoading: lookupsLoading, error: lookupsError } = useLookups()
+  const { assignees, projects, testSessions, isLoading: lookupsLoading, error: lookupsError } = useLookups()
   const searchHistory = useSearchHistory()
   const savedFilters = useSavedFilters()
   const { initialFilters: urlFilters, syncToUrl, clearUrl } = useUrlSync()
@@ -86,6 +85,8 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
       urlFilters.status?.length ||
       urlFilters.priority?.length ||
       urlFilters.severity?.length ||
+      urlFilters.testSessionIds?.length || urlFilters.experienceTags?.length ||
+      urlFilters.incidenceTypes?.length || urlFilters.recent ||
       urlFilters.assignee?.length ||
       urlFilters.project?.length ||
       urlFilters.dateType ||
@@ -94,30 +95,23 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
       urlFilters.hasEvidence
     )
 
-    if (hasFilters) {
-      if (urlFilters.q) setSearchTerm(urlFilters.q)
-      if (urlFilters.status?.length) setStatusFilter(urlFilters.status)
-      if (urlFilters.priority?.length) setPriorityFilter(urlFilters.priority)
-      if (
-        urlFilters.severity?.length ||
-        urlFilters.assignee?.length ||
-        urlFilters.project?.length ||
-        urlFilters.dateType ||
-        urlFilters.dateFrom ||
-        urlFilters.dateTo ||
-        urlFilters.hasEvidence
-      ) {
-        setAdvancedFilters({
+    setSearchTerm(urlFilters.q || '')
+    setStatusFilter(urlFilters.status || [])
+    setPriorityFilter(urlFilters.priority || [])
+    setAdvancedFilters(hasFilters ? {
           severity: urlFilters.severity,
+          testSessionIds: urlFilters.testSessionIds,
+          experienceTags: urlFilters.experienceTags,
+          incidenceTypes: urlFilters.incidenceTypes,
+          recent: urlFilters.recent,
           assignee: urlFilters.assignee,
           project: urlFilters.project,
           dateType: urlFilters.dateType,
           dateFrom: urlFilters.dateFrom,
           dateTo: urlFilters.dateTo,
           hasEvidence: urlFilters.hasEvidence,
-        })
-      }
-    }
+        } : {})
+    batchActions.clearSelection()
     // FASE 14.1.3: Added urlFilters dependency so hydration runs when URL changes
   }, [urlFilters])
 
@@ -127,6 +121,10 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
       status: statusFilter.length > 0 ? statusFilter : undefined,
       priority: priorityFilter.length > 0 ? priorityFilter : undefined,
       severity: advancedFilters.severity,
+      testSessionIds: advancedFilters.testSessionIds,
+      experienceTags: advancedFilters.experienceTags,
+      incidenceTypes: advancedFilters.incidenceTypes,
+      recent: advancedFilters.recent,
       assignee: advancedFilters.assignee,
       project: advancedFilters.project,
       dateType: advancedFilters.dateType,
@@ -143,6 +141,8 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
       statusFilter,
       priorityFilter,
       advancedFilters.severity,
+      advancedFilters.testSessionIds, advancedFilters.experienceTags,
+      advancedFilters.incidenceTypes, advancedFilters.recent,
       advancedFilters.assignee,
       advancedFilters.project,
       advancedFilters.dateType,
@@ -152,6 +152,17 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
       page,
     ],
   )
+
+  const effectiveFilterKey = useMemo(() => JSON.stringify({
+    q: searchTerm, status: statusFilter, priority: priorityFilter,
+    severity: advancedFilters.severity, testSessionIds: advancedFilters.testSessionIds,
+    experienceTags: advancedFilters.experienceTags, incidenceTypes: advancedFilters.incidenceTypes,
+    assignee: advancedFilters.assignee, project: advancedFilters.project,
+    dateType: advancedFilters.dateType, dateFrom: advancedFilters.dateFrom,
+    dateTo: advancedFilters.dateTo, hasEvidence: advancedFilters.hasEvidence,
+    recent: advancedFilters.recent,
+  }), [searchTerm, statusFilter, priorityFilter, advancedFilters])
+  useClearSelectionOnChange(effectiveFilterKey, batchActions.clearSelection)
 
   const { data, isLoading, error, isFallback, refetch } = useSearch(searchQuery)
 
@@ -168,6 +179,10 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
     (statusFilter.length || 0) +
     (priorityFilter.length || 0) +
     (advancedFilters.severity?.length || 0) +
+    (advancedFilters.testSessionIds?.length || 0) +
+    (advancedFilters.experienceTags?.length || 0) +
+    (advancedFilters.incidenceTypes?.length || 0) +
+    (advancedFilters.recent ? 1 : 0) +
     (advancedFilters.assignee?.length || 0) +
     (advancedFilters.project?.length || 0) +
     (advancedFilters.dateType && advancedFilters.dateType !== 'created' ? 1 : 0) +
@@ -192,6 +207,8 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
     statusFilter,
     priorityFilter,
     advancedFilters.severity,
+    advancedFilters.testSessionIds, advancedFilters.experienceTags,
+    advancedFilters.incidenceTypes, advancedFilters.recent,
     advancedFilters.assignee,
     advancedFilters.project,
     advancedFilters.dateFrom,
@@ -288,6 +305,11 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
               onBulkStatus={batchActions.bulkUpdateStatus}
               onBulkPriority={batchActions.bulkUpdatePriority}
               onBulkAssign={batchActions.bulkAssign}
+              onBulkDelete={async () => {
+                const count = await batchActions.bulkDelete()
+                if (count) await refetch()
+                return count
+              }}
               assigneeOptions={assignees}
               isProcessing={batchActions.isProcessing}
               error={batchActions.error}
@@ -298,13 +320,15 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
             {data!.items.map((item) => (
               <div
                 key={item.id}
-                className="rounded-lg border border-[#dbe4dd] transition-all active:bg-[#edf4ed] focus-visible:ring-2 focus-visible:ring-[#00a85a] [@media(hover:hover)]:hover:border-[#0369A1] [@media(hover:hover)]:hover:shadow-md [@media(hover:hover)]:hover:bg-white"
+                className="rounded-lg border border-[#dbe4dd] transition-all active:bg-[#edf4ed] focus-visible:ring-2 focus-visible:ring-[#00a85a] [@media(hover:hover)]:hover:border-[var(--pm-green)] [@media(hover:hover)]:hover:shadow-md [@media(hover:hover)]:hover:bg-white"
               >
                 <SearchResultItem
                   {...item}
                   selected={batchActions.isSelected(item.id)}
                   onToggleSelect={batchActions.toggleSelect}
                   showCheckbox={canBatchEdit}
+                  canDelete={canBatchEdit}
+                  onDeleted={async () => { batchActions.clearSelection(); await refetch() }}
                 />
               </div>
             ))}
@@ -463,19 +487,18 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
               <span className="text-xs font-semibold text-[#65766e] uppercase tracking-wide">Estado:</span>
               {FINDING_STATUS_OPTIONS.slice(0, 4).map((status) => {
                 const isActive = statusFilter.includes(status)
-                const colors = STATUS_COLORS[status] || 'bg-slate-100 text-slate-700 border-slate-300'
                 return (
                   <button
                     key={status}
                     onClick={() => {
-                      setStatusFilter((prev) =>
-                        prev.includes(status) ? prev.filter((s) => s !== status) : [...prev, status],
-                      )
+                      const next = statusFilter.includes(status) ? statusFilter.filter((s) => s !== status) : [...statusFilter, status]
+                      setStatusFilter(next); setPage(1); batchActions.clearSelection()
+                      syncToUrl(advancedFilters, searchTerm, next, priorityFilter)
                       setIsOpen(true)
                     }}
                     className={cn(
                       'pm-chip text-xs transition-all',
-                      isActive ? colors : 'border-[#dbe4dd] bg-white text-[#17251f] hover:border-[#0369A1] hover:bg-[#f0f9ff]'
+                      isActive ? 'border-[var(--pm-green)] bg-[var(--pm-deep)] text-white' : 'border-[#dbe4dd] bg-white text-[#17251f] hover:border-[var(--pm-green)] hover:bg-[#edf4ed]'
                     )}
                   >
                     {STATUS_LABELS_ES[status] ?? status}
@@ -489,19 +512,18 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
               <span className="text-xs font-semibold text-[#65766e] uppercase tracking-wide">Prioridad:</span>
               {FINDING_PRIORITY_OPTIONS.map((priority) => {
                 const isActive = priorityFilter.includes(priority)
-                const colors = PRIORITY_COLORS[priority] || 'bg-slate-100 text-slate-700 border-slate-300'
                 return (
                   <button
                     key={priority}
                     onClick={() => {
-                      setPriorityFilter((prev) =>
-                        prev.includes(priority) ? prev.filter((p) => p !== priority) : [...prev, priority],
-                      )
+                      const next = priorityFilter.includes(priority) ? priorityFilter.filter((p) => p !== priority) : [...priorityFilter, priority]
+                      setPriorityFilter(next); setPage(1); batchActions.clearSelection()
+                      syncToUrl(advancedFilters, searchTerm, statusFilter, next)
                       setIsOpen(true)
                     }}
                     className={cn(
                       'pm-chip text-xs transition-all',
-                      isActive ? colors : 'border-[#dbe4dd] bg-white text-[#17251f] hover:border-[#0369A1] hover:bg-[#f0f9ff]'
+                      isActive ? 'border-[var(--pm-green)] bg-[var(--pm-deep)] text-white' : 'border-[#dbe4dd] bg-white text-[#17251f] hover:border-[var(--pm-green)] hover:bg-[#edf4ed]'
                     )}
                   >
                     {PRIORITY_LABELS_ES[priority] ?? priority}
@@ -519,7 +541,7 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
               className={cn(
                 'pm-chip inline-flex items-center gap-1 text-xs transition-all focus-visible:ring-2 focus-visible:ring-[#00a85a]',
                 advancedPanelOpen || activeFilterCount > 0
-                  ? 'border-[#0369A1] bg-[#0369A1] text-white'
+                  ? 'border-[var(--pm-green)] bg-[var(--pm-deep)] text-white'
                   : 'border-[#dbe4dd] bg-white text-[#17251f]'
               )}
             >
@@ -531,13 +553,14 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
             {/* Search history button */}
             <button
               onClick={() => {
-                setHistoryOpen(!historyOpen)
-                setAdvancedPanelOpen(false)
+                const filters = { ...advancedFilters, recent: !advancedFilters.recent }
+                setAdvancedFilters(filters); setPage(1); batchActions.clearSelection()
+                syncToUrl(filters, searchTerm, statusFilter, priorityFilter)
               }}
               className={cn(
                 'pm-chip inline-flex items-center gap-1 text-xs transition-all focus-visible:ring-2 focus-visible:ring-[#00a85a]',
-                historyOpen
-                  ? 'border-[#0369A1] bg-[#0369A1] text-white'
+                advancedFilters.recent
+                  ? 'border-[var(--pm-green)] bg-[var(--pm-deep)] text-white'
                   : 'border-[#dbe4dd] bg-white text-[#17251f]'
               )}
             >
@@ -619,6 +642,7 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
             value={advancedFilters}
             onApply={(filters) => {
               setAdvancedFilters(filters)
+              batchActions.clearSelection()
               setAdvancedPanelOpen(false)
               setIsOpen(true)
               // FASE 14.1.2: Sync to URL after applying filters
@@ -635,6 +659,7 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
             }}
             assigneeOptions={assignees}
             projectOptions={projects}
+            testSessionOptions={testSessions}
             lookupsLoading={lookupsLoading}
             lookupsError={lookupsError}
             disableExtendedFilters={isFallback}
@@ -963,6 +988,7 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
                         value={advancedFilters}
                         onApply={(filters) => {
                           setAdvancedFilters(filters)
+                          batchActions.clearSelection()
                           setAdvancedPanelOpen(false)
                         }}
                         onSaveAsNamedFilter={async (name, filters) => {
@@ -975,6 +1001,7 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
                         }}
                         assigneeOptions={assignees}
                         projectOptions={projects}
+                        testSessionOptions={testSessions}
                         lookupsLoading={lookupsLoading}
                         lookupsError={lookupsError}
                         disableExtendedFilters={isFallback}

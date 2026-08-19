@@ -160,6 +160,22 @@ describe('FindingService.updateFinding — claves presentes vs. omitidas (C-05)'
     expect(serviceMocks.statusHistory).toHaveLength(1)
   })
 
+  it('permite completar directamente un hallazgo triado', async () => {
+    db.finding.findUnique.mockResolvedValueOnce({ ...CURRENT, status: 'TRIAGED' })
+
+    await FindingService.transitionFinding(
+      FINDING_ID,
+      { toStatus: 'CLOSED', version: 3, reason: 'Hallazgo completado' },
+      'user-1',
+    )
+
+    expect(lastData().status).toBe('CLOSED')
+    expect(serviceMocks.statusHistory.at(-1)).toMatchObject({
+      fromStatus: 'TRIAGED',
+      toStatus: 'CLOSED',
+    })
+  })
+
   it('propaga VERSION_MISMATCH sin escribir cuando la versión no coincide', async () => {
     db.finding.findUnique.mockResolvedValueOnce({ ...CURRENT, version: 9 })
 

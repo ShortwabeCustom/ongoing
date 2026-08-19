@@ -3,35 +3,34 @@
 import { Finding, Evidence } from '@/lib/types'
 import { MapPin, AlertTriangle, Flag, ShieldAlert, User, CalendarDays, Hash, Workflow as WorkflowIcon, Pencil } from 'lucide-react'
 import { useState } from 'react'
+import type { ReactNode } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { useLookups } from '@/lib/hooks/useLookups'
 import { EditFindingDialog } from '@/components/finding/EditFindingDialog'
 import { FindingScreensSection } from '@/components/finding/FindingScreensSection'
 import { FindingEvidenceSection } from '@/components/finding/FindingEvidenceSection'
 import { SupportLinksList } from '@/components/finding/SupportLinksList'
+import { FindingComments, type FindingComment } from '@/components/finding/FindingComments'
 import {
   EXPERIENCE_TAG_LABELS_ES,
   INCIDENCE_TYPE_LABELS_ES,
   PRIORITY_LABELS_ES,
   SEVERITY_LABELS_ES,
-  STATUS_LABELS_ES,
 } from '@/lib/constants/finding-options'
 
 interface FindingDetailWithEvidenceProps {
-  finding: Finding & { evidence?: Evidence[] }
+  finding: Finding & { evidence?: Evidence[]; comments?: FindingComment[] }
+  actions?: ReactNode
 }
-
-const IMAGE_EVIDENCE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
 export function FindingDetailWithEvidence({
   finding,
+  actions,
 }: FindingDetailWithEvidenceProps) {
   const auth = useAuth()
   const [editOpen, setEditOpen] = useState(false)
   const { assignees } = useLookups(finding.projectId)
   const canEdit = Boolean(auth.user?.role && ['OWNER', 'QA_LEAD'].includes(auth.user.role))
-  const title = finding.title ?? finding.folio ?? 'Hallazgo'
-  const description = finding.description ?? finding.observation
   const areaValues = finding.experienceTags?.map((tag) => tag.experienceTag) ?? []
   const incidenceValues = finding.incidenceTypes?.map((type) => type.incidenceType) ?? []
   const labeledArea = areaValues.map((tag) => EXPERIENCE_TAG_LABELS_ES[tag] ?? tag).join(', ')
@@ -92,37 +91,29 @@ export function FindingDetailWithEvidence({
   return (
     <div className="space-y-6">
       <section className="pm-card p-6 md:p-8">
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div className="min-w-0">
-            <h2 className="text-3xl font-bold leading-tight tracking-tight text-[#17251f]">
-              {title}
-            </h2>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <span className="rounded-full border border-[#b9dcca] bg-[#e0f5e9] px-3 py-1 text-xs font-semibold text-[#087244]">
-                {STATUS_LABELS_ES[finding.status] ?? finding.status}
-              </span>
-              <span className="rounded-full border border-[#dbe4dd] bg-white px-3 py-1 text-xs font-semibold text-[#3d4d45]">
-                {classificationLabel}
-              </span>
-            </div>
+        <div
+          className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
+          role="group"
+          aria-label="Acciones del hallazgo"
+        >
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            {actions}
+            <span className="rounded-full border border-[#dbe4dd] bg-white px-3 py-1.5 text-xs font-semibold text-[#3d4d45]">
+              {classificationLabel}
+            </span>
           </div>
 
           {canEdit && (
             <button
               type="button"
               onClick={() => setEditOpen(true)}
-              className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-lg bg-[#052b20] px-4 text-sm font-semibold text-white transition hover:bg-[#0b3e30] focus-visible:ring-2 focus-visible:ring-[#00a85a]"
+              className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-lg bg-[#052b20] px-4 text-sm font-semibold text-white transition hover:bg-[#0b3e30] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00a85a] focus-visible:ring-offset-2"
             >
-              <Pencil className="h-4 w-4" />
+              <Pencil className="h-4 w-4" aria-hidden="true" />
               Editar hallazgo
             </button>
           )}
         </div>
-      </section>
-
-      <section className="pm-card p-6 md:p-8">
-        <h3 className="mb-4 text-xl font-bold text-[#17251f]">Observación</h3>
-        <p className="max-w-4xl text-base leading-8 text-[#3b4b43]">{description}</p>
       </section>
 
       <section className="pm-card p-6 md:p-8">
@@ -141,6 +132,11 @@ export function FindingDetailWithEvidence({
           ))}
         </div>
       </section>
+
+      <FindingComments
+        findingId={finding.id}
+        initialComments={finding.comments}
+      />
 
       <FindingScreensSection
         finding={finding}

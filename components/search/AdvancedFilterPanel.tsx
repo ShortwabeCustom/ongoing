@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { X, ChevronDown, Save } from 'lucide-react'
 import { AdvancedFilterValues, LookupOption } from '@/lib/types/search'
-import { FINDING_SEVERITY_OPTIONS, SEVERITY_LABELS_ES } from '@/lib/constants/finding-options'
+import { FINDING_SEVERITY_OPTIONS, SEVERITY_LABELS_ES, EXPERIENCE_TAG_OPTIONS, EXPERIENCE_TAG_LABELS_ES, INCIDENCE_TYPE_OPTIONS, INCIDENCE_TYPE_LABELS_ES } from '@/lib/constants/finding-options'
 import { DateTypeSelector } from './DateTypeSelector'
 import { DatePresetButtons, getDateRangeForPreset } from './DatePresetButtons'
 import { dateStringToUTCRange } from '@/lib/utils/timezone'
@@ -16,6 +16,7 @@ interface AdvancedFilterPanelProps {
   onSaveAsNamedFilter?: (name: string, filters: AdvancedFilterValues) => Promise<void>
   assigneeOptions: LookupOption[]
   projectOptions: LookupOption[]
+  testSessionOptions: LookupOption[]
   lookupsLoading: boolean
   lookupsError: string | null
   disableExtendedFilters?: boolean
@@ -30,6 +31,7 @@ export function AdvancedFilterPanel({
   onSaveAsNamedFilter,
   assigneeOptions,
   projectOptions,
+  testSessionOptions,
   lookupsLoading,
   lookupsError,
   disableExtendedFilters = false,
@@ -41,6 +43,7 @@ export function AdvancedFilterPanel({
   const [assigneeSearch, setAssigneeSearch] = useState('')
   const [projectSearch, setProjectSearch] = useState('')
   const [isSaving, setIsSaving] = useState(false)
+  const [dateError, setDateError] = useState<string | null>(null)
 
   useEffect(() => {
     if (open) {
@@ -97,8 +100,11 @@ export function AdvancedFilterPanel({
   }
 
   const handleApply = () => {
-    // FASE 14.1.2: Dates are already in ISO UTC format from date inputs
-    // No additional normalization needed
+    if (draft.dateFrom && draft.dateTo && new Date(draft.dateFrom) > new Date(draft.dateTo)) {
+      setDateError('La fecha Desde no puede ser posterior a Hasta.')
+      return
+    }
+    setDateError(null)
     onApply(draft)
   }
 
@@ -117,6 +123,41 @@ export function AdvancedFilterPanel({
   }
 
   if (!open) return null
+
+  const toggleArray = (key: 'testSessionIds' | 'experienceTags' | 'incidenceTypes', id: string) => {
+    setDraft((prev) => {
+      const values = prev[key] || []
+      return { ...prev, [key]: values.includes(id) ? values.filter((value) => value !== id) : [...values, id] }
+    })
+  }
+
+  const taxonomyFilters = (
+    <div className="space-y-4">
+      <fieldset>
+        <legend className="mb-2 text-sm font-semibold text-[#17251f]">Ronda de pruebas</legend>
+        <div className="max-h-36 space-y-1 overflow-y-auto">
+          {testSessionOptions.map((session) => (
+            <label key={session.id} className="flex min-h-11 cursor-pointer items-center gap-2">
+              <input type="checkbox" checked={draft.testSessionIds?.includes(session.id) ?? false} onChange={() => toggleArray('testSessionIds', session.id)} />
+              <span className="text-sm">{session.name}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend className="mb-2 text-sm font-semibold text-[#17251f]">Área / etiqueta</legend>
+        <div className="grid grid-cols-2 gap-1">
+          {EXPERIENCE_TAG_OPTIONS.map((value) => <label key={value} className="flex min-h-11 items-center gap-2"><input type="checkbox" checked={draft.experienceTags?.includes(value) ?? false} onChange={() => toggleArray('experienceTags', value)} /><span className="text-sm">{EXPERIENCE_TAG_LABELS_ES[value]}</span></label>)}
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend className="mb-2 text-sm font-semibold text-[#17251f]">Tipo de incidencia</legend>
+        <div className="space-y-1">
+          {INCIDENCE_TYPE_OPTIONS.map((value) => <label key={value} className="flex min-h-11 items-center gap-2"><input type="checkbox" checked={draft.incidenceTypes?.includes(value) ?? false} onChange={() => toggleArray('incidenceTypes', value)} /><span className="text-sm">{INCIDENCE_TYPE_LABELS_ES[value]}</span></label>)}
+        </div>
+      </fieldset>
+    </div>
+  )
 
   // Mobile: Bottom sheet
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
@@ -210,6 +251,7 @@ export function AdvancedFilterPanel({
               </div>
             </fieldset>
 
+            {taxonomyFilters}
             {/* Severity */}
             <fieldset>
               <legend className="text-sm font-semibold text-[#17251f] mb-2">Severidad</legend>
@@ -267,6 +309,7 @@ export function AdvancedFilterPanel({
                       value={draft.dateFrom ? draft.dateFrom.split('T')[0] : ''}
                       onChange={(e) => {
                         const newDate = e.target.value
+                        if (!newDate) setDraft((prev) => ({ ...prev, dateFrom: undefined, datePreset: 'custom' }))
                         if (newDate) {
                           // FASE 14.1.3: Parse date as America/Mexico_City timezone
                           // Convert to UTC range accounting for Mexico offset
@@ -292,6 +335,7 @@ export function AdvancedFilterPanel({
                       value={draft.dateTo ? draft.dateTo.split('T')[0] : ''}
                       onChange={(e) => {
                         const newDate = e.target.value
+                        if (!newDate) setDraft((prev) => ({ ...prev, dateTo: undefined, datePreset: 'custom' }))
                         if (newDate) {
                           // FASE 14.1.3: Parse date as America/Mexico_City timezone
                           // Convert to UTC range accounting for Mexico offset
@@ -362,6 +406,7 @@ export function AdvancedFilterPanel({
             )}
           </div>
 
+          {dateError && <p role="alert" className="px-3 text-sm text-destructive">{dateError}</p>}
           {/* Footer */}
           <div className="sticky bottom-0 border-t border-slate-200 p-3 bg-white space-y-2">
             {showSaveForm ? (
@@ -482,6 +527,7 @@ export function AdvancedFilterPanel({
           </div>
         </fieldset>
 
+        {taxonomyFilters}
         {/* Severity */}
         <fieldset>
           <legend className="text-xs font-semibold text-[#17251f] mb-1">Severidad</legend>
@@ -520,6 +566,7 @@ export function AdvancedFilterPanel({
               value={draft.dateFrom ? draft.dateFrom.split('T')[0] : ''}
               onChange={(e) => {
                 const newDate = e.target.value
+                if (!newDate) setDraft((prev) => ({ ...prev, dateFrom: undefined, datePreset: 'custom' }))
                 if (newDate) {
                   const dateObj = new Date(newDate + 'T00:00:00')
                   setDraft((prev) => ({
@@ -538,6 +585,7 @@ export function AdvancedFilterPanel({
               value={draft.dateTo ? draft.dateTo.split('T')[0] : ''}
               onChange={(e) => {
                 const newDate = e.target.value
+                if (!newDate) setDraft((prev) => ({ ...prev, dateTo: undefined, datePreset: 'custom' }))
                 if (newDate) {
                   const dateObj = new Date(newDate + 'T23:59:59')
                   setDraft((prev) => ({
@@ -554,6 +602,7 @@ export function AdvancedFilterPanel({
         </fieldset>
       </div>
 
+      {dateError && <p role="alert" className="px-3 text-sm text-destructive">{dateError}</p>}
       {/* Footer */}
       <div className="border-t border-[#dbe4dd] px-4 py-2 flex gap-2" style={{ backgroundColor: '#f3f5ef' }}>
         <button

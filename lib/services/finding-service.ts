@@ -17,7 +17,7 @@ type FindingPatch = Omit<FindingUpdate, 'version'>
 
 const FINDING_TRANSITIONS: Record<FindingStatus, FindingStatus[]> = {
   OPEN: ['TRIAGED', 'OPEN'],
-  TRIAGED: ['IN_PROGRESS', 'OPEN', 'BLOCKED'],
+  TRIAGED: ['IN_PROGRESS', 'CLOSED', 'OPEN', 'BLOCKED'],
   IN_PROGRESS: ['READY_FOR_VALIDATION', 'BLOCKED', 'IN_PROGRESS'],
   READY_FOR_VALIDATION: ['VALIDATED', 'IN_PROGRESS', 'READY_FOR_VALIDATION'],
   VALIDATED: ['CLOSED', 'REOPENED', 'VALIDATED'],
@@ -1000,6 +1000,41 @@ export class FindingService {
     return comment
   }
 
+  static async deleteComment(
+    findingId: string,
+    commentId: string,
+    deletedBy: string,
+    userRole: string,
+  ) {
+    const db = getDb()
+
+    return db.$transaction(async (tx) => {
+      const comment = await tx.comment.findFirst({
+        where: { id: commentId, findingId },
+        select: { id: true, findingId: true, text: true, createdBy: true, createdAt: true },
+      })
+
+      if (!comment) throw new Error('NOT_FOUND')
+
+      const canDeleteAny = userRole === 'OWNER' || userRole === 'QA_LEAD'
+      if (comment.createdBy !== deletedBy && !canDeleteAny) throw new Error('FORBIDDEN')
+
+      await tx.comment.delete({ where: { id: comment.id } })
+      await tx.auditLog.create({
+        data: {
+          entityType: 'FindingComment',
+          entityId: comment.id,
+          action: 'DELETE',
+          actorId: deletedBy,
+          before: toAuditJson(comment),
+          after: toAuditJson({ findingId }),
+        },
+      })
+
+      return { id: comment.id }
+    })
+  }
+
   /**
    * Soft delete finding.
    */
@@ -1044,5 +1079,40 @@ export class FindingService {
     void SearchService.removeFromIndex(id)
 
     return { id, deletedAt, updated }
+  }
+
+  /** Atomically soft-delete a validated set of findings and audit every item. */
+  static async bulkDeleteFindings(ids: string[], deletedBy: string) {
+    const uniqueIds = [...new Set(ids)]
+    const db = getDb()
+    const deletedAt = new Date()
+
+    await db.$transaction(async (tx) => {
+      const current = await tx.finding.findMany({
+        where: { id: { in: uniqueIds }, deletedAt: null },
+        select: { id: true, deletedAt: true },
+      })
+      if (current.length !== uniqueIds.length) throw new Error('NOT_FOUND')
+
+      const result = await tx.finding.updateMany({
+        where: { id: { in: uniqueIds }, deletedAt: null },
+        data: { deletedAt, updatedBy: deletedBy, updatedAt: deletedAt },
+      })
+      if (result.count !== uniqueIds.length) throw new Error('DELETE_CONFLICT')
+
+      await tx.auditLog.createMany({
+        data: current.map((finding) => ({
+          entityType: 'Finding',
+          entityId: finding.id,
+          action: 'DELETE' as const,
+          actorId: deletedBy,
+          before: toAuditJson(finding),
+          after: toAuditJson({ id: finding.id, deletedAt }),
+        })),
+      })
+    })
+
+    await Promise.all(uniqueIds.map((id) => SearchService.removeFromIndex(id)))
+    return { deleted: uniqueIds.length, ids: uniqueIds }
   }
 }
