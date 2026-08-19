@@ -1045,4 +1045,39 @@ export class FindingService {
 
     return { id, deletedAt, updated }
   }
+
+  /** Atomically soft-delete a validated set of findings and audit every item. */
+  static async bulkDeleteFindings(ids: string[], deletedBy: string) {
+    const uniqueIds = [...new Set(ids)]
+    const db = getDb()
+    const deletedAt = new Date()
+
+    await db.$transaction(async (tx) => {
+      const current = await tx.finding.findMany({
+        where: { id: { in: uniqueIds }, deletedAt: null },
+        select: { id: true, deletedAt: true },
+      })
+      if (current.length !== uniqueIds.length) throw new Error('NOT_FOUND')
+
+      const result = await tx.finding.updateMany({
+        where: { id: { in: uniqueIds }, deletedAt: null },
+        data: { deletedAt, updatedBy: deletedBy, updatedAt: deletedAt },
+      })
+      if (result.count !== uniqueIds.length) throw new Error('DELETE_CONFLICT')
+
+      await tx.auditLog.createMany({
+        data: current.map((finding) => ({
+          entityType: 'Finding',
+          entityId: finding.id,
+          action: 'DELETE' as const,
+          actorId: deletedBy,
+          before: toAuditJson(finding),
+          after: toAuditJson({ id: finding.id, deletedAt }),
+        })),
+      })
+    })
+
+    await Promise.all(uniqueIds.map((id) => SearchService.removeFromIndex(id)))
+    return { deleted: uniqueIds.length, ids: uniqueIds }
+  }
 }

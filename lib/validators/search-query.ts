@@ -5,6 +5,9 @@ export type SearchQuery = {
   status?: string[]
   priority?: string[]
   severity?: string[]
+  testSessionIds?: string[]
+  experienceTags?: string[]
+  incidenceTypes?: string[]
   assignee?: string[]
   assigneeId?: string
   project?: string[]
@@ -18,6 +21,7 @@ export type SearchQuery = {
   limit?: number
   offset?: number
   _forceSearch?: boolean
+  recent?: boolean
 }
 
 // Parse comma-separated query param into array
@@ -59,6 +63,16 @@ export const SearchQuerySchema = z.object({
       'Invalid severity value',
     ),
 
+  testSessionIds: z.string().optional().transform(commaSeparatedArray),
+  experienceTags: z.string().optional().transform(commaSeparatedArray).refine(
+    (val) => !val || val.every((v) => ['UI', 'UX', 'COPY', 'DEV'].includes(v)),
+    'Invalid experience tag',
+  ),
+  incidenceTypes: z.string().optional().transform(commaSeparatedArray).refine(
+    (val) => !val || val.every((v) => ['DESIGN', 'FUNCTIONALITY', 'BUSINESS_RULE', 'COPY'].includes(v)),
+    'Invalid incidence type',
+  ),
+
   // FASE 14: Multiple assignees support (backward compatible with assigneeId)
   assignee: z
     .string()
@@ -97,6 +111,8 @@ export const SearchQuerySchema = z.object({
       return val === 'true' || val === '1'
     }),
 
+  recent: z.string().optional().transform((value) => value === 'true' || value === '1'),
+
   // Pagination
   limit: z
     .string()
@@ -112,6 +128,12 @@ export const SearchQuerySchema = z.object({
 
   // Internal flag to force loading results even without filters
   _forceSearch: z.boolean().optional(),
+}).superRefine((data, context) => {
+  const from = data.dateFrom || data.createdAfter
+  const to = data.dateTo || data.createdBefore
+  if (from && to && new Date(from) > new Date(to)) {
+    context.addIssue({ code: 'custom', path: ['dateTo'], message: 'La fecha Hasta debe ser igual o posterior a Desde' })
+  }
 }).transform((data) => {
   // Normalize: use new params if provided, fall back to old params
   return {

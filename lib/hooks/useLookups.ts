@@ -6,6 +6,7 @@ import { LookupOption } from '@/lib/types/search'
 interface UseLookups {
   assignees: LookupOption[]
   projects: LookupOption[]
+  testSessions: LookupOption[]
   isLoading: boolean
   error: string | null
 }
@@ -13,6 +14,7 @@ interface UseLookups {
 export function useLookups(projectId?: string, userId?: string): UseLookups {
   const [assignees, setAssignees] = useState<LookupOption[]>([])
   const [projects, setProjects] = useState<LookupOption[]>([])
+  const [testSessions, setTestSessions] = useState<LookupOption[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -39,10 +41,18 @@ export function useLookups(projectId?: string, userId?: string): UseLookups {
         if (!projectRes.ok) throw new Error('Failed to fetch projects')
         const projectData = await projectRes.json()
         setProjects(projectData.projects || [])
+
+        const sessionParams = new URLSearchParams({ type: 'testSessions' })
+        if (projectId) sessionParams.append('projectId', projectId)
+        const sessionRes = await fetch(`/api/search/lookups?${sessionParams}`)
+        if (!sessionRes.ok) throw new Error('Failed to fetch test sessions')
+        const sessionData = await sessionRes.json()
+        setTestSessions(sessionData.testSessions || [])
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error')
         setAssignees([])
         setProjects([])
+        setTestSessions([])
       } finally {
         setIsLoading(false)
       }
@@ -54,6 +64,7 @@ export function useLookups(projectId?: string, userId?: string): UseLookups {
   return {
     assignees,
     projects,
+    testSessions,
     isLoading,
     error,
   }

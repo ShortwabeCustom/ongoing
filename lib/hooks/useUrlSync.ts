@@ -3,7 +3,6 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useMemo } from 'react'
 import { AdvancedFilterValues } from '@/lib/types/search'
-import type { SearchQuery } from '@/lib/validators/search-query'
 import { isValidISODateTime } from '@/lib/utils/timezone'
 
 /**
@@ -52,6 +51,10 @@ export function useUrlSync(): UseUrlSyncReturn {
       status: searchParams.get('status')?.split(',').filter(Boolean) ?? undefined,
       priority: searchParams.get('priority')?.split(',').filter(Boolean) ?? undefined,
       severity: searchParams.get('severity')?.split(',').filter(Boolean) ?? undefined,
+      testSessionIds: searchParams.get('testSessionIds')?.split(',').filter(Boolean) ?? undefined,
+      experienceTags: searchParams.get('experienceTags')?.split(',').filter(Boolean) ?? undefined,
+      incidenceTypes: searchParams.get('incidenceTypes')?.split(',').filter(Boolean) ?? undefined,
+      recent: searchParams.get('recent') === 'true' || undefined,
       assignee: searchParams.get('assignee')?.split(',').filter(Boolean) ?? undefined,
       project: searchParams.get('project')?.split(',').filter(Boolean) ?? undefined,
       // FASE 14.1.3: Validate dateType enum
@@ -78,6 +81,10 @@ export function useUrlSync(): UseUrlSyncReturn {
 
       // Advanced filters (from AdvancedFilterValues)
       if (filters.severity?.length) params.append('severity', filters.severity.join(','))
+      if (filters.testSessionIds?.length) params.append('testSessionIds', filters.testSessionIds.join(','))
+      if (filters.experienceTags?.length) params.append('experienceTags', filters.experienceTags.join(','))
+      if (filters.incidenceTypes?.length) params.append('incidenceTypes', filters.incidenceTypes.join(','))
+      if (filters.recent) params.append('recent', 'true')
       if (filters.assignee?.length) params.append('assignee', filters.assignee.join(','))
       if (filters.project?.length) params.append('project', filters.project.join(','))
 

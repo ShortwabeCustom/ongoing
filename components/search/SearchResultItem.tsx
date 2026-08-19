@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowRight, FileText, Calendar } from 'lucide-react'
+import { ArrowRight, FileText, Calendar, Trash2 } from 'lucide-react'
+import { useState } from 'react'
 import {
   EXPERIENCE_TAG_LABELS_ES,
   INCIDENCE_TYPE_LABELS_ES,
@@ -27,6 +28,8 @@ interface SearchResultItemProps {
   selected: boolean
   onToggleSelect: (id: string) => void
   showCheckbox: boolean
+  canDelete?: boolean
+  onDeleted?: () => Promise<void> | void
 }
 
 function readRelationValue(item: unknown, key: 'experienceTag' | 'incidenceType') {
@@ -46,7 +49,7 @@ function getSeverityBorderColor(severity: string): string {
     case 'MINOR':
       return 'border-l-yellow-500'
     case 'COSMETIC':
-      return 'border-l-blue-500'
+      return 'border-l-[#a8bab0]'
     default:
       return 'border-l-slate-300'
   }
@@ -90,7 +93,11 @@ export function SearchResultItem({
   selected,
   onToggleSelect,
   showCheckbox,
+  canDelete = false,
+  onDeleted,
 }: SearchResultItemProps) {
+  const [confirmingDelete, setConfirmingDelete] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   const displayObservation = highlightedObservation || observation
   const areaValues =
     experienceTags
@@ -146,6 +153,7 @@ export function SearchResultItem({
             {severityLabel}
           </span>
           <span className="text-xs font-semibold text-[#65766e]">{statusLabel}</span>
+          {canDelete && <button type="button" onClick={() => setConfirmingDelete(true)} className="ml-auto flex min-h-11 min-w-11 items-center justify-center rounded text-destructive hover:bg-destructive/10 focus-visible:ring-2 focus-visible:ring-destructive" aria-label={`Eliminar hallazgo ${id}`} title="Eliminar hallazgo"><Trash2 className="h-4 w-4" /></button>}
         </div>
 
         {/* Row 2: Title */}
@@ -178,6 +186,16 @@ export function SearchResultItem({
           </div>
         )}
       </div>
+      {confirmingDelete && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true" aria-labelledby={`delete-${id}`}>
+          <div className="w-full max-w-md rounded-lg bg-white p-5 shadow-xl">
+            <h2 id={`delete-${id}`} className="text-lg font-semibold text-[#17251f]">Eliminar hallazgo</h2>
+            <p className="mt-2 text-sm text-[#65766e]">El hallazgo dejará de aparecer en las vistas activas. Esta operación utiliza borrado lógico.</p>
+            <p className="mt-3 line-clamp-2 text-sm font-medium">{observation}</p>
+            <div className="mt-5 flex justify-end gap-2"><button disabled={deleting} onClick={() => setConfirmingDelete(false)} className="min-h-11 rounded border border-[#dbe4dd] px-4">Cancelar</button><button disabled={deleting} onClick={async () => { setDeleting(true); try { const response = await fetch(`/api/findings/${id}`, { method: 'DELETE' }); if (!response.ok) throw new Error(); setConfirmingDelete(false); await onDeleted?.() } finally { setDeleting(false) } }} className="min-h-11 rounded bg-destructive px-4 text-white disabled:opacity-50">{deleting ? 'Eliminando...' : 'Eliminar'}</button></div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
