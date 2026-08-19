@@ -14,6 +14,17 @@ export const ResolutionState = z.enum([
 
 export type ResolutionState = z.infer<typeof ResolutionState>
 
+export const RESOLUTION_STATE_FLOW: ResolutionState[] = [
+  'OPEN',
+  'TRIAGED',
+  'INVESTIGATING',
+  'PROPOSED',
+  'APPROVED',
+  'IMPLEMENTED',
+  'VERIFIED',
+  'CLOSED',
+]
+
 // Resolution state transitions (validation logic)
 const STATE_TRANSITIONS: Record<ResolutionState, ResolutionState[]> = {
   OPEN: ['TRIAGED', 'OPEN'],

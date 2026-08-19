@@ -1,5 +1,4 @@
 import {
-  ResolutionState,
   UpdateResolutionStateInput,
   CreateResolutionInput,
   CreateValidationInput,
@@ -52,6 +51,16 @@ export class WorkflowClient {
         body: JSON.stringify({ evidence: [], ...input }),
       },
     )
+    return response.json()
+  }
+
+  static async deleteResolution(findingId: string, resolutionId: string) {
+    const response = await fetch(
+      `${this.baseUrl}/findings/${findingId}/resolutions/${resolutionId}`,
+      { method: 'DELETE' },
+    )
+
+    if (response.status === 204) return { status: 'success' as const }
     return response.json()
   }
 

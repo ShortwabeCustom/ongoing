@@ -186,6 +186,31 @@ export class ResolutionService {
   }
 
   /**
+   * Delete a resolution that belongs to a finding.
+   */
+  static async deleteResolution(
+    findingId: string,
+    resolutionId: string,
+    userId: string,
+  ) {
+    const prisma = getDb()
+    const current = await prisma.resolution.findFirst({
+      where: { id: resolutionId, findingId },
+    })
+
+    if (!current) throw new Error('NOT_FOUND')
+
+    await prisma.resolution.delete({ where: { id: resolutionId } })
+    await this.logAudit(
+      findingId,
+      'DELETE',
+      userId,
+      { state: current.state, description: current.description },
+      null,
+    )
+  }
+
+  /**
    * Log audit entry
    */
   static async logAudit(
