@@ -22,7 +22,7 @@ interface BatchActionsToolbarProps {
   onBulkStatus: (status: string) => Promise<void>
   onBulkPriority: (priority: string) => Promise<void>
   onBulkAssign: (assigneeId: string | null) => Promise<void>
-  onBulkDelete: () => Promise<void>
+  onBulkDelete: () => Promise<number>
   assigneeOptions: LookupOption[]
   isProcessing: boolean
   error: string | null
@@ -183,7 +183,7 @@ export function BatchActionsToolbar({
         </div>
       </div>
 
-      {confirmingDelete && <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true" aria-labelledby="bulk-delete-title"><div className="w-full max-w-md rounded-lg bg-white p-5 shadow-xl"><h2 id="bulk-delete-title" className="text-lg font-semibold">Eliminar {selectedCount} hallazgos</h2><p className="mt-2 text-sm text-[#65766e]">Los hallazgos seleccionados dejarán de aparecer en las vistas activas. El borrado será lógico y quedará auditado.</p><div className="mt-5 flex justify-end gap-2"><button disabled={isProcessing} onClick={() => setConfirmingDelete(false)} className="min-h-11 rounded border border-[#dbe4dd] px-4">Cancelar</button><button disabled={isProcessing} onClick={async () => { await onBulkDelete(); setConfirmingDelete(false) }} className="min-h-11 rounded bg-destructive px-4 text-white disabled:opacity-50">{isProcessing ? 'Eliminando...' : `Eliminar ${selectedCount} hallazgos`}</button></div></div></div>}
+      {confirmingDelete && <div className="fixed inset-0 z-[80] flex items-center justify-center bg-black/40 p-4" role="dialog" aria-modal="true" aria-labelledby="bulk-delete-title"><div className="w-full max-w-md rounded-lg bg-white p-5 shadow-xl"><h2 id="bulk-delete-title" className="text-lg font-semibold">Eliminar {selectedCount} hallazgos</h2><p className="mt-2 text-sm text-[#65766e]">Los hallazgos seleccionados dejarán de aparecer en las vistas activas. El borrado será lógico y quedará auditado.</p><div className="mt-5 flex justify-end gap-2"><button disabled={isProcessing} onClick={() => setConfirmingDelete(false)} className="min-h-11 rounded border border-[#dbe4dd] px-4">Cancelar</button><button disabled={isProcessing} onClick={async () => { const deleted = await onBulkDelete(); if (deleted > 0) setConfirmingDelete(false) }} className="min-h-11 rounded bg-destructive px-4 text-white disabled:opacity-50">{isProcessing ? 'Eliminando...' : `Eliminar ${selectedCount} hallazgos`}</button></div></div></div>}
 
       {/* Export tooltip */}
       <div className="text-xs text-slate-500 px-2">

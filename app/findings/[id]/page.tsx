@@ -5,6 +5,7 @@ import { getSession } from '@/lib/auth/lucia'
 import { FindingService } from '@/lib/services/finding-service'
 import { FindingDetailWithEvidence } from '@/components/finding/FindingDetailWithEvidence'
 import { FindingStatusActions } from '@/components/finding/FindingStatusActions'
+import { DeleteFindingButton } from '@/components/finding/DeleteFindingButton'
 import { ActivityLog } from '@/components/finding/ActivityLog'
 import { ResolutionWorkflow, ValidationCheckpoint, AuditTrailViewer } from '@/components/workflow'
 import { AppShell } from '@/components/app/AppShell'
@@ -108,6 +109,12 @@ export default async function FindingDetailPage({ params }: PageProps) {
             status={finding.status}
             version={finding.version}
           />
+          {['OWNER', 'QA_LEAD'].includes(session.user.role) && (
+            <DeleteFindingButton
+              findingId={finding.id}
+              observation={finding.observation}
+            />
+          )}
         </>
       }
     >

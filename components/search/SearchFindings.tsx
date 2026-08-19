@@ -305,7 +305,11 @@ export function SearchFindings({ presentation = 'panel' }: SearchFindingsProps) 
               onBulkStatus={batchActions.bulkUpdateStatus}
               onBulkPriority={batchActions.bulkUpdatePriority}
               onBulkAssign={batchActions.bulkAssign}
-              onBulkDelete={async () => { const count = await batchActions.bulkDelete(); if (count) await refetch() }}
+              onBulkDelete={async () => {
+                const count = await batchActions.bulkDelete()
+                if (count) await refetch()
+                return count
+              }}
               assigneeOptions={assignees}
               isProcessing={batchActions.isProcessing}
               error={batchActions.error}
