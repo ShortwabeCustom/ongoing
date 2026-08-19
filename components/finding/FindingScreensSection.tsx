@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ExternalLink } from 'lucide-react'
+import { ImageLightbox } from '@/components/evidence/ImageLightbox'
 import { Finding, Evidence } from '@/lib/types'
 import { EvidenceUploader } from '@/components/evidence/EvidenceUploader'
 import { useToast } from '@/lib/hooks/use-toast'
@@ -26,6 +26,7 @@ export function FindingScreensSection({
   findScreenEvidence,
 }: FindingScreensSectionProps) {
   const { success, error } = useToast()
+  const [selectedEvidence, setSelectedEvidence] = useState<Evidence | null>(null)
 
   const handleUploadSuccess = () => {
     success('Evidencia subida exitosamente')
@@ -69,28 +70,27 @@ export function FindingScreensSection({
                   {attachedEvidence ? (
                     <div className="space-y-3">
                       {attachedEvidence.url && (
-                        <a
-                          href={attachedEvidence.url}
-                          target="_blank"
-                          rel="noreferrer"
+                        <button
+                          type="button"
+                          onClick={() => setSelectedEvidence(attachedEvidence)}
                           className="block overflow-hidden rounded-lg border border-[#dbe4dd]"
+                          aria-label={`Abrir visor para ${attachedEvidence.originalFilename}`}
                         >
                           <img
                             src={attachedEvidence.url}
                             alt={attachedEvidence.originalFilename}
                             className="h-36 w-full object-cover"
                           />
-                        </a>
+                        </button>
                       )}
-                      <a
-                        href={attachedEvidence.url}
-                        target="_blank"
-                        rel="noreferrer"
+                      <button
+                        type="button"
+                        onClick={() => setSelectedEvidence(attachedEvidence)}
+                        disabled={!attachedEvidence.url}
                         className="inline-flex max-w-full items-center gap-2 font-semibold text-[#0b6f46] hover:text-[#052b20]"
                       >
                         <span className="truncate">{attachedEvidence.originalFilename}</span>
-                        <ExternalLink className="h-4 w-4 shrink-0" />
-                      </a>
+                      </button>
                     </div>
                   ) : (
                     <p className="text-[#65766e]">
@@ -103,6 +103,13 @@ export function FindingScreensSection({
           )
         })}
       </div>
+
+      {selectedEvidence && (
+        <ImageLightbox
+          evidence={selectedEvidence}
+          onClose={() => setSelectedEvidence(null)}
+        />
+      )}
     </section>
   )
 }

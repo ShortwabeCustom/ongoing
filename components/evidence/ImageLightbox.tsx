@@ -62,26 +62,33 @@ export function ImageLightbox({
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center">
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-black/90"
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onClose()
+      }}
+      onWheel={handleWheel}
+    >
       {/* Close Button */}
       <button
+        type="button"
         onClick={onClose}
-        className="absolute top-4 right-4 p-2 text-white hover:bg-white/10 rounded-lg transition-colors"
-        aria-label="Close"
+        className="absolute right-4 top-4 z-30 flex h-11 w-11 items-center justify-center rounded-lg text-white transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        aria-label="Cerrar visor"
       >
         <X className="w-6 h-6" />
       </button>
 
       {/* Image Container */}
       <div
-        className="relative w-full h-full flex items-center justify-center overflow-hidden"
-        onWheel={handleWheel}
+        className="pointer-events-none flex max-h-full max-w-full items-center justify-center"
       >
         {evidence.url ? (
           <img
             src={evidence.url}
             alt={evidence.originalFilename}
-            className="max-w-[90vw] max-h-[90vh] object-contain transition-transform duration-200"
+            className="pointer-events-auto max-h-[90vh] max-w-[90vw] object-contain transition-transform duration-200"
+            onClick={(event) => event.stopPropagation()}
             style={{ transform: `scale(${zoom})` }}
           />
         ) : (
@@ -92,7 +99,7 @@ export function ImageLightbox({
       </div>
 
       {/* Info Panel */}
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 text-white">
+      <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black/80 to-transparent p-6 text-white">
         <h3 className="text-lg font-semibold mb-1">{evidence.originalFilename}</h3>
         {evidence.caption && (
           <p className="text-sm text-gray-300 mb-3">{evidence.caption}</p>
@@ -104,9 +111,10 @@ export function ImageLightbox({
       </div>
 
       {/* Controls */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-black/70 rounded-lg p-2">
+      <div className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-lg bg-black/70 p-2">
         {/* Zoom Controls */}
         <button
+          type="button"
           onClick={() => setZoom((prev) => Math.max(minZoom, prev - 0.2))}
           className="p-2 text-white hover:bg-white/10 rounded transition-colors disabled:opacity-50"
           disabled={zoom <= minZoom}
@@ -120,6 +128,7 @@ export function ImageLightbox({
         </div>
 
         <button
+          type="button"
           onClick={() => setZoom((prev) => Math.min(maxZoom, prev + 0.2))}
           className="p-2 text-white hover:bg-white/10 rounded transition-colors disabled:opacity-50"
           disabled={zoom >= maxZoom}
@@ -132,6 +141,7 @@ export function ImageLightbox({
 
         {/* Navigation */}
         <button
+          type="button"
           onClick={onPrev}
           className="p-2 text-white hover:bg-white/10 rounded transition-colors disabled:opacity-50"
           disabled={!canPrev}
@@ -141,6 +151,7 @@ export function ImageLightbox({
         </button>
 
         <button
+          type="button"
           onClick={onNext}
           className="p-2 text-white hover:bg-white/10 rounded transition-colors disabled:opacity-50"
           disabled={!canNext}
@@ -153,6 +164,7 @@ export function ImageLightbox({
 
         {/* Download Button */}
         <button
+          type="button"
           onClick={downloadImage}
           className="p-2 text-white hover:bg-white/10 rounded transition-colors"
           disabled={!evidence.url}
