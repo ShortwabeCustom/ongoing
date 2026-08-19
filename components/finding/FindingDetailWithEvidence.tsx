@@ -9,6 +9,7 @@ import { EditFindingDialog } from '@/components/finding/EditFindingDialog'
 import { FindingScreensSection } from '@/components/finding/FindingScreensSection'
 import { FindingEvidenceSection } from '@/components/finding/FindingEvidenceSection'
 import { SupportLinksList } from '@/components/finding/SupportLinksList'
+import { FindingComments, type FindingComment } from '@/components/finding/FindingComments'
 import {
   EXPERIENCE_TAG_LABELS_ES,
   INCIDENCE_TYPE_LABELS_ES,
@@ -18,10 +19,8 @@ import {
 } from '@/lib/constants/finding-options'
 
 interface FindingDetailWithEvidenceProps {
-  finding: Finding & { evidence?: Evidence[] }
+  finding: Finding & { evidence?: Evidence[]; comments?: FindingComment[] }
 }
-
-const IMAGE_EVIDENCE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
 export function FindingDetailWithEvidence({
   finding,
@@ -31,7 +30,6 @@ export function FindingDetailWithEvidence({
   const { assignees } = useLookups(finding.projectId)
   const canEdit = Boolean(auth.user?.role && ['OWNER', 'QA_LEAD'].includes(auth.user.role))
   const title = finding.title ?? finding.folio ?? 'Hallazgo'
-  const description = finding.description ?? finding.observation
   const areaValues = finding.experienceTags?.map((tag) => tag.experienceTag) ?? []
   const incidenceValues = finding.incidenceTypes?.map((type) => type.incidenceType) ?? []
   const labeledArea = areaValues.map((tag) => EXPERIENCE_TAG_LABELS_ES[tag] ?? tag).join(', ')
@@ -121,11 +119,6 @@ export function FindingDetailWithEvidence({
       </section>
 
       <section className="pm-card p-6 md:p-8">
-        <h3 className="mb-4 text-xl font-bold text-[#17251f]">Observación</h3>
-        <p className="max-w-4xl text-base leading-8 text-[#3b4b43]">{description}</p>
-      </section>
-
-      <section className="pm-card p-6 md:p-8">
         <h3 className="mb-6 text-xl font-bold text-[#17251f]">Detalles del hallazgo</h3>
         <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
           {metaFields.map(({ icon: Icon, label, value }) => (
@@ -141,6 +134,11 @@ export function FindingDetailWithEvidence({
           ))}
         </div>
       </section>
+
+      <FindingComments
+        findingId={finding.id}
+        initialComments={finding.comments}
+      />
 
       <FindingScreensSection
         finding={finding}
