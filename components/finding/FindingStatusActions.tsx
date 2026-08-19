@@ -100,7 +100,7 @@ export function FindingStatusActions({
               className="inline-flex min-h-9 items-center gap-2 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-[#052b20] transition hover:bg-[#7bf0b1] disabled:opacity-50"
             >
               <Icon className="h-4 w-4" />
-              {LABELS[next]}
+              {next === 'TRIAGED' ? 'Cambiar estado' : LABELS[next]}
             </button>
           )
         })}
