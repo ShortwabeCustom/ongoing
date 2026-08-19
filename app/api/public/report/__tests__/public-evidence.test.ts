@@ -39,6 +39,16 @@ beforeEach(() => {
   vi.clearAllMocks()
   calls.evidenceCount.length = 0
   calls.findingFindMany.length = 0
+  db.finding.count.mockResolvedValue(0)
+  db.finding.findMany.mockImplementation(async (args: unknown) => {
+    calls.findingFindMany.push(args)
+    return []
+  })
+  db.evidence.count.mockImplementation(async (args: unknown) => {
+    calls.evidenceCount.push(args)
+    return 0
+  })
+  db.testSession.findMany.mockResolvedValue([])
 })
 
 function countWhere(): any {
@@ -107,5 +117,60 @@ describe('contrato público conservado', () => {
     expect(body.stats).toHaveProperty('evidenceCount')
     expect(body).toHaveProperty('rounds')
     expect(body).toHaveProperty('findings')
+  })
+
+  it('incluye findings sin evidencia y sesiones, con estadísticas consistentes', async () => {
+    db.finding.count
+      .mockResolvedValueOnce(2)
+      .mockResolvedValueOnce(1)
+      .mockResolvedValueOnce(1)
+    db.testSession.findMany.mockResolvedValueOnce([
+      { id: 'session-a', name: 'Sesión A', date: new Date('2026-08-10'), _count: { findings: 2 } },
+    ] as any)
+    db.finding.findMany.mockImplementationOnce(async (args: unknown) => {
+      calls.findingFindMany.push(args)
+      return [
+        {
+          id: 'finding-a', observation: 'Sin evidencia', status: 'OPEN', sourceRow: 2,
+          testSessionId: 'session-a', testSession: { name: 'Sesión A' }, incidenceTypes: [], evidence: [],
+        },
+        {
+          id: 'finding-b', observation: 'Con legacy pública', status: 'CLOSED', sourceRow: 3,
+          testSessionId: 'session-a', testSession: { name: 'Sesión A' }, incidenceTypes: [],
+          evidence: [{ id: 'evidence-a', url: '/images/legacy.jpg', originalFilename: 'legacy.jpg' }],
+        },
+      ]
+    })
+
+    const response = await GET()
+    const body = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(body.findings).toHaveLength(2)
+    expect(body.findings[0].evidence).toEqual([])
+    expect(body.findings[1].evidence).toEqual([{ url: '/images/legacy.jpg', filename: 'legacy.jpg' }])
+    expect(body.rounds).toEqual([{ id: 'session-a', label: 'Sesión A', count: 2 }])
+    expect(body.stats.observations).toBe(body.findings.length)
+    expect(body.stats.completed + body.stats.pending).toBe(body.stats.observations)
+  })
+
+  it('excluye findings borrados desde la query padre', async () => {
+    await GET()
+    expect((calls.findingFindMany[0] as any).where.deletedAt).toBeNull()
+  })
+
+  it('solo incluye sesiones que conservan findings activos', async () => {
+    await GET()
+    expect(db.testSession.findMany).toHaveBeenCalledWith(expect.objectContaining({
+      where: { findings: { some: { deletedAt: null } } },
+    }))
+  })
+
+  it('no selecciona rutas internas ni storageKey de evidencia privada', async () => {
+    await GET()
+    const select = (calls.findingFindMany[0] as any).select.evidence.select
+    expect(select).toEqual({ id: true, url: true, originalFilename: true })
+    expect(select.storageKey).toBeUndefined()
+    expect(listWhere()).toMatchObject({ deletedAt: null, storageKey: { startsWith: 'legacy/' } })
   })
 })

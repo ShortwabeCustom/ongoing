@@ -16,6 +16,23 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    files: ['**/*.{js,cjs,mjs}'],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
+      'prefer-const': 'warn',
+    },
+  },
+  {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       globals: {
@@ -47,6 +64,7 @@ export default tseslint.config(
       'no-console': 'off',
       'no-undef': 'off',
       'no-useless-escape': 'off',
+      'prefer-const': 'warn',
     },
   }
 )

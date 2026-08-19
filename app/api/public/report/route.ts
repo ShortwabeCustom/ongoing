@@ -44,6 +44,7 @@ export async function GET() {
         where: { ...PUBLICLY_RENDERABLE_EVIDENCE, finding: { deletedAt: null } },
       }),
       db.testSession.findMany({
+        where: { findings: { some: { deletedAt: null } } },
         select: { id: true, name: true, date: true, _count: { select: { findings: { where: { deletedAt: null } } } } },
         orderBy: { date: 'asc' },
       }),
