@@ -9,6 +9,7 @@ type FindingStatusActionsProps = {
   findingId: string
   status: FindingStatus
   version: number
+  appearance?: 'dark' | 'light'
 }
 
 const TRANSITIONS: Record<FindingStatus, FindingStatus[]> = {
@@ -48,6 +49,7 @@ export function FindingStatusActions({
   findingId,
   status,
   version,
+  appearance = 'dark',
 }: FindingStatusActionsProps) {
   const router = useRouter()
   const [pendingStatus, setPendingStatus] = useState<FindingStatus | null>(null)
@@ -85,7 +87,11 @@ export function FindingStatusActions({
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-sm font-semibold text-white">
+        <span className={`inline-flex min-h-11 items-center rounded-full border px-3 py-1.5 text-sm font-semibold ${
+          appearance === 'light'
+            ? 'border-[#b9dcca] bg-[#e0f5e9] text-[#087244]'
+            : 'border-white/25 bg-white/10 text-white'
+        }`}>
           {LABELS[status]}
         </span>
 
@@ -97,9 +103,13 @@ export function FindingStatusActions({
               type="button"
               onClick={() => transition(next)}
               disabled={Boolean(pendingStatus)}
-              className="inline-flex min-h-9 items-center gap-2 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-[#052b20] transition hover:bg-[#7bf0b1] disabled:opacity-50"
+              className={`inline-flex min-h-11 items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00a85a] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+                appearance === 'light'
+                  ? 'border border-[#b9dcca] bg-white text-[#052b20] hover:bg-[#e0f5e9]'
+                  : 'bg-white text-[#052b20] hover:bg-[#7bf0b1]'
+              }`}
             >
-              <Icon className="h-4 w-4" />
+              <Icon className="h-4 w-4" aria-hidden="true" />
               {next === 'TRIAGED' ? 'Cambiar estado' : LABELS[next]}
             </button>
           )
