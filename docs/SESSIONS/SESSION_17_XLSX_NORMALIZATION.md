@@ -1,7 +1,7 @@
 # Session 17 — Normalización XLSX de Pruebas María
 
 Fecha: 2026-08-19  
-Estado: DRY-RUN COMPLETADO; GATE LISTO, PENDIENTE DE AUTORIZACIÓN  
+Estado: APPLY COMPLETADO Y VERIFICADO  
 Rama: `feat/xlsx-normalization-2026-08-19`
 
 ## Fuente
@@ -105,9 +105,59 @@ Resultado canónico: AuditLog DELETE `cmszocceq0000nk2sefypmtx3`, `after.phase=I
 - Comments se crean solo desde la columna semántica Comentarios; una celda que contiene exclusivamente URL genera SupportLink, no Comment.
 - APPLY exige preflight de storage, backup PostgreSQL, backup del storage y dry-run guardado. Elasticsearch deshabilitado es aceptable cuando health y fallback PostgreSQL están sanos.
 
-### PENDIENTE
+## Snapshot y backups pre-apply
 
-- Autorizar explícitamente el APPLY después de revisar este dry-run.
+- UTC: 2026-08-19T05:59:27Z
+- Git HEAD: `e7c2fcd4fa42338807bb8172f6d412d490f9cce2`
+- Working tree: limpio
+- XLSX SHA-256: `561934a8090c83eee824b8d5d5fd3c4a6b8a0e76c97698180eb5e50c4356c12c`
+- PostgreSQL: `/home/alexis/backups/uix/20260819T055943Z/pruebas-maria-pre-normalization.dump`
+- PostgreSQL bytes: 73,891
+- PostgreSQL SHA-256: `6da6de8ffa6052ecb2d84ce1928ec271dd026b8aaf723918f7f31c18f0b35d8d`
+- Verificación: `pg_dump` exit 0, fichero no vacío y `pg_restore --list` PASS
+- Evidence storage: `/home/alexis/backups/uix/20260819T055943Z/evidence-storage.tar.gz`
+- Evidence backup SHA-256: `09939613f95c25419307c631c4224371289af5e7e707d6f8793ac7f0b698c6ff`
+- Evidence snapshot: 2 archivos, 2,776,456 bytes; archive legible con 2 archivos
+
+## Resultado APPLY
+
+| Métrica | PRE | POST |
+|---|---:|---:|
+| Findings activos | 2 | 236 |
+| Evidence activas | 2 | 267 |
+| Evidence PENDING | 0 | 0 |
+
+- Findings importados: 234
+- Evidence importadas: 265
+- Findings con evidencia: 205
+- Findings sin evidencia: 29
+- Fingerprints duplicados: 0
+- Evidence huérfana: 0
+- Runtime confirmada sin URL: 0
+- Objetos runtime comprobados: 267; faltantes: 0
+- Cruces julio/agosto: 0
+- Distribución: 29 findings con 0 Evidence, 150 con 1, 50 con 2 y 5 con 3.
+- `Pruebas 30 de julio` sourceRow 68: Finding `cmszonhq400a5s62siox8x4ay`, con las dos Evidence de `image89.png` e `image90.png` confirmadas.
+
+## Idempotencia post-apply
+
+- Matched existing / NOOP: 234
+- Findings CREATE/UPDATE: 0/0
+- Evidence CREATE: 0
+- Evidence exact duplicate reconocida: 265
+- TestSessions CREATE: 0; REUSE: 12
+- Promociones de status: 0
+- Ambiguous/unmapped/conflicts: 0/0/0
+- Reporte: `artifacts/xlsx-normalization-idempotency-2026-08-19.json`
+
+## HTTP/UI y búsqueda
+
+- `/findings`: autorizado 200; anónimo 307 a login.
+- Details y API 200 para muestras de 30-jul, 4-5 ago, 6-7 ago, 13 ago y 18 ago; metadata, sesión, status, incidencia y Evidence presentes.
+- Finding con 3 Evidence: API 200 y las 3 imágenes presentes.
+- Evidence privada: autorizado 200 `image/png`; anónimo 401.
+- `/api/health`: `healthy`; Elasticsearch `disabled`, `optional=true`.
+- `SearchService`: fuente `postgresql`; búsqueda textual encontró el Finding nuevo de sourceRow 68.
 
 ## Contradicciones históricas
 
@@ -139,11 +189,11 @@ Resultado canónico: AuditLog DELETE `cmszocceq0000nk2sefypmtx3`, `after.phase=I
 
 ## Validación
 
-- `npm test`: PASS, 42 archivos y 570 tests.
+- `npm test`: PASS, 42 archivos y 573 tests.
 - Tests nuevos: PASS, 19 tests.
 - `npm run build`: PASS.
 - `npm run lint`: FAIL por deuda preexistente fuera de este cambio (274 errores y 85 warnings); lint dirigido a los tres archivos nuevos: PASS.
-- No se ejecutó APPLY, deployment, restart PM2 ni smoke HTTP autenticado.
+- APPLY y smoke HTTP autenticado completados. No fue necesario restart/rebuild de producción: la operación fue de datos y la aplicación existente reflejó los registros dinámicamente.
 
 ## Rollback previsto
 
@@ -156,7 +206,7 @@ Antes de cualquier mutación el script crea `backups/xlsx-normalization-{timesta
 - `scripts/__tests__/normalize-pruebas-maria-xlsx.test.ts`
 - `artifacts/xlsx-normalization-report-2026-08-19.json`
 
-## Comando de APPLY (NO EJECUTADO; requiere autorización)
+## Comando APPLY ejecutado
 
 ```bash
 node scripts/run-ts.cjs scripts/normalize-pruebas-maria-xlsx.ts \
