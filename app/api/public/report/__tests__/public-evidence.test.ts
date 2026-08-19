@@ -66,10 +66,10 @@ describe('regla única de renderizabilidad pública', () => {
     expect(listWhere().deletedAt).toBeNull()
   })
 
-  it('ambos exigen storageKey legacy: la evidencia de runtime nunca entra', async () => {
+  it('incluye evidencia confirmada sin restringirla al prefijo legacy', async () => {
     await GET()
-    expect(countWhere().storageKey).toEqual({ startsWith: 'legacy/' })
-    expect(listWhere().storageKey).toEqual({ startsWith: 'legacy/' })
+    expect(countWhere()).not.toHaveProperty('storageKey')
+    expect(listWhere()).not.toHaveProperty('storageKey')
   })
 
   it('ambos exigen url != null y url != ""', async () => {
@@ -90,10 +90,10 @@ describe('regla única de renderizabilidad pública', () => {
     expect((calls.findingFindMany[0] as any).where).toMatchObject({ deletedAt: null })
   })
 
-  it('la lista no selecciona storageKey: no se filtra la ruta interna', async () => {
+  it('selecciona storageKey solo para elegir la URL de entrega', async () => {
     await GET()
     const select = (calls.findingFindMany[0] as any).select.evidence.select
-    expect(select.storageKey).toBeUndefined()
+    expect(select.storageKey).toBe(true)
   })
 })
 
