@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-19T05:45:40.513Z",
+  "generatedAt": "2026-08-19T05:55:36.403Z",
   "mode": "DRY_RUN",
   "xlsx": {
     "file": {
@@ -39,7 +39,7 @@
         "emptyRows": 10,
         "completedRows": 78,
         "imagePlacements": 112,
-        "imagesOnEmptyRows": 2,
+        "imagesOnEmptyRows": 0,
         "urls": 0,
         "figmaUrls": 0,
         "headers": [
@@ -285,46 +285,11 @@
         }
       }
     ],
-    "invalidRows": [
-      {
-        "worksheet": "Pruebas 30 de julio",
-        "sourceRow": 67,
-        "reason": "2 image(s) anchored to an empty observation row"
-      }
-    ],
+    "invalidRows": [],
     "physicalMediaFiles": 226,
     "imagePlacements": 265,
     "validFindings": 234,
-    "unmappedImages": [
-      {
-        "worksheet": "Pruebas 30 de julio",
-        "drawing": "xl/drawings/drawing2.xml",
-        "anchorType": "twoCellAnchor",
-        "relationshipId": "rId53",
-        "internalFilename": "xl/media/image89.png",
-        "mimeType": "image/png",
-        "bytes": 120899,
-        "sha256": "f6007926a98abaf643a0a4475b98b4d1db2e1c6737864cbe89d36b4c482f3a64",
-        "row": 67,
-        "column": 3,
-        "toRow": 67,
-        "toColumn": 3
-      },
-      {
-        "worksheet": "Pruebas 30 de julio",
-        "drawing": "xl/drawings/drawing2.xml",
-        "anchorType": "twoCellAnchor",
-        "relationshipId": "rId54",
-        "internalFilename": "xl/media/image90.png",
-        "mimeType": "image/png",
-        "bytes": 78017,
-        "sha256": "28a41f765dd665dbefaef44081383d7ec266ebfb38de8bb2900109b4b51f6a96",
-        "row": 67,
-        "column": 3,
-        "toRow": 68,
-        "toColumn": 3
-      }
-    ]
+    "unmappedImages": []
   },
   "database": {
     "project": {
@@ -343,7 +308,7 @@
     "productVersions": 2,
     "testSessions": 4,
     "activeFindings": 2,
-    "activeEvidence": 3,
+    "activeEvidence": 2,
     "importBatches": 3
   },
   "sessions": [
@@ -680,6 +645,52 @@
     "crossMonthAssociationsDetected": 0,
     "crossMonthAssociationsAfterPlan": 0
   },
+  "imageMetrics": {
+    "xlsxMediaUnique": 226,
+    "xlsxDrawingAnchors": 265,
+    "xlsxImageFindingAssociations": 265,
+    "findingsWithImages": 205,
+    "findingsWithoutImages": 29
+  },
+  "correctedImageAssociations": [
+    {
+      "worksheet": "Pruebas 30 de julio",
+      "mediaFilename": "xl/media/image89.png",
+      "mediaSha256": "f6007926a98abaf643a0a4475b98b4d1db2e1c6737864cbe89d36b4c482f3a64",
+      "anchorRowOriginal": 67,
+      "targetSourceRow": 68,
+      "findingId": null,
+      "action": "CREATE"
+    },
+    {
+      "worksheet": "Pruebas 30 de julio",
+      "mediaFilename": "xl/media/image90.png",
+      "mediaSha256": "28a41f765dd665dbefaef44081383d7ec266ebfb38de8bb2900109b4b51f6a96",
+      "anchorRowOriginal": 67,
+      "targetSourceRow": 68,
+      "findingId": null,
+      "action": "CREATE"
+    }
+  ],
+  "evidenceActions": {
+    "evidenceAlreadyConfirmed": 0,
+    "evidenceAlreadyLegacy": 0,
+    "evidenceCreate": 265,
+    "evidenceSkipExactDuplicate": 0,
+    "evidenceReuse": 0,
+    "evidencePending": 0,
+    "evidenceUnmapped": 0,
+    "evidenceConflict": 0,
+    "accountedAssociations": 265
+  },
+  "search": {
+    "elasticsearchEnabled": false,
+    "elasticsearchConfigured": false,
+    "elasticsearchOptional": true,
+    "postgresFallbackVerified": true,
+    "source": "postgresql",
+    "blocking": false
+  },
   "findings": [
     {
       "row": {
@@ -704,7 +715,8 @@
             "row": 2,
             "column": 4,
             "toRow": 2,
-            "toColumn": 4
+            "toColumn": 4,
+            "targetSourceRow": 2
           },
           {
             "worksheet": "Mod 31 Jul",
@@ -718,7 +730,8 @@
             "row": 2,
             "column": 3,
             "toRow": 2,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 2
           }
         ]
       },
@@ -777,7 +790,8 @@
             "row": 3,
             "column": 4,
             "toRow": 3,
-            "toColumn": 4
+            "toColumn": 4,
+            "targetSourceRow": 3
           },
           {
             "worksheet": "Mod 31 Jul",
@@ -791,7 +805,8 @@
             "row": 3,
             "column": 3,
             "toRow": 3,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 3
           }
         ]
       },
@@ -850,7 +865,8 @@
             "row": 4,
             "column": 3,
             "toRow": 4,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 4
           },
           {
             "worksheet": "Mod 31 Jul",
@@ -864,7 +880,8 @@
             "row": 4,
             "column": 4,
             "toRow": 4,
-            "toColumn": 4
+            "toColumn": 4,
+            "targetSourceRow": 4
           }
         ]
       },
@@ -923,7 +940,8 @@
             "row": 5,
             "column": 3,
             "toRow": 5,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 5
           },
           {
             "worksheet": "Mod 31 Jul",
@@ -937,7 +955,8 @@
             "row": 5,
             "column": 4,
             "toRow": 5,
-            "toColumn": 4
+            "toColumn": 4,
+            "targetSourceRow": 5
           }
         ]
       },
@@ -996,7 +1015,8 @@
             "row": 6,
             "column": 3,
             "toRow": 6,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 6
           },
           {
             "worksheet": "Mod 31 Jul",
@@ -1010,7 +1030,8 @@
             "row": 6,
             "column": 4,
             "toRow": 6,
-            "toColumn": 4
+            "toColumn": 4,
+            "targetSourceRow": 6
           }
         ]
       },
@@ -1069,7 +1090,8 @@
             "row": 7,
             "column": 3,
             "toRow": 7,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 7
           },
           {
             "worksheet": "Mod 31 Jul",
@@ -1083,7 +1105,8 @@
             "row": 7,
             "column": 4,
             "toRow": 7,
-            "toColumn": 4
+            "toColumn": 4,
+            "targetSourceRow": 7
           }
         ]
       },
@@ -1142,7 +1165,8 @@
             "row": 8,
             "column": 3,
             "toRow": 8,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 8
           },
           {
             "worksheet": "Mod 31 Jul",
@@ -1156,7 +1180,8 @@
             "row": 8,
             "column": 4,
             "toRow": 8,
-            "toColumn": 4
+            "toColumn": 4,
+            "targetSourceRow": 8
           }
         ]
       },
@@ -1215,7 +1240,8 @@
             "row": 9,
             "column": 3,
             "toRow": 9,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 9
           },
           {
             "worksheet": "Mod 31 Jul",
@@ -1229,7 +1255,8 @@
             "row": 9,
             "column": 4,
             "toRow": 9,
-            "toColumn": 4
+            "toColumn": 4,
+            "targetSourceRow": 9
           }
         ]
       },
@@ -1288,7 +1315,8 @@
             "row": 10,
             "column": 4,
             "toRow": 10,
-            "toColumn": 4
+            "toColumn": 4,
+            "targetSourceRow": 10
           },
           {
             "worksheet": "Mod 31 Jul",
@@ -1302,7 +1330,8 @@
             "row": 10,
             "column": 3,
             "toRow": 10,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 10
           }
         ]
       },
@@ -1361,7 +1390,8 @@
             "row": 11,
             "column": 3,
             "toRow": 11,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 11
           },
           {
             "worksheet": "Mod 31 Jul",
@@ -1375,7 +1405,8 @@
             "row": 11,
             "column": 4,
             "toRow": 11,
-            "toColumn": 4
+            "toColumn": 4,
+            "targetSourceRow": 11
           }
         ]
       },
@@ -1434,7 +1465,8 @@
             "row": 12,
             "column": 3,
             "toRow": 12,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 12
           },
           {
             "worksheet": "Mod 31 Jul",
@@ -1448,7 +1480,8 @@
             "row": 12,
             "column": 4,
             "toRow": 12,
-            "toColumn": 4
+            "toColumn": 4,
+            "targetSourceRow": 12
           }
         ]
       },
@@ -1507,7 +1540,8 @@
             "row": 13,
             "column": 3,
             "toRow": 13,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 13
           },
           {
             "worksheet": "Mod 31 Jul",
@@ -1521,7 +1555,8 @@
             "row": 13,
             "column": 4,
             "toRow": 13,
-            "toColumn": 4
+            "toColumn": 4,
+            "targetSourceRow": 13
           }
         ]
       },
@@ -1580,7 +1615,8 @@
             "row": 14,
             "column": 3,
             "toRow": 14,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 14
           },
           {
             "worksheet": "Mod 31 Jul",
@@ -1594,7 +1630,8 @@
             "row": 14,
             "column": 4,
             "toRow": 14,
-            "toColumn": 4
+            "toColumn": 4,
+            "targetSourceRow": 14
           }
         ]
       },
@@ -1653,7 +1690,8 @@
             "row": 15,
             "column": 3,
             "toRow": 15,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 15
           },
           {
             "worksheet": "Mod 31 Jul",
@@ -1667,7 +1705,8 @@
             "row": 15,
             "column": 4,
             "toRow": 15,
-            "toColumn": 4
+            "toColumn": 4,
+            "targetSourceRow": 15
           }
         ]
       },
@@ -1726,7 +1765,8 @@
             "row": 16,
             "column": 3,
             "toRow": 16,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 16
           },
           {
             "worksheet": "Mod 31 Jul",
@@ -1740,7 +1780,8 @@
             "row": 16,
             "column": 4,
             "toRow": 16,
-            "toColumn": 4
+            "toColumn": 4,
+            "targetSourceRow": 16
           },
           {
             "worksheet": "Mod 31 Jul",
@@ -1754,7 +1795,8 @@
             "row": 16,
             "column": 4,
             "toRow": 17,
-            "toColumn": 4
+            "toColumn": 4,
+            "targetSourceRow": 16
           }
         ]
       },
@@ -1819,7 +1861,8 @@
             "row": 17,
             "column": 3,
             "toRow": 17,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 17
           }
         ]
       },
@@ -1872,7 +1915,8 @@
             "row": 18,
             "column": 3,
             "toRow": 19,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 18
           },
           {
             "worksheet": "Mod 31 Jul",
@@ -1886,7 +1930,8 @@
             "row": 18,
             "column": 4,
             "toRow": 18,
-            "toColumn": 4
+            "toColumn": 4,
+            "targetSourceRow": 18
           }
         ]
       },
@@ -1945,7 +1990,8 @@
             "row": 19,
             "column": 3,
             "toRow": 20,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 19
           },
           {
             "worksheet": "Mod 31 Jul",
@@ -1959,7 +2005,8 @@
             "row": 19,
             "column": 4,
             "toRow": 20,
-            "toColumn": 4
+            "toColumn": 4,
+            "targetSourceRow": 19
           }
         ]
       },
@@ -2018,7 +2065,8 @@
             "row": 2,
             "column": 3,
             "toRow": 2,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 2
           },
           {
             "worksheet": "Pruebas 30 de julio",
@@ -2032,7 +2080,8 @@
             "row": 2,
             "column": 2,
             "toRow": 3,
-            "toColumn": 2
+            "toColumn": 2,
+            "targetSourceRow": 2
           }
         ]
       },
@@ -2091,7 +2140,8 @@
             "row": 3,
             "column": 3,
             "toRow": 3,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 3
           }
         ]
       },
@@ -2144,7 +2194,8 @@
             "row": 4,
             "column": 3,
             "toRow": 4,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 4
           }
         ]
       },
@@ -2197,7 +2248,8 @@
             "row": 5,
             "column": 3,
             "toRow": 5,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 5
           }
         ]
       },
@@ -2250,7 +2302,8 @@
             "row": 6,
             "column": 3,
             "toRow": 6,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 6
           }
         ]
       },
@@ -2303,7 +2356,8 @@
             "row": 7,
             "column": 3,
             "toRow": 7,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 7
           }
         ]
       },
@@ -2356,7 +2410,8 @@
             "row": 8,
             "column": 3,
             "toRow": 8,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 8
           },
           {
             "worksheet": "Pruebas 30 de julio",
@@ -2370,7 +2425,8 @@
             "row": 8,
             "column": 3,
             "toRow": 9,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 8
           }
         ]
       },
@@ -2462,7 +2518,8 @@
             "row": 10,
             "column": 3,
             "toRow": 10,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 10
           }
         ]
       },
@@ -2515,7 +2572,8 @@
             "row": 11,
             "column": 3,
             "toRow": 11,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 11
           }
         ]
       },
@@ -2568,7 +2626,8 @@
             "row": 12,
             "column": 3,
             "toRow": 12,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 12
           }
         ]
       },
@@ -2621,7 +2680,8 @@
             "row": 13,
             "column": 3,
             "toRow": 13,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 13
           },
           {
             "worksheet": "Pruebas 30 de julio",
@@ -2635,7 +2695,8 @@
             "row": 13,
             "column": 3,
             "toRow": 14,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 13
           }
         ]
       },
@@ -2725,7 +2786,8 @@
             "row": 15,
             "column": 3,
             "toRow": 15,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 15
           }
         ]
       },
@@ -2778,7 +2840,8 @@
             "row": 16,
             "column": 3,
             "toRow": 16,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 16
           }
         ]
       },
@@ -2831,7 +2894,8 @@
             "row": 17,
             "column": 3,
             "toRow": 17,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 17
           },
           {
             "worksheet": "Pruebas 30 de julio",
@@ -2845,7 +2909,8 @@
             "row": 17,
             "column": 3,
             "toRow": 18,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 17
           }
         ]
       },
@@ -2936,7 +3001,8 @@
             "row": 19,
             "column": 3,
             "toRow": 19,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 19
           }
         ]
       },
@@ -2990,7 +3056,8 @@
             "row": 20,
             "column": 3,
             "toRow": 20,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 20
           }
         ]
       },
@@ -3043,7 +3110,8 @@
             "row": 21,
             "column": 3,
             "toRow": 21,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 21
           }
         ]
       },
@@ -3096,7 +3164,8 @@
             "row": 22,
             "column": 3,
             "toRow": 22,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 22
           }
         ]
       },
@@ -3149,7 +3218,8 @@
             "row": 23,
             "column": 3,
             "toRow": 23,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 23
           },
           {
             "worksheet": "Pruebas 30 de julio",
@@ -3163,7 +3233,8 @@
             "row": 23,
             "column": 3,
             "toRow": 24,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 23
           }
         ]
       },
@@ -3253,7 +3324,8 @@
             "row": 25,
             "column": 3,
             "toRow": 25,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 25
           },
           {
             "worksheet": "Pruebas 30 de julio",
@@ -3267,7 +3339,8 @@
             "row": 25,
             "column": 3,
             "toRow": 26,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 25
           }
         ]
       },
@@ -3357,7 +3430,8 @@
             "row": 27,
             "column": 3,
             "toRow": 27,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 27
           }
         ]
       },
@@ -3410,7 +3484,8 @@
             "row": 28,
             "column": 3,
             "toRow": 28,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 28
           },
           {
             "worksheet": "Pruebas 30 de julio",
@@ -3424,7 +3499,8 @@
             "row": 28,
             "column": 4,
             "toRow": 28,
-            "toColumn": 5
+            "toColumn": 5,
+            "targetSourceRow": 28
           }
         ]
       },
@@ -3484,7 +3560,8 @@
             "row": 29,
             "column": 3,
             "toRow": 29,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 29
           },
           {
             "worksheet": "Pruebas 30 de julio",
@@ -3498,7 +3575,8 @@
             "row": 29,
             "column": 3,
             "toRow": 30,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 29
           },
           {
             "worksheet": "Pruebas 30 de julio",
@@ -3512,7 +3590,8 @@
             "row": 29,
             "column": 4,
             "toRow": 29,
-            "toColumn": 5
+            "toColumn": 5,
+            "targetSourceRow": 29
           }
         ]
       },
@@ -3612,7 +3691,8 @@
             "row": 31,
             "column": 3,
             "toRow": 31,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 31
           }
         ]
       },
@@ -3666,7 +3746,8 @@
             "row": 32,
             "column": 3,
             "toRow": 32,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 32
           }
         ]
       },
@@ -3720,7 +3801,8 @@
             "row": 33,
             "column": 3,
             "toRow": 33,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 33
           }
         ]
       },
@@ -3774,7 +3856,8 @@
             "row": 34,
             "column": 3,
             "toRow": 34,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 34
           },
           {
             "worksheet": "Pruebas 30 de julio",
@@ -3788,7 +3871,8 @@
             "row": 34,
             "column": 3,
             "toRow": 35,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 34
           }
         ]
       },
@@ -3879,7 +3963,8 @@
             "row": 36,
             "column": 3,
             "toRow": 36,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 36
           }
         ]
       },
@@ -3934,7 +4019,8 @@
             "row": 37,
             "column": 3,
             "toRow": 38,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 37
           }
         ]
       },
@@ -3988,7 +4074,8 @@
             "row": 38,
             "column": 3,
             "toRow": 38,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 38
           }
         ]
       },
@@ -4072,7 +4159,8 @@
             "row": 40,
             "column": 3,
             "toRow": 41,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 40
           },
           {
             "worksheet": "Pruebas 30 de julio",
@@ -4086,7 +4174,8 @@
             "row": 40,
             "column": 4,
             "toRow": 40,
-            "toColumn": 5
+            "toColumn": 5,
+            "targetSourceRow": 40
           }
         ]
       },
@@ -4145,7 +4234,8 @@
             "row": 41,
             "column": 3,
             "toRow": 41,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 41
           },
           {
             "worksheet": "Pruebas 30 de julio",
@@ -4159,7 +4249,8 @@
             "row": 41,
             "column": 4,
             "toRow": 41,
-            "toColumn": 5
+            "toColumn": 5,
+            "targetSourceRow": 41
           }
         ]
       },
@@ -4218,7 +4309,8 @@
             "row": 42,
             "column": 3,
             "toRow": 42,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 42
           }
         ]
       },
@@ -4271,7 +4363,8 @@
             "row": 43,
             "column": 3,
             "toRow": 43,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 43
           }
         ]
       },
@@ -4324,7 +4417,8 @@
             "row": 44,
             "column": 3,
             "toRow": 44,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 44
           }
         ]
       },
@@ -4377,7 +4471,8 @@
             "row": 45,
             "column": 3,
             "toRow": 45,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 45
           }
         ]
       },
@@ -4430,7 +4525,8 @@
             "row": 46,
             "column": 3,
             "toRow": 46,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 46
           }
         ]
       },
@@ -4484,7 +4580,8 @@
             "row": 47,
             "column": 3,
             "toRow": 47,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 47
           }
         ]
       },
@@ -4537,7 +4634,8 @@
             "row": 48,
             "column": 3,
             "toRow": 48,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 48
           }
         ]
       },
@@ -4590,7 +4688,8 @@
             "row": 49,
             "column": 3,
             "toRow": 49,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 49
           }
         ]
       },
@@ -4643,7 +4742,8 @@
             "row": 50,
             "column": 3,
             "toRow": 50,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 50
           }
         ]
       },
@@ -4696,7 +4796,8 @@
             "row": 51,
             "column": 3,
             "toRow": 52,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 51
           }
         ]
       },
@@ -4750,7 +4851,8 @@
             "row": 52,
             "column": 3,
             "toRow": 52,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 52
           },
           {
             "worksheet": "Pruebas 30 de julio",
@@ -4764,7 +4866,8 @@
             "row": 52,
             "column": 3,
             "toRow": 54,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 52
           }
         ]
       },
@@ -4825,7 +4928,8 @@
             "row": 53,
             "column": 3,
             "toRow": 54,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 53
           }
         ]
       },
@@ -4912,7 +5016,8 @@
             "row": 55,
             "column": 3,
             "toRow": 55,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 55
           }
         ]
       },
@@ -4965,7 +5070,8 @@
             "row": 56,
             "column": 3,
             "toRow": 56,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 56
           }
         ]
       },
@@ -5018,7 +5124,8 @@
             "row": 57,
             "column": 3,
             "toRow": 57,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 57
           }
         ]
       },
@@ -5071,7 +5178,8 @@
             "row": 58,
             "column": 3,
             "toRow": 58,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 58
           }
         ]
       },
@@ -5124,7 +5232,8 @@
             "row": 59,
             "column": 3,
             "toRow": 59,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 59
           }
         ]
       },
@@ -5177,7 +5286,8 @@
             "row": 60,
             "column": 3,
             "toRow": 60,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 60
           }
         ]
       },
@@ -5231,7 +5341,8 @@
             "row": 61,
             "column": 3,
             "toRow": 61,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 61
           }
         ]
       },
@@ -5285,7 +5396,8 @@
             "row": 62,
             "column": 3,
             "toRow": 62,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 62
           }
         ]
       },
@@ -5339,7 +5451,8 @@
             "row": 63,
             "column": 3,
             "toRow": 64,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 63
           }
         ]
       },
@@ -5394,7 +5507,8 @@
             "row": 64,
             "column": 3,
             "toRow": 65,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 64
           },
           {
             "worksheet": "Pruebas 30 de julio",
@@ -5408,7 +5522,8 @@
             "row": 64,
             "column": 3,
             "toRow": 65,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 64
           }
         ]
       },
@@ -5501,7 +5616,8 @@
             "row": 66,
             "column": 3,
             "toRow": 66,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 66
           },
           {
             "worksheet": "Pruebas 30 de julio",
@@ -5515,7 +5631,8 @@
             "row": 66,
             "column": 3,
             "toRow": 67,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 66
           }
         ]
       },
@@ -5561,7 +5678,38 @@
         "experienceTags": [],
         "urls": [],
         "figmaUrls": [],
-        "images": []
+        "images": [
+          {
+            "worksheet": "Pruebas 30 de julio",
+            "drawing": "xl/drawings/drawing2.xml",
+            "anchorType": "twoCellAnchor",
+            "relationshipId": "rId53",
+            "internalFilename": "xl/media/image89.png",
+            "mimeType": "image/png",
+            "bytes": 120899,
+            "sha256": "f6007926a98abaf643a0a4475b98b4d1db2e1c6737864cbe89d36b4c482f3a64",
+            "row": 67,
+            "column": 3,
+            "toRow": 67,
+            "toColumn": 3,
+            "targetSourceRow": 68
+          },
+          {
+            "worksheet": "Pruebas 30 de julio",
+            "drawing": "xl/drawings/drawing2.xml",
+            "anchorType": "twoCellAnchor",
+            "relationshipId": "rId54",
+            "internalFilename": "xl/media/image90.png",
+            "mimeType": "image/png",
+            "bytes": 78017,
+            "sha256": "28a41f765dd665dbefaef44081383d7ec266ebfb38de8bb2900109b4b51f6a96",
+            "row": 67,
+            "column": 3,
+            "toRow": 68,
+            "toColumn": 3,
+            "targetSourceRow": 68
+          }
+        ]
       },
       "fingerprint": "f2e389007784c1128cfc02dacc0cf95f20e8e15c5c0747976e076351ae762fb9",
       "session": {
@@ -5578,7 +5726,20 @@
       "action": "CREATE",
       "changes": {},
       "supportLinks": [],
-      "evidence": [],
+      "evidence": [
+        {
+          "action": "CREATE",
+          "imageIndex": 0,
+          "originalFilename": "xlsx-pruebas-30-de-julio-row-68-f6007926a98a.png",
+          "marker": "xlsx-normalization:910536ac34dee34c1d699090:f6007926a98abaf643a0a4475b98b4d1db2e1c6737864cbe89d36b4c482f3a64"
+        },
+        {
+          "action": "CREATE",
+          "imageIndex": 1,
+          "originalFilename": "xlsx-pruebas-30-de-julio-row-68-28a41f765dd6.png",
+          "marker": "xlsx-normalization:0f492cf9808a202a1d0aa97b:28a41f765dd665dbefaef44081383d7ec266ebfb38de8bb2900109b4b51f6a96"
+        }
+      ],
       "legacyCandidates": [],
       "statusPromotion": true
     },
@@ -5605,7 +5766,8 @@
             "row": 69,
             "column": 3,
             "toRow": 69,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 69
           },
           {
             "worksheet": "Pruebas 30 de julio",
@@ -5619,7 +5781,8 @@
             "row": 69,
             "column": 2,
             "toRow": 70,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 69
           }
         ]
       },
@@ -5711,7 +5874,8 @@
             "row": 71,
             "column": 3,
             "toRow": 71,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 71
           }
         ]
       },
@@ -5765,7 +5929,8 @@
             "row": 72,
             "column": 3,
             "toRow": 72,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 72
           }
         ]
       },
@@ -5820,7 +5985,8 @@
             "row": 73,
             "column": 3,
             "toRow": 73,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 73
           }
         ]
       },
@@ -5874,7 +6040,8 @@
             "row": 74,
             "column": 3,
             "toRow": 74,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 74
           }
         ]
       },
@@ -5927,7 +6094,8 @@
             "row": 75,
             "column": 3,
             "toRow": 75,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 75
           },
           {
             "worksheet": "Pruebas 30 de julio",
@@ -5941,7 +6109,8 @@
             "row": 75,
             "column": 3,
             "toRow": 76,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 75
           }
         ]
       },
@@ -6031,7 +6200,8 @@
             "row": 77,
             "column": 3,
             "toRow": 77,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 77
           },
           {
             "worksheet": "Pruebas 30 de julio",
@@ -6045,7 +6215,8 @@
             "row": 77,
             "column": 3,
             "toRow": 77,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 77
           },
           {
             "worksheet": "Pruebas 30 de julio",
@@ -6059,7 +6230,8 @@
             "row": 77,
             "column": 3,
             "toRow": 78,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 77
           }
         ]
       },
@@ -6155,7 +6327,8 @@
             "row": 79,
             "column": 3,
             "toRow": 79,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 79
           },
           {
             "worksheet": "Pruebas 30 de julio",
@@ -6169,7 +6342,8 @@
             "row": 79,
             "column": 3,
             "toRow": 80,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 79
           }
         ]
       },
@@ -6261,7 +6435,8 @@
             "row": 81,
             "column": 3,
             "toRow": 81,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 81
           }
         ]
       },
@@ -6314,7 +6489,8 @@
             "row": 82,
             "column": 3,
             "toRow": 82,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 82
           }
         ]
       },
@@ -6367,7 +6543,8 @@
             "row": 83,
             "column": 3,
             "toRow": 83,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 83
           }
         ]
       },
@@ -6421,7 +6598,8 @@
             "row": 84,
             "column": 3,
             "toRow": 85,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 84
           }
         ]
       },
@@ -6475,7 +6653,8 @@
             "row": 85,
             "column": 3,
             "toRow": 85,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 85
           }
         ]
       },
@@ -6528,7 +6707,8 @@
             "row": 86,
             "column": 3,
             "toRow": 86,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 86
           }
         ]
       },
@@ -6581,7 +6761,8 @@
             "row": 87,
             "column": 3,
             "toRow": 88,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 87
           },
           {
             "worksheet": "Pruebas 30 de julio",
@@ -6595,7 +6776,8 @@
             "row": 87,
             "column": 3,
             "toRow": 88,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 87
           }
         ]
       },
@@ -6654,7 +6836,8 @@
             "row": 88,
             "column": 3,
             "toRow": 89,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 88
           }
         ]
       },
@@ -6738,7 +6921,8 @@
             "row": 90,
             "column": 3,
             "toRow": 90,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 90
           }
         ]
       },
@@ -6792,7 +6976,8 @@
             "row": 91,
             "column": 3,
             "toRow": 91,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 91
           }
         ]
       },
@@ -6846,7 +7031,8 @@
             "row": 92,
             "column": 3,
             "toRow": 92,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 92
           }
         ]
       },
@@ -6900,7 +7086,8 @@
             "row": 93,
             "column": 3,
             "toRow": 93,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 93
           }
         ]
       },
@@ -6955,7 +7142,8 @@
             "row": 94,
             "column": 3,
             "toRow": 94,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 94
           }
         ]
       },
@@ -7009,7 +7197,8 @@
             "row": 95,
             "column": 3,
             "toRow": 95,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 95
           }
         ]
       },
@@ -7062,7 +7251,8 @@
             "row": 96,
             "column": 3,
             "toRow": 97,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 96
           },
           {
             "worksheet": "Pruebas 30 de julio",
@@ -7076,7 +7266,8 @@
             "row": 96,
             "column": 3,
             "toRow": 96,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 96
           }
         ]
       },
@@ -7135,7 +7326,8 @@
             "row": 97,
             "column": 3,
             "toRow": 97,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 97
           }
         ]
       },
@@ -7189,7 +7381,8 @@
             "row": 98,
             "column": 3,
             "toRow": 98,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 98
           }
         ]
       },
@@ -7243,7 +7436,8 @@
             "row": 99,
             "column": 3,
             "toRow": 99,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 99
           }
         ]
       },
@@ -7296,7 +7490,8 @@
             "row": 100,
             "column": 3,
             "toRow": 100,
-            "toColumn": 4
+            "toColumn": 4,
+            "targetSourceRow": 100
           }
         ]
       },
@@ -7349,7 +7544,8 @@
             "row": 101,
             "column": 3,
             "toRow": 101,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 101
           }
         ]
       },
@@ -7402,7 +7598,8 @@
             "row": 102,
             "column": 3,
             "toRow": 103,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 102
           }
         ]
       },
@@ -7456,7 +7653,8 @@
             "row": 103,
             "column": 3,
             "toRow": 104,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 103
           }
         ]
       },
@@ -7511,7 +7709,8 @@
             "row": 104,
             "column": 3,
             "toRow": 104,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 104
           }
         ]
       },
@@ -7566,7 +7765,8 @@
             "row": 105,
             "column": 3,
             "toRow": 105,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 105
           }
         ]
       },
@@ -7621,7 +7821,8 @@
             "row": 106,
             "column": 3,
             "toRow": 106,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 106
           }
         ]
       },
@@ -7679,7 +7880,8 @@
             "row": 2,
             "column": 3,
             "toRow": 2,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 2
           }
         ]
       },
@@ -7744,7 +7946,8 @@
             "row": 2,
             "column": 3,
             "toRow": 2,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 2
           }
         ]
       },
@@ -7810,7 +8013,8 @@
             "row": 3,
             "column": 3,
             "toRow": 3,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 3
           }
         ]
       },
@@ -7876,7 +8080,8 @@
             "row": 4,
             "column": 3,
             "toRow": 4,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 4
           }
         ]
       },
@@ -7942,7 +8147,8 @@
             "row": 5,
             "column": 3,
             "toRow": 5,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 5
           }
         ]
       },
@@ -8008,7 +8214,8 @@
             "row": 6,
             "column": 3,
             "toRow": 6,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 6
           }
         ]
       },
@@ -8074,7 +8281,8 @@
             "row": 7,
             "column": 3,
             "toRow": 7,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 7
           }
         ]
       },
@@ -8140,7 +8348,8 @@
             "row": 8,
             "column": 3,
             "toRow": 8,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 8
           }
         ]
       },
@@ -8206,7 +8415,8 @@
             "row": 9,
             "column": 3,
             "toRow": 9,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 9
           }
         ]
       },
@@ -8272,7 +8482,8 @@
             "row": 10,
             "column": 3,
             "toRow": 10,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 10
           }
         ]
       },
@@ -8337,7 +8548,8 @@
             "row": 11,
             "column": 3,
             "toRow": 11,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 11
           }
         ]
       },
@@ -8401,7 +8613,8 @@
             "row": 12,
             "column": 3,
             "toRow": 12,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 12
           }
         ]
       },
@@ -8466,7 +8679,8 @@
             "row": 13,
             "column": 3,
             "toRow": 13,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 13
           }
         ]
       },
@@ -8532,7 +8746,8 @@
             "row": 14,
             "column": 3,
             "toRow": 14,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 14
           }
         ]
       },
@@ -8597,7 +8812,8 @@
             "row": 15,
             "column": 3,
             "toRow": 15,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 15
           }
         ]
       },
@@ -8662,7 +8878,8 @@
             "row": 16,
             "column": 3,
             "toRow": 16,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 16
           }
         ]
       },
@@ -8728,7 +8945,8 @@
             "row": 17,
             "column": 3,
             "toRow": 17,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 17
           }
         ]
       },
@@ -8838,7 +9056,8 @@
             "row": 19,
             "column": 3,
             "toRow": 19,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 19
           }
         ]
       },
@@ -8904,7 +9123,8 @@
             "row": 20,
             "column": 3,
             "toRow": 20,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 20
           }
         ]
       },
@@ -9012,7 +9232,8 @@
             "row": 22,
             "column": 3,
             "toRow": 22,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 22
           }
         ]
       },
@@ -9077,7 +9298,8 @@
             "row": 23,
             "column": 3,
             "toRow": 23,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 23
           },
           {
             "worksheet": "Pruebas 4 - 5 agosto",
@@ -9091,7 +9313,8 @@
             "row": 23,
             "column": 3,
             "toRow": 24,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 23
           }
         ]
       },
@@ -9206,7 +9429,8 @@
             "row": 25,
             "column": 3,
             "toRow": 25,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 25
           }
         ]
       },
@@ -9272,7 +9496,8 @@
             "row": 26,
             "column": 3,
             "toRow": 26,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 26
           }
         ]
       },
@@ -9338,7 +9563,8 @@
             "row": 27,
             "column": 3,
             "toRow": 27,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 27
           }
         ]
       },
@@ -9404,7 +9630,8 @@
             "row": 28,
             "column": 3,
             "toRow": 28,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 28
           }
         ]
       },
@@ -9469,7 +9696,8 @@
             "row": 29,
             "column": 3,
             "toRow": 29,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 29
           }
         ]
       },
@@ -9534,7 +9762,8 @@
             "row": 30,
             "column": 3,
             "toRow": 30,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 30
           },
           {
             "worksheet": "Pruebas 4 - 5 agosto",
@@ -9548,7 +9777,8 @@
             "row": 30,
             "column": 6,
             "toRow": 30,
-            "toColumn": 6
+            "toColumn": 6,
+            "targetSourceRow": 30
           }
         ]
       },
@@ -9619,7 +9849,8 @@
             "row": 31,
             "column": 3,
             "toRow": 31,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 31
           },
           {
             "worksheet": "Pruebas 4 - 5 agosto",
@@ -9633,7 +9864,8 @@
             "row": 31,
             "column": 3,
             "toRow": 31,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 31
           }
         ]
       },
@@ -9704,7 +9936,8 @@
             "row": 32,
             "column": 3,
             "toRow": 33,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 32
           }
         ]
       },
@@ -9814,7 +10047,8 @@
             "row": 34,
             "column": 3,
             "toRow": 34,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 34
           }
         ]
       },
@@ -9880,7 +10114,8 @@
             "row": 35,
             "column": 3,
             "toRow": 35,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 35
           }
         ]
       },
@@ -9946,7 +10181,8 @@
             "row": 36,
             "column": 3,
             "toRow": 36,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 36
           },
           {
             "worksheet": "Pruebas 4 - 5 agosto",
@@ -9960,7 +10196,8 @@
             "row": 36,
             "column": 3,
             "toRow": 37,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 36
           }
         ]
       },
@@ -10076,7 +10313,8 @@
             "row": 38,
             "column": 3,
             "toRow": 38,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 38
           }
         ]
       },
@@ -10142,7 +10380,8 @@
             "row": 39,
             "column": 3,
             "toRow": 39,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 39
           },
           {
             "worksheet": "Pruebas 4 - 5 agosto",
@@ -10156,7 +10395,8 @@
             "row": 39,
             "column": 3,
             "toRow": 39,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 39
           }
         ]
       },
@@ -10228,7 +10468,8 @@
             "row": 40,
             "column": 3,
             "toRow": 40,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 40
           }
         ]
       },
@@ -10294,7 +10535,8 @@
             "row": 41,
             "column": 3,
             "toRow": 41,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 41
           }
         ]
       },
@@ -10359,7 +10601,8 @@
             "row": 42,
             "column": 3,
             "toRow": 42,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 42
           }
         ]
       },
@@ -10424,7 +10667,8 @@
             "row": 43,
             "column": 3,
             "toRow": 43,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 43
           }
         ]
       },
@@ -10490,7 +10734,8 @@
             "row": 44,
             "column": 3,
             "toRow": 44,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 44
           }
         ]
       },
@@ -10556,7 +10801,8 @@
             "row": 45,
             "column": 3,
             "toRow": 45,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 45
           }
         ]
       },
@@ -10622,7 +10868,8 @@
             "row": 46,
             "column": 3,
             "toRow": 46,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 46
           },
           {
             "worksheet": "Pruebas 4 - 5 agosto",
@@ -10636,7 +10883,8 @@
             "row": 46,
             "column": 3,
             "toRow": 46,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 46
           },
           {
             "worksheet": "Pruebas 4 - 5 agosto",
@@ -10650,7 +10898,8 @@
             "row": 46,
             "column": 3,
             "toRow": 47,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 46
           }
         ]
       },
@@ -10772,7 +11021,8 @@
             "row": 48,
             "column": 3,
             "toRow": 48,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 48
           },
           {
             "worksheet": "Pruebas 4 - 5 agosto",
@@ -10786,7 +11036,8 @@
             "row": 48,
             "column": 3,
             "toRow": 48,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 48
           }
         ]
       },
@@ -10858,7 +11109,8 @@
             "row": 49,
             "column": 3,
             "toRow": 49,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 49
           },
           {
             "worksheet": "Pruebas 4 - 5 agosto",
@@ -10872,7 +11124,8 @@
             "row": 49,
             "column": 3,
             "toRow": 49,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 49
           }
         ]
       },
@@ -10943,7 +11196,8 @@
             "row": 50,
             "column": 3,
             "toRow": 51,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 50
           }
         ]
       },
@@ -11008,7 +11262,8 @@
             "row": 51,
             "column": 3,
             "toRow": 52,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 51
           },
           {
             "worksheet": "Pruebas 4 - 5 agosto",
@@ -11022,7 +11277,8 @@
             "row": 51,
             "column": 3,
             "toRow": 51,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 51
           },
           {
             "worksheet": "Pruebas 4 - 5 agosto",
@@ -11036,7 +11292,8 @@
             "row": 51,
             "column": 3,
             "toRow": 51,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 51
           }
         ]
       },
@@ -11114,7 +11371,8 @@
             "row": 52,
             "column": 3,
             "toRow": 53,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 52
           }
         ]
       },
@@ -11180,7 +11438,8 @@
             "row": 2,
             "column": 3,
             "toRow": 3,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 2
           }
         ]
       },
@@ -11246,7 +11505,8 @@
             "row": 3,
             "column": 3,
             "toRow": 4,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 3
           }
         ]
       },
@@ -11318,7 +11578,8 @@
             "row": 4,
             "column": 3,
             "toRow": 4,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 4
           }
         ]
       },
@@ -11388,7 +11649,8 @@
             "row": 2,
             "column": 3,
             "toRow": 2,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 2
           }
         ]
       },
@@ -11458,7 +11720,8 @@
             "row": 3,
             "column": 3,
             "toRow": 3,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 3
           }
         ]
       },
@@ -11526,7 +11789,8 @@
             "row": 4,
             "column": 3,
             "toRow": 4,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 4
           }
         ]
       },
@@ -11591,7 +11855,8 @@
             "row": 5,
             "column": 3,
             "toRow": 5,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 5
           }
         ]
       },
@@ -11660,7 +11925,8 @@
             "row": 6,
             "column": 3,
             "toRow": 7,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 6
           }
         ]
       },
@@ -11732,7 +11998,8 @@
             "row": 7,
             "column": 3,
             "toRow": 7,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 7
           }
         ]
       },
@@ -11799,7 +12066,8 @@
             "row": 8,
             "column": 3,
             "toRow": 8,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 8
           }
         ]
       },
@@ -11860,7 +12128,8 @@
             "row": 9,
             "column": 3,
             "toRow": 9,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 9
           },
           {
             "worksheet": "Pruebas 10 de agosto",
@@ -11874,7 +12143,8 @@
             "row": 9,
             "column": 3,
             "toRow": 10,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 9
           }
         ]
       },
@@ -11934,7 +12204,8 @@
             "row": 10,
             "column": 3,
             "toRow": 11,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 10
           }
         ]
       },
@@ -11989,7 +12260,8 @@
             "row": 11,
             "column": 3,
             "toRow": 12,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 11
           }
         ]
       },
@@ -12102,7 +12374,8 @@
             "row": 13,
             "column": 3,
             "toRow": 13,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 13
           },
           {
             "worksheet": "Pruebas 10 de agosto",
@@ -12116,7 +12389,8 @@
             "row": 13,
             "column": 3,
             "toRow": 14,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 13
           }
         ]
       },
@@ -12195,7 +12469,8 @@
             "row": 14,
             "column": 3,
             "toRow": 15,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 14
           }
         ]
       },
@@ -12263,7 +12538,8 @@
             "row": 15,
             "column": 3,
             "toRow": 17,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 15
           }
         ]
       },
@@ -12369,7 +12645,8 @@
             "row": 17,
             "column": 3,
             "toRow": 18,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 17
           }
         ]
       },
@@ -12435,7 +12712,8 @@
             "row": 18,
             "column": 3,
             "toRow": 18,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 18
           }
         ]
       },
@@ -12501,7 +12779,8 @@
             "row": 19,
             "column": 3,
             "toRow": 19,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 19
           },
           {
             "worksheet": "Pruebas 10 de agosto",
@@ -12515,7 +12794,8 @@
             "row": 19,
             "column": 3,
             "toRow": 19,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 19
           }
         ]
       },
@@ -12589,7 +12869,8 @@
             "row": 2,
             "column": 3,
             "toRow": 2,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 2
           }
         ]
       },
@@ -12655,7 +12936,8 @@
             "row": 3,
             "column": 3,
             "toRow": 3,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 3
           }
         ]
       },
@@ -12721,7 +13003,8 @@
             "row": 4,
             "column": 3,
             "toRow": 4,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 4
           }
         ]
       },
@@ -12791,7 +13074,8 @@
             "row": 5,
             "column": 3,
             "toRow": 5,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 5
           }
         ]
       },
@@ -12862,7 +13146,8 @@
             "row": 6,
             "column": 3,
             "toRow": 6,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 6
           }
         ]
       },
@@ -12935,7 +13220,8 @@
             "row": 7,
             "column": 3,
             "toRow": 8,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 7
           }
         ]
       },
@@ -13003,7 +13289,8 @@
             "row": 8,
             "column": 3,
             "toRow": 8,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 8
           }
         ]
       },
@@ -13067,7 +13354,8 @@
             "row": 9,
             "column": 3,
             "toRow": 9,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 9
           }
         ]
       },
@@ -13131,7 +13419,8 @@
             "row": 10,
             "column": 3,
             "toRow": 11,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 10
           }
         ]
       },
@@ -13283,7 +13572,8 @@
             "row": 2,
             "column": 3,
             "toRow": 3,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 2
           }
         ]
       },
@@ -13347,7 +13637,8 @@
             "row": 3,
             "column": 3,
             "toRow": 3,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 3
           }
         ]
       },
@@ -13415,7 +13706,8 @@
             "row": 4,
             "column": 3,
             "toRow": 4,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 4
           }
         ]
       },
@@ -13481,7 +13773,8 @@
             "row": 5,
             "column": 3,
             "toRow": 5,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 5
           },
           {
             "worksheet": "Pruebas 12 de agosto",
@@ -13495,7 +13788,8 @@
             "row": 5,
             "column": 3,
             "toRow": 6,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 5
           }
         ]
       },
@@ -13607,7 +13901,8 @@
             "row": 7,
             "column": 3,
             "toRow": 7,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 7
           },
           {
             "worksheet": "Pruebas 12 de agosto",
@@ -13621,7 +13916,8 @@
             "row": 7,
             "column": 3,
             "toRow": 8,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 7
           }
         ]
       },
@@ -13733,7 +14029,8 @@
             "row": 9,
             "column": 3,
             "toRow": 9,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 9
           },
           {
             "worksheet": "Pruebas 12 de agosto",
@@ -13747,7 +14044,8 @@
             "row": 9,
             "column": 3,
             "toRow": 9,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 9
           }
         ]
       },
@@ -13817,7 +14115,8 @@
             "row": 10,
             "column": 3,
             "toRow": 10,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 10
           },
           {
             "worksheet": "Pruebas 12 de agosto",
@@ -13831,7 +14130,8 @@
             "row": 10,
             "column": 3,
             "toRow": 11,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 10
           }
         ]
       },
@@ -13956,7 +14256,8 @@
             "row": 2,
             "column": 3,
             "toRow": 2,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 2
           }
         ]
       },
@@ -14029,7 +14330,8 @@
             "row": 3,
             "column": 3,
             "toRow": 3,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 3
           }
         ]
       },
@@ -14100,7 +14402,8 @@
             "row": 4,
             "column": 3,
             "toRow": 4,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 4
           }
         ]
       },
@@ -14171,7 +14474,8 @@
             "row": 5,
             "column": 3,
             "toRow": 5,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 5
           }
         ]
       },
@@ -14242,7 +14546,8 @@
             "row": 6,
             "column": 3,
             "toRow": 7,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 6
           }
         ]
       },
@@ -14308,7 +14613,8 @@
             "row": 7,
             "column": 3,
             "toRow": 7,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 7
           }
         ]
       },
@@ -14379,7 +14685,8 @@
             "row": 2,
             "column": 3,
             "toRow": 2,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 2
           }
         ]
       },
@@ -14447,7 +14754,8 @@
             "row": 2,
             "column": 3,
             "toRow": 2,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 2
           }
         ]
       },
@@ -14507,7 +14815,8 @@
             "row": 3,
             "column": 3,
             "toRow": 3,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 3
           }
         ]
       },
@@ -14560,7 +14869,8 @@
             "row": 4,
             "column": 3,
             "toRow": 4,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 4
           }
         ]
       },
@@ -14613,7 +14923,8 @@
             "row": 5,
             "column": 3,
             "toRow": 5,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 5
           }
         ]
       },
@@ -14670,7 +14981,8 @@
             "row": 6,
             "column": 3,
             "toRow": 6,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 6
           }
         ]
       },
@@ -14729,7 +15041,8 @@
             "row": 7,
             "column": 3,
             "toRow": 7,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 7
           }
         ]
       },
@@ -14784,7 +15097,8 @@
             "row": 8,
             "column": 3,
             "toRow": 8,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 8
           }
         ]
       },
@@ -14837,7 +15151,8 @@
             "row": 9,
             "column": 3,
             "toRow": 9,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 9
           }
         ]
       },
@@ -14897,7 +15212,8 @@
             "row": 2,
             "column": 3,
             "toRow": 2,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 2
           }
         ]
       },
@@ -14957,7 +15273,8 @@
             "row": 3,
             "column": 3,
             "toRow": 3,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 3
           },
           {
             "worksheet": "Pruebas 18 de agosto",
@@ -14971,7 +15288,8 @@
             "row": 3,
             "column": 3,
             "toRow": 4,
-            "toColumn": 3
+            "toColumn": 3,
+            "targetSourceRow": 3
           }
         ]
       },
@@ -15064,8 +15382,8 @@
     "update": 0,
     "noop": 0,
     "conflicts": 0,
-    "evidenceMappings": 263,
-    "evidenceCreate": 263,
+    "evidenceMappings": 265,
+    "evidenceCreate": 265,
     "evidenceDuplicate": 0,
     "legacyReplacements": 0,
     "statusPromotions": 104,
@@ -15074,9 +15392,5 @@
     "sessionsCreate": 12,
     "sessionsReuse": 0
   },
-  "risks": [
-    "2 imágenes están ancladas a filas sin observación o no mapeables; quedan SKIPPED",
-    "Existe Evidence runtime PENDING en la BD antes de la importación",
-    "Elasticsearch no está habilitado/configurado; APPLY está bloqueado para evitar divergencia"
-  ]
+  "risks": []
 }

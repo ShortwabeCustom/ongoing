@@ -18,6 +18,7 @@ export interface XlsxImage {
   bytes: number
   sha256: string
   row: number
+  targetSourceRow?: number
   column: number
   toRow?: number
   toColumn?: number
@@ -67,7 +68,24 @@ export interface WorkbookAudit {
   unmappedImages: XlsxImage[]
   physicalMediaFiles: number
   imagePlacements: number
+  imageCorrections: Array<{
+    worksheet: string
+    internalFilename: string
+    sha256: string
+    anchorRowOriginal: number
+    targetSourceRow: number
+    reason: string
+  }>
 }
+
+const IMAGE_ANCHOR_CORRECTIONS = [
+  {
+    worksheet: 'Pruebas 30 de julio',
+    anchorRowOriginal: 67,
+    targetSourceRow: 68,
+    reason: 'Corrección de origen documentada: dos screenshots anclados en fila vacía 67 pertenecen al Finding de fila 68',
+  },
+] as const
 
 const URL_RE = /https?:\/\/[^\s)\]}>,]+/gi
 
@@ -281,6 +299,28 @@ export async function auditWorkbook(filePath: string): Promise<WorkbookAudit> {
   const invalidRows: WorkbookAudit['invalidRows'] = []
   const worksheets: WorksheetAudit[] = []
   const mappedImages = new Set<XlsxImage>()
+  const imageCorrections: WorkbookAudit['imageCorrections'] = []
+
+  for (const image of images) {
+    const correction = IMAGE_ANCHOR_CORRECTIONS.find((item) => item.worksheet === image.worksheet && item.anchorRowOriginal === image.row)
+    if (correction) {
+      const correctionSheet = workbook.getWorksheet(correction.worksheet)
+      const anchorObservation = correctionSheet?.getRow(correction.anchorRowOriginal).getCell(2).text.trim()
+      const targetObservation = correctionSheet?.getRow(correction.targetSourceRow).getCell(2).text.trim()
+      if (!anchorObservation && targetObservation) {
+        image.targetSourceRow = correction.targetSourceRow
+        imageCorrections.push({
+          worksheet: image.worksheet,
+          internalFilename: image.internalFilename,
+          sha256: image.sha256,
+          anchorRowOriginal: image.row,
+          targetSourceRow: correction.targetSourceRow,
+          reason: correction.reason,
+        })
+      }
+    }
+    image.targetSourceRow ??= image.row
+  }
 
   for (const sheet of workbook.worksheets) {
     const headers = headerColumns(sheet)
@@ -305,7 +345,7 @@ export async function auditWorkbook(filePath: string): Promise<WorkbookAudit> {
         if (cell.value instanceof Date || cell.type === ExcelJS.ValueType.Date || /^(fecha|date)$/i.test(cell.text.trim())) perRowDateCells++
       })
       const observation = cellText(excelRow, observationColumn)
-      const rowImages = images.filter((image) => image.worksheet === sheet.name && image.row === sourceRow)
+      const rowImages = images.filter((image) => image.worksheet === sheet.name && image.targetSourceRow === sourceRow)
       if (!observation) {
         emptyRows++
         if (rowImages.length) {
@@ -373,6 +413,7 @@ export async function auditWorkbook(filePath: string): Promise<WorkbookAudit> {
     unmappedImages: images.filter((image) => !mappedImages.has(image)),
     physicalMediaFiles: zip.getEntries().filter((entry) => /^xl\/media\//.test(entry.entryName) && !entry.isDirectory).length,
     imagePlacements: images.length,
+    imageCorrections,
   }
 }
 

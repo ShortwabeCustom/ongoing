@@ -59,6 +59,8 @@ interface FindingPlan {
     originalFilename: string
     marker: string
     duplicateEvidenceId?: string
+    duplicateEvidenceUrl?: string | null
+    duplicateStorageKey?: string
   }>
   legacyCandidates: string[]
   statusPromotion: boolean
@@ -88,6 +90,41 @@ interface NormalizationReport {
     rangePolicy: string
     crossMonthAssociationsDetected: number
     crossMonthAssociationsAfterPlan: number
+  }
+  imageMetrics: {
+    xlsxMediaUnique: number
+    xlsxDrawingAnchors: number
+    xlsxImageFindingAssociations: number
+    findingsWithImages: number
+    findingsWithoutImages: number
+  }
+  correctedImageAssociations: Array<{
+    worksheet: string
+    mediaFilename: string
+    mediaSha256: string
+    anchorRowOriginal: number
+    targetSourceRow: number
+    findingId: string | null
+    action: 'CREATE' | 'SKIP_DUPLICATE' | 'CONFLICT'
+  }>
+  evidenceActions: {
+    evidenceAlreadyConfirmed: number
+    evidenceAlreadyLegacy: number
+    evidenceCreate: number
+    evidenceSkipExactDuplicate: number
+    evidenceReuse: number
+    evidencePending: number
+    evidenceUnmapped: number
+    evidenceConflict: number
+    accountedAssociations: number
+  }
+  search: {
+    elasticsearchEnabled: boolean
+    elasticsearchConfigured: boolean
+    elasticsearchOptional: boolean
+    postgresFallbackVerified: boolean
+    source: string
+    blocking: boolean
   }
   findings: FindingPlan[]
   summary: Record<string, number>
@@ -148,6 +185,7 @@ async function buildPlan(options: CliOptions): Promise<{ report: NormalizationRe
     include: { evidence: true, supportLinks: true, comments: true, incidenceTypes: true, experienceTags: true },
   })
   const importBatches = await prisma.importBatch.findMany({ where: { projectId: project.id } })
+  const activePendingEvidence = await prisma.evidence.count({ where: { url: null, deletedAt: null } })
   const sessions: SessionPlan[] = selectedWorksheets.map((worksheet) => {
     const definition = sessionDefinition(worksheet)
     if (!definition) return { worksheet, name: worksheet, date: '', originStartDate: '', originEndDate: '', originPeriod: '', isRange: false, action: 'CONFLICT', reason: 'No se pudo derivar una fecha inequívoca' }
@@ -195,7 +233,7 @@ async function buildPlan(options: CliOptions): Promise<{ report: NormalizationRe
       const originalFilename = deterministicEvidenceFilename(row.worksheet, row.sourceRow, image.sha256, extension)
       const marker = evidenceMarker(row.worksheet, row.sourceRow, image.sha256)
       const duplicate = existing?.evidence.find((item) => !item.deletedAt && (item.originalFilename === originalFilename || item.caption?.includes(marker)))
-      return { action: duplicate ? 'SKIP_DUPLICATE' as const : 'CREATE' as const, imageIndex, originalFilename, marker, duplicateEvidenceId: duplicate?.id }
+      return { action: duplicate ? 'SKIP_DUPLICATE' as const : 'CREATE' as const, imageIndex, originalFilename, marker, duplicateEvidenceId: duplicate?.id, duplicateEvidenceUrl: duplicate?.url, duplicateStorageKey: duplicate?.storageKey }
     })
     const legacyCandidates = existing?.evidence.filter((item) =>
       !item.deletedAt && item.storageKey.startsWith('legacy/')
@@ -223,9 +261,11 @@ async function buildPlan(options: CliOptions): Promise<{ report: NormalizationRe
   const risks: string[] = []
   const conflicts = plans.filter((plan) => plan.action === 'CONFLICT')
   if (conflicts.length) risks.push(`${conflicts.length} mappings ambiguos o sesiones no resolubles; APPLY abortará`)
-  if (audit.unmappedImages.length) risks.push(`${audit.unmappedImages.length} imágenes están ancladas a filas sin observación o no mapeables; quedan SKIPPED`)
+  if (audit.unmappedImages.length) risks.push(`${audit.unmappedImages.length} imágenes no se pudieron asociar a un Finding; APPLY abortará`)
   if (existingFindings.some((finding) => finding.evidence.some((evidence) => !evidence.deletedAt && !evidence.url && !evidence.storageKey.startsWith('legacy/')))) risks.push('Existe Evidence runtime PENDING en la BD antes de la importación')
-  if (process.env.ELASTICSEARCH_ENABLED !== 'true' || !process.env.ELASTICSEARCH_URL) risks.push('Elasticsearch no está habilitado/configurado; APPLY está bloqueado para evitar divergencia')
+  const elasticsearchEnabled = process.env.ELASTICSEARCH_ENABLED === 'true' && Boolean(process.env.ELASTICSEARCH_URL)
+  const searchProbe = await SearchService.search({ q: '', page: 1, pageSize: 1 })
+  const postgresFallbackVerified = !elasticsearchEnabled && searchProbe.source === 'postgresql'
   const summary = {
     findingsXlsx: plans.length,
     matchedExisting: plans.filter((plan) => Boolean(plan.findingId)).length,
@@ -265,6 +305,27 @@ async function buildPlan(options: CliOptions): Promise<{ report: NormalizationRe
       perRowDateMetadataFound: Boolean(worksheetAudit?.dateMetadata.perRowDateCells),
     }
   })
+  const findingsWithImages = selectedRows.filter((row) => row.images.length > 0).length
+  const evidenceAlreadyConfirmed = plans.reduce((sum, plan) => sum + plan.evidence.filter((item) => item.action === 'SKIP_DUPLICATE' && Boolean(item.duplicateEvidenceUrl) && !item.duplicateStorageKey?.startsWith('legacy/')).length, 0)
+  const evidenceAlreadyLegacy = plans.reduce((sum, plan) => sum + plan.evidence.filter((item) => item.action === 'SKIP_DUPLICATE' && item.duplicateStorageKey?.startsWith('legacy/')).length, 0)
+  const evidenceCreate = plans.reduce((sum, plan) => sum + plan.evidence.filter((item) => item.action === 'CREATE').length, 0)
+  const evidenceSkipExactDuplicate = plans.reduce((sum, plan) => sum + plan.evidence.filter((item) => item.action === 'SKIP_DUPLICATE').length, 0)
+  const evidenceUnmapped = audit.unmappedImages.length
+  const evidenceConflict = plans.filter((plan) => plan.action === 'CONFLICT').reduce((sum, plan) => sum + plan.row.images.length, 0)
+  const correctedImageAssociations = audit.imageCorrections.map((correction) => {
+    const plan = plans.find((candidate) => candidate.row.worksheet === correction.worksheet && candidate.row.sourceRow === correction.targetSourceRow)
+    const imageIndex = plan?.row.images.findIndex((image) => image.sha256 === correction.sha256 && image.row === correction.anchorRowOriginal) ?? -1
+    const evidence = imageIndex >= 0 ? plan?.evidence.find((candidate) => candidate.imageIndex === imageIndex) : undefined
+    return {
+      worksheet: correction.worksheet,
+      mediaFilename: correction.internalFilename,
+      mediaSha256: correction.sha256,
+      anchorRowOriginal: correction.anchorRowOriginal,
+      targetSourceRow: correction.targetSourceRow,
+      findingId: plan?.findingId ?? null,
+      action: plan?.action === 'CONFLICT' ? 'CONFLICT' as const : evidence?.action ?? 'CONFLICT' as const,
+    }
+  })
   const report: NormalizationReport = {
     generatedAt: new Date().toISOString(),
     mode: options.apply ? 'APPLY' : 'DRY_RUN',
@@ -295,6 +356,33 @@ async function buildPlan(options: CliOptions): Promise<{ report: NormalizationRe
       rangePolicy: 'TestSession.date = first day; TestSession.name preserves the exact worksheet range. No per-row date exists in this workbook.',
       crossMonthAssociationsDetected,
       crossMonthAssociationsAfterPlan: 0,
+    },
+    imageMetrics: {
+      xlsxMediaUnique: audit.physicalMediaFiles,
+      xlsxDrawingAnchors: audit.imagePlacements,
+      xlsxImageFindingAssociations: audit.imagePlacements - audit.unmappedImages.length,
+      findingsWithImages,
+      findingsWithoutImages: selectedRows.length - findingsWithImages,
+    },
+    correctedImageAssociations,
+    evidenceActions: {
+      evidenceAlreadyConfirmed,
+      evidenceAlreadyLegacy,
+      evidenceCreate,
+      evidenceSkipExactDuplicate,
+      evidenceReuse: 0,
+      evidencePending: activePendingEvidence,
+      evidenceUnmapped,
+      evidenceConflict,
+      accountedAssociations: evidenceCreate + evidenceSkipExactDuplicate + evidenceUnmapped + evidenceConflict,
+    },
+    search: {
+      elasticsearchEnabled,
+      elasticsearchConfigured: Boolean(process.env.ELASTICSEARCH_URL),
+      elasticsearchOptional: true,
+      postgresFallbackVerified,
+      source: searchProbe.source ?? 'unknown',
+      blocking: elasticsearchEnabled ? false : !postgresFallbackVerified,
     },
     findings: withoutBuffers(plans),
     summary,
@@ -333,7 +421,9 @@ function backupBeforeApply(options: CliOptions, report: NormalizationReport): Re
 
 async function applyPlan(options: CliOptions, report: NormalizationReport, audit: WorkbookAudit, plans: FindingPlan[]): Promise<Record<string, number>> {
   if (report.summary.conflicts > 0) throw new Error('APPLY abortado: existen conflictos de identidad')
-  if (process.env.ELASTICSEARCH_ENABLED !== 'true' || !process.env.ELASTICSEARCH_URL) throw new Error('APPLY abortado: Elasticsearch no está habilitado/configurado')
+  if (report.evidenceActions.evidenceUnmapped > 0 || report.evidenceActions.evidenceConflict > 0) throw new Error('APPLY abortado: existen imágenes sin contabilizar')
+  if (report.evidenceActions.evidencePending > 0) throw new Error('APPLY abortado: existe Evidence runtime PENDING activa')
+  if (report.search.blocking) throw new Error('APPLY abortado: ni Elasticsearch ni el fallback PostgreSQL están sanos')
   await PrivateFileStore.preflight()
   writeReport(options.report, { ...report, mode: 'DRY_RUN' })
   report.backup = backupBeforeApply(options, report)

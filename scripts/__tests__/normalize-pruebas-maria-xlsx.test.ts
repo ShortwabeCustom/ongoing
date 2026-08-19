@@ -83,6 +83,25 @@ describe('XLSX inventory and normalization', () => {
     expect(audit.unmappedImages.some((item) => item.row === 4)).toBe(true)
   })
 
+  it('applies the documented row 67 to 68 image correction without losing anchor provenance', async () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'xlsx-row-correction-test-'))
+    tempDirs.push(dir)
+    const file = path.join(dir, 'correction.xlsx')
+    const workbook = new ExcelJS.Workbook()
+    const image = workbook.addImage({ buffer: pixel, extension: 'png' })
+    const sheet = workbook.addWorksheet('Pruebas 30 de julio')
+    sheet.addRow(['', 'Observación', 'Evidencia'])
+    for (let sourceRow = 2; sourceRow <= 68; sourceRow++) sheet.addRow([false, sourceRow === 68 ? 'Finding target' : '', ''])
+    sheet.addImage(image, { tl: { col: 2, row: 66 }, ext: { width: 10, height: 10 } })
+    await workbook.xlsx.writeFile(file)
+    const audit = await auditWorkbook(file)
+    const finding = audit.rows.find((item) => item.sourceRow === 68)
+    expect(finding?.images).toHaveLength(1)
+    expect(finding?.images[0]).toMatchObject({ row: 67, targetSourceRow: 68 })
+    expect(audit.unmappedImages).toHaveLength(0)
+    expect(audit.imageCorrections).toHaveLength(1)
+  })
+
   it('extracts support and Figma URLs', () => {
     const urls = extractUrls('Referencia https://example.com/a.', 'https://www.figma.com/design/demo')
     expect(urls).toEqual(['https://example.com/a', 'https://www.figma.com/design/demo'])

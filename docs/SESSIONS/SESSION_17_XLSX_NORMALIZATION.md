@@ -1,7 +1,7 @@
 # Session 17 — Normalización XLSX de Pruebas María
 
 Fecha: 2026-08-19  
-Estado: DRY-RUN COMPLETADO; APPLY BLOQUEADO  
+Estado: DRY-RUN COMPLETADO; GATE LISTO, PENDIENTE DE AUTORIZACIÓN  
 Rama: `feat/xlsx-normalization-2026-08-19`
 
 ## Fuente
@@ -14,8 +14,17 @@ Rama: `feat/xlsx-normalization-2026-08-19`
 - Findings válidos: 234
 - Ficheros físicos en `xl/media`: 226
 - Colocaciones de imagen: 265
-- Colocaciones mapeadas a findings: 263
-- Colocaciones sobre filas sin observación: 2 (SKIPPED)
+- Asociaciones imagen → Finding: 265
+- Findings con imágenes: 205
+- Findings sin imágenes: 29
+- Imágenes no mapeadas: 0
+
+Las dos imágenes ancladas originalmente en la fila vacía 67 de `Pruebas 30 de julio` se reasocian al Finding de sourceRow 68 según la corrección de origen documentada. Se conservan el anchor original y el target final:
+
+| Media | SHA-256 | Anchor original | Target sourceRow | Finding existente | Acción |
+|---|---|---:|---:|---|---|
+| xl/media/image89.png | f6007926a98abaf643a0a4475b98b4d1db2e1c6737864cbe89d36b4c482f3a64 | 67 | 68 | ninguno | Evidence CREATE |
+| xl/media/image90.png | 28a41f765dd665dbefaef44081383d7ec266ebfb38de8bb2900109b4b51f6a96 | 67 | 68 | ninguno | Evidence CREATE |
 
 ## Inventario por hoja
 
@@ -66,11 +75,19 @@ Validación cruzada: 0 asociaciones agosto→julio o julio→agosto detectadas; 
 - `StorageService.uploadFile()` implementa la máquina PENDING → objeto privado → CONFIRMED y genera el `AuditLog` de Evidence.
 - La entrega runtime autorizada usa `/api/evidence/{evidenceId}/file`; `storageKey` no se expone al cliente.
 - ADR-001 D7/D9 exige evidencia runtime privada y preserva legacy; ninguna evidencia nueva puede escribirse en `public/`.
-- La BD conectada tiene 1 proyecto, 2 versiones, 4 TestSessions, 2 findings activos, 3 Evidence activas, 3 ImportBatch, 18 historiales de estado y 44 AuditLog.
+- Tras la reconciliación canónica, la BD conectada tiene 1 proyecto, 2 versiones, 4 TestSessions, 2 findings activos, 2 Evidence activas, 3 ImportBatch, 18 historiales de estado y 45 AuditLog.
 - El proyecto correcto es `cmsoc6p7l0000h1acb6i9uoyt`, la versión operativa seleccionada es `1.0` y existe un único usuario OWNER apto para la importación.
 - El storage privado está provisionado en `/var/lib/pruebas-maria/evidence`, owner correcto y modo `0700`.
-- Existe una Evidence runtime PENDING (`url IS NULL`) antes de la importación.
-- Elasticsearch no está habilitado en el entorno cargado (`ELASTICSEARCH_ENABLED/ELASTICSEARCH_URL`).
+- Existía una Evidence runtime PENDING (`ExMYccC4uoFhJf1gP8Lyi`), con objeto físico y más de 31 horas. El reconciler canónico con grace de 30 minutos produjo `scanned=1 cleaned=1 failed=0` y AuditLog DELETE con `after.phase=INCOMPLETE_UPLOAD_CLEANUP`. Verificación posterior: 0 PENDING activas, objeto inexistente y dry-run `scanned=0`.
+- Elasticsearch está deliberadamente deshabilitado. `/api/health` devuelve `healthy` y ES `disabled/optional=true`; `SearchService.search()` confirmó `source=postgresql`. Es no bloqueante.
+
+Detalle PENDING previo a la reconciliación:
+
+| id | findingId | url | deletedAt | storageKey | originalFilename | createdAt | age | objectExists | AuditLog previo |
+|---|---|---|---|---|---|---|---|---|---|
+| ExMYccC4uoFhJf1gP8Lyi | cmsxruv9n00004u2suauza2hl | null | null | findings/cmsxruv9n00004u2suauza2hl/ExMYccC4uoFhJf1gP8Lyi/alexis-valdez-cortez.jpg | alexis-valdez-cortez.jpg | 2026-08-17T21:54:50.583Z | ~31h56m | true | CREATE `cmsxruwd500044u2sisko8kbm` |
+
+Resultado canónico: AuditLog DELETE `cmszocceq0000nk2sefypmtx3`, `after.phase=INCOMPLETE_UPLOAD_CLEANUP`; el objeto y la fila PENDING ya no existen. Ninguna Evidence soft-deleted fue seleccionada.
 
 ### INFERIDO
 
@@ -86,12 +103,10 @@ Validación cruzada: 0 asociaciones agosto→julio o julio→agosto detectadas; 
 - Nombre de evidencia determinista `xlsx-{sheet}-row-{row}-{hash12}.{ext}` y marker completo de SHA-256 en caption.
 - Soft-delete legacy solamente cuando filename o marker prueban equivalencia con una evidencia nueva ya confirmada.
 - Comments se crean solo desde la columna semántica Comentarios; una celda que contiene exclusivamente URL genera SupportLink, no Comment.
-- APPLY exige preflight de storage, backup PostgreSQL, backup del storage, dry-run guardado y Elasticsearch habilitado.
+- APPLY exige preflight de storage, backup PostgreSQL, backup del storage y dry-run guardado. Elasticsearch deshabilitado es aceptable cuando health y fallback PostgreSQL están sanos.
 
-### PENDIENTE / BLOQUEANTE
+### PENDIENTE
 
-- Resolver o conciliar la Evidence runtime PENDING preexistente.
-- Configurar y comprobar Elasticsearch antes del APPLY.
 - Autorizar explícitamente el APPLY después de revisar este dry-run.
 
 ## Contradicciones históricas
@@ -110,9 +125,13 @@ Validación cruzada: 0 asociaciones agosto→julio o julio→agosto detectadas; 
 - CONFLICT/AMBIGUOUS: 0
 - Sessions CREATE: 12
 - Sessions REUSE: 0
-- Evidence mappings: 263
-- Evidence CREATE: 263
+- XLSX media unique: 226
+- XLSX drawing anchors: 265
+- Evidence mappings: 265
+- Evidence CREATE: 265
 - Evidence duplicate: 0
+- Evidence existing/reuse: 0
+- Evidence unmapped/conflict: 0
 - Legacy replacements: 0
 - Status promotions: 104
 - SupportLinks CREATE: 22
@@ -121,7 +140,7 @@ Validación cruzada: 0 asociaciones agosto→julio o julio→agosto detectadas; 
 ## Validación
 
 - `npm test`: PASS, 42 archivos y 570 tests.
-- Tests nuevos: PASS, 18 tests.
+- Tests nuevos: PASS, 19 tests.
 - `npm run build`: PASS.
 - `npm run lint`: FAIL por deuda preexistente fuera de este cambio (274 errores y 85 warnings); lint dirigido a los tres archivos nuevos: PASS.
 - No se ejecutó APPLY, deployment, restart PM2 ni smoke HTTP autenticado.
@@ -137,7 +156,7 @@ Antes de cualquier mutación el script crea `backups/xlsx-normalization-{timesta
 - `scripts/__tests__/normalize-pruebas-maria-xlsx.test.ts`
 - `artifacts/xlsx-normalization-report-2026-08-19.json`
 
-## Comando de APPLY (NO EJECUTAR mientras existan bloqueantes)
+## Comando de APPLY (NO EJECUTADO; requiere autorización)
 
 ```bash
 node scripts/run-ts.cjs scripts/normalize-pruebas-maria-xlsx.ts \
