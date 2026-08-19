@@ -239,7 +239,7 @@ git log --oneline -10
 
 ## 🔗 Referencias Cruzadas
 
-- **Memory**: Revisar `/root/.claude/projects/-var-www-uix-torrax-cloud/memor./memory.md`
+- **Memory**: Revisar `/root/.claude/projects/-var-www-uix/memor./memory.md`
 - **Git history**: `git log --oneline | head -20`
 - **Current branch**: `git branch -v`
 - **Status**: `git status`

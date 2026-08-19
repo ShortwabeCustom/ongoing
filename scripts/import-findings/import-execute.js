@@ -314,7 +314,7 @@ async function main() {
       console.log(`Batch ID: ${result.batchId}`);
       console.log(`Backup: ${backup.backupFile}`);
       console.log('\nNext steps:');
-      console.log('1. Check: https://uix.torrax.cloud/findings');
+      console.log('1. Check: https://uix.productdesign.mx/findings');
       console.log('2. Validate individual findings: /findings/[id]');
       console.log('3. Check API responses\n');
 

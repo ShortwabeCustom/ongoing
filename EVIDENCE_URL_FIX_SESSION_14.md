@@ -157,10 +157,10 @@ SELECT DISTINCT storageKey FROM evidence WHERE url LIKE '%evidence-from-excel%';
 
 ### File System
 ```bash
-ls -lah /var/www/uix.torrax.cloud/public/evidence-from-excel/ | wc -l
+ls -lah /var/www/apps/uix/public/evidence-from-excel/ | wc -l
 -- Result: 207 (206 images + 1 directory marker)
 
-find /var/www/uix.torrax.cloud/public/evidence-from-excel -name "*.png" | wc -l
+find /var/www/apps/uix/public/evidence-from-excel -name "*.png" | wc -l
 -- Result: 206
 ```
 
@@ -220,7 +220,7 @@ find /var/www/uix.torrax.cloud/public/evidence-from-excel -name "*.png" | wc -l
 ### To verify production:
 ```bash
 # Check if Evidence is serving correctly
-curl -I https://uix.torrax.cloud/evidence-from-excel/image-101.png
+curl -I https://uix.productdesign.mx/evidence-from-excel/image-101.png
 # Expected: 200 OK, Content-Type: image/png
 
 # Check database consistency
@@ -228,7 +228,7 @@ SELECT COUNT(*) FROM evidence WHERE storageKey NOT LIKE 'legacy/%';
 # Expected: 0 (all should be legacy for evidence-from-excel URLs)
 
 # Check app logs
-pm2 logs uix-torrax-cloud | grep -i error
+pm2 logs uix | grep -i error
 # Expected: No 404 or storage errors
 ```
 

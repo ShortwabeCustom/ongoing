@@ -10,8 +10,8 @@ Copia y pega uno de estos prompts en tu siguiente sesión:
 
 ```
 Lee estos archivos para contexto rápido:
-- /var/www/uix.torrax.cloud/FASE7_COMPLETION.md
-- /var/www/uix.torrax.cloud/phase7_master_prompt.md
+- /var/www/apps/uix/FASE7_COMPLETION.md
+- /var/www/apps/uix/phase7_master_prompt.md
 
 FASE 7 está 100% completa. 
 
@@ -35,7 +35,7 @@ Contexto:
 - Auth system implementado: 9 endpoints + 4 componentes
 - RBAC matrix con 6 roles: OWNER, QA_LEAD, DESIGNER, DEVELOPER, BUSINESS_REVIEWER, VIEWER
 - Lucia + Argon2id + PostgreSQL
-- Ver: /var/www/uix.torrax.cloud/FASE7_COMPLETION.md
+- Ver: /var/www/apps/uix/FASE7_COMPLETION.md
 
 Endpoints a proteger con RBAC:
 1. Finding endpoints (POST, GET, PATCH, DELETE)
@@ -65,7 +65,7 @@ export async function PATCH(req: NextRequest) {
 ```
 FASE 7 (Auth System) está 100% completa.
 
-Referencia: /var/www/uix.torrax.cloud/FASE7_COMPLETION.md
+Referencia: /var/www/apps/uix/FASE7_COMPLETION.md
 
 Ahora empiezo FASE 8: PWA & Offline Sync
 
@@ -164,7 +164,7 @@ Stack: Next.js 16.3, React 19, Prisma 7.9.1, Lucia, Argon2id
 
 ### En el Repo
 ```
-/var/www/uix.torrax.cloud/
+/var/www/apps/uix/
 ├── phase7_master_prompt.md ← MASTER PROMPT
 ├── FASE7_COMPLETION.md ← RESUMEN EJECUTIVO
 ├── docs/backend/09-fase7-auth-guide.md ← GUÍA TÉCNICA
@@ -181,7 +181,7 @@ Stack: Next.js 16.3, React 19, Prisma 7.9.1, Lucia, Argon2id
 
 ### En Memory (Para Futuras Conversaciones)
 ```
-/root/.claude/projects/-var-www-uix-torrax-cloud/memory/
+/root/.claude/projects/-var-www-uix/memory/
 ├── MEMORY.md ← ÍNDICE
 └── fase7_entry_point.md ← QUICK START
 ```

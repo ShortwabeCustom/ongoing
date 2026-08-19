@@ -116,7 +116,7 @@ Test case:
 
 ### Ejemplo Real
 ```
-Usuario abre: https://uix.torrax.cloud/findings?dateType=session&dateFrom=2026-08-04T00:00:00.000Z&dateTo=2026-08-04T23:59:59.999Z
+Usuario abre: https://uix.productdesign.mx/findings?dateType=session&dateFrom=2026-08-04T00:00:00.000Z&dateTo=2026-08-04T23:59:59.999Z
 
 Resultado:
 - ✓ Hydration on mount

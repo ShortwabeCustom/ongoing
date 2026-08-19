@@ -104,7 +104,7 @@ pm2 save              # Guardar estado
 # - Hostname CANÓNICO real de producción: uix.productdesign.mx (único server_name
 #   configurado en nginx, único hostname con certificado TLS válido — verificado
 #   contra /etc/nginx/sites-enabled y el certificado servido, no asumido de la doc).
-#   uix.torrax.cloud resuelve por DNS a este mismo host pero NO tiene vhost ni
+#   uix.productdesign.mx resuelve por DNS a este mismo host pero NO tiene vhost ni
 #   certificado propios: cualquier cliente TLS estricto (curl sin -k, navegadores)
 #   falla ahí con "no alternative certificate subject name matches". No usar ese
 #   hostname para verificación — ver hallazgo operativo abajo.
@@ -127,7 +127,7 @@ if [ "$ACTUAL" = "$SERVED" ]; then echo "✅ OK (chunk $ACTUAL)"; exit 0; else e
 '
 ```
 
-**Hallazgo operativo separado (no corregido aquí, requiere decisión de infraestructura)**: `uix.torrax.cloud` — el hostname usado en el nombre del proceso pm2 (`uix-torrax-cloud`), en gran parte de la documentación y en `auditoria.md` — **no tiene vhost ni certificado TLS propio configurado en este host**. Resuelve por DNS a la misma IP que `uix.productdesign.mx`, pero nginx solo tiene `server_name uix.productdesign.mx`, así que cualquier petición TLS a `uix.torrax.cloud` recibe el certificado de `uix.productdesign.mx` (único bloque HTTPS configurado, actúa como default implícito del socket 443) y falla la validación en cualquier cliente estricto. No se ha tocado infraestructura para corregir esto — requiere decidir cuál es el dominio de producto real y, si es `uix.torrax.cloud`, emitir un certificado para él (p. ej. `certbot --nginx -d uix.torrax.cloud`) o renombrar todo lo que asume ese hostname.
+**Hallazgo operativo separado (no corregido aquí, requiere decisión de infraestructura)**: `uix.productdesign.mx` — el hostname usado en el nombre del proceso pm2 (`uix`), en gran parte de la documentación y en `auditoria.md` — **no tiene vhost ni certificado TLS propio configurado en este host**. Resuelve por DNS a la misma IP que `uix.productdesign.mx`, pero nginx solo tiene `server_name uix.productdesign.mx`, así que cualquier petición TLS a `uix.productdesign.mx` recibe el certificado de `uix.productdesign.mx` (único bloque HTTPS configurado, actúa como default implícito del socket 443) y falla la validación en cualquier cliente estricto. No se ha tocado infraestructura para corregir esto — requiere decidir cuál es el dominio de producto real y, si es `uix.productdesign.mx`, emitir un certificado para él (p. ej. `certbot --nginx -d uix.productdesign.mx`) o renombrar todo lo que asume ese hostname.
 
 **⚠️ CRITICAL RULES**:
 - ✅ SIEMPRE usar `ecosystem.config.js` para iniciar
@@ -194,7 +194,7 @@ if [ "$ACTUAL" = "$SERVED" ]; then echo "✅ OK (chunk $ACTUAL)"; exit 0; else e
 - Lint: ✅ Pass
 - Image serving: ✅ HTTP 200
 - PM2 Restart: ✅ Online
-- Live: https://uix.torrax.cloud/findings ✅
+- Live: https://uix.productdesign.mx/findings ✅
 
 **Documentation**:
 - [docs/SESSIONS/SESSION_2_EVIDENCE_LOADING.md](./docs/SESSIONS/SESSION_2_EVIDENCE_LOADING.md) — Full session details

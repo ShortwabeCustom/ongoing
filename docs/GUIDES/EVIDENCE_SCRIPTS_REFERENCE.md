@@ -464,7 +464,7 @@ npx tsx scripts/verify-status-sync.ts
 ```bash
 # 1. Rebuild y restart
 npm run build
-pm2 restart uix-torrax-cloud
+pm2 restart uix
 
 # 2. Verificar imágenes sirviendo
 curl -s http://localhost:3000/evidence-from-excel/image-1.png | head -c 100
@@ -528,7 +528,7 @@ VALIDATED, CLOSED, BLOCKED, REOPENED
 ```bash
 # Rebuildar y reiniciar
 npm run build
-pm2 restart uix-torrax-cloud
+pm2 restart uix
 
 # Verificar files existen
 ls -la /public/evidence-from-excel/

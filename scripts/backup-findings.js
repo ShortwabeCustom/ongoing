@@ -5,7 +5,7 @@ const path = require('path');
 (async () => {
   const prisma = new PrismaClient();
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
-  const backupDir = `/tmp/claude-0/-var-www-uix-torrax-cloud/6ee4dc0d-1646-46e2-8214-8c3f2d392169/scratchpad/backups`;
+  const backupDir = `/tmp/claude-0/-var-www-uix/6ee4dc0d-1646-46e2-8214-8c3f2d392169/scratchpad/backups`;
 
   if (!fs.existsSync(backupDir)) {
     fs.mkdirSync(backupDir, { recursive: true });

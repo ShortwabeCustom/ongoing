@@ -4,7 +4,7 @@
 **Fase:** 0 - auditoría solamente  
 **Rama:** `master`  
 **Commit revisado:** `9ec2aae`  
-**Directorio:** `/var/www/uix.torrax.cloud`  
+**Directorio:** `/var/www/apps/uix`
 **Alcance:** diagnóstico técnico sin cambios funcionales.
 
 ## Resumen Ejecutivo

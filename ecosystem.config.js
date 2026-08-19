@@ -14,7 +14,7 @@
 module.exports = {
   apps: [
     {
-      name: 'uix-torrax-cloud',
+      name: 'uix',
       script: 'npm',
       args: 'start',  // ← CRITICAL: Runs 'next start' (production)
       instances: 1,

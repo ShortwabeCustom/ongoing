@@ -7,7 +7,7 @@ Referencia completa de la estructura de carpetas y qué va en cada lugar.
 ## Árbol Completo
 
 ```
-/var/www/uix.torrax.cloud/
+/var/www/apps/uix/
 ├── 📚 docs/                          ← DOCUMENTACIÓN
 │   ├── README.md                     ← Índice principal
 │   ├── GETTING_STARTED.md            ← Primeros pasos

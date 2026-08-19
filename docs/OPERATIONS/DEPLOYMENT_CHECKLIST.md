@@ -30,7 +30,7 @@ cat ecosystem.config.js | grep "args: 'start'"
 
 ```bash
 # 5. Stop old process
-pm2 delete uix-torrax-cloud || true
+pm2 delete uix || true
 
 # 6. Kill zombie processes
 pkill -9 node || true
@@ -54,13 +54,13 @@ pm2 list
 
 ```bash
 # 10. Check app is in PRODUCTION mode (not dev)
-pm2 logs uix-torrax-cloud --lines 3 --nostream | grep -E "next start|Ready"
+pm2 logs uix --lines 3 --nostream | grep -E "next start|Ready"
 # Expected: See "next start" and "Ready"
 # NOT: "Turbopack" or "next dev"
 
 # 11. Verify chunks hash match (CRITICAL)
 ACTUAL=$(ls .next/static/chunks/app/findings/page-*.js | sed 's/.*page-//' | sed 's/.js//')
-SERVED=$(curl -s https://uix.torrax.cloud/findings 2>/dev/null | grep -o 'page-[a-f0-9]*\.js' | sed 's/.js//' | head -1)
+SERVED=$(curl -s https://uix.productdesign.mx/findings 2>/dev/null | grep -o 'page-[a-f0-9]*\.js' | sed 's/.js//' | head -1)
 
 if [ "$ACTUAL" = "$SERVED" ]; then
   echo "✅ PASS: Chunks match - deployment successful"
@@ -73,7 +73,7 @@ else
 fi
 
 # 12. Verify app loads without errors
-curl -s https://uix.torrax.cloud/findings | head -100
+curl -s https://uix.productdesign.mx/findings | head -100
 # Expected: See HTML with correct chunk hashes
 # NOT: "page couldn't load" error or 404s
 ```
@@ -90,13 +90,13 @@ echo "Actual chunks:"
 ls .next/static/chunks/app/findings/page-*.js
 
 echo "Served chunks:"
-curl -s https://uix.torrax.cloud/findings 2>/dev/null | grep -o 'page-[a-f0-9]*\.js'
+curl -s https://uix.productdesign.mx/findings 2>/dev/null | grep -o 'page-[a-f0-9]*\.js'
 
 # 2. If they don't match:
 # → App is still running old build
 # → Kill and restart with ecosystem.config.js
 
-pm2 delete uix-torrax-cloud
+pm2 delete uix
 pkill -9 node
 sleep 3
 pm2 start ecosystem.config.js
@@ -119,12 +119,12 @@ pm2 start ecosystem.config.js
 ```bash
 # This means app is in DEV mode
 # Check logs:
-pm2 logs uix-torrax-cloud --lines 10 --nostream
+pm2 logs uix --lines 10 --nostream
 
 # If you see "Turbopack" or "next dev":
 # → App started with wrong command
 # → Fix: Use ecosystem.config.js only
-pm2 delete uix-torrax-cloud
+pm2 delete uix
 pm2 start ecosystem.config.js
 ```
 

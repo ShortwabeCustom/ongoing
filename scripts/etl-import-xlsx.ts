@@ -233,7 +233,7 @@ async function dryRun(xlsxPath: string): Promise<void> {
 }
 
 async function main() {
-  const xlsxPath = '/var/www/uix.torrax.cloud/Pruebas Maria 2.0.xlsx'
+  const xlsxPath = '/var/www/apps/uix/Pruebas Maria 2.0.xlsx'
 
   if (!fs.existsSync(xlsxPath)) {
     console.error(`❌ File not found: ${xlsxPath}`)

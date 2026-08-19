@@ -163,7 +163,7 @@ if (Array.isArray(serialized.statusHistory)) {
 
 - **Build Time**: 20.2s ✅
 - **PM2 Restart**: Online (PID 38951) ✅
-- **URL**: https://uix.torrax.cloud/findings ✅
+- **URL**: https://uix.productdesign.mx/findings ✅
 - **Test**: Finding detail + evidence section working perfectly ✅
 
 ---
@@ -188,7 +188,7 @@ if (Array.isArray(serialized.statusHistory)) {
 
 ## Related Documentation
 
-- See `/root/.claude/projects/-var-www-uix-torrax-cloud/memory/session_15_error_fixes.md` for technical deep-dive
+- See `/root/.claude/projects/-var-www-uix/memory/session_15_error_fixes.md` for technical deep-dive
 - See `MEMORY.md` for session history completa
 
 ---

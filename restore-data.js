@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 async function restoreData() {
   console.log('📊 Reading Excel file...');
-  const workbook = XLSX.readFile('/var/www/uix.torrax.cloud/Pruebas Maria 2.0 (hoy).xlsx');
+  const workbook = XLSX.readFile('/var/www/apps/uix/Pruebas Maria 2.0 (hoy).xlsx');
 
   // Get or create default project
   let project = await prisma.project.findFirst();

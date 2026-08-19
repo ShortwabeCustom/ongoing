@@ -307,10 +307,10 @@ npm run lint:  ✅ PASS (No new errors)
 - **Revisor**: [You]
 
 ### Links Útiles
-- Proyecto: https://uix.torrax.cloud/findings
+- Proyecto: https://uix.productdesign.mx/findings
 - Backup: `/var/backups/uix/import_20260812_195100/`
-- Scripts: `/var/www/uix.torrax.cloud/scripts/`
-- Schema: `/var/www/uix.torrax.cloud/prisma/schema.prisma`
+- Scripts: `/var/www/apps/uix/scripts/`
+- Schema: `/var/www/apps/uix/prisma/schema.prisma`
 
 ### ImportBatch ID para Referencia
 ```
@@ -374,4 +374,4 @@ cmsqi9hci00008dacypjsgr3v
 ---
 
 **Generado**: 2026-08-12 19:51 UTC  
-**Archivo**: `/var/www/uix.torrax.cloud/IMPORT_COMPLETION_REPORT.md`
+**Archivo**: `/var/www/apps/uix/IMPORT_COMPLETION_REPORT.md`

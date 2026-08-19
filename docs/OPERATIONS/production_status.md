@@ -61,7 +61,7 @@ time: ⏱️ 5 minutes
 - [ ] PostgreSQL 16+ running and accessible
 - [ ] Elasticsearch 8.11.0 running and healthy
 - [ ] Cloudflare R2 bucket created with API tokens
-- [ ] SSL certificate valid for uix.torrax.cloud
+- [ ] SSL certificate valid for uix.productdesign.mx
 
 **Step 3: Pre-Flight Verification** (5 min)
 ```bash
@@ -87,10 +87,10 @@ pm2 restart pruebas-maria
 **Step 5: Verify** (5 min)
 ```bash
 # Health check
-curl https://uix.torrax.cloud/api/health
+curl https://uix.productdesign.mx/api/health
 
 # Check application responds
-curl https://uix.torrax.cloud/findings
+curl https://uix.productdesign.mx/findings
 
 # Monitor logs
 docker logs pruebas-maria --follow
@@ -197,7 +197,7 @@ docker compose -f docker-compose.prod.yml up -d
 ```bash
 pm2 start "npm start" --name pruebas-maria
 pm2 save && pm2 startup
-# Existing setup on uix.torrax.cloud
+# Existing setup on uix.productdesign.mx
 ```
 
 ### Option 3: Vercel (Recommended for simplicity)

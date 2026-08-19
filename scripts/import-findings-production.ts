@@ -8,7 +8,7 @@ const PROJECT_ID = 'cmsoc6p7l0000h1acb6i9uoyt'
 const TEST_SESSION_ID = 'cmsoc6pbq0003h1ac6hgztsda'
 const USER_ID = 'cmsnnzhsj0000mzacg3c1w1rn' // Alexis (OWNER)
 const DEFAULT_AREA = 'DESIGN'
-const XLSX_PATH = '/var/www/uix.torrax.cloud/Pruebas Maria 2.0.xlsx'
+const XLSX_PATH = '/var/www/apps/uix/Pruebas Maria 2.0.xlsx'
 
 interface NormalizedRow {
   sourceRow: number

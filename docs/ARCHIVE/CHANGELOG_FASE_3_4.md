@@ -215,7 +215,7 @@ app/globals.css
 **Lint**: ✅ All checks passed  
 **DB Migrations**: ✅ No pending  
 **PM2 Restart**: ✅ Online (PID 3023022, Node.js v16.3.0)  
-**Health Check**: ✅ https://uix.torrax.cloud/findings responsive
+**Health Check**: ✅ https://uix.productdesign.mx/findings responsive
 
 ---
 

@@ -26,7 +26,7 @@ npm --version     # ≥10.0
 
 ### 2️⃣ Instalar Dependencias (si es primera vez)
 ```bash
-cd /var/www/uix.torrax.cloud
+cd /var/www/apps/uix
 npm install --no-dedupe  # ⚠️ IMPORTANTE: --no-dedupe para Prisma + Lucia
 npm run build
 ```

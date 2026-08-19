@@ -170,7 +170,7 @@ PostgreSQL (Finding table - 83 status updated to VALIDATED)
     ↓
 PRODUCTION LIVE
     ↓
-https://uix.torrax.cloud/findings
+https://uix.productdesign.mx/findings
 ```
 
 ---
@@ -238,7 +238,7 @@ npx tsx scripts/inspect-excel-structure.ts
 npm run build
 
 # 2. Reiniciar app
-pm2 restart uix-torrax-cloud
+pm2 restart uix
 
 # 3. Verificar
 curl -s http://localhost:3000/evidence-from-excel/image-1.png | head -c 100

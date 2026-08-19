@@ -95,7 +95,7 @@ time: ⏱️ 15 minutes
 - [ ] Uptime monitoring active
 
 #### 7. SSL/TLS
-- [ ] Certificate valid for uix.torrax.cloud
+- [ ] Certificate valid for uix.productdesign.mx
 - [ ] Certificate renewal automatic (Let's Encrypt)
 - [ ] No mixed HTTP/HTTPS content
 

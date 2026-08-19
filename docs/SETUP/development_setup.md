@@ -116,14 +116,14 @@ NEXT_PUBLIC_APP_URL=http://localhost:3001
 
 ### Clone Repository
 ```bash
-cd /var/www/uix.torrax.cloud
+cd /var/www/apps/uix
 # (o clone si no existe)
-git clone <repo-url> /var/www/uix.torrax.cloud
+git clone <repo-url> /var/www/apps/uix
 ```
 
 ### Install Dependencies
 ```bash
-cd /var/www/uix.torrax.cloud
+cd /var/www/apps/uix
 
 # ⚠️ IMPORTANTE: Usar --no-dedupe para evitar conflictos Prisma + Lucia
 npm install --no-dedupe

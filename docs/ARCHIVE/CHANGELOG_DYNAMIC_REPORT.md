@@ -70,7 +70,7 @@ cache: 180s ISR        (auto-revalidate every 3 minutes)
 ## Architecture
 
 ```
-GET https://uix.torrax.cloud/
+GET https://uix.productdesign.mx/
   ├─ Nginx → localhost:3000
   ├─ Next.js rewrite: / → /app.html (unchanged)
   ├─ Load 159KB HTML + CSS + JS (static, 1843 lines)

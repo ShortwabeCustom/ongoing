@@ -286,7 +286,7 @@ UPDATE "Finding" SET status = 'OPEN' WHERE status = 'VALIDATED';
 
 # 4. Rebuild and restart
 npm run build
-pm2 restart uix-torrax-cloud
+pm2 restart uix
 ```
 
 ---

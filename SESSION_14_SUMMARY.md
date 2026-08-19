@@ -116,15 +116,15 @@ psql -c "SELECT COUNT(*) FROM evidence WHERE storageKey = 'legacy/evidence-from-
 # Expected: 204
 
 # Check files
-ls /var/www/uix.torrax.cloud/public/evidence-from-excel/ | wc -l
+ls /var/www/apps/uix/public/evidence-from-excel/ | wc -l
 # Expected: 206 PNG files
 
 # Check app status
 pm2 status
-# Expected: uix-torrax-cloud online
+# Expected: uix online
 
 # Verify in browser
-curl -I https://uix.torrax.cloud/evidence-from-excel/image-101.png
+curl -I https://uix.productdesign.mx/evidence-from-excel/image-101.png
 # Expected: 200 OK, Content-Type: image/png
 ```
 

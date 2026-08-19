@@ -143,7 +143,7 @@ async function main() {
 
   if (results.filter((r) => r.action === 'UPDATED').length === EVIDENCE_UPDATES.length) {
     console.log('\n✨ All evidence URLs updated successfully!');
-    console.log('🌐 You can now view evidence in the UI:\n   https://uix.torrax.cloud/findings\n');
+    console.log('🌐 You can now view evidence in the UI:\n   https://uix.productdesign.mx/findings\n');
   }
 
   await prisma.$disconnect();

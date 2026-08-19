@@ -12,7 +12,7 @@ time: ⏱️ 10 minutes
 
 ## 📊 Resumen
 
-Los **19 hallazgos importados manualmente** mediante scripts están **100% compatibles** con el importador integrado en `https://uix.torrax.cloud/test-import`.
+Los **19 hallazgos importados manualmente** mediante scripts están **100% compatibles** con el importador integrado en `https://uix.productdesign.mx/test-import`.
 
 El flujo manual ejecutado y el flujo de UI utilizan **la misma lógica subyacente** (`ImportService`), por lo que no hay conflictos.
 
@@ -46,7 +46,7 @@ El flujo manual ejecutado y el flujo de UI utilizan **la misma lógica subyacent
 ### Flujo UI (test-import)
 
 ```
-1. Usuario sube archivo en https://uix.torrax.cloud/test-import
+1. Usuario sube archivo en https://uix.productdesign.mx/test-import
    ↓
 2. POST /api/imports/preview
    ├─ Crea TestSession (si no existe)
@@ -134,7 +134,7 @@ generateFingerprint(
 ### Paso 1: Abrir Importador
 
 ```
-https://uix.torrax.cloud/test-import
+https://uix.productdesign.mx/test-import
 ```
 
 ### Paso 2: Seleccionar Proyecto
@@ -296,7 +296,7 @@ ImportBatches:
 
 **SÍ** ✅
 
-1. Ir a: https://uix.torrax.cloud/test-import
+1. Ir a: https://uix.productdesign.mx/test-import
 2. Seleccionar proyecto
 3. Subir archivo
 4. Revisar preview

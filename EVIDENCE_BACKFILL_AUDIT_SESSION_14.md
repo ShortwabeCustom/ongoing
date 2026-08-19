@@ -25,7 +25,7 @@ The **Evidence Image Backfill operation is complete and fully operational**. Ses
 
 ### Phase 1: Image Extraction ✅
 
-**Source File**: `/var/www/uix.torrax.cloud/Pruebas Maria 2.0 (hoy).xlsx`
+**Source File**: `/var/www/apps/uix/Pruebas Maria 2.0 (hoy).xlsx`
 
 ```
 ✅ Images in XLSX:        206 PNG files
@@ -77,7 +77,7 @@ SELECT COUNT(*) FROM findings WHERE "deletedAt" IS NULL;
 
 ### Phase 3: File System Validation ✅
 
-**Storage Location**: `/var/www/uix.torrax.cloud/public/evidence-from-excel/`
+**Storage Location**: `/var/www/apps/uix/public/evidence-from-excel/`
 
 ```
 ✅ Total files on disk:    206 PNG
@@ -114,7 +114,7 @@ SELECT COUNT(*) FROM findings WHERE "deletedAt" IS NULL;
 ```
 Browser request
   ↓
-GET https://uix.torrax.cloud/evidence-from-excel/image-101.png
+GET https://uix.productdesign.mx/evidence-from-excel/image-101.png
   ↓
 Nginx reverse proxy → localhost:3001
   ↓
@@ -176,19 +176,19 @@ This enables:
 **Sample URLs Tested** (representative sample):
 
 ```
-✅ https://uix.torrax.cloud/evidence-from-excel/image-1.png
+✅ https://uix.productdesign.mx/evidence-from-excel/image-1.png
    └─ Status: 200 OK
    └─ Content-Type: image/png
    └─ Content-Length: 11776 bytes
    └─ Serves real PNG ✅
 
-✅ https://uix.torrax.cloud/evidence-from-excel/image-101.png
+✅ https://uix.productdesign.mx/evidence-from-excel/image-101.png
    └─ Status: 200 OK
    └─ Content-Type: image/png
    └─ Content-Length: 11264 bytes
    └─ Serves real PNG ✅ (from screenshot)
 
-✅ https://uix.torrax.cloud/evidence-from-excel/image-206.png
+✅ https://uix.productdesign.mx/evidence-from-excel/image-206.png
    └─ Status: 200 OK
    └─ Content-Type: image/png
    └─ Content-Length: 23441 bytes
@@ -326,7 +326,7 @@ The Excel file has 206 images total, but only 204 findings:
 ### Live System
 
 ```
-https://uix.torrax.cloud/findings
+https://uix.productdesign.mx/findings
 ├── /findings/[id]
 │   └── Shows all evidence for that finding
 │       ├── Type: IMAGE
@@ -404,7 +404,7 @@ If needed later:
 npx tsx scripts/validate-evidence-integrity.ts
 
 # Check disk space
-du -sh /var/www/uix.torrax.cloud/public/evidence-from-excel/
+du -sh /var/www/apps/uix/public/evidence-from-excel/
 
 # Verify database consistency
 SELECT COUNT(*) FROM evidence WHERE url IS NULL;

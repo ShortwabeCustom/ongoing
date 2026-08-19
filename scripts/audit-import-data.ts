@@ -245,7 +245,7 @@ function compareAnalyses(xlsx: FileAnalysis, csv: FileAnalysis): void {
 }
 
 async function main() {
-  const projectRoot = "/var/www/uix.torrax.cloud";
+  const projectRoot = "/var/www/apps/uix";
   const xlsxPath = path.join(projectRoot, "Pruebas Maria 2.0.xlsx");
   const csvPath = path.join(projectRoot, "Pruebas Maria 2.csv");
 

@@ -1,7 +1,7 @@
 # AUDITORÍA — Pruebas María 2.0 (PRODUCCIÓN)
 
 **Fecha**: 2026-08-16
-**Entorno auditado**: `http://127.0.0.1:3000` (pm2 `uix-torrax-cloud`, `next start`, `NODE_ENV=production`) — **único entorno existente, no hay staging**
+**Entorno auditado**: `http://127.0.0.1:3000` (pm2 `uix`, `next start`, `NODE_ENV=production`) — **único entorno existente, no hay staging**
 **Raíz del proyecto**: `/var/www/apps/uix` — rama `main`, commit `074c47d`
 **Base de datos**: PostgreSQL `pruebas_maria_prod` en `127.0.0.1:5432`
 **Método**: navegación con navegador real (Playwright + Chromium headless) trazando UI → Red → API → validación → RBAC → servicio → Prisma/PostgreSQL → efectos secundarios → respuesta → estado React → UI, con `page.on('console')`, `page.on('pageerror')` y `page.on('response')` activos en todos los flujos, más verificación por SQL directo tras cada mutación.
@@ -196,7 +196,7 @@ Contribuye `proxy.ts`, que es un *pass-through* puro (`NextResponse.next()`) y c
 
 **Archivos afectados**: `app/api/search/findings/route.ts:11-15`, `lib/middleware/rbac.ts:38`, `proxy.ts`, `app/findings/page.tsx`, `app/search/page.tsx`, `app/test-import/page.tsx`
 
-**Riesgo de seguridad**: **alto**. Las observaciones son hallazgos de seguridad de un cliente real (Elektra). La aplicación está publicada en `uix.torrax.cloud`; cualquiera en Internet puede enumerar el inventario completo.
+**Riesgo de seguridad**: **alto**. Las observaciones son hallazgos de seguridad de un cliente real (Elektra). La aplicación está publicada en `uix.productdesign.mx`; cualquiera en Internet puede enumerar el inventario completo.
 
 **Test que falta**: suite de contrato que recorra todas las rutas de `app/api/**` sin cookie y afirme 401/403 salvo en una lista blanca explícita (`/api/health`, `/api/public/report`).
 
@@ -300,7 +300,7 @@ El script hace `upsert` con `update: { passwordHash, role }`, de modo que cualqu
 users 1 | projects 1 | project_members 1 | product_versions 1 | test_sessions 1
 findings 0 | evidence 0 | comments 0 | audit_logs 0 | resolutions 0 | validations 0
 ```
-`CLAUDE.md` afirma 204 hallazgos, 204 evidencias (100 % de cobertura), 206 PNG extraídos y *"Live: https://uix.torrax.cloud/findings ✅"*. La UI muestra *"Sin resultados (base de datos vacía)"*.
+`CLAUDE.md` afirma 204 hallazgos, 204 evidencias (100 % de cobertura), 206 PNG extraídos y *"Live: https://uix.productdesign.mx/findings ✅"*. La UI muestra *"Sin resultados (base de datos vacía)"*.
 
 **Único respaldo del repositorio**:
 ```
@@ -605,7 +605,7 @@ Los guiones de Playwright y SQL utilizados quedan en el directorio padre de esa 
 
 ### 9.1 Confirmación de la base real usada por el proceso pm2
 
-`pm2` (`uix-torrax-cloud`, PID 1050 → hijo `next-server` PID 1068) **no inyecta `DATABASE_URL`** vía `ecosystem.config.js` (ese fichero solo define `NODE_ENV` y `PORT`); Next.js la toma en tiempo de ejecución de `.env` vía `dotenv`. Se confirmó por conexión directa con esa misma cadena:
+`pm2` (`uix`, PID 1050 → hijo `next-server` PID 1068) **no inyecta `DATABASE_URL`** vía `ecosystem.config.js` (ese fichero solo define `NODE_ENV` y `PORT`); Next.js la toma en tiempo de ejecución de `.env` vía `dotenv`. Se confirmó por conexión directa con esa misma cadena:
 
 ```
 current_database = pruebas_maria_prod
@@ -644,7 +644,7 @@ Revisado: `crontab -l` del usuario (vacío), `/etc/cron.d`, `/etc/cron.daily`, `
 
 **Hallazgo nuevo, causa raíz probable de la pérdida de datos (C-07)**: `scripts/backup-findings.js` —el único script de "respaldo" propio del proyecto— escribe su salida a una ruta hardcodeada:
 ```js
-const backupDir = `/tmp/claude-0/-var-www-uix-torrax-cloud/6ee4dc0d-1646-46e2-8214-8c3f2d392169/scratchpad/backups`;
+const backupDir = `/tmp/claude-0/-var-www-uix/6ee4dc0d-1646-46e2-8214-8c3f2d392169/scratchpad/backups`;
 ```
 Esa ruta es el directorio de trabajo temporal (`scratchpad`) de una sesión anterior de un asistente de código en `/tmp`. Se comprobó en vivo: **esa ruta ya no existe** — `/tmp/claude-0/` no está en el filesystem. Cualquier "respaldo" generado por ese script en su momento se perdió cuando esa sesión terminó y el sistema limpió `/tmp`. Es una explicación directa y verificable de cómo los 204 hallazgos documentados pudieron quedar sin ningún respaldo recuperable: el mecanismo de backup del propio proyecto nunca escribió a un destino durable.
 **Etiqueta**: CONFIRMADO (la ruta no existe; el mecanismo es inservible por diseño para persistencia real).
@@ -690,7 +690,7 @@ Tras verificar, el clúster temporal se **detuvo (`pg_ctl stop`) y su directorio
 
 **Confirmación final tras todo el ejercicio**:
 - Producción: `users=1`, `findings=0` (sin cambios respecto al inicio del ejercicio).
-- pm2 `uix-torrax-cloud`: mismo PID (1050/1068) desde antes de empezar hasta el final, **sin reinicios**.
+- pm2 `uix`: mismo PID (1050/1068) desde antes de empezar hasta el final, **sin reinicios**.
 - `git status --short` del proyecto: solo dos ficheros nuevos sin trackear —
   ```
   ?? auditoria.md
@@ -713,7 +713,7 @@ Lo que **sigue sin resolver** (fuera del alcance de P0-A, ya recogido en el plan
 
 **Alcance ejecutado**: exclusivamente C-06 (credenciales versionadas), C-03 (hallazgos legibles sin sesión) y C-04 (audit-log público). C-01, C-02, C-05 y todo P1-P3 **no se han tocado**, según lo acordado.
 
-**Verificado tras el trabajo**: pm2 `uix-torrax-cloud` sigue en el mismo PID (1050/1068) desde antes de empezar, sin reinicios; producción sin cambios (`users=1`, `findings=0`, `sessions=0`); sin `git add`/`commit`/`push`; sin deploy.
+**Verificado tras el trabajo**: pm2 `uix` sigue en el mismo PID (1050/1068) desde antes de empezar, sin reinicios; producción sin cambios (`users=1`, `findings=0`, `sessions=0`); sin `git add`/`commit`/`push`; sin deploy.
 
 ### 10.1 Archivos modificados
 
@@ -807,7 +807,7 @@ cd /var/www/apps/uix
 git status --short                                    # revisar antes de commitear
 node_modules/.bin/vitest run                           # esperado: 95 pasan
 npm run build                                           # next build --webpack
-pm2 restart uix-torrax-cloud --update-env
+pm2 restart uix --update-env
 # Verificación de chunks (check de CLAUDE.md) + los 7 checks de contrato en vivo,
 # luego login como OWNER y abrir /findings y un hallazgo.
 ```
@@ -892,10 +892,10 @@ Re-verificado sobre una copia limpia de HEAD (sin ningún cambio de esta fase ni
 
 ### 11.8 Aviso operativo importante detectado: el chequeo de chunks de `CLAUDE.md` dará falso positivo tras este deploy
 
-`CLAUDE.md` verifica el deploy con `curl https://uix.torrax.cloud/findings | grep -o "page-[a-f0-9]*\.js"` — pero `/findings` ahora devuelve `307 → /login` para anónimo (la propia barrera de §10), así que ese `curl` no encontrará ningún `page-*.js` y el chequeo fallará aunque el deploy sea correcto. Esto afecta a todo despliegue de P0-B en adelante, no solo a este cierre. **Alternativa verificada y funcional**, usando `/login` (pública, estática):
+`CLAUDE.md` verifica el deploy con `curl https://uix.productdesign.mx/findings | grep -o "page-[a-f0-9]*\.js"` — pero `/findings` ahora devuelve `307 → /login` para anónimo (la propia barrera de §10), así que ese `curl` no encontrará ningún `page-*.js` y el chequeo fallará aunque el deploy sea correcto. Esto afecta a todo despliegue de P0-B en adelante, no solo a este cierre. **Alternativa verificada y funcional**, usando `/login` (pública, estática):
 ```bash
 ACTUAL=$(ls .next/static/chunks/app/login/page-*.js | sed "s/.*page-//; s/.js//")
-SERVED=$(curl -s https://uix.torrax.cloud/login | grep -o "page-[a-f0-9]*\.js" | sed "s/.js//" | head -1)
+SERVED=$(curl -s https://uix.productdesign.mx/login | grep -o "page-[a-f0-9]*\.js" | sed "s/.js//" | head -1)
 [ "$ACTUAL" = "$SERVED" ] && echo "✅ OK" || echo "❌ MISMATCH"
 ```
 Pendiente de decisión: actualizar `CLAUDE.md` con esta variante (no se ha editado el fichero).
@@ -908,7 +908,7 @@ git status --short
 node_modules/.bin/vitest run                       # esperado: 100 pasan
 
 npm run build                                        # next build --webpack
-pm2 restart uix-torrax-cloud --update-env
+pm2 restart uix --update-env
 
 # Verificación de chunks — usar la variante de /login de §11.8, NO la de /findings de CLAUDE.md
 
@@ -923,7 +923,7 @@ pm2 restart uix-torrax-cloud --update-env
 
 # Smoke autenticado OWNER: login -> /findings -> abrir un hallazgo
 
-pm2 logs uix-torrax-cloud --lines 100 --nostream     # sin errores nuevos
+pm2 logs uix --lines 100 --nostream     # sin errores nuevos
 
 # Counts de producción — deben quedar IDÉNTICOS (este deploy no escribe datos):
 #   users=1 findings=0 sessions=0 import_batches=0 audit_logs=0 push_subscriptions=0
@@ -937,7 +937,7 @@ pm2 logs uix-torrax-cloud --lines 100 --nostream     # sin errores nuevos
 ```bash
 git stash    # o: git checkout HEAD -- <los 11 ficheros modificados>
 npm run build
-pm2 restart uix-torrax-cloud --update-env
+pm2 restart uix --update-env
 curl -s -o /dev/null -w '%{http_code}\n' http://127.0.0.1:3000/api/health   # 200
 ```
 **Rollback de datos**: no debería aplicar nunca en este cierre (cero escrituras); solo sería relevante si algún día se ejecuta la rotación del OWNER y algo sale mal — ahí el backup P0-A permite reconstruir el estado exacto de hoy (§9.7). No restaurar sobre `pruebas_maria_prod` sin decisión explícita.
@@ -990,10 +990,10 @@ Comparado por `diff` contra el log previo al restart: únicas líneas nuevas son
 ### 12.7 Desviaciones respecto al plan §11.9
 
 **a) El chequeo de chunks corregido en `CLAUDE.md` da `MISMATCH` — pero por dos defectos ajenos al deploy, no porque el deploy esté mal:**
-1. El certificado TLS de `https://uix.torrax.cloud` es válido para `CN=uix.productdesign.mx`, no para ese hostname — condición de infraestructura preexistente al deploy (emitido 2026-08-16, antes de este cambio).
+1. El certificado TLS de `https://uix.productdesign.mx` es válido para `CN=uix.productdesign.mx`, no para ese hostname — condición de infraestructura preexistente al deploy (emitido 2026-08-16, antes de este cambio).
 2. El propio comando de `CLAUDE.md` tiene un `sed` incompleto en el lado `SERVED` (falta `s/.*page-//`), así que compara un hash pelado contra uno con prefijo — **da `MISMATCH` incluso con un deploy perfecto**. Verificado corrigiendo el `sed`: da `OK`.
 
-La prueba real de que el código nuevo está en vivo es más fuerte que este chequeo: el `BUILD_ID` servido es el nuevo, y el comportamiento nuevo está activo (`/findings` anónimo → 307). **No se editó `CLAUDE.md` para corregir esto** — queda como decisión pendiente (¿arreglar el `sed`? ¿decidir el hostname canónico entre `uix.torrax.cloud` y `uix.productdesign.mx`?).
+La prueba real de que el código nuevo está en vivo es más fuerte que este chequeo: el `BUILD_ID` servido es el nuevo, y el comportamiento nuevo está activo (`/findings` anónimo → 307). **No se editó `CLAUDE.md` para corregir esto** — queda como decisión pendiente (¿arreglar el `sed`? ¿decidir el hostname canónico entre `uix.productdesign.mx` y `uix.productdesign.mx`?).
 
 **b) IDs sintéticos en los smokes de `audit-log`/`imports`**: no hay `findings` ni `import_batches` reales en producción (0 filas), así que se probó con ids sintéticos — cobertura equivalente, ya que el 401/403 se emite antes de cualquier consulta a BD.
 
@@ -1010,18 +1010,18 @@ Corregir (o no) el `sed` del chequeo de chunks en `CLAUDE.md:101` y decidir el h
 ### 13.1 Hostname canónico de producción, verificado contra configuración real (no asumido de la doc)
 
 - **Hostname canónico**: `uix.productdesign.mx` — único `server_name` configurado en nginx (`/etc/nginx/sites-enabled/uix.productdesign.mx`), único hostname con certificado válido.
-- **Hostnames alternativos configurados**: ninguno. `uix.torrax.cloud` (usado en el nombre del proceso pm2, `CLAUDE.md`, y buena parte de la documentación) **resuelve por DNS a la misma IP** (`46.225.236.4`) pero **no tiene vhost propio en nginx**. Al no haber `default_server` explícito en el socket 443, el único bloque HTTPS configurado (`uix.productdesign.mx`) actúa como default implícito — por eso cualquier petición TLS a `uix.torrax.cloud` recibe ese certificado, que no lo ampara.
+- **Hostnames alternativos configurados**: ninguno. `uix.productdesign.mx` (usado en el nombre del proceso pm2, `CLAUDE.md`, y buena parte de la documentación) **resuelve por DNS a la misma IP** (`46.225.236.4`) pero **no tiene vhost propio en nginx**. Al no haber `default_server` explícito en el socket 443, el único bloque HTTPS configurado (`uix.productdesign.mx`) actúa como default implícito — por eso cualquier petición TLS a `uix.productdesign.mx` recibe ese certificado, que no lo ampara.
 - **Certificado presentado**: Let's Encrypt, `CN=uix.productdesign.mx`, emitido 2026-08-16 16:11 UTC, expira 2026-11-14.
 - **SANs del certificado**: uno solo — `DNS:uix.productdesign.mx`. No es un certificado multi-dominio.
 - **Upstream/puerto real**: `proxy_pass http://127.0.0.1:3000` — coincide exactamente con el puerto real de pm2 (`ecosystem.config.js`, `PORT: 3000`).
 
-**Verificado en vivo, sin `-k`**: `curl https://uix.productdesign.mx/login` → `200`. `curl https://uix.torrax.cloud/login` → falla con `SSL: no alternative certificate subject name matches target host name 'uix.torrax.cloud'` (error 60) — el fallo es real y no se ha ocultado ni evitado.
+**Verificado en vivo, sin `-k`**: `curl https://uix.productdesign.mx/login` → `200`. `curl https://uix.productdesign.mx/login` → falla con `SSL: no alternative certificate subject name matches target host name 'uix.productdesign.mx'` (error 60) — el fallo es real y no se ha ocultado ni evitado.
 
-**Hallazgo operativo separado, no corregido** (per instrucción explícita de no tocar infraestructura sin decisión): `uix.torrax.cloud` es el hostname asumido en el nombre del proceso pm2 y en gran parte de la documentación, pero no funciona por HTTPS con validación estricta. Requiere decidir: ¿el dominio de producto real es `uix.productdesign.mx` (y hay que renombrar todo lo que asume `torrax.cloud`), o `uix.torrax.cloud` debería tener su propio certificado (`certbot --nginx -d uix.torrax.cloud`)? No se ha cambiado nada de nginx/certbot.
+**Hallazgo operativo separado, no corregido** (per instrucción explícita de no tocar infraestructura sin decisión): `uix.productdesign.mx` es el hostname asumido en el nombre del proceso pm2 y en gran parte de la documentación, pero no funciona por HTTPS con validación estricta. Requiere decidir: ¿el dominio de producto real es `uix.productdesign.mx` (y hay que renombrar todo lo que asume `torrax.cloud`), o `uix.productdesign.mx` debería tener su propio certificado (`certbot --nginx -d uix.productdesign.mx`)? No se ha cambiado nada de nginx/certbot.
 
 ### 13.2 Los dos defectos del check original, confirmados
 
-**a) Problema TLS/hostname**: el check apuntaba a `https://uix.torrax.cloud`, que falla la validación TLS por lo descrito en §13.1 — el `curl` sin `-k` nunca llega a completar la petición.
+**a) Problema TLS/hostname**: el check apuntaba a `https://uix.productdesign.mx`, que falla la validación TLS por lo descrito en §13.1 — el `curl` sin `-k` nunca llega a completar la petición.
 
 **b) Extracción incorrecta por `sed`**: `ACTUAL` se calculaba con `sed "s/.*page-//"` (quita todo hasta `page-` inclusive, deja solo el hash), pero `SERVED` solo tenía `sed "s/.js//"` (nunca le quitaba el prefijo `page-`). Comparaba `"abc123..."` contra `"page-abc123..."` — **siempre `MISMATCH`, incluso con un deploy perfecto**. Confirmado reproduciendo el bug de forma aislada antes de corregirlo.
 
@@ -1034,7 +1034,7 @@ Reemplazado en `CLAUDE.md` por un script que: usa `uix.productdesign.mx` (canón
 2. Simulando un build viejo (hash local sustituido por uno falso) → `❌ MISMATCH`, `exit 1` — confirma que el check sí detecta un mismatch real.
 3. Re-ejecutado después de los 3 commits de §13.4 (sin rebuild ni restart) → `✅ OK`, `exit 0` — sin cambios, como se esperaba.
 
-No se usó `-k`/`--insecure` en ningún momento — el fallo TLS contra `uix.torrax.cloud` se dejó fallar y se documentó como hallazgo separado (§13.1), no se ocultó.
+No se usó `-k`/`--insecure` en ningún momento — el fallo TLS contra `uix.productdesign.mx` se dejó fallar y se documentó como hallazgo separado (§13.1), no se ocultó.
 
 ### 13.4 Commits — código desplegado + correcciones aprobadas, SIN PUSH
 
@@ -1148,7 +1148,7 @@ Solo código, cero escrituras de datos en esta fase (sin cambios de esquema ni m
 git checkout HEAD -- lib/validators/finding.ts lib/services/finding-service.ts
 rm -rf "app/api/findings/[id]/__tests__" lib/validators/__tests__ \
        lib/services/__tests__/finding-service-update.test.ts
-npm run build && pm2 restart uix-torrax-cloud --update-env
+npm run build && pm2 restart uix --update-env
 ```
 Nota de orden: revertir este fix reabre C-05, y con el hallazgo de §14.3 eso significa volver a degradar `effort` en cada edición por la UI — si hiciera falta revertir, conviene congelar ediciones hasta rehacerlo.
 

@@ -30,24 +30,24 @@ On 2026-08-13, the production application was accidentally deployed in **DEV mod
 ```bash
 # Production deployment
 npm start                 # Runs: next start
-pm2 start "npm start" --name uix-torrax-cloud
+pm2 start "npm start" --name uix
 ```
 
 **WRONG** ❌
 ```bash
 # Development mode (rebuilds on every request)
 npm run dev              # Runs: next dev
-pm2 start "npm run dev" --name uix-torrax-cloud
+pm2 start "npm run dev" --name uix
 ```
 
 ### Rule 2: Verify the Mode Before Restart
 
 ```bash
 # Check what command PM2 is running
-pm2 describe uix-torrax-cloud | grep -A 2 "command"
+pm2 describe uix | grep -A 2 "command"
 
 # Check logs for dev/prod mode indicators
-pm2 logs uix-torrax-cloud --lines 20 --nostream
+pm2 logs uix --lines 20 --nostream
 
 # LOOK FOR:
 # ✅ Production:  "▲ Next.js X.X.X" (no "Turbopack" in startup)
@@ -63,7 +63,7 @@ After deployment, verify the built chunks exist and are served:
 ls .next/static/chunks/app/findings/page-*.js
 
 # Check what chunks the server is serving
-curl -s https://uix.torrax.cloud/findings | grep -o 'page-[a-f0-9]*\.js' | sort -u
+curl -s https://uix.productdesign.mx/findings | grep -o 'page-[a-f0-9]*\.js' | sort -u
 
 # These should MATCH. If they don't, the app is not running the production build.
 ```
@@ -76,7 +76,7 @@ Create an `ecosystem.config.js` file to lock the configuration:
 module.exports = {
   apps: [
     {
-      name: 'uix-torrax-cloud',
+      name: 'uix',
       script: 'npm',
       args: 'start',  // ← PRODUCTION ONLY
       instances: 1,
@@ -127,7 +127,7 @@ pm2 save
 ```bash
 # Run this check:
 ACTUAL_CHUNKS=$(ls .next/static/chunks/app/findings/page-*.js | sed 's/.*page-/page-/' | sed 's/\.js$//')
-SERVED_CHUNKS=$(curl -s https://uix.torrax.cloud/findings | grep -o 'page-[a-f0-9]*\.js' | sed 's/\.js$//' | sort -u)
+SERVED_CHUNKS=$(curl -s https://uix.productdesign.mx/findings | grep -o 'page-[a-f0-9]*\.js' | sed 's/\.js$//' | sort -u)
 
 if [ "$ACTUAL_CHUNKS" != "$SERVED_CHUNKS" ]; then
   echo "❌ CRITICAL: Hash mismatch - app not serving production build"
@@ -143,8 +143,8 @@ fi
 ### Step 1: Stop the Broken Process
 
 ```bash
-pm2 stop uix-torrax-cloud
-pm2 delete uix-torrax-cloud
+pm2 stop uix
+pm2 delete uix
 ```
 
 ### Step 2: Kill Any Leftover Node Processes
@@ -169,7 +169,7 @@ pm2 start ecosystem.config.js
 pm2 save
 
 # Option B: Direct command
-pm2 start "npm start" --name uix-torrax-cloud --no-autorestart
+pm2 start "npm start" --name uix --no-autorestart
 pm2 save
 ```
 
@@ -180,11 +180,11 @@ pm2 save
 pm2 list
 
 # Check logs for production mode
-pm2 logs uix-torrax-cloud --lines 10
+pm2 logs uix --lines 10
 
 # Verify chunks match
 ACTUAL=$(ls .next/static/chunks/app/findings/page-*.js | grep -o 'page-[a-f0-9]*')
-SERVED=$(curl -s https://uix.torrax.cloud/findings | grep -o 'page-[a-f0-9]*\.js' | sed 's/\.js//')
+SERVED=$(curl -s https://uix.productdesign.mx/findings | grep -o 'page-[a-f0-9]*\.js' | sed 's/\.js//')
 [ "$ACTUAL" = "$SERVED" ] && echo "✅ OK" || echo "❌ MISMATCH"
 ```
 
@@ -225,16 +225,16 @@ SERVED=$(curl -s https://uix.torrax.cloud/findings | grep -o 'page-[a-f0-9]*\.js
 
 ```bash
 # Is app in dev or prod mode?
-pm2 logs uix-torrax-cloud --lines 5 --nostream | grep -E "next dev|next start"
+pm2 logs uix --lines 5 --nostream | grep -E "next dev|next start"
 
 # What chunks should be served?
 ls .next/static/chunks/app/findings/page-*.js | grep -o 'page-[a-f0-9]*'
 
 # What chunks are being served?
-curl -s https://uix.torrax.cloud/findings | grep -o 'page-[a-f0-9]*\.js'
+curl -s https://uix.productdesign.mx/findings | grep -o 'page-[a-f0-9]*\.js'
 
 # Is the app healthy?
-curl -s https://uix.torrax.cloud/findings | grep -q "page-" && echo "✅ OK" || echo "❌ BROKEN"
+curl -s https://uix.productdesign.mx/findings | grep -q "page-" && echo "✅ OK" || echo "❌ BROKEN"
 ```
 
 ---

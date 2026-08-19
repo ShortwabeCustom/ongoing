@@ -1,6 +1,6 @@
 # Public Report API Reference
 
-**Endpoint**: `GET https://uix.torrax.cloud/api/public/report`  
+**Endpoint**: `GET https://uix.productdesign.mx/api/public/report`
 **Authentication**: ✅ Not required (public)  
 **Cache**: ISR 180s + `Cache-Control: public, max-age=180, stale-while-revalidate=60`  
 **Rate Limit**: Not yet implemented (future: add if needed)  
@@ -12,7 +12,7 @@
 ### Request
 
 ```bash
-curl https://uix.torrax.cloud/api/public/report
+curl https://uix.productdesign.mx/api/public/report
 ```
 
 ### Response (200 OK)
@@ -163,19 +163,19 @@ document.addEventListener('DOMContentLoaded', loadPublicReport);
 
 ```bash
 # Get all data
-curl https://uix.torrax.cloud/api/public/report | jq .
+curl https://uix.productdesign.mx/api/public/report | jq .
 
 # Get only stats
-curl https://uix.torrax.cloud/api/public/report | jq '.stats'
+curl https://uix.productdesign.mx/api/public/report | jq '.stats'
 
 # Get findings count
-curl https://uix.torrax.cloud/api/public/report | jq '.findings | length'
+curl https://uix.productdesign.mx/api/public/report | jq '.findings | length'
 
 # Get first finding details
-curl https://uix.torrax.cloud/api/public/report | jq '.findings[0]'
+curl https://uix.productdesign.mx/api/public/report | jq '.findings[0]'
 
 # Filter findings by status
-curl https://uix.torrax.cloud/api/public/report | jq '.findings[] | select(.status=="completado")'
+curl https://uix.productdesign.mx/api/public/report | jq '.findings[] | select(.status=="completado")'
 ```
 
 ### Python
@@ -184,7 +184,7 @@ curl https://uix.torrax.cloud/api/public/report | jq '.findings[] | select(.stat
 import requests
 import json
 
-url = "https://uix.torrax.cloud/api/public/report"
+url = "https://uix.productdesign.mx/api/public/report"
 response = requests.get(url)
 data = response.json()
 
@@ -279,7 +279,7 @@ The endpoint should not return errors in normal operation. If it fails:
 
 **Recovery**:
 1. Retry after 30 seconds (ISR cache may be stale)
-2. Check `https://uix.torrax.cloud/api/health` for server status
+2. Check `https://uix.productdesign.mx/api/health` for server status
 3. If repeated, contact support
 
 ### Client-Side Fallback
@@ -331,14 +331,14 @@ The endpoint makes 6 Prisma queries in parallel:
 **Fix**:
 - Check `db.finding.count(...)` query time via Prisma logs
 - Check database CPU/memory via hosting provider
-- Restart PM2: `pm2 restart uix-torrax-cloud`
+- Restart PM2: `pm2 restart uix`
 
 ### "Stats show old numbers"
 
 **Cause**: Cache not expired yet (ISR revalidate = 180s)  
 **Fix**:
 - Wait 3+ minutes for automatic revalidation
-- Or restart app to clear cache: `pm2 restart uix-torrax-cloud`
+- Or restart app to clear cache: `pm2 restart uix`
 
 ### "Evidence images 404"
 

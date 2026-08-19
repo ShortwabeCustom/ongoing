@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_NAME="${PM2_APP_NAME:-uix-torrax-cloud}"
+APP_NAME="${PM2_APP_NAME:-uix}"
 
 echo "Deploying ${APP_NAME} with PM2"
 

@@ -246,7 +246,7 @@ pm2 restart ecosystem.config.js
 
 ### Verification
 ✅ App online (PM2 PID 45923)  
-✅ Page loads at https://uix.torrax.cloud/findings  
+✅ Page loads at https://uix.productdesign.mx/findings
 ✅ Chunks served correctly  
 ✅ No console errors  
 
@@ -254,7 +254,7 @@ pm2 restart ecosystem.config.js
 - **Deployed**: 2026-08-14
 - **Version**: Session 16
 - **Status**: ✅ Live
-- **URL**: https://uix.torrax.cloud/findings
+- **URL**: https://uix.productdesign.mx/findings
 
 ---
 

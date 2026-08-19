@@ -291,7 +291,7 @@ npm run dev
 
 ```bash
 # Verificar que el servidor está corriendo
-curl https://uix.torrax.cloud/api/search/findings?dateType=session&dateFrom=2026-07-30&dateTo=2026-07-30
+curl https://uix.productdesign.mx/api/search/findings?dateType=session&dateFrom=2026-07-30&dateTo=2026-07-30
 
 # Esperado: { items: [...], facets: {...}, total: 100 }
 # (100 findings para "Pruebas 30 de julio")
@@ -299,7 +299,7 @@ curl https://uix.torrax.cloud/api/search/findings?dateType=session&dateFrom=2026
 
 ### 5. Smoke Test (Manual en Navegador)
 
-1. Abrir https://uix.torrax.cloud/findings
+1. Abrir https://uix.productdesign.mx/findings
 2. Clickear "Filtros"
 3. Seleccionar "Fecha de prueba" + "30 de julio"
 4. Verificar: 100 hallazgos (fue 0 antes)
@@ -372,7 +372,7 @@ Si hay issues post-deploy:
 
 ```bash
 # 1. Asegurarse de estar en el directorio correcto
-cd /var/www/uix.torrax.cloud
+cd /var/www/apps/uix
 
 # 2. Verificar estado
 git status
@@ -386,7 +386,7 @@ git push origin master
 pm2 restart pruebas-maria-2.0 || npm run dev
 
 # 5. Verificar en navegador
-# https://uix.torrax.cloud/findings
+# https://uix.productdesign.mx/findings
 # Seleccionar "Fecha de prueba" + cualquier fecha
 # Debe devolver resultados correctos ✅
 ```

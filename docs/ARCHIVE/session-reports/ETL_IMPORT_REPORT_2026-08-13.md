@@ -40,7 +40,7 @@ Successfully completed a **full ETL pipeline** importing **205 new findings** fr
 
 ## DATA SOURCE
 
-**File**: `/var/www/uix.torrax.cloud/Pruebas Maria 2.0 (hoy).xlsx` (39 MB)
+**File**: `/var/www/apps/uix/Pruebas Maria 2.0 (hoy).xlsx` (39 MB)
 
 **Structure** (8 Test Session Sheets):
 ```
@@ -309,7 +309,7 @@ PGPASSWORD='<DEV_DB_PASSWORD>' psql -h localhost -U torrax_user -d pruebas_maria
 ## WHAT'S NEXT
 
 ### Phase 1: Verify UI
-- [ ] Open https://uix.torrax.cloud/findings
+- [ ] Open https://uix.productdesign.mx/findings
 - [ ] Count displayed findings (should show ~400)
 - [ ] Load individual finding: Click one from "Pruebas 3 agosto"
 - [ ] Check `/findings/[id]` renders without React errors
@@ -403,7 +403,7 @@ The ETL pipeline successfully imported **205 new findings** from Excel into Post
 - Verified integrity
 - Production deployment ready
 
-**Next Action**: Verify UI/API functionality at https://uix.torrax.cloud/findings
+**Next Action**: Verify UI/API functionality at https://uix.productdesign.mx/findings
 
 ---
 

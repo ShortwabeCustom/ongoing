@@ -22,7 +22,7 @@ services:
       S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY}
       NEXT_PUBLIC_VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
       VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY}
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://uix.torrax.cloud}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://uix.productdesign.mx}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
       interval: 30s

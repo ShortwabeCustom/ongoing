@@ -379,7 +379,7 @@ async function main() {
       console.log(`Imported: ${result.imported}`);
       console.log(`Failed: ${result.failed}`);
       console.log(`Backup: ${backupFile}`);
-      console.log('\nNext: Verify at https://uix.torrax.cloud/findings');
+      console.log('\nNext: Verify at https://uix.productdesign.mx/findings');
       process.exit(0);
     }
   } catch (error) {

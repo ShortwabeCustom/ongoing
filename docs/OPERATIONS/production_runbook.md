@@ -18,7 +18,7 @@ Guía rápida para operaciones de producción.
 ### Application Down
 1. **Check health endpoint**
    ```bash
-   curl -I https://uix.torrax.cloud/api/health
+   curl -I https://uix.productdesign.mx/api/health
    ```
 
 2. **Check logs**
@@ -243,7 +243,7 @@ curl -s $ELASTICSEARCH_URL/findings-v1/_stats | jq '.indices["findings-v1"].prim
    ```
 3. **Verify performance**
    ```bash
-   curl https://uix.torrax.cloud/api/health
+   curl https://uix.productdesign.mx/api/health
    ```
 
 ---
@@ -269,8 +269,8 @@ curl -s $ELASTICSEARCH_URL/findings-v1/_stats | jq '.indices["findings-v1"].prim
 
 ## 🔗 Quick Links
 
-- Production URL: https://uix.torrax.cloud/findings
-- Health endpoint: https://uix.torrax.cloud/api/health
+- Production URL: https://uix.productdesign.mx/findings
+- Health endpoint: https://uix.productdesign.mx/api/health
 - Deployment guide: [DEPLOYMENT.md](./deployment.md)
 - Security checklist: [SECURITY_CHECKLIST.md](./security_checklist.md)
 

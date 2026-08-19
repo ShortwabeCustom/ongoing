@@ -8,7 +8,7 @@
 
 ## Problem Statement
 
-The public report at `https://uix.torrax.cloud/` was a **static HTML snapshot** (156KB, 1843 lines) frozen since 2026-08-05, containing 176 hardcoded findings. Meanwhile, the private dashboard (`/findings`) was dynamically pulling 195 findings from the live database. This created **data divergence**: the public report was outdated and disconnected from the source of truth.
+The public report at `https://uix.productdesign.mx/` was a **static HTML snapshot** (156KB, 1843 lines) frozen since 2026-08-05, containing 176 hardcoded findings. Meanwhile, the private dashboard (`/findings`) was dynamically pulling 195 findings from the live database. This created **data divergence**: the public report was outdated and disconnected from the source of truth.
 
 **Goal**: Make the public report's "Fuente Integral: Hallazgos y evidencia" section dynamically fetch from the same database, keeping the static HTML shell and visual design untouched.
 
@@ -174,16 +174,16 @@ curl http://localhost:3001/ | grep -q "renderReport" && echo "Script injected"
 
 ```bash
 # Health check
-curl https://uix.torrax.cloud/api/health
+curl https://uix.productdesign.mx/api/health
 
 # Endpoint live data
-curl https://uix.torrax.cloud/api/public/report | jq '{stats: .stats, count: (.findings | length)}'
+curl https://uix.productdesign.mx/api/public/report | jq '{stats: .stats, count: (.findings | length)}'
 
 # Verify cache headers
-curl -I https://uix.torrax.cloud/api/public/report | grep -i cache
+curl -I https://uix.productdesign.mx/api/public/report | grep -i cache
 
 # Visual: open in browser
-# https://uix.torrax.cloud/
+# https://uix.productdesign.mx/
 # Verify stats render as 195/83/112/198
 # Verify filters work
 # Verify images load
@@ -206,7 +206,7 @@ If issues arise in production:
 
 ISR cache persists for 180 seconds. To force refresh:
 ```bash
-pm2 restart uix-torrax-cloud  # Clears .next cache directory
+pm2 restart uix  # Clears .next cache directory
 ```
 
 Or wait 3+ minutes for automatic revalidation.

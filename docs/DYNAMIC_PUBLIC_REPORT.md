@@ -8,7 +8,7 @@
 
 ## 📋 Executive Summary
 
-Converted the static public report (`https://uix.torrax.cloud/`) from a hardcoded HTML snapshot (176 findings, frozen 2026-08-05) to a **dynamic, real-time view** of the findings database.
+Converted the static public report (`https://uix.productdesign.mx/`) from a hardcoded HTML snapshot (176 findings, frozen 2026-08-05) to a **dynamic, real-time view** of the findings database.
 
 ### Before → After
 
@@ -30,7 +30,7 @@ Converted the static public report (`https://uix.torrax.cloud/`) from a hardcode
 ### Request Flow
 
 ```
-Client (https://uix.torrax.cloud/)
+Client (https://uix.productdesign.mx/)
     ↓
 Nginx (reverse proxy on :443 → :3000)
     ↓
@@ -267,7 +267,7 @@ bash scripts/deploy-pm2.sh
 
 **Execution**:
 ```
-Deploying uix-torrax-cloud with PM2
+Deploying uix with PM2
 ✓ Compiled successfully in 23.6s
 ✓ Generating static pages using 1 worker (16/16) in 2.1s
 ✓ /api/public/report registered with revalidate=3m
@@ -280,24 +280,24 @@ Deploying uix-torrax-cloud with PM2
 
 ```bash
 # 1. Health check
-curl https://uix.torrax.cloud/api/health
+curl https://uix.productdesign.mx/api/health
 # → { "status": "healthy", ... }
 
 # 2. Public report endpoint
-curl https://uix.torrax.cloud/api/public/report | jq '.stats'
+curl https://uix.productdesign.mx/api/public/report | jq '.stats'
 # → { "observations": 195, "completed": 83, ... }
 
 # 3. Public page loads
-curl -I https://uix.torrax.cloud/
+curl -I https://uix.productdesign.mx/
 # → HTTP/1.1 200 OK
 
 # 4. Cache headers
-curl -I https://uix.torrax.cloud/api/public/report | grep cache-control
+curl -I https://uix.productdesign.mx/api/public/report | grep cache-control
 # → cache-control: public, max-age=180, stale-while-revalidate=60
 
 # 5. Check PM2 status
 pm2 status
-# → uix-torrax-cloud: online (PID 29734)
+# → uix: online (PID 29734)
 ```
 
 **All checks passed ✅**
@@ -435,13 +435,13 @@ Suggested test cases:
 
 ### Issue: Endpoint returns empty or 500
 
-**Symptom**: `curl https://uix.torrax.cloud/api/public/report` hangs or 500s
+**Symptom**: `curl https://uix.productdesign.mx/api/public/report` hangs or 500s
 
 **Solution**:
-1. Check PM2 logs: `pm2 logs uix-torrax-cloud`
+1. Check PM2 logs: `pm2 logs uix`
 2. Verify DB connection: `psql $DATABASE_URL -c "SELECT 1"`
 3. Check Prisma client: `npx prisma generate`
-4. Restart: `pm2 restart uix-torrax-cloud`
+4. Restart: `pm2 restart uix`
 
 ### Issue: Data not updating after 3 minutes
 
@@ -450,7 +450,7 @@ Suggested test cases:
 **Solution**:
 1. Cache is working as designed (180s ISR window)
 2. Wait 3+ minutes or:
-   - Restart app: `pm2 restart uix-torrax-cloud` (clears cache)
+   - Restart app: `pm2 restart uix` (clears cache)
    - Or check `/api/health` to confirm findings are in DB
 
 ### Issue: Images not loading
@@ -458,9 +458,9 @@ Suggested test cases:
 **Symptom**: `<img>` tags show broken image icons
 
 **Solution**:
-1. Verify Nginx serving static files: `curl -I https://uix.torrax.cloud/images/image4.jpg`
-2. Check file permissions: `ls -la /var/www/uix.torrax.cloud/public/images/`
-3. Verify evidence URLs in response: `curl https://uix.torrax.cloud/api/public/report | jq '.findings[0].evidence'`
+1. Verify Nginx serving static files: `curl -I https://uix.productdesign.mx/images/image4.jpg`
+2. Check file permissions: `ls -la /var/www/apps/uix/public/images/`
+3. Verify evidence URLs in response: `curl https://uix.productdesign.mx/api/public/report | jq '.findings[0].evidence'`
 
 ---
 
@@ -488,7 +488,7 @@ Suggested test cases:
 ## ✅ Sign-Off
 
 **Implementation**: Complete and verified in production  
-**Status**: LIVE at https://uix.torrax.cloud/  
+**Status**: LIVE at https://uix.productdesign.mx/
 **Commit**: `a7f0e9b`  
 **Uptime**: 4+ minutes stable  
 **Health**: ✅ All checks pass

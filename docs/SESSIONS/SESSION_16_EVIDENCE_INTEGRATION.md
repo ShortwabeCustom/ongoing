@@ -5,7 +5,7 @@
 **Branch**: `master`  
 **Commits**: `7ab669d`, `7e2f9c1`  
 **Build Time**: 19.5s  
-**Production**: ✅ Live at https://uix.torrax.cloud/findings
+**Production**: ✅ Live at https://uix.productdesign.mx/findings
 
 ---
 
@@ -280,14 +280,14 @@ pm2 restart ecosystem.config.js --update-env
 
 # 3. Verification
 pm2 status  # Confirm online
-curl https://uix.torrax.cloud/findings  # Confirm page loads
+curl https://uix.productdesign.mx/findings  # Confirm page loads
 ```
 
 ### Production Status
-- **App**: `uix-torrax-cloud` (PID 45923)
+- **App**: `uix` (PID 45923)
 - **Status**: ✅ Online
 - **Uptime**: 30s+ (running)
-- **URL**: https://uix.torrax.cloud/findings
+- **URL**: https://uix.productdesign.mx/findings
 
 ---
 

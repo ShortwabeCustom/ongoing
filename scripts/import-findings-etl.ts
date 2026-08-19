@@ -246,7 +246,7 @@ async function main() {
 
   try {
     // Load normalized records
-    const normalizedPath = '/tmp/claude-0/-var-www-uix-torrax-cloud/6ee4dc0d-1646-46e2-8214-8c3f2d392169/scratchpad/normalized-records.json';
+    const normalizedPath = '/tmp/claude-0/-var-www-uix/6ee4dc0d-1646-46e2-8214-8c3f2d392169/scratchpad/normalized-records.json';
     if (!fs.existsSync(normalizedPath)) {
       console.error('Error: normalized-records.json not found');
       process.exit(1);
@@ -281,7 +281,7 @@ async function main() {
       const results = await dryRun(normalizedRecords, prisma, project.id, user.id);
 
       fs.writeFileSync(
-        '/tmp/claude-0/-var-www-uix-torrax-cloud/6ee4dc0d-1646-46e2-8214-8c3f2d392169/scratchpad/dryrun-results.json',
+        '/tmp/claude-0/-var-www-uix/6ee4dc0d-1646-46e2-8214-8c3f2d392169/scratchpad/dryrun-results.json',
         JSON.stringify(results, null, 2)
       );
 
@@ -307,7 +307,7 @@ async function main() {
         data: findings
       };
 
-      const backupPath = `/tmp/claude-0/-var-www-uix-torrax-cloud/6ee4dc0d-1646-46e2-8214-8c3f2d392169/scratchpad/findings-backup-${Date.now()}.json`;
+      const backupPath = `/tmp/claude-0/-var-www-uix/6ee4dc0d-1646-46e2-8214-8c3f2d392169/scratchpad/findings-backup-${Date.now()}.json`;
       fs.writeFileSync(backupPath, JSON.stringify(backup, null, 2));
       console.log(`✅ Backup created: ${backupPath}`);
     }

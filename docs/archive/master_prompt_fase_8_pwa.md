@@ -388,7 +388,7 @@ El `/senior-fullstack` es ideal para FASE 8 porque:
 ### Prompt Recomendado para Siguiente Sesión
 
 ```
-Lee: /var/www/uix.torrax.cloud/MASTER_PROMPT_FASE_8_PWA.md
+Lee: /var/www/apps/uix/MASTER_PROMPT_FASE_8_PWA.md
 
 [Tu pregunta]: Implementa FASE 8 (PWA + Offline Sync)
 

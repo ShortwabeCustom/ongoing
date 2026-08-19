@@ -272,7 +272,7 @@ components/workflow/AuditTrailViewer.tsx
 **PM2 Restart**: ✅ Successful (PID 2945854)  
 **Health Check**: ✅ Healthy (database: ok, elasticsearch: optional)
 
-**Live**: https://uix.torrax.cloud/findings ✅
+**Live**: https://uix.productdesign.mx/findings ✅
 
 ---
 

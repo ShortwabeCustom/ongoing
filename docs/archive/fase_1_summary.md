@@ -297,7 +297,7 @@ Documentation:
 1. ¿Parser? (SheetJS / ExcelJS)
 2. ¿CSV solo o XLSX + embedded images?
 
-**Master prompt guardado**: `/root/.claude/projects/-var-www-uix-torrax-cloud/memory/phase2_master_prompt.md`
+**Master prompt guardado**: `/root/.claude/projects/-var-www-uix/memory/phase2_master_prompt.md`
 
 ---
 
@@ -330,7 +330,7 @@ Documentation:
 
 Documentación guardada en:
 ```
-/root/.claude/projects/-var-www-uix-torrax-cloud/memory/
+/root/.claude/projects/-var-www-uix/memory/
 
 ├── MEMORY.md                    ← Índice principal (⭐ LEER PRIMERO)
 ├── project_pruebas_maria_migration.md  ← Contexto general
