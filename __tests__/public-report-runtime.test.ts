@@ -65,7 +65,8 @@ describe('public report runtime', () => {
     runtime.renderReport(data)
 
     expect(document.querySelector('.list img')).toBeNull()
-    expect(document.querySelector('.list h2')?.textContent).toBe(payload)
+    expect(document.querySelector('.list h2')).toBeNull()
+    expect(document.querySelector('summary span')?.textContent).toBe(payload)
     expect(document.querySelector('#f-ronda option:last-child')?.textContent).toContain(payload)
     expect(document.querySelector('.insights-head img')).toBeNull()
     expect(alertSpy).not.toHaveBeenCalled()
@@ -76,6 +77,7 @@ describe('public report runtime', () => {
     const data = report()
     data.findings[0].evidence = [
       { url: '/images/image001.jpg', filename: 'válida.jpg' },
+      { url: '/api/public/evidence/evidence-1/file', filename: 'runtime.jpg' },
       { url: 'javascript:alert(1)', filename: 'peligrosa.jpg' },
       { url: 'https://evil.example/image.jpg', filename: 'externa.jpg' },
     ] as any
@@ -84,5 +86,6 @@ describe('public report runtime', () => {
 
     expect(document.querySelectorAll('.evidence a')).toHaveLength(1)
     expect(document.querySelector('.evidence span')?.textContent).toBe('válida.jpg')
+    expect(document.body.textContent).not.toContain('runtime.jpg')
   })
 })

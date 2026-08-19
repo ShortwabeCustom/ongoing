@@ -68,7 +68,7 @@
     summary.append(el("b", finding.number), el("span", finding.title), chips);
 
     const detail = el("div", undefined, "detail");
-    detail.append(el("small", finding.metaLine), el("h2", finding.title));
+    detail.append(el("small", finding.metaLine));
     const evidence = Array.isArray(finding.evidence) ? finding.evidence : [];
     const safeEvidence = evidence.filter((item) => isSafeLegacyUrl(item && item.url));
     if (safeEvidence.length) {

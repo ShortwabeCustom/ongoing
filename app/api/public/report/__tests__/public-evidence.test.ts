@@ -76,7 +76,7 @@ describe('regla única de renderizabilidad pública', () => {
     expect(listWhere().deletedAt).toBeNull()
   })
 
-  it('ambos exigen storageKey legacy: la evidencia de runtime nunca entra', async () => {
+  it('excluye Runtime Evidence activa del listado y del contador', async () => {
     await GET()
     expect(countWhere().storageKey).toEqual({ startsWith: 'legacy/' })
     expect(listWhere().storageKey).toEqual({ startsWith: 'legacy/' })
@@ -95,15 +95,26 @@ describe('regla única de renderizabilidad pública', () => {
     expect(countWhere().finding).toEqual({ deletedAt: null })
   })
 
+  it('excluye Evidence borrada del listado y deja el contador sin incremento', async () => {
+    await GET()
+    expect(listWhere().deletedAt).toBeNull()
+    expect(countWhere().deletedAt).toBeNull()
+  })
+
+  it('excluye la evidencia de un Finding borrado', async () => {
+    await GET()
+    expect((calls.findingFindMany[0] as any).where.deletedAt).toBeNull()
+    expect(countWhere().finding).toEqual({ deletedAt: null })
+  })
+
   it('la query padre de findings ya restringe a findings activos', async () => {
     await GET()
     expect((calls.findingFindMany[0] as any).where).toMatchObject({ deletedAt: null })
   })
 
-  it('la lista no selecciona storageKey: no se filtra la ruta interna', async () => {
-    await GET()
-    const select = (calls.findingFindMany[0] as any).select.evidence.select
-    expect(select.storageKey).toBeUndefined()
+  it('la respuesta pública nunca emite storageKey', async () => {
+    const response = await GET()
+    expect(JSON.stringify(await response.json())).not.toContain('storageKey')
   })
 })
 
@@ -127,6 +138,7 @@ describe('contrato público conservado', () => {
     db.testSession.findMany.mockResolvedValueOnce([
       { id: 'session-a', name: 'Sesión A', date: new Date('2026-08-10'), _count: { findings: 2 } },
     ] as any)
+    db.evidence.count.mockResolvedValueOnce(1)
     db.finding.findMany.mockImplementationOnce(async (args: unknown) => {
       calls.findingFindMany.push(args)
       return [
@@ -137,7 +149,8 @@ describe('contrato público conservado', () => {
         {
           id: 'finding-b', observation: 'Con legacy pública', status: 'CLOSED', sourceRow: 3,
           testSessionId: 'session-a', testSession: { name: 'Sesión A' }, incidenceTypes: [],
-          evidence: [{ id: 'evidence-a', url: '/images/legacy.jpg', originalFilename: 'legacy.jpg' }],
+          // Prisma ya excluyó la runtime activa; solo devuelve la legacy activa.
+          evidence: [{ url: '/images/image001.jpg', originalFilename: 'imagen.jpg' }],
         },
       ]
     })
@@ -148,10 +161,34 @@ describe('contrato público conservado', () => {
     expect(response.status).toBe(200)
     expect(body.findings).toHaveLength(2)
     expect(body.findings[0].evidence).toEqual([])
-    expect(body.findings[1].evidence).toEqual([{ url: '/images/legacy.jpg', filename: 'legacy.jpg' }])
+    expect(body.findings[1].evidence).toEqual([{ url: '/images/image001.jpg', filename: 'imagen.jpg' }])
     expect(body.rounds).toEqual([{ id: 'session-a', label: 'Sesión A', count: 2 }])
     expect(body.stats.observations).toBe(body.findings.length)
     expect(body.stats.completed + body.stats.pending).toBe(body.stats.observations)
+    expect(body.stats.evidenceCount).toBe(1)
+  })
+
+  it('mezcla runtime + legacy: publica y contabiliza únicamente legacy', async () => {
+    db.finding.count
+      .mockResolvedValueOnce(1)
+      .mockResolvedValueOnce(0)
+      .mockResolvedValueOnce(1)
+    db.evidence.count.mockResolvedValueOnce(1)
+    db.finding.findMany.mockImplementationOnce(async (args: unknown) => {
+      calls.findingFindMany.push(args)
+      return [{
+        id: 'finding-a', observation: 'Mixto', status: 'OPEN', sourceRow: 2,
+        testSessionId: null, testSession: null, incidenceTypes: [],
+        evidence: [{ url: '/images/legacy.png', originalFilename: 'legacy.png' }],
+      }]
+    })
+
+    const body = await (await GET()).json()
+    expect(body.stats.evidenceCount).toBe(1)
+    expect(body.findings[0].evidence).toEqual([{ url: '/images/legacy.png', filename: 'legacy.png' }])
+    const serialized = JSON.stringify(body)
+    expect(serialized).not.toContain('/api/evidence/')
+    expect(serialized).not.toContain('/api/public/evidence/')
   })
 
   it('excluye findings borrados desde la query padre', async () => {
@@ -166,11 +203,11 @@ describe('contrato público conservado', () => {
     }))
   })
 
-  it('no selecciona rutas internas ni storageKey de evidencia privada', async () => {
-    await GET()
-    const select = (calls.findingFindMany[0] as any).select.evidence.select
-    expect(select).toEqual({ id: true, url: true, originalFilename: true })
-    expect(select.storageKey).toBeUndefined()
-    expect(listWhere()).toMatchObject({ deletedAt: null, storageKey: { startsWith: 'legacy/' } })
+  it('no emite rutas internas ni storageKey de evidencia privada', async () => {
+    const response = await GET()
+    const serialized = JSON.stringify(await response.json())
+    expect(serialized).not.toContain('storageKey')
+    expect(serialized).not.toContain('/api/evidence/')
+    expect(serialized).not.toContain('/api/public/evidence/')
   })
 })
