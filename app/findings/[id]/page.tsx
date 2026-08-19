@@ -7,7 +7,7 @@ import { FindingDetailWithEvidence } from '@/components/finding/FindingDetailWit
 import { FindingStatusActions } from '@/components/finding/FindingStatusActions'
 import { DeleteFindingButton } from '@/components/finding/DeleteFindingButton'
 import { ActivityLog } from '@/components/finding/ActivityLog'
-import { ResolutionWorkflow, ValidationCheckpoint, AuditTrailViewer } from '@/components/workflow'
+import { ResolutionWorkflow, ValidationCheckpoint } from '@/components/workflow'
 import { AppShell } from '@/components/app/AppShell'
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary'
 import {
@@ -122,11 +122,6 @@ export default async function FindingDetailPage({ params }: PageProps) {
         <FindingDetailWithEvidence finding={finding as any} />
 
         <section className="pm-card p-6 md:p-8">
-          <h2 className="mb-4 text-xl font-bold text-[#17251f]">📋 Historial de actividades</h2>
-          <ActivityLog findingId={finding.id} />
-        </section>
-
-        <section className="pm-card p-6 md:p-8">
           <ResolutionWorkflow finding={finding as any} />
         </section>
 
@@ -134,17 +129,12 @@ export default async function FindingDetailPage({ params }: PageProps) {
           <ValidationCheckpoint finding={finding as any} />
         </section>
 
-        {/*
-          C-01: el visor de auditoría lleva su propio límite de error. Antes, un
-          fallo de render aquí subía hasta `app/findings/[id]/error.tsx` y dejaba
-          el hallazgo entero inaccesible; ahora degrada sólo esta tarjeta.
-        */}
         <section className="pm-card p-6 md:p-8">
           <ErrorBoundary
-            title="Auditoría"
-            message="No pudimos mostrar el historial de auditoría de este hallazgo. El resto del detalle sigue disponible."
+            title="Historial de actividades"
+            message="No pudimos mostrar el historial de actividades de este hallazgo. El resto del detalle sigue disponible."
           >
-            <AuditTrailViewer findingId={finding.id} compact />
+            <ActivityLog findingId={finding.id} />
           </ErrorBoundary>
         </section>
       </div>
