@@ -63,3 +63,21 @@ export async function PATCH(
     return apiError(error)
   }
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string; resId: string }> },
+) {
+  try {
+    const { valid, user, error } = await checkRBAC(request, {
+      allowedRoles: RBAC_PERMISSIONS.DELETE_RESOLUTION,
+    })
+    if (!valid) return error
+
+    const { id: findingId, resId } = await params
+    await ResolutionService.deleteResolution(findingId, resId, user.id)
+    return new Response(null, { status: 204 })
+  } catch (error) {
+    return apiError(error)
+  }
+}
