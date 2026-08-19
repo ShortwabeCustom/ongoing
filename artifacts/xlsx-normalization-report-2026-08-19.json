@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-19T05:42:35.772Z",
+  "generatedAt": "2026-08-19T05:45:40.513Z",
   "mode": "DRY_RUN",
   "xlsx": {
     "file": {
@@ -25,7 +25,12 @@
           "Observación",
           "Pantalla Anterior",
           "Modificación"
-        ]
+        ],
+        "dateMetadata": {
+          "perRowDateCells": 0,
+          "hiddenColumns": [],
+          "hiddenRows": []
+        }
       },
       {
         "name": "Pruebas 30 de julio",
@@ -43,7 +48,12 @@
           "Evidencia",
           "Ajuste",
           "Comentarios"
-        ]
+        ],
+        "dateMetadata": {
+          "perRowDateCells": 0,
+          "hiddenColumns": [],
+          "hiddenRows": []
+        }
       },
       {
         "name": "Pruebas 3 agosto",
@@ -60,7 +70,12 @@
           "Observación",
           "Evidencia",
           "Tipo de incidencia"
-        ]
+        ],
+        "dateMetadata": {
+          "perRowDateCells": 0,
+          "hiddenColumns": [],
+          "hiddenRows": []
+        }
       },
       {
         "name": "Pruebas 4 - 5 agosto",
@@ -78,7 +93,12 @@
           "Evidencia",
           "Tipo de incidencia",
           "Comentarios"
-        ]
+        ],
+        "dateMetadata": {
+          "perRowDateCells": 0,
+          "hiddenColumns": [],
+          "hiddenRows": []
+        }
       },
       {
         "name": "Pruebas 6 - 7 de agosto",
@@ -96,7 +116,12 @@
           "Evidencia",
           "Tipo de incidencia",
           "Comentarios"
-        ]
+        ],
+        "dateMetadata": {
+          "perRowDateCells": 0,
+          "hiddenColumns": [],
+          "hiddenRows": []
+        }
       },
       {
         "name": "Pruebas 10 de agosto",
@@ -114,7 +139,12 @@
           "Evidencia",
           "Tipo de incidencia",
           "Comentarios"
-        ]
+        ],
+        "dateMetadata": {
+          "perRowDateCells": 0,
+          "hiddenColumns": [],
+          "hiddenRows": []
+        }
       },
       {
         "name": "Pruebas 11 de agosto",
@@ -132,7 +162,12 @@
           "Evidencia",
           "Tipo de incidencia",
           "Comentarios"
-        ]
+        ],
+        "dateMetadata": {
+          "perRowDateCells": 0,
+          "hiddenColumns": [],
+          "hiddenRows": []
+        }
       },
       {
         "name": "Pruebas 12 de agosto",
@@ -150,7 +185,12 @@
           "Evidencia",
           "Tipo de incidencia",
           "Comentarios"
-        ]
+        ],
+        "dateMetadata": {
+          "perRowDateCells": 0,
+          "hiddenColumns": [],
+          "hiddenRows": []
+        }
       },
       {
         "name": "Pruebas 13 de agosto",
@@ -168,7 +208,12 @@
           "Evidencia",
           "Tipo de incidencia",
           "Comentarios"
-        ]
+        ],
+        "dateMetadata": {
+          "perRowDateCells": 0,
+          "hiddenColumns": [],
+          "hiddenRows": []
+        }
       },
       {
         "name": "Pruebas 14 de agosto",
@@ -186,7 +231,12 @@
           "Evidencia",
           "Tipo de incidencia",
           "Comentarios"
-        ]
+        ],
+        "dateMetadata": {
+          "perRowDateCells": 0,
+          "hiddenColumns": [],
+          "hiddenRows": []
+        }
       },
       {
         "name": "Pruebas 17 de agosto",
@@ -204,7 +254,12 @@
           "Evidencia",
           "Tipo de incidencia",
           "Comentarios"
-        ]
+        ],
+        "dateMetadata": {
+          "perRowDateCells": 0,
+          "hiddenColumns": [],
+          "hiddenRows": []
+        }
       },
       {
         "name": "Pruebas 18 de agosto",
@@ -222,7 +277,12 @@
           "Evidencia",
           "Tipo de incidencia",
           "Comentarios"
-        ]
+        ],
+        "dateMetadata": {
+          "perRowDateCells": 0,
+          "hiddenColumns": [],
+          "hiddenRows": []
+        }
       }
     ],
     "invalidRows": [
@@ -289,8 +349,12 @@
   "sessions": [
     {
       "worksheet": "Mod 31 Jul",
-      "name": "Modificación 31 Jul",
+      "name": "Mod 31 Jul",
       "date": "2026-07-31",
+      "originStartDate": "2026-07-31",
+      "originEndDate": "2026-07-31",
+      "originPeriod": "2026-07-31",
+      "isRange": false,
       "action": "CREATE",
       "id": "proposed:Mod 31 Jul"
     },
@@ -298,6 +362,10 @@
       "worksheet": "Pruebas 30 de julio",
       "name": "Pruebas 30 de julio",
       "date": "2026-07-30",
+      "originStartDate": "2026-07-30",
+      "originEndDate": "2026-07-30",
+      "originPeriod": "2026-07-30",
+      "isRange": false,
       "action": "CREATE",
       "id": "proposed:Pruebas 30 de julio"
     },
@@ -305,6 +373,10 @@
       "worksheet": "Pruebas 3 agosto",
       "name": "Pruebas 3 agosto",
       "date": "2026-08-03",
+      "originStartDate": "2026-08-03",
+      "originEndDate": "2026-08-03",
+      "originPeriod": "2026-08-03",
+      "isRange": false,
       "action": "CREATE",
       "id": "proposed:Pruebas 3 agosto"
     },
@@ -312,6 +384,10 @@
       "worksheet": "Pruebas 4 - 5 agosto",
       "name": "Pruebas 4 - 5 agosto",
       "date": "2026-08-04",
+      "originStartDate": "2026-08-04",
+      "originEndDate": "2026-08-05",
+      "originPeriod": "2026-08-04/2026-08-05",
+      "isRange": true,
       "action": "CREATE",
       "id": "proposed:Pruebas 4 - 5 agosto"
     },
@@ -319,6 +395,10 @@
       "worksheet": "Pruebas 6 - 7 de agosto",
       "name": "Pruebas 6 - 7 de agosto",
       "date": "2026-08-06",
+      "originStartDate": "2026-08-06",
+      "originEndDate": "2026-08-07",
+      "originPeriod": "2026-08-06/2026-08-07",
+      "isRange": true,
       "action": "CREATE",
       "id": "proposed:Pruebas 6 - 7 de agosto"
     },
@@ -326,6 +406,10 @@
       "worksheet": "Pruebas 10 de agosto",
       "name": "Pruebas 10 de agosto",
       "date": "2026-08-10",
+      "originStartDate": "2026-08-10",
+      "originEndDate": "2026-08-10",
+      "originPeriod": "2026-08-10",
+      "isRange": false,
       "action": "CREATE",
       "id": "proposed:Pruebas 10 de agosto"
     },
@@ -333,6 +417,10 @@
       "worksheet": "Pruebas 11 de agosto",
       "name": "Pruebas 11 de agosto",
       "date": "2026-08-11",
+      "originStartDate": "2026-08-11",
+      "originEndDate": "2026-08-11",
+      "originPeriod": "2026-08-11",
+      "isRange": false,
       "action": "CREATE",
       "id": "proposed:Pruebas 11 de agosto"
     },
@@ -340,6 +428,10 @@
       "worksheet": "Pruebas 12 de agosto",
       "name": "Pruebas 12 de agosto",
       "date": "2026-08-12",
+      "originStartDate": "2026-08-12",
+      "originEndDate": "2026-08-12",
+      "originPeriod": "2026-08-12",
+      "isRange": false,
       "action": "CREATE",
       "id": "proposed:Pruebas 12 de agosto"
     },
@@ -347,6 +439,10 @@
       "worksheet": "Pruebas 13 de agosto",
       "name": "Pruebas 13 de agosto",
       "date": "2026-08-13",
+      "originStartDate": "2026-08-13",
+      "originEndDate": "2026-08-13",
+      "originPeriod": "2026-08-13",
+      "isRange": false,
       "action": "CREATE",
       "id": "proposed:Pruebas 13 de agosto"
     },
@@ -354,6 +450,10 @@
       "worksheet": "Pruebas 14 de agosto",
       "name": "Pruebas 14 de agosto",
       "date": "2026-08-14",
+      "originStartDate": "2026-08-14",
+      "originEndDate": "2026-08-14",
+      "originPeriod": "2026-08-14",
+      "isRange": false,
       "action": "CREATE",
       "id": "proposed:Pruebas 14 de agosto"
     },
@@ -361,6 +461,10 @@
       "worksheet": "Pruebas 17 de agosto",
       "name": "Pruebas 17 de agosto",
       "date": "2026-08-17",
+      "originStartDate": "2026-08-17",
+      "originEndDate": "2026-08-17",
+      "originPeriod": "2026-08-17",
+      "isRange": false,
       "action": "CREATE",
       "id": "proposed:Pruebas 17 de agosto"
     },
@@ -368,10 +472,214 @@
       "worksheet": "Pruebas 18 de agosto",
       "name": "Pruebas 18 de agosto",
       "date": "2026-08-18",
+      "originStartDate": "2026-08-18",
+      "originEndDate": "2026-08-18",
+      "originPeriod": "2026-08-18",
+      "isRange": false,
       "action": "CREATE",
       "id": "proposed:Pruebas 18 de agosto"
     }
   ],
+  "temporalMappings": [
+    {
+      "worksheet": "Mod 31 Jul",
+      "originDate": "2026-07-31",
+      "originPeriod": "2026-07-31",
+      "testSession": {
+        "action": "CREATE",
+        "name": "Mod 31 Jul",
+        "date": "2026-07-31"
+      },
+      "findings": 18,
+      "sourceRows": {
+        "min": 2,
+        "max": 19
+      },
+      "perRowDateMetadataFound": false
+    },
+    {
+      "worksheet": "Pruebas 30 de julio",
+      "originDate": "2026-07-30",
+      "originPeriod": "2026-07-30",
+      "testSession": {
+        "action": "CREATE",
+        "name": "Pruebas 30 de julio",
+        "date": "2026-07-30"
+      },
+      "findings": 104,
+      "sourceRows": {
+        "min": 2,
+        "max": 106
+      },
+      "perRowDateMetadataFound": false
+    },
+    {
+      "worksheet": "Pruebas 3 agosto",
+      "originDate": "2026-08-03",
+      "originPeriod": "2026-08-03",
+      "testSession": {
+        "action": "CREATE",
+        "name": "Pruebas 3 agosto",
+        "date": "2026-08-03"
+      },
+      "findings": 1,
+      "sourceRows": {
+        "min": 2,
+        "max": 2
+      },
+      "perRowDateMetadataFound": false
+    },
+    {
+      "worksheet": "Pruebas 4 - 5 agosto",
+      "originDate": "2026-08-04",
+      "originPeriod": "2026-08-04/2026-08-05",
+      "testSession": {
+        "action": "CREATE",
+        "name": "Pruebas 4 - 5 agosto",
+        "date": "2026-08-04"
+      },
+      "findings": 51,
+      "sourceRows": {
+        "min": 2,
+        "max": 52
+      },
+      "perRowDateMetadataFound": false
+    },
+    {
+      "worksheet": "Pruebas 6 - 7 de agosto",
+      "originDate": "2026-08-06",
+      "originPeriod": "2026-08-06/2026-08-07",
+      "testSession": {
+        "action": "CREATE",
+        "name": "Pruebas 6 - 7 de agosto",
+        "date": "2026-08-06"
+      },
+      "findings": 3,
+      "sourceRows": {
+        "min": 2,
+        "max": 4
+      },
+      "perRowDateMetadataFound": false
+    },
+    {
+      "worksheet": "Pruebas 10 de agosto",
+      "originDate": "2026-08-10",
+      "originPeriod": "2026-08-10",
+      "testSession": {
+        "action": "CREATE",
+        "name": "Pruebas 10 de agosto",
+        "date": "2026-08-10"
+      },
+      "findings": 18,
+      "sourceRows": {
+        "min": 2,
+        "max": 19
+      },
+      "perRowDateMetadataFound": false
+    },
+    {
+      "worksheet": "Pruebas 11 de agosto",
+      "originDate": "2026-08-11",
+      "originPeriod": "2026-08-11",
+      "testSession": {
+        "action": "CREATE",
+        "name": "Pruebas 11 de agosto",
+        "date": "2026-08-11"
+      },
+      "findings": 11,
+      "sourceRows": {
+        "min": 2,
+        "max": 12
+      },
+      "perRowDateMetadataFound": false
+    },
+    {
+      "worksheet": "Pruebas 12 de agosto",
+      "originDate": "2026-08-12",
+      "originPeriod": "2026-08-12",
+      "testSession": {
+        "action": "CREATE",
+        "name": "Pruebas 12 de agosto",
+        "date": "2026-08-12"
+      },
+      "findings": 10,
+      "sourceRows": {
+        "min": 2,
+        "max": 11
+      },
+      "perRowDateMetadataFound": false
+    },
+    {
+      "worksheet": "Pruebas 13 de agosto",
+      "originDate": "2026-08-13",
+      "originPeriod": "2026-08-13",
+      "testSession": {
+        "action": "CREATE",
+        "name": "Pruebas 13 de agosto",
+        "date": "2026-08-13"
+      },
+      "findings": 6,
+      "sourceRows": {
+        "min": 2,
+        "max": 7
+      },
+      "perRowDateMetadataFound": false
+    },
+    {
+      "worksheet": "Pruebas 14 de agosto",
+      "originDate": "2026-08-14",
+      "originPeriod": "2026-08-14",
+      "testSession": {
+        "action": "CREATE",
+        "name": "Pruebas 14 de agosto",
+        "date": "2026-08-14"
+      },
+      "findings": 1,
+      "sourceRows": {
+        "min": 2,
+        "max": 2
+      },
+      "perRowDateMetadataFound": false
+    },
+    {
+      "worksheet": "Pruebas 17 de agosto",
+      "originDate": "2026-08-17",
+      "originPeriod": "2026-08-17",
+      "testSession": {
+        "action": "CREATE",
+        "name": "Pruebas 17 de agosto",
+        "date": "2026-08-17"
+      },
+      "findings": 8,
+      "sourceRows": {
+        "min": 2,
+        "max": 9
+      },
+      "perRowDateMetadataFound": false
+    },
+    {
+      "worksheet": "Pruebas 18 de agosto",
+      "originDate": "2026-08-18",
+      "originPeriod": "2026-08-18",
+      "testSession": {
+        "action": "CREATE",
+        "name": "Pruebas 18 de agosto",
+        "date": "2026-08-18"
+      },
+      "findings": 3,
+      "sourceRows": {
+        "min": 2,
+        "max": 4
+      },
+      "perRowDateMetadataFound": false
+    }
+  ],
+  "temporalValidation": {
+    "schemaSupportsSingleDateOnly": true,
+    "rangePolicy": "TestSession.date = first day; TestSession.name preserves the exact worksheet range. No per-row date exists in this workbook.",
+    "crossMonthAssociationsDetected": 0,
+    "crossMonthAssociationsAfterPlan": 0
+  },
   "findings": [
     {
       "row": {
@@ -417,8 +725,12 @@
       "fingerprint": "02c2665b84df1423a229828ce4f5bbc96812f565720cf02b834629a719934a5d",
       "session": {
         "worksheet": "Mod 31 Jul",
-        "name": "Modificación 31 Jul",
+        "name": "Mod 31 Jul",
         "date": "2026-07-31",
+        "originStartDate": "2026-07-31",
+        "originEndDate": "2026-07-31",
+        "originPeriod": "2026-07-31",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Mod 31 Jul"
       },
@@ -486,8 +798,12 @@
       "fingerprint": "e80011a1fd3f7c3f2a88351fb35b5b4cde42ca2496a4a0be06b6eb3b555f96ef",
       "session": {
         "worksheet": "Mod 31 Jul",
-        "name": "Modificación 31 Jul",
+        "name": "Mod 31 Jul",
         "date": "2026-07-31",
+        "originStartDate": "2026-07-31",
+        "originEndDate": "2026-07-31",
+        "originPeriod": "2026-07-31",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Mod 31 Jul"
       },
@@ -555,8 +871,12 @@
       "fingerprint": "f87e30f9de904dad145a8742146ca2b71dd5449033a5ea379bc992a44eeb603f",
       "session": {
         "worksheet": "Mod 31 Jul",
-        "name": "Modificación 31 Jul",
+        "name": "Mod 31 Jul",
         "date": "2026-07-31",
+        "originStartDate": "2026-07-31",
+        "originEndDate": "2026-07-31",
+        "originPeriod": "2026-07-31",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Mod 31 Jul"
       },
@@ -624,8 +944,12 @@
       "fingerprint": "3637a25e5e28ad178e3601feb3c5e4b51d15b697b34d8bab7ae37bd22489b220",
       "session": {
         "worksheet": "Mod 31 Jul",
-        "name": "Modificación 31 Jul",
+        "name": "Mod 31 Jul",
         "date": "2026-07-31",
+        "originStartDate": "2026-07-31",
+        "originEndDate": "2026-07-31",
+        "originPeriod": "2026-07-31",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Mod 31 Jul"
       },
@@ -693,8 +1017,12 @@
       "fingerprint": "d0843aaf2378068d242b496ecbf2103619d5557b814ab48725731447367c886d",
       "session": {
         "worksheet": "Mod 31 Jul",
-        "name": "Modificación 31 Jul",
+        "name": "Mod 31 Jul",
         "date": "2026-07-31",
+        "originStartDate": "2026-07-31",
+        "originEndDate": "2026-07-31",
+        "originPeriod": "2026-07-31",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Mod 31 Jul"
       },
@@ -762,8 +1090,12 @@
       "fingerprint": "718ef536947ad1e635d0844f8746f47b5e31e2d7b184f1014511dbbc3001d32a",
       "session": {
         "worksheet": "Mod 31 Jul",
-        "name": "Modificación 31 Jul",
+        "name": "Mod 31 Jul",
         "date": "2026-07-31",
+        "originStartDate": "2026-07-31",
+        "originEndDate": "2026-07-31",
+        "originPeriod": "2026-07-31",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Mod 31 Jul"
       },
@@ -831,8 +1163,12 @@
       "fingerprint": "3b328d445249c39e11f6fb3590d5f30cb781e4b5f581c93c6461d88653eae8e5",
       "session": {
         "worksheet": "Mod 31 Jul",
-        "name": "Modificación 31 Jul",
+        "name": "Mod 31 Jul",
         "date": "2026-07-31",
+        "originStartDate": "2026-07-31",
+        "originEndDate": "2026-07-31",
+        "originPeriod": "2026-07-31",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Mod 31 Jul"
       },
@@ -900,8 +1236,12 @@
       "fingerprint": "b251d3a22bd1fd74bcd6696904ee83f65197aeb3c35ba6466b05cf3be8cffd34",
       "session": {
         "worksheet": "Mod 31 Jul",
-        "name": "Modificación 31 Jul",
+        "name": "Mod 31 Jul",
         "date": "2026-07-31",
+        "originStartDate": "2026-07-31",
+        "originEndDate": "2026-07-31",
+        "originPeriod": "2026-07-31",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Mod 31 Jul"
       },
@@ -969,8 +1309,12 @@
       "fingerprint": "bf681500feb42b15f65c694400554f295a7afe29e0b02f24915a0ec55431d30a",
       "session": {
         "worksheet": "Mod 31 Jul",
-        "name": "Modificación 31 Jul",
+        "name": "Mod 31 Jul",
         "date": "2026-07-31",
+        "originStartDate": "2026-07-31",
+        "originEndDate": "2026-07-31",
+        "originPeriod": "2026-07-31",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Mod 31 Jul"
       },
@@ -1038,8 +1382,12 @@
       "fingerprint": "751573b8e24ce75842c7054ab3335177adebebc837ace2effa955ee1d17e7be7",
       "session": {
         "worksheet": "Mod 31 Jul",
-        "name": "Modificación 31 Jul",
+        "name": "Mod 31 Jul",
         "date": "2026-07-31",
+        "originStartDate": "2026-07-31",
+        "originEndDate": "2026-07-31",
+        "originPeriod": "2026-07-31",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Mod 31 Jul"
       },
@@ -1107,8 +1455,12 @@
       "fingerprint": "c0a2a4ecea5c41b8f48786446bb6597ddf6fd0198039bcb29343bf5eb4a888b1",
       "session": {
         "worksheet": "Mod 31 Jul",
-        "name": "Modificación 31 Jul",
+        "name": "Mod 31 Jul",
         "date": "2026-07-31",
+        "originStartDate": "2026-07-31",
+        "originEndDate": "2026-07-31",
+        "originPeriod": "2026-07-31",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Mod 31 Jul"
       },
@@ -1176,8 +1528,12 @@
       "fingerprint": "b634d6924f34ae12f6c788237718c75a73a8846d302bff1df9aa0ab9f0b1ebc3",
       "session": {
         "worksheet": "Mod 31 Jul",
-        "name": "Modificación 31 Jul",
+        "name": "Mod 31 Jul",
         "date": "2026-07-31",
+        "originStartDate": "2026-07-31",
+        "originEndDate": "2026-07-31",
+        "originPeriod": "2026-07-31",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Mod 31 Jul"
       },
@@ -1245,8 +1601,12 @@
       "fingerprint": "f139f76479c3b9e75971f8e8cbdc4f8c7d1b985dd63f48c62915fc6158facc6b",
       "session": {
         "worksheet": "Mod 31 Jul",
-        "name": "Modificación 31 Jul",
+        "name": "Mod 31 Jul",
         "date": "2026-07-31",
+        "originStartDate": "2026-07-31",
+        "originEndDate": "2026-07-31",
+        "originPeriod": "2026-07-31",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Mod 31 Jul"
       },
@@ -1314,8 +1674,12 @@
       "fingerprint": "b878c618ab05a699f8745ec59de99c21b484ee142dd023e9d591caf11f00d5f7",
       "session": {
         "worksheet": "Mod 31 Jul",
-        "name": "Modificación 31 Jul",
+        "name": "Mod 31 Jul",
         "date": "2026-07-31",
+        "originStartDate": "2026-07-31",
+        "originEndDate": "2026-07-31",
+        "originPeriod": "2026-07-31",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Mod 31 Jul"
       },
@@ -1397,8 +1761,12 @@
       "fingerprint": "89144595a296b8f896a1380aeb46e93d743124563269005a95dd7fd711668bf0",
       "session": {
         "worksheet": "Mod 31 Jul",
-        "name": "Modificación 31 Jul",
+        "name": "Mod 31 Jul",
         "date": "2026-07-31",
+        "originStartDate": "2026-07-31",
+        "originEndDate": "2026-07-31",
+        "originPeriod": "2026-07-31",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Mod 31 Jul"
       },
@@ -1458,8 +1826,12 @@
       "fingerprint": "722881547b54c4af7ec90d2765316cb027f93798b60d7b65a0517445fcef8054",
       "session": {
         "worksheet": "Mod 31 Jul",
-        "name": "Modificación 31 Jul",
+        "name": "Mod 31 Jul",
         "date": "2026-07-31",
+        "originStartDate": "2026-07-31",
+        "originEndDate": "2026-07-31",
+        "originPeriod": "2026-07-31",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Mod 31 Jul"
       },
@@ -1521,8 +1893,12 @@
       "fingerprint": "2a98d0ebf955560514f8317b10141e53e9f95723578431487ff5f5aac1fc60fd",
       "session": {
         "worksheet": "Mod 31 Jul",
-        "name": "Modificación 31 Jul",
+        "name": "Mod 31 Jul",
         "date": "2026-07-31",
+        "originStartDate": "2026-07-31",
+        "originEndDate": "2026-07-31",
+        "originPeriod": "2026-07-31",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Mod 31 Jul"
       },
@@ -1590,8 +1966,12 @@
       "fingerprint": "c09b1edb13f3a49999fed0260608a8744befcad792ce177ea4376fbfb373e791",
       "session": {
         "worksheet": "Mod 31 Jul",
-        "name": "Modificación 31 Jul",
+        "name": "Mod 31 Jul",
         "date": "2026-07-31",
+        "originStartDate": "2026-07-31",
+        "originEndDate": "2026-07-31",
+        "originPeriod": "2026-07-31",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Mod 31 Jul"
       },
@@ -1661,6 +2041,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -1716,6 +2100,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -1765,6 +2153,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -1814,6 +2206,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -1863,6 +2259,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -1912,6 +2312,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -1975,6 +2379,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -2016,6 +2424,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -2059,6 +2471,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -2108,6 +2524,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -2157,6 +2577,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -2220,6 +2644,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -2260,6 +2688,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -2302,6 +2734,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -2351,6 +2787,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -2414,6 +2854,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -2454,6 +2898,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -2497,6 +2945,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -2547,6 +2999,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -2596,6 +3052,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -2645,6 +3105,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -2708,6 +3172,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -2748,6 +3216,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -2804,6 +3276,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -2844,6 +3320,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -2886,6 +3366,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -2949,6 +3433,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -3033,6 +3521,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -3081,6 +3573,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -3125,6 +3621,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -3175,6 +3675,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -3225,6 +3729,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -3289,6 +3797,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -3329,6 +3841,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -3372,6 +3888,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -3423,6 +3943,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -3473,6 +3997,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -3507,6 +4035,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -3563,6 +4095,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -3632,6 +4168,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -3687,6 +4227,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -3736,6 +4280,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -3785,6 +4333,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -3834,6 +4386,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -3883,6 +4439,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -3933,6 +4493,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -3982,6 +4546,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -4031,6 +4599,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -4080,6 +4652,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -4129,6 +4705,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -4193,6 +4773,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -4250,6 +4834,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -4286,6 +4874,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -4329,6 +4921,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -4378,6 +4974,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -4427,6 +5027,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -4476,6 +5080,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -4525,6 +5133,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -4574,6 +5186,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -4624,6 +5240,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -4674,6 +5294,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -4724,6 +5348,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -4789,6 +5417,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -4831,6 +5463,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -4888,6 +5524,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -4928,6 +5568,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -4984,6 +5628,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -5025,6 +5673,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -5068,6 +5720,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -5118,6 +5774,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -5169,6 +5829,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -5219,6 +5883,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -5282,6 +5950,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -5322,6 +5994,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -5392,6 +6068,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -5438,6 +6118,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -5494,6 +6178,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -5535,6 +6223,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -5578,6 +6270,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -5627,6 +6323,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -5676,6 +6376,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -5726,6 +6430,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -5776,6 +6484,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -5825,6 +6537,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -5888,6 +6604,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -5943,6 +6663,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -5977,6 +6701,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -6019,6 +6747,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -6069,6 +6801,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -6119,6 +6855,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -6169,6 +6909,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -6220,6 +6964,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -6270,6 +7018,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -6333,6 +7085,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -6388,6 +7144,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -6438,6 +7198,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -6488,6 +7252,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -6537,6 +7305,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -6586,6 +7358,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -6635,6 +7411,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -6685,6 +7465,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -6736,6 +7520,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -6787,6 +7575,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -6838,6 +7630,10 @@
         "worksheet": "Pruebas 30 de julio",
         "name": "Pruebas 30 de julio",
         "date": "2026-07-30",
+        "originStartDate": "2026-07-30",
+        "originEndDate": "2026-07-30",
+        "originPeriod": "2026-07-30",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 30 de julio"
       },
@@ -6892,6 +7688,10 @@
         "worksheet": "Pruebas 3 agosto",
         "name": "Pruebas 3 agosto",
         "date": "2026-08-03",
+        "originStartDate": "2026-08-03",
+        "originEndDate": "2026-08-03",
+        "originPeriod": "2026-08-03",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 3 agosto"
       },
@@ -6953,6 +7753,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -7015,6 +7819,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -7077,6 +7885,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -7139,6 +7951,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -7201,6 +8017,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -7263,6 +8083,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -7325,6 +8149,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -7387,6 +8215,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -7449,6 +8281,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -7510,6 +8346,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -7570,6 +8410,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -7631,6 +8475,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -7693,6 +8541,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -7754,6 +8606,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -7815,6 +8671,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -7877,6 +8737,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -7924,6 +8788,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -7979,6 +8847,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -8041,6 +8913,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -8087,6 +8963,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -8141,6 +9021,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -8216,6 +9100,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -8268,6 +9156,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -8323,6 +9215,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -8385,6 +9281,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -8447,6 +9347,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -8509,6 +9413,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -8570,6 +9478,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -8645,6 +9557,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -8726,6 +9642,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -8793,6 +9713,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -8840,6 +9764,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -8895,6 +9823,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -8957,6 +9889,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -9033,6 +9969,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -9086,6 +10026,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -9141,6 +10085,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -9217,6 +10165,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -9285,6 +10237,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -9347,6 +10303,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -9408,6 +10368,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -9469,6 +10433,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -9531,6 +10499,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -9593,6 +10565,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -9683,6 +10659,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -9742,6 +10722,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -9811,6 +10795,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -9893,6 +10881,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -9960,6 +10952,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -10049,6 +11045,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -10123,6 +11123,10 @@
         "worksheet": "Pruebas 4 - 5 agosto",
         "name": "Pruebas 4 - 5 agosto",
         "date": "2026-08-04",
+        "originStartDate": "2026-08-04",
+        "originEndDate": "2026-08-05",
+        "originPeriod": "2026-08-04/2026-08-05",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 4 - 5 agosto"
       },
@@ -10185,6 +11189,10 @@
         "worksheet": "Pruebas 6 - 7 de agosto",
         "name": "Pruebas 6 - 7 de agosto",
         "date": "2026-08-06",
+        "originStartDate": "2026-08-06",
+        "originEndDate": "2026-08-07",
+        "originPeriod": "2026-08-06/2026-08-07",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 6 - 7 de agosto"
       },
@@ -10247,6 +11255,10 @@
         "worksheet": "Pruebas 6 - 7 de agosto",
         "name": "Pruebas 6 - 7 de agosto",
         "date": "2026-08-06",
+        "originStartDate": "2026-08-06",
+        "originEndDate": "2026-08-07",
+        "originPeriod": "2026-08-06/2026-08-07",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 6 - 7 de agosto"
       },
@@ -10315,6 +11327,10 @@
         "worksheet": "Pruebas 6 - 7 de agosto",
         "name": "Pruebas 6 - 7 de agosto",
         "date": "2026-08-06",
+        "originStartDate": "2026-08-06",
+        "originEndDate": "2026-08-07",
+        "originPeriod": "2026-08-06/2026-08-07",
+        "isRange": true,
         "action": "CREATE",
         "id": "proposed:Pruebas 6 - 7 de agosto"
       },
@@ -10381,6 +11397,10 @@
         "worksheet": "Pruebas 10 de agosto",
         "name": "Pruebas 10 de agosto",
         "date": "2026-08-10",
+        "originStartDate": "2026-08-10",
+        "originEndDate": "2026-08-10",
+        "originPeriod": "2026-08-10",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 10 de agosto"
       },
@@ -10447,6 +11467,10 @@
         "worksheet": "Pruebas 10 de agosto",
         "name": "Pruebas 10 de agosto",
         "date": "2026-08-10",
+        "originStartDate": "2026-08-10",
+        "originEndDate": "2026-08-10",
+        "originPeriod": "2026-08-10",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 10 de agosto"
       },
@@ -10511,6 +11535,10 @@
         "worksheet": "Pruebas 10 de agosto",
         "name": "Pruebas 10 de agosto",
         "date": "2026-08-10",
+        "originStartDate": "2026-08-10",
+        "originEndDate": "2026-08-10",
+        "originPeriod": "2026-08-10",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 10 de agosto"
       },
@@ -10572,6 +11600,10 @@
         "worksheet": "Pruebas 10 de agosto",
         "name": "Pruebas 10 de agosto",
         "date": "2026-08-10",
+        "originStartDate": "2026-08-10",
+        "originEndDate": "2026-08-10",
+        "originPeriod": "2026-08-10",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 10 de agosto"
       },
@@ -10637,6 +11669,10 @@
         "worksheet": "Pruebas 10 de agosto",
         "name": "Pruebas 10 de agosto",
         "date": "2026-08-10",
+        "originStartDate": "2026-08-10",
+        "originEndDate": "2026-08-10",
+        "originPeriod": "2026-08-10",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 10 de agosto"
       },
@@ -10705,6 +11741,10 @@
         "worksheet": "Pruebas 10 de agosto",
         "name": "Pruebas 10 de agosto",
         "date": "2026-08-10",
+        "originStartDate": "2026-08-10",
+        "originEndDate": "2026-08-10",
+        "originPeriod": "2026-08-10",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 10 de agosto"
       },
@@ -10768,6 +11808,10 @@
         "worksheet": "Pruebas 10 de agosto",
         "name": "Pruebas 10 de agosto",
         "date": "2026-08-10",
+        "originStartDate": "2026-08-10",
+        "originEndDate": "2026-08-10",
+        "originPeriod": "2026-08-10",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 10 de agosto"
       },
@@ -10839,6 +11883,10 @@
         "worksheet": "Pruebas 10 de agosto",
         "name": "Pruebas 10 de agosto",
         "date": "2026-08-10",
+        "originStartDate": "2026-08-10",
+        "originEndDate": "2026-08-10",
+        "originPeriod": "2026-08-10",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 10 de agosto"
       },
@@ -10895,6 +11943,10 @@
         "worksheet": "Pruebas 10 de agosto",
         "name": "Pruebas 10 de agosto",
         "date": "2026-08-10",
+        "originStartDate": "2026-08-10",
+        "originEndDate": "2026-08-10",
+        "originPeriod": "2026-08-10",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 10 de agosto"
       },
@@ -10946,6 +11998,10 @@
         "worksheet": "Pruebas 10 de agosto",
         "name": "Pruebas 10 de agosto",
         "date": "2026-08-10",
+        "originStartDate": "2026-08-10",
+        "originEndDate": "2026-08-10",
+        "originPeriod": "2026-08-10",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 10 de agosto"
       },
@@ -10992,6 +12048,10 @@
         "worksheet": "Pruebas 10 de agosto",
         "name": "Pruebas 10 de agosto",
         "date": "2026-08-10",
+        "originStartDate": "2026-08-10",
+        "originEndDate": "2026-08-10",
+        "originPeriod": "2026-08-10",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 10 de agosto"
       },
@@ -11065,6 +12125,10 @@
         "worksheet": "Pruebas 10 de agosto",
         "name": "Pruebas 10 de agosto",
         "date": "2026-08-10",
+        "originStartDate": "2026-08-10",
+        "originEndDate": "2026-08-10",
+        "originPeriod": "2026-08-10",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 10 de agosto"
       },
@@ -11140,6 +12204,10 @@
         "worksheet": "Pruebas 10 de agosto",
         "name": "Pruebas 10 de agosto",
         "date": "2026-08-10",
+        "originStartDate": "2026-08-10",
+        "originEndDate": "2026-08-10",
+        "originPeriod": "2026-08-10",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 10 de agosto"
       },
@@ -11204,6 +12272,10 @@
         "worksheet": "Pruebas 10 de agosto",
         "name": "Pruebas 10 de agosto",
         "date": "2026-08-10",
+        "originStartDate": "2026-08-10",
+        "originEndDate": "2026-08-10",
+        "originPeriod": "2026-08-10",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 10 de agosto"
       },
@@ -11249,6 +12321,10 @@
         "worksheet": "Pruebas 10 de agosto",
         "name": "Pruebas 10 de agosto",
         "date": "2026-08-10",
+        "originStartDate": "2026-08-10",
+        "originEndDate": "2026-08-10",
+        "originPeriod": "2026-08-10",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 10 de agosto"
       },
@@ -11302,6 +12378,10 @@
         "worksheet": "Pruebas 10 de agosto",
         "name": "Pruebas 10 de agosto",
         "date": "2026-08-10",
+        "originStartDate": "2026-08-10",
+        "originEndDate": "2026-08-10",
+        "originPeriod": "2026-08-10",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 10 de agosto"
       },
@@ -11364,6 +12444,10 @@
         "worksheet": "Pruebas 10 de agosto",
         "name": "Pruebas 10 de agosto",
         "date": "2026-08-10",
+        "originStartDate": "2026-08-10",
+        "originEndDate": "2026-08-10",
+        "originPeriod": "2026-08-10",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 10 de agosto"
       },
@@ -11440,6 +12524,10 @@
         "worksheet": "Pruebas 10 de agosto",
         "name": "Pruebas 10 de agosto",
         "date": "2026-08-10",
+        "originStartDate": "2026-08-10",
+        "originEndDate": "2026-08-10",
+        "originPeriod": "2026-08-10",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 10 de agosto"
       },
@@ -11510,6 +12598,10 @@
         "worksheet": "Pruebas 11 de agosto",
         "name": "Pruebas 11 de agosto",
         "date": "2026-08-11",
+        "originStartDate": "2026-08-11",
+        "originEndDate": "2026-08-11",
+        "originPeriod": "2026-08-11",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 11 de agosto"
       },
@@ -11572,6 +12664,10 @@
         "worksheet": "Pruebas 11 de agosto",
         "name": "Pruebas 11 de agosto",
         "date": "2026-08-11",
+        "originStartDate": "2026-08-11",
+        "originEndDate": "2026-08-11",
+        "originPeriod": "2026-08-11",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 11 de agosto"
       },
@@ -11634,6 +12730,10 @@
         "worksheet": "Pruebas 11 de agosto",
         "name": "Pruebas 11 de agosto",
         "date": "2026-08-11",
+        "originStartDate": "2026-08-11",
+        "originEndDate": "2026-08-11",
+        "originPeriod": "2026-08-11",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 11 de agosto"
       },
@@ -11700,6 +12800,10 @@
         "worksheet": "Pruebas 11 de agosto",
         "name": "Pruebas 11 de agosto",
         "date": "2026-08-11",
+        "originStartDate": "2026-08-11",
+        "originEndDate": "2026-08-11",
+        "originPeriod": "2026-08-11",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 11 de agosto"
       },
@@ -11767,6 +12871,10 @@
         "worksheet": "Pruebas 11 de agosto",
         "name": "Pruebas 11 de agosto",
         "date": "2026-08-11",
+        "originStartDate": "2026-08-11",
+        "originEndDate": "2026-08-11",
+        "originPeriod": "2026-08-11",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 11 de agosto"
       },
@@ -11836,6 +12944,10 @@
         "worksheet": "Pruebas 11 de agosto",
         "name": "Pruebas 11 de agosto",
         "date": "2026-08-11",
+        "originStartDate": "2026-08-11",
+        "originEndDate": "2026-08-11",
+        "originPeriod": "2026-08-11",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 11 de agosto"
       },
@@ -11900,6 +13012,10 @@
         "worksheet": "Pruebas 11 de agosto",
         "name": "Pruebas 11 de agosto",
         "date": "2026-08-11",
+        "originStartDate": "2026-08-11",
+        "originEndDate": "2026-08-11",
+        "originPeriod": "2026-08-11",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 11 de agosto"
       },
@@ -11960,6 +13076,10 @@
         "worksheet": "Pruebas 11 de agosto",
         "name": "Pruebas 11 de agosto",
         "date": "2026-08-11",
+        "originStartDate": "2026-08-11",
+        "originEndDate": "2026-08-11",
+        "originPeriod": "2026-08-11",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 11 de agosto"
       },
@@ -12020,6 +13140,10 @@
         "worksheet": "Pruebas 11 de agosto",
         "name": "Pruebas 11 de agosto",
         "date": "2026-08-11",
+        "originStartDate": "2026-08-11",
+        "originEndDate": "2026-08-11",
+        "originPeriod": "2026-08-11",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 11 de agosto"
       },
@@ -12067,6 +13191,10 @@
         "worksheet": "Pruebas 11 de agosto",
         "name": "Pruebas 11 de agosto",
         "date": "2026-08-11",
+        "originStartDate": "2026-08-11",
+        "originEndDate": "2026-08-11",
+        "originPeriod": "2026-08-11",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 11 de agosto"
       },
@@ -12107,6 +13235,10 @@
         "worksheet": "Pruebas 11 de agosto",
         "name": "Pruebas 11 de agosto",
         "date": "2026-08-11",
+        "originStartDate": "2026-08-11",
+        "originEndDate": "2026-08-11",
+        "originPeriod": "2026-08-11",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 11 de agosto"
       },
@@ -12160,6 +13292,10 @@
         "worksheet": "Pruebas 12 de agosto",
         "name": "Pruebas 12 de agosto",
         "date": "2026-08-12",
+        "originStartDate": "2026-08-12",
+        "originEndDate": "2026-08-12",
+        "originPeriod": "2026-08-12",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 12 de agosto"
       },
@@ -12220,6 +13356,10 @@
         "worksheet": "Pruebas 12 de agosto",
         "name": "Pruebas 12 de agosto",
         "date": "2026-08-12",
+        "originStartDate": "2026-08-12",
+        "originEndDate": "2026-08-12",
+        "originPeriod": "2026-08-12",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 12 de agosto"
       },
@@ -12284,6 +13424,10 @@
         "worksheet": "Pruebas 12 de agosto",
         "name": "Pruebas 12 de agosto",
         "date": "2026-08-12",
+        "originStartDate": "2026-08-12",
+        "originEndDate": "2026-08-12",
+        "originPeriod": "2026-08-12",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 12 de agosto"
       },
@@ -12360,6 +13504,10 @@
         "worksheet": "Pruebas 12 de agosto",
         "name": "Pruebas 12 de agosto",
         "date": "2026-08-12",
+        "originStartDate": "2026-08-12",
+        "originEndDate": "2026-08-12",
+        "originPeriod": "2026-08-12",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 12 de agosto"
       },
@@ -12411,6 +13559,10 @@
         "worksheet": "Pruebas 12 de agosto",
         "name": "Pruebas 12 de agosto",
         "date": "2026-08-12",
+        "originStartDate": "2026-08-12",
+        "originEndDate": "2026-08-12",
+        "originPeriod": "2026-08-12",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 12 de agosto"
       },
@@ -12478,6 +13630,10 @@
         "worksheet": "Pruebas 12 de agosto",
         "name": "Pruebas 12 de agosto",
         "date": "2026-08-12",
+        "originStartDate": "2026-08-12",
+        "originEndDate": "2026-08-12",
+        "originPeriod": "2026-08-12",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 12 de agosto"
       },
@@ -12529,6 +13685,10 @@
         "worksheet": "Pruebas 12 de agosto",
         "name": "Pruebas 12 de agosto",
         "date": "2026-08-12",
+        "originStartDate": "2026-08-12",
+        "originEndDate": "2026-08-12",
+        "originPeriod": "2026-08-12",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 12 de agosto"
       },
@@ -12596,6 +13756,10 @@
         "worksheet": "Pruebas 12 de agosto",
         "name": "Pruebas 12 de agosto",
         "date": "2026-08-12",
+        "originStartDate": "2026-08-12",
+        "originEndDate": "2026-08-12",
+        "originPeriod": "2026-08-12",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 12 de agosto"
       },
@@ -12676,6 +13840,10 @@
         "worksheet": "Pruebas 12 de agosto",
         "name": "Pruebas 12 de agosto",
         "date": "2026-08-12",
+        "originStartDate": "2026-08-12",
+        "originEndDate": "2026-08-12",
+        "originPeriod": "2026-08-12",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 12 de agosto"
       },
@@ -12731,6 +13899,10 @@
         "worksheet": "Pruebas 12 de agosto",
         "name": "Pruebas 12 de agosto",
         "date": "2026-08-12",
+        "originStartDate": "2026-08-12",
+        "originEndDate": "2026-08-12",
+        "originPeriod": "2026-08-12",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 12 de agosto"
       },
@@ -12793,6 +13965,10 @@
         "worksheet": "Pruebas 13 de agosto",
         "name": "Pruebas 13 de agosto",
         "date": "2026-08-13",
+        "originStartDate": "2026-08-13",
+        "originEndDate": "2026-08-13",
+        "originPeriod": "2026-08-13",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 13 de agosto"
       },
@@ -12862,6 +14038,10 @@
         "worksheet": "Pruebas 13 de agosto",
         "name": "Pruebas 13 de agosto",
         "date": "2026-08-13",
+        "originStartDate": "2026-08-13",
+        "originEndDate": "2026-08-13",
+        "originPeriod": "2026-08-13",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 13 de agosto"
       },
@@ -12929,6 +14109,10 @@
         "worksheet": "Pruebas 13 de agosto",
         "name": "Pruebas 13 de agosto",
         "date": "2026-08-13",
+        "originStartDate": "2026-08-13",
+        "originEndDate": "2026-08-13",
+        "originPeriod": "2026-08-13",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 13 de agosto"
       },
@@ -12996,6 +14180,10 @@
         "worksheet": "Pruebas 13 de agosto",
         "name": "Pruebas 13 de agosto",
         "date": "2026-08-13",
+        "originStartDate": "2026-08-13",
+        "originEndDate": "2026-08-13",
+        "originPeriod": "2026-08-13",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 13 de agosto"
       },
@@ -13063,6 +14251,10 @@
         "worksheet": "Pruebas 13 de agosto",
         "name": "Pruebas 13 de agosto",
         "date": "2026-08-13",
+        "originStartDate": "2026-08-13",
+        "originEndDate": "2026-08-13",
+        "originPeriod": "2026-08-13",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 13 de agosto"
       },
@@ -13125,6 +14317,10 @@
         "worksheet": "Pruebas 13 de agosto",
         "name": "Pruebas 13 de agosto",
         "date": "2026-08-13",
+        "originStartDate": "2026-08-13",
+        "originEndDate": "2026-08-13",
+        "originPeriod": "2026-08-13",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 13 de agosto"
       },
@@ -13192,6 +14388,10 @@
         "worksheet": "Pruebas 14 de agosto",
         "name": "Pruebas 14 de agosto",
         "date": "2026-08-14",
+        "originStartDate": "2026-08-14",
+        "originEndDate": "2026-08-14",
+        "originPeriod": "2026-08-14",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 14 de agosto"
       },
@@ -13256,6 +14456,10 @@
         "worksheet": "Pruebas 17 de agosto",
         "name": "Pruebas 17 de agosto",
         "date": "2026-08-17",
+        "originStartDate": "2026-08-17",
+        "originEndDate": "2026-08-17",
+        "originPeriod": "2026-08-17",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 17 de agosto"
       },
@@ -13312,6 +14516,10 @@
         "worksheet": "Pruebas 17 de agosto",
         "name": "Pruebas 17 de agosto",
         "date": "2026-08-17",
+        "originStartDate": "2026-08-17",
+        "originEndDate": "2026-08-17",
+        "originPeriod": "2026-08-17",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 17 de agosto"
       },
@@ -13361,6 +14569,10 @@
         "worksheet": "Pruebas 17 de agosto",
         "name": "Pruebas 17 de agosto",
         "date": "2026-08-17",
+        "originStartDate": "2026-08-17",
+        "originEndDate": "2026-08-17",
+        "originPeriod": "2026-08-17",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 17 de agosto"
       },
@@ -13410,6 +14622,10 @@
         "worksheet": "Pruebas 17 de agosto",
         "name": "Pruebas 17 de agosto",
         "date": "2026-08-17",
+        "originStartDate": "2026-08-17",
+        "originEndDate": "2026-08-17",
+        "originPeriod": "2026-08-17",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 17 de agosto"
       },
@@ -13463,6 +14679,10 @@
         "worksheet": "Pruebas 17 de agosto",
         "name": "Pruebas 17 de agosto",
         "date": "2026-08-17",
+        "originStartDate": "2026-08-17",
+        "originEndDate": "2026-08-17",
+        "originPeriod": "2026-08-17",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 17 de agosto"
       },
@@ -13518,6 +14738,10 @@
         "worksheet": "Pruebas 17 de agosto",
         "name": "Pruebas 17 de agosto",
         "date": "2026-08-17",
+        "originStartDate": "2026-08-17",
+        "originEndDate": "2026-08-17",
+        "originPeriod": "2026-08-17",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 17 de agosto"
       },
@@ -13569,6 +14793,10 @@
         "worksheet": "Pruebas 17 de agosto",
         "name": "Pruebas 17 de agosto",
         "date": "2026-08-17",
+        "originStartDate": "2026-08-17",
+        "originEndDate": "2026-08-17",
+        "originPeriod": "2026-08-17",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 17 de agosto"
       },
@@ -13618,6 +14846,10 @@
         "worksheet": "Pruebas 17 de agosto",
         "name": "Pruebas 17 de agosto",
         "date": "2026-08-17",
+        "originStartDate": "2026-08-17",
+        "originEndDate": "2026-08-17",
+        "originPeriod": "2026-08-17",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 17 de agosto"
       },
@@ -13674,6 +14906,10 @@
         "worksheet": "Pruebas 18 de agosto",
         "name": "Pruebas 18 de agosto",
         "date": "2026-08-18",
+        "originStartDate": "2026-08-18",
+        "originEndDate": "2026-08-18",
+        "originPeriod": "2026-08-18",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 18 de agosto"
       },
@@ -13744,6 +14980,10 @@
         "worksheet": "Pruebas 18 de agosto",
         "name": "Pruebas 18 de agosto",
         "date": "2026-08-18",
+        "originStartDate": "2026-08-18",
+        "originEndDate": "2026-08-18",
+        "originPeriod": "2026-08-18",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 18 de agosto"
       },
@@ -13795,6 +15035,10 @@
         "worksheet": "Pruebas 18 de agosto",
         "name": "Pruebas 18 de agosto",
         "date": "2026-08-18",
+        "originStartDate": "2026-08-18",
+        "originEndDate": "2026-08-18",
+        "originPeriod": "2026-08-18",
+        "isRange": false,
         "action": "CREATE",
         "id": "proposed:Pruebas 18 de agosto"
       },

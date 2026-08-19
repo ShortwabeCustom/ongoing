@@ -52,6 +52,11 @@ export interface WorksheetAudit {
   urls: number
   figmaUrls: number
   headers: string[]
+  dateMetadata: {
+    perRowDateCells: number
+    hiddenColumns: number[]
+    hiddenRows: number[]
+  }
 }
 
 export interface WorkbookAudit {
@@ -99,15 +104,35 @@ export function experienceTagsFor(types: IncidenceType[]): ExperienceTag[] {
   return [...tags]
 }
 
-export function sessionDefinition(sheet: string, year = 2026): { name: string; date: string } | null {
+export interface SessionDefinition {
+  name: string
+  date: string
+  originStartDate: string
+  originEndDate: string
+  originPeriod: string
+  isRange: boolean
+}
+
+export function sessionDefinition(sheet: string, year = 2026): SessionDefinition | null {
   const normalized = normalizeText(sheet)
   const month = normalized.includes('jul') ? 7 : normalized.includes('agosto') ? 8 : null
   const dayMatch = normalized.match(/(?:pruebas|mod(?:ificación)?)\s+(\d{1,2})/)
   if (!month || !dayMatch) return null
-  const day = Number(dayMatch[1])
-  if (day < 1 || day > 31) return null
-  const name = /^mod\s/i.test(sheet.trim()) ? sheet.trim().replace(/^mod\s/i, 'Modificación ') : sheet.trim()
-  return { name, date: `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}` }
+  const startDay = Number(dayMatch[1])
+  const rangeMatch = normalized.match(/\d{1,2}\s*-\s*(\d{1,2})/)
+  const endDay = rangeMatch ? Number(rangeMatch[1]) : startDay
+  if (startDay < 1 || startDay > 31 || endDay < startDay || endDay > 31) return null
+  const name = sheet.trim()
+  const originStartDate = `${year}-${String(month).padStart(2, '0')}-${String(startDay).padStart(2, '0')}`
+  const originEndDate = `${year}-${String(month).padStart(2, '0')}-${String(endDay).padStart(2, '0')}`
+  return {
+    name,
+    date: originStartDate,
+    originStartDate,
+    originEndDate,
+    originPeriod: originStartDate === originEndDate ? originStartDate : `${originStartDate}/${originEndDate}`,
+    isRange: originStartDate !== originEndDate,
+  }
 }
 
 export function deterministicEvidenceFilename(sheet: string, row: number, hash: string, extension: string): string {
@@ -270,9 +295,15 @@ export async function auditWorkbook(filePath: string): Promise<WorkbookAudit> {
     let imagesOnEmptyRows = 0
     const sheetUrls = new Set<string>()
     const sheetFigma = new Set<string>()
+    const hiddenColumns = Array.from({ length: sheet.columnCount }, (_, index) => index + 1).filter((column) => sheet.getColumn(column).hidden)
+    const hiddenRows = Array.from({ length: sheet.rowCount }, (_, index) => index + 1).filter((row) => sheet.getRow(row).hidden)
+    let perRowDateCells = 0
 
     for (let sourceRow = 2; sourceRow <= sheet.rowCount; sourceRow++) {
       const excelRow = sheet.getRow(sourceRow)
+      excelRow.eachCell({ includeEmpty: false }, (cell) => {
+        if (cell.value instanceof Date || cell.type === ExcelJS.ValueType.Date || /^(fecha|date)$/i.test(cell.text.trim())) perRowDateCells++
+      })
       const observation = cellText(excelRow, observationColumn)
       const rowImages = images.filter((image) => image.worksheet === sheet.name && image.row === sourceRow)
       if (!observation) {
@@ -324,6 +355,7 @@ export async function auditWorkbook(filePath: string): Promise<WorkbookAudit> {
       urls: sheetUrls.size,
       figmaUrls: sheetFigma.size,
       headers: sheet.getRow(1).values.slice(1).map((value) => String(value ?? '')),
+      dateMetadata: { perRowDateCells, hiddenColumns, hiddenRows },
     })
   }
 

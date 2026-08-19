@@ -34,6 +34,29 @@ Rama: `feat/xlsx-normalization-2026-08-19`
 | Pruebas 17 de agosto | 8 | 8 | 0 | 0 | 8 | 2/2 |
 | Pruebas 18 de agosto | 3 | 3 | 0 | 0 | 3 | 2/2 |
 
+## Originación temporal y TestSessions
+
+El workbook no contiene celdas de fecha por fila, columnas o filas ocultas con fechas, comentarios de fecha, propiedades personalizadas ni metadata que permita asignar un día individual dentro de los periodos. El schema vigente solo tiene `TestSession.date`; no existen `originStartDate` ni `originEndDate`.
+
+Política determinista: `TestSession.date` usa el primer día; `TestSession.name` conserva exactamente el nombre/rango de la worksheet; `Finding.sourceSheet` conserva exactamente el nombre original. `createdAt`, `updatedAt`, fecha de importación y mtime del XLSX no participan en la originación.
+
+| Worksheet/sourceSheet | OriginDate/periodo | TestSession.name | TestSession.date | Acción | Findings | SourceRows | Fecha por fila |
+|---|---|---|---|---|---:|---|---|
+| Mod 31 Jul | 2026-07-31 | Mod 31 Jul | 2026-07-31 | CREATE | 18 | 2-19 | no |
+| Pruebas 30 de julio | 2026-07-30 | Pruebas 30 de julio | 2026-07-30 | CREATE | 104 | 2-106 | no |
+| Pruebas 3 agosto | 2026-08-03 | Pruebas 3 agosto | 2026-08-03 | CREATE | 1 | 2-2 | no |
+| Pruebas 4 - 5 agosto | 2026-08-04/2026-08-05 | Pruebas 4 - 5 agosto | 2026-08-04 | CREATE | 51 | 2-52 | no |
+| Pruebas 6 - 7 de agosto | 2026-08-06/2026-08-07 | Pruebas 6 - 7 de agosto | 2026-08-06 | CREATE | 3 | 2-4 | no |
+| Pruebas 10 de agosto | 2026-08-10 | Pruebas 10 de agosto | 2026-08-10 | CREATE | 18 | 2-19 | no |
+| Pruebas 11 de agosto | 2026-08-11 | Pruebas 11 de agosto | 2026-08-11 | CREATE | 11 | 2-12 | no |
+| Pruebas 12 de agosto | 2026-08-12 | Pruebas 12 de agosto | 2026-08-12 | CREATE | 10 | 2-11 | no |
+| Pruebas 13 de agosto | 2026-08-13 | Pruebas 13 de agosto | 2026-08-13 | CREATE | 6 | 2-7 | no |
+| Pruebas 14 de agosto | 2026-08-14 | Pruebas 14 de agosto | 2026-08-14 | CREATE | 1 | 2-2 | no |
+| Pruebas 17 de agosto | 2026-08-17 | Pruebas 17 de agosto | 2026-08-17 | CREATE | 8 | 2-9 | no |
+| Pruebas 18 de agosto | 2026-08-18 | Pruebas 18 de agosto | 2026-08-18 | CREATE | 3 | 2-4 | no |
+
+Validación cruzada: 0 asociaciones agosto→julio o julio→agosto detectadas; 0 quedarían después del plan.
+
 ## Hallazgos de conocimiento
 
 ### CONFIRMADO
@@ -52,7 +75,7 @@ Rama: `feat/xlsx-normalization-2026-08-19`
 ### INFERIDO
 
 - El año de las sesiones es 2026 por el contexto temporal del XLSX y la secuencia de hojas; para rangos se usa el primer día como fecha de sesión.
-- `Mod 31 Jul` se normaliza a `Modificación 31 Jul`, fecha 2026-07-31.
+- `Mod 31 Jul` conserva ese nombre exacto y deriva la fecha 2026-07-31.
 - La versión `1.0` es la versión de producto correcta; `legacy-import` pertenece a intentos de importación previos sin findings vinculados.
 - Los valores TRUE históricos promueven únicamente OPEN/TRIAGED a VALIDATED. FALSE no degrada estados.
 
@@ -98,7 +121,7 @@ Rama: `feat/xlsx-normalization-2026-08-19`
 ## Validación
 
 - `npm test`: PASS, 42 archivos y 570 tests.
-- Tests nuevos: PASS, 16 tests.
+- Tests nuevos: PASS, 18 tests.
 - `npm run build`: PASS.
 - `npm run lint`: FAIL por deuda preexistente fuera de este cambio (274 errores y 85 warnings); lint dirigido a los tres archivos nuevos: PASS.
 - No se ejecutó APPLY, deployment, restart PM2 ni smoke HTTP autenticado.

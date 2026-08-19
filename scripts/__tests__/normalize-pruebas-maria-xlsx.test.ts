@@ -15,6 +15,7 @@ import {
   parseCompleted,
   parseIncidenceTypes,
   reconcileIdentity,
+  sessionDefinition,
   shouldPromoteToValidated,
   type NormalizedXlsxRow,
 } from '../lib/pruebas-maria-xlsx'
@@ -96,6 +97,33 @@ describe('XLSX inventory and normalization', () => {
     expect(parseCompleted(true)).toBe(true)
     expect(parseCompleted('✓')).toBe(true)
     expect(parseCompleted(false)).toBe(false)
+  })
+
+  it('derives deterministic origin dates while preserving exact range names', () => {
+    expect(sessionDefinition('Pruebas 30 de julio')).toMatchObject({
+      name: 'Pruebas 30 de julio',
+      date: '2026-07-30',
+      originPeriod: '2026-07-30',
+      isRange: false,
+    })
+    expect(sessionDefinition('Mod 31 Jul')).toMatchObject({ name: 'Mod 31 Jul', date: '2026-07-31' })
+    expect(sessionDefinition('Pruebas 4 - 5 agosto')).toEqual({
+      name: 'Pruebas 4 - 5 agosto',
+      date: '2026-08-04',
+      originStartDate: '2026-08-04',
+      originEndDate: '2026-08-05',
+      originPeriod: '2026-08-04/2026-08-05',
+      isRange: true,
+    })
+    expect(sessionDefinition('Pruebas 6 - 7 de agosto')).toMatchObject({
+      date: '2026-08-06',
+      originPeriod: '2026-08-06/2026-08-07',
+    })
+  })
+
+  it('does not treat persistence timestamps as worksheet row dates', async () => {
+    const audit = await auditWorkbook(await fixtureWorkbook())
+    expect(audit.worksheets.every((sheet) => sheet.dateMetadata.perRowDateCells === 0)).toBe(true)
   })
 })
 

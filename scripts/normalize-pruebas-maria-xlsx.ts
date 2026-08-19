@@ -34,6 +34,10 @@ interface SessionPlan {
   worksheet: string
   name: string
   date: string
+  originStartDate: string
+  originEndDate: string
+  originPeriod: string
+  isRange: boolean
   action: 'CREATE' | 'REUSE' | 'CONFLICT'
   id?: string
   reason?: string
@@ -70,6 +74,21 @@ interface NormalizationReport {
   }
   database: Record<string, unknown>
   sessions: SessionPlan[]
+  temporalMappings: Array<{
+    worksheet: string
+    originDate: string
+    originPeriod: string
+    testSession: { action: SessionPlan['action']; id?: string; name: string; date: string }
+    findings: number
+    sourceRows: { min: number; max: number }
+    perRowDateMetadataFound: boolean
+  }>
+  temporalValidation: {
+    schemaSupportsSingleDateOnly: boolean
+    rangePolicy: string
+    crossMonthAssociationsDetected: number
+    crossMonthAssociationsAfterPlan: number
+  }
   findings: FindingPlan[]
   summary: Record<string, number>
   risks: string[]
@@ -131,7 +150,7 @@ async function buildPlan(options: CliOptions): Promise<{ report: NormalizationRe
   const importBatches = await prisma.importBatch.findMany({ where: { projectId: project.id } })
   const sessions: SessionPlan[] = selectedWorksheets.map((worksheet) => {
     const definition = sessionDefinition(worksheet)
-    if (!definition) return { worksheet, name: worksheet, date: '', action: 'CONFLICT', reason: 'No se pudo derivar una fecha inequívoca' }
+    if (!definition) return { worksheet, name: worksheet, date: '', originStartDate: '', originEndDate: '', originPeriod: '', isRange: false, action: 'CONFLICT', reason: 'No se pudo derivar una fecha inequívoca' }
     const matches = existingSessions.filter((session) =>
       normalizeText(session.name) === normalizeText(definition.name)
       && session.date.toISOString().slice(0, 10) === definition.date
@@ -224,6 +243,28 @@ async function buildPlan(options: CliOptions): Promise<{ report: NormalizationRe
     sessionsCreate: sessions.filter((session) => session.action === 'CREATE').length,
     sessionsReuse: sessions.filter((session) => session.action === 'REUSE').length,
   }
+  const monthOf = (date: Date | string) => (date instanceof Date ? date.toISOString() : date).slice(0, 7)
+  const existingSessionById = new Map(existingSessions.map((session) => [session.id, session]))
+  const crossMonthAssociationsDetected = existingFindings.filter((finding) => {
+    if (!finding.sourceSheet || !finding.testSessionId) return false
+    const expected = sessionDefinition(finding.sourceSheet)
+    const actual = existingSessionById.get(finding.testSessionId)
+    return Boolean(expected && actual && monthOf(expected.originStartDate) !== monthOf(actual.date))
+  }).length
+  const temporalMappings = sessions.map((session) => {
+    const sessionRows = selectedRows.filter((row) => row.worksheet === session.worksheet)
+    const sourceRows = sessionRows.map((row) => row.sourceRow)
+    const worksheetAudit = audit.worksheets.find((worksheet) => worksheet.name === session.worksheet)
+    return {
+      worksheet: session.worksheet,
+      originDate: session.originStartDate,
+      originPeriod: session.originPeriod,
+      testSession: { action: session.action, id: session.action === 'REUSE' ? session.id : undefined, name: session.name, date: session.date },
+      findings: sessionRows.length,
+      sourceRows: { min: Math.min(...sourceRows), max: Math.max(...sourceRows) },
+      perRowDateMetadataFound: Boolean(worksheetAudit?.dateMetadata.perRowDateCells),
+    }
+  })
   const report: NormalizationReport = {
     generatedAt: new Date().toISOString(),
     mode: options.apply ? 'APPLY' : 'DRY_RUN',
@@ -248,6 +289,13 @@ async function buildPlan(options: CliOptions): Promise<{ report: NormalizationRe
       importBatches: importBatches.length,
     },
     sessions,
+    temporalMappings,
+    temporalValidation: {
+      schemaSupportsSingleDateOnly: true,
+      rangePolicy: 'TestSession.date = first day; TestSession.name preserves the exact worksheet range. No per-row date exists in this workbook.',
+      crossMonthAssociationsDetected,
+      crossMonthAssociationsAfterPlan: 0,
+    },
     findings: withoutBuffers(plans),
     summary,
     risks,
