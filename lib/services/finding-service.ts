@@ -1000,6 +1000,41 @@ export class FindingService {
     return comment
   }
 
+  static async deleteComment(
+    findingId: string,
+    commentId: string,
+    deletedBy: string,
+    userRole: string,
+  ) {
+    const db = getDb()
+
+    return db.$transaction(async (tx) => {
+      const comment = await tx.comment.findFirst({
+        where: { id: commentId, findingId },
+        select: { id: true, findingId: true, text: true, createdBy: true, createdAt: true },
+      })
+
+      if (!comment) throw new Error('NOT_FOUND')
+
+      const canDeleteAny = userRole === 'OWNER' || userRole === 'QA_LEAD'
+      if (comment.createdBy !== deletedBy && !canDeleteAny) throw new Error('FORBIDDEN')
+
+      await tx.comment.delete({ where: { id: comment.id } })
+      await tx.auditLog.create({
+        data: {
+          entityType: 'FindingComment',
+          entityId: comment.id,
+          action: 'DELETE',
+          actorId: deletedBy,
+          before: toAuditJson(comment),
+          after: toAuditJson({ findingId }),
+        },
+      })
+
+      return { id: comment.id }
+    })
+  }
+
   /**
    * Soft delete finding.
    */
