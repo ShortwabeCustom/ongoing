@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server'
 import { getDb } from '@/lib/db-lazy'
 import { INCIDENCE_TYPE_LABELS_ES } from '@/lib/constants/finding-options'
-import { LEGACY_STORAGE_KEY_PREFIX } from '@/lib/storage/storage-key'
+import { isLegacyStorageKey } from '@/lib/storage/storage-key'
 
 export const revalidate = 180 // 3 minutes ISR cache
 
 /**
- * Definición ÚNICA de "evidencia públicamente renderizable" (ADR-001 D8.1).
+ * Definición única de evidencia confirmada que puede mostrarse en el reporte.
  *
  * La lista y `evidenceCount` DEBEN compartir esta misma regla; si divergen, el
  * contador filtraría la existencia de evidencia privada por un endpoint
@@ -14,17 +14,15 @@ export const revalidate = 180 // 3 minutes ISR cache
  *
  *   evidence.deletedAt == null
  *   AND finding.deletedAt == null      <- se añade abajo donde haga falta
- *   AND isLegacyStorageKey(storageKey)
  *   AND url != null
  *   AND url != ""
  *
- * La evidencia de runtime (`findings/...`) NUNCA es públicamente renderizable:
- * es privada por defecto (D7) y su entrega exige sesión (D2). Su URL
- * `/api/evidence/{id}/file` no se emite jamás en esta respuesta (D8.2).
+ * La evidencia runtime conserva su ruta autenticada `/api/evidence/:id/file`:
+ * se enumera igual que en `/findings`, pero los bytes siguen protegidos por el
+ * RBAC del endpoint de archivos.
  */
 const PUBLICLY_RENDERABLE_EVIDENCE = {
   deletedAt: null,
-  storageKey: { startsWith: LEGACY_STORAGE_KEY_PREFIX },
   url: { not: null },
   NOT: { url: '' },
 }
@@ -59,7 +57,7 @@ export async function GET() {
           incidenceTypes: { select: { incidenceType: true } },
           evidence: {
             where: PUBLICLY_RENDERABLE_EVIDENCE,
-            select: { id: true, url: true, originalFilename: true },
+            select: { id: true, storageKey: true, url: true, originalFilename: true },
             orderBy: { createdAt: 'asc' },
           },
         },
@@ -101,12 +99,8 @@ export async function GET() {
         .filter((p): p is string => p !== null)
         .join(' · ')
 
-      // La consulta ya aplicó PUBLICLY_RENDERABLE_EVIDENCE: aquí solo llega
-      // evidencia legacy activa, de un finding activo y con URL no vacía. La
-      // evidencia de runtime queda excluida en la propia query, no por un
-      // filtro posterior.
       const evidenceList = finding.evidence.map((ev) => ({
-        url: ev.url as string,
+        url: isLegacyStorageKey(ev.storageKey) ? (ev.url as string) : `/api/evidence/${ev.id}/file`,
         filename: ev.originalFilename || 'evidencia',
       }))
 
