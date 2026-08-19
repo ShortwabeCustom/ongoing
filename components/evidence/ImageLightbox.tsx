@@ -2,6 +2,7 @@
 
 import { Evidence } from '@/lib/types'
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Download } from 'lucide-react'
 
 interface ImageLightboxProps {
@@ -22,8 +23,20 @@ export function ImageLightbox({
   canPrev,
 }: ImageLightboxProps) {
   const [zoom, setZoom] = useState(1)
+  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null)
   const maxZoom = 3
   const minZoom = 1
+
+  useEffect(() => {
+    setPortalTarget(document.body)
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+    }
+  }, [])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -61,9 +74,14 @@ export function ImageLightbox({
     }
   }
 
-  return (
+  if (!portalTarget) return null
+
+  return createPortal(
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-black/90"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Visor de imagen"
+      className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden bg-black/90"
       onClick={(event) => {
         if (event.target === event.currentTarget) onClose()
       }}
@@ -73,7 +91,7 @@ export function ImageLightbox({
       <button
         type="button"
         onClick={onClose}
-        className="absolute right-4 top-4 z-30 flex h-11 w-11 items-center justify-center rounded-lg text-white transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        className="fixed right-4 top-4 z-[10000] flex h-11 w-11 touch-manipulation items-center justify-center rounded-lg text-white transition-colors hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         aria-label="Cerrar visor"
       >
         <X className="w-6 h-6" />
@@ -173,6 +191,7 @@ export function ImageLightbox({
           <Download className="w-5 h-5" />
         </button>
       </div>
-    </div>
+    </div>,
+    portalTarget,
   )
 }
