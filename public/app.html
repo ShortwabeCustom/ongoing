@@ -144,6 +144,26 @@ img{max-width:100%;height:auto}
 }
 @media print{#pwa-install,#pwa-toast{display:none!important}}
 
+/* ---- Visor de evidencias ---- */
+body.evidence-viewer-open{overflow:hidden}
+#evidence-viewer{position:fixed;inset:0;z-index:100;display:none;background:rgba(0,0,0,.92);color:#fff;overscroll-behavior:contain}
+#evidence-viewer[data-open="true"]{display:flex;align-items:center;justify-content:center}
+#evidence-viewer .viewer-stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none}
+#evidence-viewer .viewer-image{max-width:90vw;max-height:82vh;object-fit:contain;transform:scale(var(--viewer-zoom,1));transform-origin:center;transition:transform .16s ease;user-select:none;-webkit-user-drag:none}
+#evidence-viewer .viewer-close{position:absolute;z-index:2;top:max(18px,env(safe-area-inset-top));right:max(18px,env(safe-area-inset-right));width:46px;height:46px;border:0;border-radius:999px;background:rgba(0,0,0,.58);color:#fff;font:300 34px/1 Arial,sans-serif;cursor:pointer}
+#evidence-viewer .viewer-info{position:absolute;z-index:2;left:0;right:0;bottom:0;padding:70px max(24px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left));background:linear-gradient(transparent,rgba(0,0,0,.88));pointer-events:none}
+#evidence-viewer .viewer-info b{display:block;max-width:min(70vw,760px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:18px}
+#evidence-viewer .viewer-info small{display:block;margin-top:4px;color:#b8c2bd}
+#evidence-viewer .viewer-controls{position:absolute;z-index:3;left:50%;bottom:max(22px,env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;align-items:center;gap:4px;padding:6px;border-radius:14px;background:rgba(0,0,0,.76);box-shadow:0 10px 35px rgba(0,0,0,.35)}
+#evidence-viewer .viewer-controls button,#evidence-viewer .viewer-download{display:flex;align-items:center;justify-content:center;min-width:42px;height:42px;border:0;border-radius:9px;background:transparent;color:#fff;font:600 19px Arial,sans-serif;text-decoration:none;cursor:pointer}
+#evidence-viewer .viewer-controls button:hover,#evidence-viewer .viewer-download:hover,#evidence-viewer .viewer-close:hover{background:rgba(255,255,255,.15)}
+#evidence-viewer button:focus-visible,#evidence-viewer a:focus-visible{outline:2px solid #54e89a;outline-offset:2px}
+#evidence-viewer button:disabled{opacity:.3;cursor:default}
+#evidence-viewer .viewer-zoom{min-width:58px;text-align:center;font-size:13px;font-weight:600}
+#evidence-viewer .viewer-separator{width:1px;height:25px;margin:0 3px;background:rgba(255,255,255,.22)}
+@media(max-width:600px){#evidence-viewer .viewer-image{max-width:96vw;max-height:76vh}#evidence-viewer .viewer-info{padding-bottom:94px}#evidence-viewer .viewer-info b{max-width:88vw;font-size:14px}}
+@media print{#evidence-viewer{display:none!important}}
+
 section[id],details{scroll-margin-top:76px}
 /* ---- Documentos incluidos ---- */
 .docs{padding:80px 5vw 100px;background:#071f18;color:#fff;padding-left:max(5vw,env(safe-area-inset-left));padding-right:max(5vw,env(safe-area-inset-right))}
@@ -1546,12 +1566,73 @@ function initFindingsFilters(){
 <a class="doc" href="/contenido/inventario-observaciones.json" download><b>Inventario estructurado</b><small>Mismo inventario en formato legible por máquina.</small><span>JSON</span></a>
 <a class="doc" href="/contenido/MANIFIESTO.json" download><b>Manifiesto del paquete</b><small>Detalle de archivos y evidencias que componen el corte.</small><span>JSON</span></a>
 </div></div></section>
-<footer class="site"><span>Originación Única · Pruebas María 2.0 · Corte 5 de agosto de 2026</span><span>176 observaciones · 173 evidencias · Disponible sin conexión</span></footer><div id="pwa-install" role="dialog" aria-live="polite" aria-label="Instalar la aplicación">
+<footer class="site"><span>Originación Única · Pruebas María 2.0 · Corte 5 de agosto de 2026</span><span>176 observaciones · 173 evidencias · Disponible sin conexión</span></footer>
+<div id="evidence-viewer" role="dialog" aria-modal="true" aria-label="Visor de evidencia" aria-hidden="true">
+  <div class="viewer-stage"><img class="viewer-image" alt=""></div>
+  <button class="viewer-close" type="button" aria-label="Cerrar visor">×</button>
+  <div class="viewer-info"><b class="viewer-filename"></b><small class="viewer-position"></small></div>
+  <div class="viewer-controls" aria-label="Controles del visor">
+    <button class="viewer-zoom-out" type="button" aria-label="Alejar">−</button><span class="viewer-zoom">100%</span><button class="viewer-zoom-in" type="button" aria-label="Acercar">+</button>
+    <span class="viewer-separator"></span>
+    <button class="viewer-prev" type="button" aria-label="Evidencia anterior">‹</button><button class="viewer-next" type="button" aria-label="Evidencia siguiente">›</button>
+    <span class="viewer-separator"></span>
+    <a class="viewer-download" href="#" download aria-label="Descargar evidencia" title="Descargar">⇩</a>
+  </div>
+</div>
+<div id="pwa-install" role="dialog" aria-live="polite" aria-label="Instalar la aplicación">
 <img src="/icons/icon-192.png" alt="">
 <div class="txt"><b>Instalar Pruebas María 2.0</b><small id="pwa-hint">Añádela a tu pantalla de inicio y consulta el inventario sin conexión.</small></div>
 <div class="row"><button id="pwa-add" type="button">Instalar</button><button id="pwa-close" type="button" aria-label="Cerrar aviso de instalación">Ahora no</button></div>
 </div>
 <div id="pwa-toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+  var viewer=document.getElementById('evidence-viewer'),image=viewer.querySelector('.viewer-image'),
+      filename=viewer.querySelector('.viewer-filename'),position=viewer.querySelector('.viewer-position'),
+      zoomLabel=viewer.querySelector('.viewer-zoom'),prevBtn=viewer.querySelector('.viewer-prev'),
+      nextBtn=viewer.querySelector('.viewer-next'),download=viewer.querySelector('.viewer-download'),
+      closeBtn=viewer.querySelector('.viewer-close'),links=[],index=0,zoom=1,lastFocus=null;
+
+  function evidenceLinks(anchor){return [].slice.call(anchor.closest('.evidence').querySelectorAll('a'))}
+  function labelFor(anchor){var label=anchor.querySelector('span');return label?label.textContent.trim():'Evidencia'}
+  function update(){
+    var anchor=links[index];
+    if(!anchor)return;
+    zoom=1;viewer.style.setProperty('--viewer-zoom',zoom);zoomLabel.textContent='100%';
+    image.src=anchor.href;image.alt=labelFor(anchor);filename.textContent=labelFor(anchor);
+    position.textContent=links.length>1?(index+1)+' de '+links.length:'Evidencia';
+    download.href=anchor.href;download.setAttribute('download',labelFor(anchor));
+    prevBtn.disabled=index===0;nextBtn.disabled=index===links.length-1;
+  }
+  function open(anchor){
+    links=evidenceLinks(anchor);index=Math.max(0,links.indexOf(anchor));lastFocus=anchor;
+    update();viewer.setAttribute('data-open','true');viewer.setAttribute('aria-hidden','false');
+    document.body.classList.add('evidence-viewer-open');closeBtn.focus();
+  }
+  function close(){
+    viewer.removeAttribute('data-open');viewer.setAttribute('aria-hidden','true');image.removeAttribute('src');
+    document.body.classList.remove('evidence-viewer-open');if(lastFocus)lastFocus.focus();
+  }
+  function setZoom(next){zoom=Math.max(1,Math.min(3,next));viewer.style.setProperty('--viewer-zoom',zoom);zoomLabel.textContent=Math.round(zoom*100)+'%'}
+  function move(delta){var next=index+delta;if(next>=0&&next<links.length){index=next;update()}}
+
+  document.addEventListener('click',function(event){
+    var anchor=event.target.closest&&event.target.closest('.evidence a');
+    if(anchor){event.preventDefault();open(anchor)}
+  });
+  closeBtn.addEventListener('click',close);
+  viewer.querySelector('.viewer-stage').addEventListener('click',function(event){if(event.target===this)close()});
+  viewer.querySelector('.viewer-zoom-out').addEventListener('click',function(){setZoom(zoom-.2)});
+  viewer.querySelector('.viewer-zoom-in').addEventListener('click',function(){setZoom(zoom+.2)});
+  prevBtn.addEventListener('click',function(){move(-1)});nextBtn.addEventListener('click',function(){move(1)});
+  viewer.addEventListener('wheel',function(event){event.preventDefault();setZoom(zoom+(event.deltaY<0?.1:-.1))},{passive:false});
+  document.addEventListener('keydown',function(event){
+    if(viewer.getAttribute('data-open')!=='true')return;
+    if(event.key==='Escape')close();else if(event.key==='ArrowLeft')move(-1);else if(event.key==='ArrowRight')move(1);
+    else if(event.key==='+'||event.key==='=')setZoom(zoom+.2);else if(event.key==='-')setZoom(zoom-.2);
+  });
+})();
+</script>
 <script>
 (function(){
   var bar=document.getElementById('pwa-install'),hint=document.getElementById('pwa-hint'),
