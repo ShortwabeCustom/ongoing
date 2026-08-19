@@ -6,20 +6,6 @@ import { SearchQuery } from '@/lib/validators/search-query'
 
 const SEARCH_DEBOUNCE_DELAY = { mobile: 500, desktop: 300 } as const
 
-function normalizeRelationValues(items: unknown, key: 'experienceTag' | 'incidenceType') {
-  if (!Array.isArray(items)) return undefined
-
-  return items
-    .map((item) => {
-      if (typeof item === 'string') return { [key]: item }
-      if (!item || typeof item !== 'object') return undefined
-
-      const value = (item as Record<string, unknown>)[key]
-      return typeof value === 'string' ? { [key]: value } : undefined
-    })
-    .filter((item): item is Record<'experienceTag' | 'incidenceType', string> => Boolean(item))
-}
-
 export interface UseSearchResult {
   data: {
     total: number
@@ -72,6 +58,10 @@ export function useSearch(query: Partial<SearchQuery>): UseSearchResult {
     if (q.status?.length) params.append('status', q.status.join(','))
     if (q.priority?.length) params.append('priority', q.priority.join(','))
     if (q.severity?.length) params.append('severity', q.severity.join(','))
+    if (q.testSessionIds?.length) params.append('testSessionIds', q.testSessionIds.join(','))
+    if (q.experienceTags?.length) params.append('experienceTags', q.experienceTags.join(','))
+    if (q.incidenceTypes?.length) params.append('incidenceTypes', q.incidenceTypes.join(','))
+    if (q.recent) params.append('recent', 'true')
     if (q.assigneeId) params.append('assigneeId', q.assigneeId)
     if (q.projectId) params.append('projectId', q.projectId)
     if (q.createdAfter) params.append('createdAfter', q.createdAfter)
@@ -104,6 +94,10 @@ export function useSearch(query: Partial<SearchQuery>): UseSearchResult {
       debouncedQuery.status?.length ||
       debouncedQuery.priority?.length ||
       debouncedQuery.severity?.length ||
+      debouncedQuery.testSessionIds?.length ||
+      debouncedQuery.experienceTags?.length ||
+      debouncedQuery.incidenceTypes?.length ||
+      debouncedQuery.recent ||
       debouncedQuery.assignee?.length ||
       debouncedQuery.project?.length ||
       debouncedQuery.dateFrom ||
@@ -136,72 +130,9 @@ export function useSearch(query: Partial<SearchQuery>): UseSearchResult {
       const result = await response.json()
       setIsFallback(result.source === 'postgresql')
       setData(result)
-    } catch (esError) {
-      // Fallback to simple /api/findings search if ES fails
-      try {
-        const fallbackParams = new URLSearchParams()
-        if (debouncedQuery.q) {
-          fallbackParams.append('search', debouncedQuery.q)
-        }
-        if (debouncedQuery.status?.length) {
-          fallbackParams.append('status', debouncedQuery.status.join(','))
-        }
-        if (debouncedQuery.priority?.length) {
-          fallbackParams.append('priority', debouncedQuery.priority.join(','))
-        }
-        if (debouncedQuery.severity?.length) {
-          fallbackParams.append('severity', debouncedQuery.severity.join(','))
-        }
-        // FASE 14: Map advanced filters to fallback (first value only)
-        if (debouncedQuery.assignee?.[0]) {
-          fallbackParams.append('assigneeId', debouncedQuery.assignee[0])
-        }
-        if (debouncedQuery.project?.[0]) {
-          fallbackParams.append('projectId', debouncedQuery.project[0])
-        }
-        if (debouncedQuery.dateFrom) {
-          fallbackParams.append('createdAfter', debouncedQuery.dateFrom)
-        }
-        if (debouncedQuery.dateTo) {
-          fallbackParams.append('createdBefore', debouncedQuery.dateTo)
-        }
-        // hasEvidence: no equivalent in FindingsQuerySchema, omit
-        if (debouncedQuery.limit) {
-          fallbackParams.append('limit', debouncedQuery.limit.toString())
-        }
-        if (debouncedQuery.offset !== undefined) {
-          fallbackParams.append('offset', debouncedQuery.offset.toString())
-        }
-
-        const fallbackResponse = await fetch(`/api/findings?${fallbackParams.toString()}`)
-
-        if (!fallbackResponse.ok) {
-          throw new Error('Fallback request also failed')
-        }
-
-        const fallbackResult = await fallbackResponse.json()
-
-        setData({
-          total: fallbackResult.total || 0,
-          items: (fallbackResult.items || []).map((item: any) => ({
-            id: item.id,
-            observation: item.observation,
-	            status: item.status,
-	            priority: item.priority,
-	            severity: item.severity,
-	            projectId: item.projectId,
-	            assigneeId: item.assigneeId,
-	            experienceTags: normalizeRelationValues(item.experienceTags, 'experienceTag'),
-	            incidenceTypes: normalizeRelationValues(item.incidenceTypes, 'incidenceType'),
-	            createdAt: item.createdAt,
-	          })),
-          facets: undefined,
-        })
-        setIsFallback(true)
-      } catch (fallbackError) {
-        setError('No se pudo conectar con el servicio de búsqueda')
-        setData(null)
-      }
+    } catch {
+      setError('No se pudo conectar con el servicio de búsqueda')
+      setData(null)
     } finally {
       setIsLoading(false)
     }

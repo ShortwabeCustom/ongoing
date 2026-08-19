@@ -8,12 +8,18 @@ export interface AdvancedFilterValues {
   assignee?: string[]
   project?: string[]
   severity?: string[]
+  testSessionIds?: string[]
+  experienceTags?: string[]
+  incidenceTypes?: string[]
   dateType?: DateFilterType
   dateFrom?: string
   dateTo?: string
   datePreset?: DatePreset
   hasEvidence?: 'any' | 'with' | 'without'
+  recent?: boolean
 }
+
+export const RECENT_FINDINGS_DAYS = 7
 
 export interface SearchHistoryEntry {
   id: string
@@ -61,4 +67,9 @@ export interface BulkUpdateApiResult {
     version?: number
     error?: string
   }>
+}
+
+export interface BulkDeleteApiResult {
+  deleted: number
+  ids: string[]
 }

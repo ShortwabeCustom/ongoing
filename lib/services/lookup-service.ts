@@ -11,6 +11,13 @@ export interface ProjectOption {
 }
 
 export class LookupService {
+  static async getTestSessions(projectId?: string): Promise<Array<{ id: string; name: string }>> {
+    return getDb().testSession.findMany({
+      where: projectId ? { projectId, project: { deletedAt: null } } : { project: { deletedAt: null } },
+      select: { id: true, name: true },
+      orderBy: { date: 'desc' },
+    })
+  }
   /**
    * Get all users available for assignment (excluding GUEST role)
    * Optionally filter by project membership

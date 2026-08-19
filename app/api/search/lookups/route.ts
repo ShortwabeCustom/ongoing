@@ -7,6 +7,10 @@ export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   try {
+    const { valid, error } = await checkRBAC(request, {
+      allowedRoles: RBAC_PERMISSIONS.VIEW_ALL_FINDINGS,
+    })
+    if (!valid) return error
     const searchParams = request.nextUrl.searchParams
     const type = searchParams.get('type') // 'assignees' | 'projects'
     const projectId = searchParams.get('projectId')
@@ -22,10 +26,15 @@ export async function GET(request: NextRequest) {
       return apiSuccess({ projects })
     }
 
+    if (type === 'testSessions') {
+      const testSessions = await LookupService.getTestSessions(projectId || undefined)
+      return apiSuccess({ testSessions })
+    }
+
     return apiError(
       new ApiError(
         'VALIDATION_ERROR',
-        'Missing or invalid type parameter (assignees|projects)',
+        'Missing or invalid type parameter (assignees|projects|testSessions)',
         undefined,
         400,
       ),

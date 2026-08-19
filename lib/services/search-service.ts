@@ -8,6 +8,7 @@ import {
 } from '@/lib/generated/prisma/client'
 import { getDb } from '@/lib/db-lazy'
 import { SearchQuery } from '@/lib/validators/search-query'
+import { RECENT_FINDINGS_DAYS } from '@/lib/types/search'
 
 export interface SearchFindingItem {
   id: string
@@ -80,7 +81,7 @@ function toFacetRecord(rows: Array<{ [key: string]: unknown; _count: number }>, 
   return Object.fromEntries(rows.map((row) => [String(row[field]), row._count]))
 }
 
-function buildPostgresWhere(query: SearchQuery): Prisma.FindingWhereInput {
+export function buildPostgresWhere(query: SearchQuery): Prisma.FindingWhereInput {
   const where: Prisma.FindingWhereInput = {
     deletedAt: null,
   }
@@ -96,6 +97,14 @@ function buildPostgresWhere(query: SearchQuery): Prisma.FindingWhereInput {
 
   if (query.severity?.length) {
     where.severity = { in: query.severity as FindingSeverity[] }
+  }
+
+  if (query.testSessionIds?.length) where.testSessionId = { in: query.testSessionIds }
+  if (query.experienceTags?.length) {
+    where.experienceTags = { some: { experienceTag: { in: query.experienceTags as any } } }
+  }
+  if (query.incidenceTypes?.length) {
+    where.incidenceTypes = { some: { incidenceType: { in: query.incidenceTypes as any } } }
   }
 
   if (query.assignee?.length) {
@@ -160,6 +169,12 @@ function buildPostgresWhere(query: SearchQuery): Prisma.FindingWhereInput {
         { comments: { some: { text: textFilter } } },
         { resolutions: { some: { description: textFilter } } },
       ],
+    })
+  }
+
+  if (query.recent) {
+    and.push({
+      updatedAt: { gte: new Date(Date.now() - RECENT_FINDINGS_DAYS * 24 * 60 * 60 * 1000) },
     })
   }
 
@@ -280,7 +295,10 @@ export class SearchService {
 
     // FASE 14.1: If filtering by imported/session dates, use PostgreSQL directly
     // (Elasticsearch index doesn't have these fields)
-    if (query.dateType === 'imported' || query.dateType === 'session') {
+    if (
+      query.dateType === 'imported' || query.dateType === 'session' ||
+      query.testSessionIds?.length || query.experienceTags?.length || query.incidenceTypes?.length
+    ) {
       return this.searchPostgres(query, `Using PostgreSQL for dateType="${query.dateType}"`)
     }
 
@@ -315,6 +333,12 @@ export class SearchService {
 
     if (query.severity?.length) {
       filters.push({ terms: { severity: query.severity } })
+    }
+
+    if (query.recent) {
+      filters.push({
+        range: { updatedAt: { gte: new Date(Date.now() - RECENT_FINDINGS_DAYS * 86400000).toISOString() } },
+      })
     }
 
     // FASE 14: Support both single and multiple assignees
@@ -396,6 +420,7 @@ export class SearchService {
       },
       from: query.offset,
       size: query.limit,
+      sort: query.recent ? [{ updatedAt: { order: 'desc' } }] : undefined,
     }
 
     const startTime = Date.now()
@@ -405,9 +430,7 @@ export class SearchService {
     })
     const took_ms = Date.now() - startTime
 
-    const total = typeof result.hits.total === 'number' ? result.hits.total : result.hits.total?.value ?? 0
-
-    const items: SearchFindingItem[] = (result.hits.hits ?? []).map((hit: any) => ({
+    const rawItems: SearchFindingItem[] = (result.hits.hits ?? []).map((hit: any) => ({
       id: hit._source.id,
       observation: hit._source.observation,
       highlightedObservation: hit.highlight?.observation?.[0] ?? undefined,
@@ -421,47 +444,35 @@ export class SearchService {
       createdAt: hit._source.createdAt,
     }))
 
-    const facets: SearchResponse['facets'] = {}
+    // PostgreSQL is canonical. Never expose a stale Elasticsearch document after
+    // a soft delete, even when index cleanup previously failed.
+    const db = getDb()
+    const canonicalWhere = buildPostgresWhere(query)
+    const [activeRows, canonicalTotal, statusRows, priorityRows, severityRows, assigneeRows, projectRows] = await Promise.all([
+      rawItems.length ? db.finding.findMany({
+          where: { id: { in: rawItems.map((item) => item.id) }, deletedAt: null },
+          select: { id: true },
+        }) : Promise.resolve([]),
+      db.finding.count({ where: canonicalWhere }),
+      db.finding.groupBy({ by: ['status'], where: canonicalWhere, _count: true }),
+      db.finding.groupBy({ by: ['priority'], where: canonicalWhere, _count: true }),
+      db.finding.groupBy({ by: ['severity'], where: canonicalWhere, _count: true }),
+      db.finding.groupBy({ by: ['assigneeId'], where: { ...canonicalWhere, assigneeId: { not: null } }, _count: true }),
+      db.finding.groupBy({ by: ['projectId'], where: canonicalWhere, _count: true }),
+    ])
+    const activeIds = new Set(activeRows.map((row) => row.id))
+    const items = rawItems.filter((item) => activeIds.has(item.id))
 
-    if (result.aggregations?.status) {
-      facets.status = {}
-      for (const bucket of getTermsBuckets(result.aggregations.status)) {
-        facets.status[String(bucket.key)] = bucket.doc_count
-      }
-    }
-
-    if (result.aggregations?.priority) {
-      facets.priority = {}
-      for (const bucket of getTermsBuckets(result.aggregations.priority)) {
-        facets.priority[String(bucket.key)] = bucket.doc_count
-      }
-    }
-
-    if (result.aggregations?.severity) {
-      facets.severity = {}
-      for (const bucket of getTermsBuckets(result.aggregations.severity)) {
-        facets.severity[String(bucket.key)] = bucket.doc_count
-      }
-    }
-
-    // FASE 14: Assignee facets
-    if (result.aggregations?.assignee) {
-      facets.assignee = getTermsBuckets(result.aggregations.assignee).map((bucket) => ({
-        id: String(bucket.key),
-        doc_count: bucket.doc_count,
-      }))
-    }
-
-    // FASE 14: Project facets
-    if (result.aggregations?.project) {
-      facets.project = getTermsBuckets(result.aggregations.project).map((bucket) => ({
-        id: String(bucket.key),
-        doc_count: bucket.doc_count,
-      }))
+    const facets: SearchResponse['facets'] = {
+      status: toFacetRecord(statusRows, 'status'),
+      priority: toFacetRecord(priorityRows, 'priority'),
+      severity: toFacetRecord(severityRows, 'severity'),
+      assignee: assigneeRows.map((row) => ({ id: row.assigneeId ?? '', doc_count: row._count })),
+      project: projectRows.map((row) => ({ id: row.projectId, doc_count: row._count })),
     }
 
     return {
-      total,
+      total: canonicalTotal,
       items,
       took_ms,
       source: 'elasticsearch',
@@ -478,7 +489,7 @@ export class SearchService {
       await Promise.all([
         db.finding.findMany({
           where,
-          orderBy: { createdAt: 'desc' },
+          orderBy: query.recent ? { updatedAt: 'desc' } : { createdAt: 'desc' },
           skip: query.offset,
           take: query.limit,
           select: {

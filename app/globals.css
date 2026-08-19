@@ -255,14 +255,14 @@
   }
 
   .pm-chip:hover {
-    border-color: #0369A1;
-    background: #f0f9ff;
-    color: #0369A1;
+    border-color: var(--pm-green);
+    background: #edf4ed;
+    color: var(--pm-deep);
   }
 
   .pm-chip-active {
-    border-color: #0369A1;
-    background: #0369A1;
+    border-color: var(--pm-green);
+    background: var(--pm-deep);
     color: #ffffff;
     font-weight: 700;
   }

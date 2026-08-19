@@ -15,6 +15,7 @@ export interface UseBatchActionsReturn {
   bulkUpdatePriority: (priority: string) => Promise<void>
   bulkAssign: (assigneeId: string | null) => Promise<void>
   bulkSetDueDate: (dueDate: string | null) => Promise<void>
+  bulkDelete: () => Promise<number>
   isProcessing: boolean
   error: string | null
   lastResult: BulkUpdateApiResult | null
@@ -132,6 +133,25 @@ export function useBatchActions(): UseBatchActionsReturn {
     [performUpdate]
   )
 
+  const bulkDelete = useCallback(async () => {
+    if (!selectedIds.length || selectedIds.length > MAX_BATCH_SIZE) return 0
+    setIsProcessing(true)
+    setError(null)
+    try {
+      const response = await fetch('/api/findings/bulk-delete', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: selectedIds }),
+      })
+      if (!response.ok) throw new Error('No se pudieron eliminar los hallazgos')
+      const result = await response.json()
+      setSelectedIds([])
+      return result.deleted ?? selectedIds.length
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Error al eliminar')
+      return 0
+    } finally { setIsProcessing(false) }
+  }, [selectedIds])
+
   return {
     selectedIds,
     isSelected,
@@ -142,6 +162,7 @@ export function useBatchActions(): UseBatchActionsReturn {
     bulkUpdatePriority,
     bulkAssign,
     bulkSetDueDate,
+    bulkDelete,
     isProcessing,
     error,
     lastResult,

@@ -350,3 +350,12 @@ Per CLAUDE.md guidance: "Three similar lines is better than a premature abstract
 **Session Time**: ~2 hours (exploration + implementation + deployment + documentation)  
 **Commit**: `a7f0e9b`  
 **Status**: ✅ Production Live & Stable
+# Findings filters and soft delete (2026-08-19)
+
+- `/findings` serializes status, priority, severity, test-session IDs, experience tags,
+  incidence types, date ranges and the seven-day `recent` toggle in stable URL parameters.
+- PostgreSQL is canonical. Searches requiring session dates or relational categories route
+  directly to PostgreSQL; Elasticsearch remains available for fields represented in its index.
+- Individual and bulk deletion are soft deletes. Bulk deletion is atomic (maximum 100 unique
+  IDs), uses `DELETE_FINDING` RBAC, creates one `AuditAction.DELETE` record per finding and
+  removes derived Elasticsearch documents after the database transaction commits.
