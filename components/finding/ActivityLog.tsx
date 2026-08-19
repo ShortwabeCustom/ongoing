@@ -9,9 +9,11 @@ import {
   Edit3,
   Clock,
   Loader2,
+  ChevronDown,
 } from 'lucide-react'
 import { WorkflowClient } from '@/lib/api/workflow-client'
 import { toast } from '@/components/ui/use-toast'
+import { getAuditChanges } from '@/lib/utils/audit-format'
 
 interface ActivityLogProps {
   findingId: string
@@ -105,6 +107,7 @@ function formatDate(dateString: string): string {
 export function ActivityLog({ findingId }: ActivityLogProps) {
   const [logs, setLogs] = useState<AuditLogEntry[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [showAll, setShowAll] = useState(false)
 
   useEffect(() => {
     const loadLogs = async () => {
@@ -126,26 +129,37 @@ export function ActivityLog({ findingId }: ActivityLogProps) {
     loadLogs()
   }, [findingId])
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-8">
-        <Loader2 className="h-5 w-5 animate-spin text-[#65766e]" />
-        <span className="ml-2 text-sm text-[#65766e]">Cargando historial...</span>
-      </div>
-    )
-  }
-
-  if (logs.length === 0) {
-    return (
-      <p className="py-6 text-center text-sm text-[#65766e]">
-        No hay actividades registradas
-      </p>
-    )
-  }
-
   return (
-    <div className="space-y-3">
-      {logs.map((entry, index) => {
+    <details className="group/history">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00a85a] focus-visible:ring-offset-4 [&::-webkit-details-marker]:hidden">
+        <div>
+          <h2 className="text-xl font-bold text-[#17251f]">Historial de actividades</h2>
+          <p className="mt-1 text-sm text-[#65766e]">
+            {isLoading
+              ? 'Cargando actividades...'
+              : logs.length === 0
+                ? 'No hay actividades registradas'
+                : `${logs.length} ${logs.length === 1 ? 'actividad registrada' : 'actividades registradas'}`}
+          </p>
+        </div>
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#edf4ed] text-[#17251f] transition group-open/history:rotate-180">
+          <ChevronDown className="h-5 w-5" aria-hidden="true" />
+        </span>
+      </summary>
+
+      <div className="mt-6 border-t border-[#dbe4dd] pt-6">
+        {isLoading ? (
+          <div className="flex items-center justify-center py-8">
+            <Loader2 className="h-5 w-5 animate-spin text-[#65766e]" />
+            <span className="ml-2 text-sm text-[#65766e]">Cargando historial...</span>
+          </div>
+        ) : logs.length === 0 ? (
+          <p className="py-6 text-center text-sm text-[#65766e]">
+            No hay actividades registradas
+          </p>
+        ) : (
+          <div className="space-y-3">
+      {(showAll ? logs : logs.slice(0, 5)).map((entry, index) => {
         const config = ACTION_ICONS[entry.action] || {
           icon: <Clock className="h-5 w-5" />,
           bg: 'bg-[#f3f4f6]',
@@ -184,21 +198,47 @@ export function ActivityLog({ findingId }: ActivityLogProps) {
                   </span>
                 </div>
 
-                {/* Details (if available) */}
-                {entry.action === 'UPDATE' && entry.after && (
-                  <div className="mt-2 text-xs text-[#65766e] space-y-1">
-                    {Object.entries(entry.after).slice(0, 2).map(([key, value]) => (
-                      <p key={key} className="truncate">
-                        {key}: {String(value).substring(0, 30)}
-                      </p>
-                    ))}
-                  </div>
+                {(entry.before != null || entry.after != null) && (
+                  <details className="mt-3 text-xs text-[#65766e]">
+                    <summary className="w-fit cursor-pointer font-semibold text-[#245342] hover:text-[#00a85a] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00a85a]">
+                      Ver detalles
+                    </summary>
+                    <div className="mt-2 space-y-1 rounded-lg bg-[#f7faf5] p-3">
+                      {entry.before != null && entry.after != null ? (
+                        getAuditChanges(entry.before, entry.after).length > 0 ? (
+                          getAuditChanges(entry.before, entry.after).map((change) => (
+                            <p key={change.key}>
+                              <span className="font-semibold text-[#17251f]">{change.key}:</span>{' '}
+                              {change.before} → {change.after}
+                            </p>
+                          ))
+                        ) : (
+                          <p>Sin cambios en los campos auditados</p>
+                        )
+                      ) : (
+                        <p>Sin cambios registrados</p>
+                      )}
+                    </div>
+                  </details>
                 )}
               </div>
             </div>
           </div>
         )
       })}
-    </div>
+
+            {logs.length > 5 && (
+              <button
+                type="button"
+                onClick={() => setShowAll((current) => !current)}
+                className="mt-4 inline-flex h-10 items-center rounded-full border border-[#9baba3] px-4 text-sm font-semibold text-[#17251f] transition hover:border-[#00a85a] hover:bg-[#edf4ed] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00a85a] focus-visible:ring-offset-2"
+              >
+                {showAll ? 'Mostrar menos' : `Ver todo el historial (${logs.length})`}
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+    </details>
   )
 }
