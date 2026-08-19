@@ -12,7 +12,7 @@ import {
 
 const statusLabels: Record<string, string> = {
   OPEN: 'Abierto',
-  TRIAGED: 'Triado',
+  TRIAGED: 'Clasificado',
   IN_PROGRESS: 'En Progreso',
   READY_FOR_VALIDATION: 'Listo para Validar',
   VALIDATED: 'Validado',
