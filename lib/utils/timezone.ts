@@ -42,11 +42,20 @@ function getTimezoneOffsetMs(date: Date, timezone: string): number {
   const minute = parseInt(parts.find(p => p.type === 'minute')?.value || '0')
   const second = parseInt(parts.find(p => p.type === 'second')?.value || '0')
 
-  // Create a date interpreted in browser's local timezone using these components
-  const localDate = new Date(year, month, day, hour, minute, second)
+  // Rebuild the target timezone wall-clock time as UTC.
+  // Using Date.UTC here makes this independent of the browser's local timezone.
+  const targetWallClockAsUTC = Date.UTC(
+    year,
+    month,
+    day,
+    hour,
+    minute,
+    second
+  )
 
-  // The offset is the difference between the UTC date and the local interpretation
-  return date.getTime() - localDate.getTime()
+  // Positive when UTC is ahead of the target timezone.
+  // Mexico City UTC-6 => +6 hours.
+  return date.getTime() - targetWallClockAsUTC
 }
 
 /**
@@ -156,6 +165,36 @@ export function isValidISODateTime(dateString: string): boolean {
   } catch {
     return false
   }
+}
+
+/**
+ * Convert an ISO datetime to YYYY-MM-DD in the requested timezone.
+ */
+export function isoDateTimeToDateStringInTimezone(
+  isoString: string,
+  timezone: string = 'America/Mexico_City'
+): string {
+  if (!isValidISODateTime(isoString)) {
+    return ''
+  }
+
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: timezone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  })
+
+  const parts = formatter.formatToParts(new Date(isoString))
+  const year = parts.find((part) => part.type === 'year')?.value
+  const month = parts.find((part) => part.type === 'month')?.value
+  const day = parts.find((part) => part.type === 'day')?.value
+
+  if (!year || !month || !day) {
+    return ''
+  }
+
+  return `${year}-${month}-${day}`
 }
 
 /**

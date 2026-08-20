@@ -12,36 +12,17 @@ export interface ProjectOption {
 
 export class LookupService {
   /**
-   * Get all users available for assignment (excluding GUEST role)
-   * Optionally filter by project membership
+   * Get all active platform users available for assignment.
+   *
+   * The responsible selector is platform-wide: a newly created user must be
+   * available immediately, even before being added as a project member and
+   * regardless of their role.
    */
-  static async getAssignees(projectId?: string): Promise<AssigneeOption[]> {
+  static async getAssignees(_projectId?: string): Promise<AssigneeOption[]> {
     const db = getDb()
 
-    if (projectId) {
-      // Get users who are members of this project (exclude VIEWER role)
-      return db.user.findMany({
-        where: {
-          role: { not: 'VIEWER' },
-          deletedAt: null,
-          projectMembers: {
-            some: {
-              projectId,
-            },
-          },
-        },
-        select: {
-          id: true,
-          name: true,
-        },
-        orderBy: { name: 'asc' },
-      })
-    }
-
-    // Get all non-viewer users
     return db.user.findMany({
       where: {
-        role: { not: 'VIEWER' },
         deletedAt: null,
       },
       select: {

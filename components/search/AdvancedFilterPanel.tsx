@@ -6,7 +6,11 @@ import { AdvancedFilterValues, LookupOption } from '@/lib/types/search'
 import { FINDING_SEVERITY_OPTIONS, SEVERITY_LABELS_ES } from '@/lib/constants/finding-options'
 import { DateTypeSelector } from './DateTypeSelector'
 import { DatePresetButtons, getDateRangeForPreset } from './DatePresetButtons'
-import { dateStringToUTCRange } from '@/lib/utils/timezone'
+import {
+  dateStringToUTCRange,
+  isoDateTimeToDateStringInTimezone,
+} from '@/lib/utils/timezone'
+import { DatePicker } from '@/components/ui/DatePicker'
 
 interface AdvancedFilterPanelProps {
   open: boolean
@@ -259,57 +263,48 @@ export function AdvancedFilterPanel({
               )}
 
               {(!draft.dateFrom || draft.datePreset === 'custom') && (
-                <div className="mt-4 space-y-3">
-                  <div>
-                    <label className="text-xs font-medium text-[#17251f]">Desde</label>
-                    <input
-                      type="date"
-                      value={draft.dateFrom ? draft.dateFrom.split('T')[0] : ''}
-                      onChange={(e) => {
-                        const newDate = e.target.value
-                        if (newDate) {
-                          // FASE 14.1.3: Parse date as America/Mexico_City timezone
-                          // Convert to UTC range accounting for Mexico offset
-                          try {
-                            const [startUTC] = dateStringToUTCRange(newDate, 'America/Mexico_City')
-                            setDraft((prev) => ({
-                              ...prev,
-                              dateFrom: startUTC,
-                              datePreset: 'custom',
-                            }))
-                          } catch (err) {
-                            console.error('Invalid date format:', err)
-                          }
-                        }
-                      }}
-                      className="w-full px-3 py-2 border border-[#dbe4dd] rounded text-sm"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-[#17251f]">Hasta</label>
-                    <input
-                      type="date"
-                      value={draft.dateTo ? draft.dateTo.split('T')[0] : ''}
-                      onChange={(e) => {
-                        const newDate = e.target.value
-                        if (newDate) {
-                          // FASE 14.1.3: Parse date as America/Mexico_City timezone
-                          // Convert to UTC range accounting for Mexico offset
-                          try {
-                            const [, endUTC] = dateStringToUTCRange(newDate, 'America/Mexico_City')
-                            setDraft((prev) => ({
-                              ...prev,
-                              dateTo: endUTC,
-                              datePreset: 'custom',
-                            }))
-                          } catch (err) {
-                            console.error('Invalid date format:', err)
-                          }
-                        }
-                      }}
-                      className="w-full px-3 py-2 border border-[#dbe4dd] rounded text-sm"
-                    />
-                  </div>
+                <div className="mt-4 grid gap-3">
+                  <DatePicker
+                    label="Desde"
+                    value={
+                      draft.dateFrom
+                        ? isoDateTimeToDateStringInTimezone(draft.dateFrom)
+                        : ''
+                    }
+                    onChange={(newDate) => {
+                      const [startUTC] = dateStringToUTCRange(
+                        newDate,
+                        'America/Mexico_City'
+                      )
+
+                      setDraft((prev) => ({
+                        ...prev,
+                        dateFrom: startUTC,
+                        datePreset: 'custom',
+                      }))
+                    }}
+                  />
+
+                  <DatePicker
+                    label="Hasta"
+                    value={
+                      draft.dateTo
+                        ? isoDateTimeToDateStringInTimezone(draft.dateTo)
+                        : ''
+                    }
+                    onChange={(newDate) => {
+                      const [, endUTC] = dateStringToUTCRange(
+                        newDate,
+                        'America/Mexico_City'
+                      )
+
+                      setDraft((prev) => ({
+                        ...prev,
+                        dateTo: endUTC,
+                        datePreset: 'custom',
+                      }))
+                    }}
+                  />
                 </div>
               )}
             </div>
@@ -514,41 +509,47 @@ export function AdvancedFilterPanel({
             <option value="session">Fecha de prueba</option>
           </select>
 
-          <div className="mt-2 flex gap-1">
-            <input
-              type="date"
-              value={draft.dateFrom ? draft.dateFrom.split('T')[0] : ''}
-              onChange={(e) => {
-                const newDate = e.target.value
-                if (newDate) {
-                  const dateObj = new Date(newDate + 'T00:00:00')
-                  setDraft((prev) => ({
-                    ...prev,
-                    dateFrom: dateObj.toISOString(),
-                    datePreset: 'custom',
-                  }))
-                }
+          <div className="mt-2 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-1">
+            <DatePicker
+              value={
+                draft.dateFrom
+                  ? isoDateTimeToDateStringInTimezone(draft.dateFrom)
+                  : ''
+              }
+              onChange={(newDate) => {
+                const [startUTC] = dateStringToUTCRange(
+                  newDate,
+                  'America/Mexico_City'
+                )
+
+                setDraft((prev) => ({
+                  ...prev,
+                  dateFrom: startUTC,
+                  datePreset: 'custom',
+                }))
               }}
-              className="flex-1 px-2 py-1 border border-[#dbe4dd] rounded text-xs"
-              placeholder="Desde"
             />
-            <span className="px-1 py-1 text-xs text-[#65766e]">–</span>
-            <input
-              type="date"
-              value={draft.dateTo ? draft.dateTo.split('T')[0] : ''}
-              onChange={(e) => {
-                const newDate = e.target.value
-                if (newDate) {
-                  const dateObj = new Date(newDate + 'T23:59:59')
-                  setDraft((prev) => ({
-                    ...prev,
-                    dateTo: dateObj.toISOString(),
-                    datePreset: 'custom',
-                  }))
-                }
+
+            <span className="px-1 text-xs text-[#65766e]">–</span>
+
+            <DatePicker
+              value={
+                draft.dateTo
+                  ? isoDateTimeToDateStringInTimezone(draft.dateTo)
+                  : ''
+              }
+              onChange={(newDate) => {
+                const [, endUTC] = dateStringToUTCRange(
+                  newDate,
+                  'America/Mexico_City'
+                )
+
+                setDraft((prev) => ({
+                  ...prev,
+                  dateTo: endUTC,
+                  datePreset: 'custom',
+                }))
               }}
-              className="flex-1 px-2 py-1 border border-[#dbe4dd] rounded text-xs"
-              placeholder="Hasta"
             />
           </div>
         </fieldset>
