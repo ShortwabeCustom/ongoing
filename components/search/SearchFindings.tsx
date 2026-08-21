@@ -879,8 +879,13 @@ export function SearchFindings({ presentation = 'panel', showQuickFilters = true
         {/* Filter bar */}
         {showQuickFilters && renderFilterBar()}
 
-        <div className={cn('flex flex-wrap items-center gap-2', !showQuickFilters && 'mt-4')}>
+        <div className="mt-4 flex flex-wrap items-center gap-2">
           {/*
+            QA fix: this row used to get `mt-4` only when `!showQuickFilters`
+            (Analytics). On /findings (showQuickFilters=true), renderFilterBar()
+            renders directly above with its own `mt-4`, but this row had none —
+            "Vistas" sat flush against the filter bar with 0 gap. Unconditional
+            now; a no-op for Analytics (already had mt-4 the same way).
             FASE 6 ("Ingresados hoy" + "Vistas"): renamed from "Recientes" —
             that label was ambiguous (search history here vs. Analytics'
             own temporal concept). This opens Recientes + Guardadas, both
