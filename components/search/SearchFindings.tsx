@@ -881,11 +881,20 @@ export function SearchFindings({ presentation = 'panel', showQuickFilters = true
 
         <div className="mt-4 flex flex-wrap items-center gap-2">
           {/*
-            QA fix: this row used to get `mt-4` only when `!showQuickFilters`
-            (Analytics). On /findings (showQuickFilters=true), renderFilterBar()
-            renders directly above with its own `mt-4`, but this row had none —
-            "Vistas" sat flush against the filter bar with 0 gap. Unconditional
-            now; a no-op for Analytics (already had mt-4 the same way).
+            QA fix: on /findings (showQuickFilters=true), renderFilterBar()
+            renders directly above this row with its own mt-4, but this row
+            had none — "Vistas" sat flush against the filter bar with 0 gap.
+            Made unconditional rather than gated on showQuickFilters: on
+            Analytics (showQuickFilters=false), the sibling directly above
+            this row is the search input, not a filter bar, and mt-4 is
+            what already spaced them apart — removing it there would leave
+            "Vistas" flush against the search box instead. AnalyticsFilterBar's
+            own `gap-3` wrapper only spaces its direct children (this whole
+            SearchFindings block vs. its own Estado/Prioridad row) — it
+            doesn't reach inside to space the search input from Vistas, so
+            it can't replace this. Net effect: /findings gains the gap it
+            was missing, /dashboard/analytics renders byte-for-byte the same
+            class it already had — nothing changes there.
             FASE 6 ("Ingresados hoy" + "Vistas"): renamed from "Recientes" —
             that label was ambiguous (search history here vs. Analytics'
             own temporal concept). This opens Recientes + Guardadas, both
