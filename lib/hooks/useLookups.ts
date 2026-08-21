@@ -10,13 +10,20 @@ interface UseLookups {
   error: string | null
 }
 
-export function useLookups(projectId?: string, userId?: string): UseLookups {
+export function useLookups(
+  projectId?: string,
+  userId?: string,
+  options?: { enabled?: boolean },
+): UseLookups {
+  const enabled = options?.enabled ?? true
   const [assignees, setAssignees] = useState<LookupOption[]>([])
   const [projects, setProjects] = useState<LookupOption[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    if (!enabled) return
+
     const fetchLookups = async () => {
       setIsLoading(true)
       setError(null)
@@ -49,7 +56,7 @@ export function useLookups(projectId?: string, userId?: string): UseLookups {
     }
 
     fetchLookups()
-  }, [projectId, userId])
+  }, [projectId, userId, enabled])
 
   return {
     assignees,

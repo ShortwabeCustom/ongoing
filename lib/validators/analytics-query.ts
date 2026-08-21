@@ -13,6 +13,7 @@ export type AnalyticsQuery = {
   priority?: string[]
   severity?: string[]
   projectId?: string
+  assigneeId?: string
   granularity?: 'day' | 'week'
 }
 
@@ -64,6 +65,7 @@ export const AnalyticsQuerySchema = z.object({
     ),
 
   projectId: z.string().optional(),
+  assigneeId: z.string().optional(),
 
   granularity: z.enum(['day', 'week']).optional().default('day'),
 })

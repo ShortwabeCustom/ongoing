@@ -7,6 +7,16 @@ import { v4 as uuidv4 } from 'uuid'
 
 const MAX_HISTORY = 10
 
+/** Fields that make two entries "the same search" for dedup purposes — excludes id/timestamp/resultCount. */
+export function entrySignature(entry: Pick<SearchHistoryEntry, 'q' | 'status' | 'priority' | 'filters'>): string {
+  return JSON.stringify({
+    q: entry.q ?? '',
+    status: entry.status ?? [],
+    priority: entry.priority ?? [],
+    filters: entry.filters ?? {},
+  })
+}
+
 export interface UseSearchHistoryReturn {
   recent: SearchHistoryEntry[]
   isReady: boolean
@@ -67,6 +77,23 @@ export function useSearchHistory(): UseSearchHistoryReturn {
           id: uuidv4(),
           timestamp: Date.now(),
         }
+
+        // Section 28: skip adding when it's identical to the most recent
+        // entry (open/close without changing anything, or a re-render
+        // re-triggering the same add) — compare against the latest entry
+        // only, not the whole history, so unrelated older duplicates
+        // (e.g. re-running the same search a while later) still get kept.
+        const shouldSkip = await new Promise<boolean>((resolve) => {
+          const cursorRequest = store.index('timestamp').openCursor(null, 'prev')
+          cursorRequest.onsuccess = () => {
+            const cursor = cursorRequest.result
+            const latest = cursor?.value as SearchHistoryEntry | undefined
+            resolve(Boolean(latest && entrySignature(latest) === entrySignature(newEntry)))
+          }
+          cursorRequest.onerror = () => resolve(false)
+        })
+
+        if (shouldSkip) return
 
         const addRequest = store.add(newEntry)
 

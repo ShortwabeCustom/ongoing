@@ -2,7 +2,6 @@
 // FASE 14.1: Date intelligence types
 
 export type DateFilterType = 'created' | 'updated' | 'imported' | 'session'
-export type DatePreset = 'today' | 'yesterday' | 'last7days' | 'last30days' | 'custom'
 
 export interface AdvancedFilterValues {
   assignee?: string[]
@@ -11,7 +10,6 @@ export interface AdvancedFilterValues {
   dateType?: DateFilterType
   dateFrom?: string
   dateTo?: string
-  datePreset?: DatePreset
   hasEvidence?: 'any' | 'with' | 'without'
 }
 

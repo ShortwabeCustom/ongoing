@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter, useSearchParams } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useMemo } from 'react'
 import { AdvancedFilterValues } from '@/lib/types/search'
 import type { SearchQuery } from '@/lib/validators/search-query'
@@ -38,6 +38,7 @@ function isValidDateType(value: unknown): value is typeof VALID_DATE_TYPES[numbe
 
 export function useUrlSync(): UseUrlSyncReturn {
   const router = useRouter()
+  const pathname = usePathname()
   const searchParams = useSearchParams()
 
   // Hydrate from URL on mount (memoized to avoid recalculation)
@@ -94,20 +95,20 @@ export function useUrlSync(): UseUrlSyncReturn {
       }
 
       const queryString = params.toString()
-      const newUrl = queryString ? `/findings?${queryString}` : '/findings'
+      const newUrl = queryString ? `${pathname}?${queryString}` : pathname
 
       // FASE 14.1.3: Use push() to create history entry
       // This enables browser back/forward navigation
       // Applied filters are intentional user actions, so they should be in history
       router.push(newUrl, { scroll: false })
     },
-    [router]
+    [router, pathname]
   )
 
   const clearUrl = useCallback(() => {
     // FASE 14.1.3: Use push() so clearing filters can be undone via browser back
-    router.push('/findings', { scroll: false })
-  }, [router])
+    router.push(pathname, { scroll: false })
+  }, [router, pathname])
 
   return {
     initialFilters,

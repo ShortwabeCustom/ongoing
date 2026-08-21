@@ -9,9 +9,9 @@ import { Suspense } from 'react'
 import { KPIGrid } from '@/components/analytics/KPIGrid'
 import { TrendChart } from '@/components/analytics/TrendChart'
 import { StatusBreakdownChart } from '@/components/analytics/StatusBreakdownChart'
-import { DateRangeFilter } from '@/components/analytics/DateRangeFilter'
+import { AnalysisPeriodPanel } from '@/components/analytics/AnalysisPeriodPanel'
+import { AnalyticsFilterBar } from '@/components/analytics/AnalyticsFilterBar'
 import { RecentActivityPanel } from '@/components/analytics/RecentActivityPanel'
-import { SearchFindings } from '@/components/search/SearchFindings'
 import { AppShell } from '@/components/app/AppShell'
 import { getInventoryStats } from '@/lib/services/inventory-stats'
 
@@ -87,9 +87,18 @@ export default async function AnalyticsDashboardPage({
       stats={stats}
     >
       <div className="space-y-6">
-        <section className="pm-card grid gap-4 p-4 lg:grid-cols-[minmax(0,1fr)_360px]">
-          <SearchFindings presentation="dropdown" />
-          <DateRangeFilter />
+        {/*
+          FASE 6 (section 39): at exactly 1024px (`lg`'s own breakpoint), the
+          1fr column has ~552px to fit Buscar + Estado/Prioridad/Proyecto/
+          Asignado/Más filtros — arithmetically borderline (~546px estimated)
+          for wrapping without a real browser to confirm either way. Pushed
+          the two-column split to `xl` (1280px) instead: 1024-1279px keeps
+          both blocks stacked full-width (~928px+, comfortably one row), and
+          the side-by-side layout only kicks in once there's clear headroom.
+        */}
+        <section className="pm-card grid items-start gap-4 p-4 xl:grid-cols-[minmax(0,1fr)_360px]">
+          <AnalyticsFilterBar />
+          <AnalysisPeriodPanel />
         </section>
 
         <Suspense

@@ -17,6 +17,7 @@ export class AnalyticsService {
       createdAfter: filters.from,
       createdBefore: filters.to,
       projectId: filters.projectId,
+      assigneeId: filters.assigneeId,
     })
     return where
   }

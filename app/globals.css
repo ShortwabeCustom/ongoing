@@ -87,24 +87,36 @@
   --pm-line: #dbe4dd;
   --pm-amber: #f2b84b;
   --pm-coral: #ed765e;
+  /*
+   * FASE 6 visual remediation: these were the unmodified shadcn scaffold
+   * defaults (--primary near-black, --border/--muted generic gray) — never
+   * wired to UIX's actual brand tokens (--pm-deep/--pm-green/--pm-surface/
+   * --pm-line/--pm-ink above). The shared filter primitives (FilterTrigger,
+   * DateRangePicker, ActiveFilterChip, MoreFiltersPopover, ...) consume
+   * these via Tailwind's bg-primary/border-border/text-muted-foreground
+   * etc., so the mismatch showed up as a visually separate "black" filter
+   * system next to the rest of the (already-brand-colored) product. Mapped
+   * to the existing brand hex values already used everywhere else in the
+   * app instead of inventing a new palette.
+   */
   --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --foreground: var(--pm-ink);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: var(--pm-ink);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
+  --popover-foreground: var(--pm-ink);
+  --primary: var(--pm-deep);
+  --primary-foreground: #ffffff;
   --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --secondary-foreground: var(--pm-ink);
+  --muted: var(--pm-surface);
+  --muted-foreground: #65766e;
   --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --accent-foreground: var(--pm-ink);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: var(--pm-line);
+  --input: var(--pm-line);
+  --ring: var(--pm-green);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -156,42 +168,20 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not(.light) {
-    color-scheme: dark;
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
-  }
-}
+/*
+ * FASE 6: removed the `@media (prefers-color-scheme: dark)` auto-switch
+ * that used to live here. Nothing in this app ever applies the `.dark`
+ * class or offers a theme toggle (verified: no next-themes/ThemeProvider/
+ * `.dark` usage anywhere in the codebase) — the media query was dead
+ * scaffolding from the initial shadcn setup that nonetheless activated
+ * for any visitor whose OS/browser prefers dark, silently flipping every
+ * component that consumes the CSS variable tokens (all of the shared
+ * filter primitives) into a dark theme the rest of the product — built
+ * with hardcoded brand hex, not these tokens — never adopted. That
+ * mismatch is what read as a separate "black" filter system. The `.dark`
+ * class rule above stays defined (inert, since nothing applies it) in
+ * case a real theme toggle is added later.
+ */
 
 @layer base {
   * {
