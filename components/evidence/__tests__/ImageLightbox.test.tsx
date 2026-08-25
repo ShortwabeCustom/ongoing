@@ -8,7 +8,7 @@ import type { Evidence } from '@/lib/types'
 const evidence = {
   id: 'evidence-1',
   findingId: 'finding-1',
-  type: 'SCREENSHOT',
+  type: 'IMAGE',
   storageKey: 'evidence/image.png',
   url: '/image.png',
   originalFilename: 'image.png',
