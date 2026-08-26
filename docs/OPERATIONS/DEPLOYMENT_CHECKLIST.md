@@ -4,6 +4,65 @@
 
 ---
 
+## ⚠️ SUPERSEDED (2026-08-26) — read this before anything below
+
+**`https://uix.productdesign.mx` is currently NOT served by `pm2 start
+ecosystem.config.js` / the `uix` process on port 3000.** nginx's
+`proxy_pass` points at a specific `uix-release-<sha>` process on its own
+localhost port (see `docs/ADR/ADR_BLUE_GREEN_UIX_DEPLOYMENT.md` for the
+full topology and why).
+
+Running Steps 5-9 below (`pm2 delete uix` / `pm2 start
+ecosystem.config.js` on port 3000) **does not affect public traffic at
+all** — it restarts an orphaned process nobody visits. It will *look*
+successful (`pm2 list` shows `online`) while production keeps serving
+whatever `uix-release-<sha>` process nginx currently points to. This is
+a **ghost deployment**: every check in this file will pass and nothing
+in production will have changed.
+
+**Use the canonical blue/green procedure instead**, summarized here and
+detailed in the ADR:
+
+```text
+1. git worktree add --detach /var/www/apps/uix-release-<sha> <sha>
+2. ln -s /var/www/apps/uix/.env /var/www/apps/uix-release-<sha>/.env
+   (never copy the .env — symlink to the single source of truth)
+3. cd /var/www/apps/uix-release-<sha>
+   npm ci                     # reproducible install, no updates
+   npm exec -- prisma generate  # codegen only, never migrate/db push here
+   npm run build
+4. Write ecosystem.deploy.config.js in that directory (not committed):
+   name = uix-release-<sha>, cwd = that directory, its own free port
+   (check: `ss -lntp | grep ':<port>'` and `pm2 describe uix-release-<sha>`
+   must both come back empty before you claim the port)
+5. pm2 start ecosystem.deploy.config.js
+6. Smoke DIRECTLY against 127.0.0.1:<port> — do not touch nginx yet
+7. Confirm current nginx upstream first: `cat /etc/nginx/sites-enabled/uix.productdesign.mx`
+   Back up to /var/backups/nginx/ — NEVER inside sites-enabled/ (a file
+   left in sites-enabled is parsed as an active server block and will
+   break `nginx -t` with a duplicate server_name/listen error before
+   you ever reload)
+8. Edit ONLY the proxy_pass port, then: sudo nginx -t && sudo systemctl reload nginx
+9. Verify chunk consistency against the PUBLIC domain (see Step 11
+   below, same technique — just compare against the new release
+   directory's .next, not against ecosystem.config.js's uix)
+10. pm2 save only after the public check passes
+11. Keep the previous uix-release-<sha> process running — it is the
+    one-line rollback (revert proxy_pass, nginx -t, reload)
+```
+
+Do not delete/stop the old `uix-release-<sha>` slot, `uix-canary`, or
+the orphaned `uix`/3000 process as part of a routine deploy — that is a
+separate, explicit PM2 inventory audit (see the ADR's "Known
+operational debt" section).
+
+The steps below (original checklist) are kept as historical reference
+for the `ecosystem.config.js`/`uix`/3000 path itself, in case that slot
+is ever deliberately made the live path again — but as of 2026-08-26
+they are **not** what drives `uix.productdesign.mx`.
+
+---
+
 ## Pre-Deployment (5 minutes)
 
 ```bash

@@ -1,8 +1,18 @@
 # Production Mode Deployment — Critical Guide
 
-**Última actualización**: 2026-08-13  
-**Status**: ✅ CRITICAL DOCUMENTATION  
+**Última actualización**: 2026-08-13
+**Status**: ✅ CRITICAL DOCUMENTATION
 **Audience**: DevOps, SRE, Production Maintainers
+
+> ⚠️ **2026-08-26**: the single-process model this guide describes
+> (`ecosystem.config.js` → `uix` → port 3000 → nginx) is no longer how
+> `uix.productdesign.mx` is actually served. Production now runs on
+> immutable blue/green `uix-release-<sha>` slots, each on its own
+> localhost port, with nginx switched between them. See
+> `docs/ADR/ADR_BLUE_GREEN_UIX_DEPLOYMENT.md` and the updated
+> `docs/OPERATIONS/DEPLOYMENT_CHECKLIST.md` before deploying — this
+> document's dev-vs-prod-mode diagnosis is still correct and useful,
+> but its deploy commands target the wrong process.
 
 ---
 
