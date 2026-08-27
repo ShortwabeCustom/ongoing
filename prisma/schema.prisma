@@ -330,6 +330,10 @@ model Evidence {
   mimeType          String
   fileSize          Int?         // bytes
   caption           String?
+  // ADR-001 D7/D12: privada por defecto. Publicación explícita y deliberada
+  // hacia /api/public/report. Sin efecto sobre evidencia legacy (D9): esa
+  // visibilidad la decide únicamente isLegacyStorageKey(storageKey).
+  visibility        EvidenceVisibility @default(PRIVATE)
 
   // Workflow attachments (optional)
   resolutionId String?
@@ -352,6 +356,11 @@ model Evidence {
   @@index([resolutionId])
   @@index([validationId])
   @@map("evidence")
+}
+
+enum EvidenceVisibility {
+  PRIVATE
+  PUBLIC_REPORT
 }
 
 enum EvidenceType {

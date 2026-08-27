@@ -15,6 +15,11 @@
 > **Numeración**: este documento usa la numeración canónica de rev.4
 > (`D1`–`D15`, más `D6-bis` y `D15-bis`). No existe ninguna otra numeración vigente.
 
+> **Addendum (2026-08-27)**: **D12** se actualiza de "futura, fuera de P1-B" a
+> **implementada**. Esta actualización **supersede únicamente el texto previo de
+> D12** (y la línea correspondiente de §14). Ninguna otra decisión de este ADR
+> (D1–D11, D13–D15) cambia de contenido, numeración o alcance.
+
 ---
 
 ## 0. Estado de la decisión
@@ -431,12 +436,129 @@ riesgo de pérdida, y no se aborda aquí.
 P1-B. Su activación es una evolución futura, junto con la reevaluación de signed URLs
 (D4). P1-B no introduce la abstracción de drivers que esa evolución requeriría (D3).
 
-### D12 · Publicación explícita de evidencias: futura, fuera de P1-B
+### D12 · Publicación explícita de evidencias — implementada (2026-08-27)
 
-Cualquier mecanismo de **publicación deliberada** de una evidencia de runtime —hacerla
-visible sin sesión, o incorporarla al reporte público— es una decisión futura y queda
-**explícitamente fuera del alcance de P1-B**. Hoy la única evidencia públicamente
-renderizable es la legacy (D8.1).
+> **Este texto reemplaza la versión previa de D12** ("futura, fuera de P1-B").
+> Es la única decisión de este ADR que cambia de estado; D1–D11 y D13–D15 no
+> se ven afectadas.
+
+Se implementa un mecanismo de **publicación deliberada** de evidencia de runtime
+hacia el reporte público: opt-in, de baja frecuencia, y sin alterar ninguna otra
+decisión de este documento.
+
+#### 12.1 Modelo
+
+- `Evidence.visibility: EvidenceVisibility` con valores `PRIVATE` y `PUBLIC_REPORT`.
+- **`PRIVATE` es el default.** D7 ("toda Evidence nueva es privada por defecto")
+  no cambia: `visibility` es un flag adicional sobre esa base, no un reemplazo.
+- El flag **no tiene efecto sobre evidencia legacy** (D9): la visibilidad legacy
+  la sigue decidiendo únicamente `isLegacyStorageKey(storageKey)` (D8.1).
+  Intentar fijarlo sobre una fila legacy se rechaza (`LEGACY_NOT_APPLICABLE`) —
+  ese flag no tiene significado ahí y marcarlo sería engañoso.
+
+#### 12.2 Mutación — únicamente script manual, en esta fase
+
+Mismo patrón operativo que el restore lógico (D6-bis.A): `scripts/set-evidence-visibility.ts`,
+**sin UI y sin endpoint HTTP**. Argumentos `--evidence-id` y `--visibility=PRIVATE|PUBLIC_REPORT`
+obligatorios; **dry-run por defecto**; `--execute` obligatorio para escribir.
+
+- Rechaza evidencia soft-deleted (`EVIDENCE_DELETED`), finding inactivo
+  (`FINDING_DELETED`) y `storageKey` legacy (`LEGACY_NOT_APPLICABLE`).
+- **Idempotente**: si la evidencia ya está en el `visibility` destino, es un
+  no-op (sin transacción, sin `AuditLog` duplicado).
+- Nunca toca `storageKey`; nunca mueve ni copia bytes; no importa `PrivateFileStore`
+  ni `fs` — es una escritura de un único flag en BD, con CAS sobre el valor leído.
+- Cambios auditados con `AuditAction.UPDATE` + `after.phase = "VISIBILITY_CHANGE"`
+  (mismo patrón de discriminador por `phase` que D6.3/D6-bis.A; no se amplía el
+  enum de auditoría).
+
+No se expone un endpoint HTTP de mutación en esta fase: la decisión de qué
+evidencia se hace pública es deliberada y poco frecuente, y no justifica ampliar
+la superficie de RBAC.
+
+#### 12.3 Entrega — `GET /api/public/evidence/{id}/file`
+
+Contraparte anónima de D2, en un route handler **separado**:
+
+- **sin sesión, sin RBAC** — la autorización la decide exclusivamente `visibility`;
+- sirve **únicamente** `Evidence.visibility === 'PUBLIC_REPORT'`, activa, de
+  finding activo, y no-legacy (la exclusión de legacy es defensa en profundidad:
+  `PrivateFileStore` rechaza claves `legacy/*` por D3, así que una fila legacy
+  jamás debería llegar aquí, pero si lo hiciera no debe alcanzar el almacén);
+- `PRIVATE`, inexistente, evidencia borrada, finding borrado y legacy comparten
+  el mismo **404** indistinguible (mismo criterio que D2/§3.1: no filtrar qué
+  existe ni qué es pública);
+- usa **exclusivamente** la frontera de storage existente (`PrivateFileStore`,
+  D3): ningún `fs`/`path` en el handler; la `storageKey` sale de la BD a partir
+  del `id` de la URL y **nunca** del cliente;
+- Range/206/416 igual que D13, reutilizando los mismos helpers puros
+  (`lib/http/range.ts`, `lib/http/content-disposition.ts`);
+- `Cache-Control: no-store` como punto de partida (más conservador que
+  `private, no-store` de D2 porque esta ruta no depende de cookie de sesión;
+  reevaluable si en el futuro conviene cachear en CDN evidencia ya pública);
+- mismos códigos que D2 para los estados de la máquina D5: `url === null` ⇒
+  409 `UPLOAD_INCOMPLETE`; confirmada sin objeto físico ⇒ 410 `OBJECT_MISSING`.
+
+**`GET /api/evidence/{id}/file` (D2) permanece exactamente igual**: mismo RBAC
+(`VIEW_ALL_FINDINGS`), mismo contrato, mismo código — sirve TODA evidencia de
+runtime, publicada o no, a un solicitante autenticado. La publicación **no
+relaja ni reemplaza** esa ruta; añade una vía anónima adicional, estrictamente
+más restringida en qué evidencia alcanza a servir.
+
+#### 12.4 `/api/public/report`
+
+La regla de "públicamente renderizable" (D8.1) se **extiende**, sin dejar de
+aplicar en lista y `evidenceCount` de forma idéntica (R6):
+
+```
+evidence.deletedAt == null
+AND finding.deletedAt == null
+AND url != null AND url != ""
+AND ( isLegacyStorageKey(storageKey)       -- D9, sin cambios
+      OR visibility == 'PUBLIC_REPORT' )   -- D12
+```
+
+La URL emitida es `ev.url` tal cual para legacy, o `/api/public/evidence/{id}/file`
+para runtime publicada — **nunca** `/api/evidence/{id}/file` (D8.2 no cambia:
+esa ruta sigue exigiendo sesión y jamás se emite en este contrato).
+
+#### 12.5 Impacto en Prisma
+
+A diferencia de D10 ("cero migraciones, cero cambios en `prisma/schema.prisma`",
+que describe el alcance original de P1-B y no cambia), D12 introduce la primera
+migración desde el squash base:
+
+```sql
+CREATE TYPE "EvidenceVisibility" AS ENUM ('PRIVATE', 'PUBLIC_REPORT');
+ALTER TABLE "evidence" ADD COLUMN "visibility" "EvidenceVisibility" NOT NULL DEFAULT 'PRIVATE';
+```
+
+Aditiva, sin downtime, sin backfill manual: el `DEFAULT` puebla todas las filas
+existentes (legacy y runtime) en la misma sentencia.
+
+#### 12.6 Riesgos
+
+- **Publicación errónea de evidencia sensible.** Mitigado por: opt-in,
+  `PRIVATE` por defecto (D7), mutación solo por script manual con `--execute`
+  explícito, y auditoría (`VISIBILITY_CHANGE`) de cada cambio.
+- **Despliegue del código sin la migración correspondiente en el entorno de
+  destino** produce `P2022 ColumnNotFound` en `/api/public/report` y en el
+  endpoint público — verificado de forma reproducible. La migración debe
+  preceder siempre al despliegue del código que la referencia.
+- **Impacto operativo inmediato al desplegar solo D8.1 (Fase A) sin D12**: si
+  toda la evidencia activa de un entorno es runtime (sin ninguna fila legacy),
+  el reporte público pasa de mostrar imágenes rotas (bug pre-D8.1) a mostrar
+  **cero evidencia** hasta que se publique explícitamente alguna vía D12. Es
+  el comportamiento correcto y seguro, pero es un cambio de UX visible que debe
+  comunicarse antes del despliegue.
+
+#### 12.7 Rollback
+
+- **Código**: revertir el despliegue. `/api/public/report` vuelve a D8.1 tal
+  cual (sin el segundo término del `OR`); ninguna evidencia pierde bytes.
+- **Esquema**: `ALTER TABLE "evidence" DROP COLUMN "visibility"; DROP TYPE
+  "EvidenceVisibility";` — reversible sin pérdida de ningún otro dato, dado que
+  la migración es puramente aditiva y ninguna otra columna depende de ella.
 
 ### D13 · Range / HTTP 206 para media
 
@@ -830,6 +952,10 @@ alcance.
 - `Evidence.url`: cambia de semántica, no de esquema (D5.1).
 - Purgado físico: sin `AuditAction.PURGE`; se usa `DELETE` + `after.phase` (D6.3).
 
+> **Actualización (D12, 2026-08-27)**: lo anterior describe el alcance original
+> de P1-B (D10) y no cambia. D12 sí introduce una migración — la primera desde
+> el squash base —, aditiva y sin backfill. Ver §12.5.
+
 ## 8. Matriz de autorización
 
 **Sin cambios.** RBAC global existente: `VIEW_ALL_FINDINGS` para READ,
@@ -1018,13 +1144,31 @@ Inventario **previsto**, no modificado por este ADR:
 
 `lib/storage/r2-client.ts` y `lib/storage/s3-client.ts` permanecen huérfanos (D11).
 
+### 13.1 Archivos de D12 (2026-08-27)
+
+La tabla de §13 es el inventario **original** de P1-B y no se modifica. D12 es
+posterior y añade estos archivos, no previstos en esa tabla:
+
+| Fichero / área | Naturaleza del cambio | Decisión |
+|---|---|---|
+| `prisma/schema.prisma` | `enum EvidenceVisibility { PRIVATE, PUBLIC_REPORT }` + `Evidence.visibility @default(PRIVATE)` | D12.1 |
+| `prisma/migrations/20260827015548_add_evidence_visibility/` | `CREATE TYPE` + `ALTER TABLE ... ADD COLUMN ... DEFAULT 'PRIVATE'`, aditiva | D12.5 |
+| `lib/services/evidence-visibility-service.ts` | `setEvidenceVisibility`: precondiciones, CAS, idempotencia, `AuditLog` | D12.2 |
+| `scripts/set-evidence-visibility.ts` | CLI manual, dry-run por defecto, `--execute` obligatorio, sin UI/endpoint | D12.2 |
+| `app/api/public/evidence/[id]/file/route.ts` | **Nuevo** — entrega anónima, solo `PUBLIC_REPORT`, mismo boundary de storage que D2 | D12.3 |
+| `app/api/public/report/route.ts` | Regla de D8.1 extendida con el `OR` de D12.4 | D8.1, D12.4 |
+| Tests | `lib/services/__tests__/evidence-visibility-service.test.ts`, `scripts/__tests__/set-evidence-visibility.test.ts`, `app/api/public/evidence/__tests__/file-route.test.ts`, `app/api/public/report/__tests__/*` | — |
+
+`app/api/evidence/[id]/file/route.ts` (D2) **no está en esta tabla**: no se modificó.
+
 ---
 
 ## 14. Explícitamente fuera de alcance
 
 - **Signed URLs** — no seleccionadas para P1-B; reevaluables con R2/S3 futuro (D4).
 - **Activación de R2/S3** y cualquier abstracción de drivers (D11, D3).
-- **Publicación explícita de evidencias** de runtime (D12).
+- ~~Publicación explícita de evidencias de runtime~~ — **implementada**, ver D12
+  (actualización 2026-08-27). Ya no está fuera de alcance.
 - **Migración de la evidencia legacy** al nuevo almacén (D9).
 - **`ProjectMember` scoping** o cualquier cambio del modelo de autorización (D10).
 - **Migraciones de Prisma** y cambios de esquema (D10).
