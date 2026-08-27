@@ -20,6 +20,19 @@
 > D12** (y la línea correspondiente de §14). Ninguna otra decisión de este ADR
 > (D1–D11, D13–D15) cambia de contenido, numeración o alcance.
 
+> **Addendum (2026-08-27, mismo día) — D12-bis**: D12 dejaba la publicación
+> como un acto 100% manual (`--evidence-id` único, sin backfill). La política
+> de producto se aclaró el mismo día: **toda evidencia de runtime que
+> pertenece al reporte ejecutivo debe ser visible tanto a invitado como a
+> autenticado**, y la publicación de una evidencia nueva debe ocurrir
+> automáticamente al confirmar su upload, no esperar a un operador. **D12-bis**
+> (nueva sección, no reemplaza D12) añade: (1) publicación automática en FASE 3
+> de `StorageService.uploadFile`, (2) un modo bulk idempotente en el mismo CLI
+> para backfillear la evidencia runtime ya existente. `D12.1`–`D12.7` no
+> cambian: el modelo, el default `PRIVATE`, los endpoints y el rollback de
+> código siguen siendo los mismos. Ninguna otra decisión de este ADR se ve
+> afectada.
+
 ---
 
 ## 0. Estado de la decisión
@@ -559,6 +572,151 @@ existentes (legacy y runtime) en la misma sentencia.
 - **Esquema**: `ALTER TABLE "evidence" DROP COLUMN "visibility"; DROP TYPE
   "EvidenceVisibility";` — reversible sin pérdida de ningún otro dato, dado que
   la migración es puramente aditiva y ninguna otra columna depende de ella.
+
+### D12-bis · Publicación automática al confirmar upload + backfill masivo (2026-08-27)
+
+> Sección **nueva**, no reemplaza D12. Requisito de producto confirmado el
+> mismo día que D12 se desplegó: invitado y autenticado deben ver exactamente
+> el mismo conjunto de evidencia en el reporte ejecutivo, y una evidencia
+> nueva que pertenece al reporte no debe depender de que un operador la
+> publique manualmente después.
+
+#### 12-bis.1 Publicación automática en `StorageService.uploadFile`
+
+FASE 3 (D5.2) pasa de `Evidence.update({ url })` a
+`Evidence.update({ url, visibility: 'PUBLIC_REPORT' })`, en la MISMA
+transacción que confirma la URL y emite el `AuditLog CREATE`. No cambia nada
+más de la máquina de estados:
+
+- FASE 1 sigue sin fijar `visibility` explícitamente — la fila nace `PRIVATE`
+  por el default de schema (D12.1/D7). Un upload interrumpido entre FASE 1 y
+  FASE 3 nunca es públicamente enumerable.
+- FASE 2 no cambia.
+- Un fallo en FASE 2 o FASE 3 deja la fila `PENDING` (`url = null`) y
+  `PRIVATE`, exactamente como antes de D12-bis — la propiedad de los fallos
+  de D5.3 se extiende sin modificarla: ahora también es cierto que un fallo
+  nunca puede dejar una fila públicamente visible sin bytes confirmados.
+- `AuditLog CREATE.after` incluye `visibility: 'PUBLIC_REPORT'`: refleja el
+  estado resultante de la misma escritura, no un evento adicional.
+
+El `@default(PRIVATE)` de `Evidence.visibility` en `prisma/schema.prisma`
+**no cambia**. Es intencional (ver 12-bis.4): la publicación es responsabilidad
+explícita de cada camino de creación que la necesita, no del esquema.
+
+Los demás caminos de creación de `Evidence` en el repositorio no participan:
+`import-service.ts` (importación XLSX) escribe siempre `storageKey` con
+prefijo `legacy/`, fuera del alcance de este flag por diseño (D9) — su
+visibilidad la sigue decidiendo únicamente `isLegacyStorageKey`.
+
+#### 12-bis.2 Backfill masivo — `evidence-visibility-bulk-service.ts`
+
+Nuevo módulo, no modifica `evidence-visibility-service.ts` (que conserva su
+invariante de no importar `PrivateFileStore` ni tocar filesystem — sigue
+siendo el mecanismo de mutación fila-a-fila con CAS que D12 describe). El
+bulk service reutiliza `setEvidenceVisibility` fila por fila para escribir;
+añade la clasificación de elegibilidad que el camino manual no necesita:
+
+```
+evidence.deletedAt == null
+AND finding.deletedAt == null
+AND NOT isLegacyStorageKey(storageKey)
+AND url != null AND url != ""
+AND type NOT IN (FIGMA_URL, EXTERNAL_URL)   -- tipos no respaldados por PrivateFileStore
+AND PrivateFileStore.exists(storageKey)     -- bytes reales, no solo el patrón de la clave
+```
+
+La comprobación de bytes reales es deliberada: se encontraron filas
+históricas (`scripts/bulk-create-evidence.ts`, `scripts/load-evidence-batch.ts`,
+ya ejecutados en el pasado, sin caller productivo activo) cuyo `storageKey`
+no es legacy por patrón pero cuyos bytes nunca se escribieron en
+`PrivateFileStore` — apuntan a placeholders estáticos servidos desde otro
+sitio. Publicar esas filas por `/api/public/evidence/{id}/file` fallaría
+(objeto inexistente) o, peor, sería un comportamiento indefinido si algún día
+existiera contenido distinto en esa ruta. `skippedUnsupported` las excluye
+explícitamente; el precheck de datos que precede a cualquier ejecución en
+producción documenta cuántas filas caen en cada categoría antes de escribir
+nada.
+
+Interfaz de resultado — dry-run (por defecto, cero escrituras):
+`eligible`, `alreadyTarget`, `skippedPending`, `skippedDeleted`,
+`skippedDeletedFinding`, `skippedLegacy`, `skippedUnsupported`, `total`.
+Execute (requiere `--execute`): `changed`, `unchanged`, `skipped`, `failed`,
+`total`, `failedIds`.
+
+Cada fila se muta en su propia transacción (mismo patrón CAS que D12): un
+fallo puntual en una fila (carrera concurrente, soft-delete en curso) se
+cuenta en `failed` y no aborta el resto del lote. A la escala de esta
+migración (cientos de filas, no millones) se prefiere progreso parcial
+auditado sobre atomicidad de todo-o-nada, porque el resultado de una fila no
+tiene relación causal con las demás. `AuditLog` por cada cambio, con
+`after.reason = 'REPORT_POLICY_BACKFILL'` para distinguir el backfill masivo
+de una publicación manual individual (`after.phase` sigue siendo
+`VISIBILITY_CHANGE` en ambos casos — no se amplía el enum de auditoría).
+
+#### 12-bis.3 CLI — `scripts/set-evidence-visibility.ts`
+
+Extiende el CLI existente sin romper su contrato single-ID:
+
+```
+# Sin cambios — sigue funcionando exactamente igual
+npx tsx scripts/set-evidence-visibility.ts --evidence-id=<id> --visibility=PUBLIC_REPORT [--execute]
+
+# Nuevo — bulk, dry-run por defecto
+npx tsx scripts/set-evidence-visibility.ts --all-active-runtime --visibility=PUBLIC_REPORT
+npx tsx scripts/set-evidence-visibility.ts --all-active-runtime --visibility=PUBLIC_REPORT --execute
+
+# Rollback de datos — mismo mecanismo, dirección inversa
+npx tsx scripts/set-evidence-visibility.ts --all-active-runtime --visibility=PRIVATE --execute
+```
+
+`--all-active-runtime` y `--evidence-id` son mutuamente excluyentes. Sigue sin
+haber UI ni endpoint HTTP para ninguno de los dos modos — el CLI, con
+dry-run por defecto y `--execute` explícito, sigue siendo la única superficie
+de mutación (D12.2).
+
+#### 12-bis.4 Por qué el default de schema NO cambia
+
+Se consideró y se rechazó fijar `Evidence.visibility @default(PUBLIC_REPORT)`.
+`PRIVATE` sigue siendo el fallback de schema porque debe proteger cualquier
+camino de creación de `Evidence` que no se haya auditado explícitamente —
+presente o futuro (import, script, migración, feature no prevista). Hacer
+público por default significaría que un camino nuevo, no revisado bajo esta
+regla, publicaría datos sin que nadie lo decidiera. La publicación es
+responsabilidad explícita de FASE 3 de `StorageService.uploadFile` (el único
+camino productivo que crea evidencia reportable) y del backfill controlado
+para lo ya existente — nunca del esquema.
+
+#### 12-bis.5 Invitado y autenticado ven el mismo conjunto
+
+No hay dataset separado. `GET /api/public/report` (D12.4) no depende de
+sesión ni cookie — no tiene ninguna rama de RBAC — así que invitado y
+autenticado ejecutan literalmente la misma consulta y reciben el mismo JSON.
+`public/app.html` confirma esto estructuralmente: hace un único
+`fetch('/api/public/report')` incondicional; la sesión (`/api/auth/session`,
+consulta separada) solo cambia `nav[data-auth]` — navegación y acciones —,
+nunca qué evidencia se solicita ni se renderiza. Este ADR no introduce (y
+explícitamente rechaza) una rama `if (authenticated) usar URL privada`: eso
+recrearía dos comportamientos, exactamente lo que D12-bis existe para evitar.
+
+#### 12-bis.6 Revocación y ISR
+
+Sin cambios de comportamiento respecto a D12: pasar una fila de
+`PUBLIC_REPORT` a `PRIVATE` bloquea `/api/public/evidence/{id}/file` de forma
+inmediata (revalida `visibility` en cada petición, D12.3) aunque
+`/api/public/report` pueda conservar una referencia stale hasta su próxima
+revalidación ISR (`revalidate = 180`, D12.4). Los bytes nunca se tocan en
+ninguna dirección.
+
+#### 12-bis.7 Rollback
+
+- **Código**: revertir el despliegue de FASE 3 vuelve a la publicación 100%
+  manual de D12; ninguna evidencia ya publicada pierde su `visibility` por
+  eso (el rollback de código no reescribe datos).
+- **Datos del backfill**: `--all-active-runtime --visibility=PRIVATE --execute`
+  (con dry-run previo), mismo mecanismo que la publicación, dirección inversa.
+  No se ejecuta salvo que la validación post-backfill falle.
+- No hay rollback destructivo: no se borran bytes, no se hace `DROP COLUMN` ni
+  `DROP TYPE` como parte de esta operación.
 
 ### D13 · Range / HTTP 206 para media
 
@@ -1160,6 +1318,22 @@ posterior y añade estos archivos, no previstos en esa tabla:
 | Tests | `lib/services/__tests__/evidence-visibility-service.test.ts`, `scripts/__tests__/set-evidence-visibility.test.ts`, `app/api/public/evidence/__tests__/file-route.test.ts`, `app/api/public/report/__tests__/*` | — |
 
 `app/api/evidence/[id]/file/route.ts` (D2) **no está en esta tabla**: no se modificó.
+
+### 13.2 Archivos de D12-bis (2026-08-27, mismo día)
+
+| Fichero / área | Naturaleza del cambio | Decisión |
+|---|---|---|
+| `lib/services/storage-service.ts` | FASE 3 fija `visibility: 'PUBLIC_REPORT'` en la misma escritura que confirma `url`; `AuditLog CREATE.after` lo refleja | D12-bis.1 |
+| `lib/services/evidence-visibility-bulk-service.ts` | **Nuevo** — `setAllActiveRuntimeVisibility`: clasificación de elegibilidad + backfill masivo reutilizando `setEvidenceVisibility` fila a fila | D12-bis.2 |
+| `lib/services/evidence-visibility-service.ts` | Aditivo: `options.reason` opcional en `AuditLog.after`, sin cambiar el contrato existente | D12-bis.2 |
+| `scripts/set-evidence-visibility.ts` | `--all-active-runtime`, mutuamente excluyente con `--evidence-id`; motivo fijo `REPORT_POLICY_BACKFILL` | D12-bis.3 |
+| `docs/DECISIONS/ADR-001-...md` | Este addendum | D12-bis |
+| Tests | `lib/services/__tests__/storage-service-upload.test.ts` (FASE 1/3 actualizados), `lib/services/__tests__/evidence-visibility-bulk-service.test.ts` (nuevo), `scripts/__tests__/set-evidence-visibility.test.ts` (modo bulk) | — |
+
+`app/api/public/report/route.ts`, `app/api/public/evidence/[id]/file/route.ts` y
+`app/api/evidence/[id]/file/route.ts` **no están en esta tabla**: D12-bis no
+modifica ninguno — la regla de renderizabilidad, el endpoint público y el
+endpoint privado ya cumplían el requisito de producto (D12.3/D12.4).
 
 ---
 

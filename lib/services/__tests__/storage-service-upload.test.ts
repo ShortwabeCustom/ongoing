@@ -142,6 +142,10 @@ describe('FASE 1 — fila PENDING sin AuditLog', () => {
     const createArgs = mockEvidence.create.mock.calls[0][0]
     expect(createArgs.data.url).toBeNull()
     expect(createArgs.data.storageKey).toMatch(/^findings\/find_1\//)
+    // FASE 1 nunca fija `visibility` explícitamente: la fila queda PRIVATE
+    // por el default de schema (D12-bis), nunca públicamente enumerable
+    // antes de que los bytes existan.
+    expect(createArgs.data).not.toHaveProperty('visibility')
 
     // El AuditLog existe, pero DESPUÉS del put (FASE 3), nunca antes.
     const createOrder = mockEvidence.create.mock.invocationCallOrder[0]
@@ -188,7 +192,7 @@ describe('FASE 3 — confirmación', () => {
     const createdKey = mockEvidence.create.mock.calls[0][0].data.storageKey
     expect(mockEvidence.update).toHaveBeenCalledWith({
       where: { id: evidenceId, deletedAt: null },
-      data: { url: `/api/evidence/${evidenceId}/file` },
+      data: { url: `/api/evidence/${evidenceId}/file`, visibility: 'PUBLIC_REPORT' },
     })
 
     const audit = mockAuditLog.create.mock.calls[0][0].data
@@ -197,6 +201,7 @@ describe('FASE 3 — confirmación', () => {
       entityId: evidenceId,
       action: 'CREATE',
       actorId: 'user_1',
+      after: expect.objectContaining({ visibility: 'PUBLIC_REPORT' }),
     })
 
     const updateOrder = mockEvidence.update.mock.invocationCallOrder[0]

@@ -27,7 +27,7 @@ export type SetVisibilityDependencies = { db: VisibilityDb }
 export async function setEvidenceVisibility(
   evidenceId: string,
   visibility: EvidenceVisibility,
-  options: { execute?: boolean; actorId?: string } = {},
+  options: { execute?: boolean; actorId?: string; reason?: string } = {},
   dependencies?: SetVisibilityDependencies,
 ): Promise<SetVisibilityResult> {
   if (!evidenceId.trim()) throw new Error('EVIDENCE_ID_REQUIRED')
@@ -78,7 +78,11 @@ export async function setEvidenceVisibility(
         action: 'UPDATE',
         actorId: options.actorId ?? null,
         before: { visibility: evidence.visibility },
-        after: { phase: 'VISIBILITY_CHANGE', visibility },
+        after: {
+          phase: 'VISIBILITY_CHANGE',
+          visibility,
+          ...(options.reason ? { reason: options.reason } : {}),
+        },
       },
     })
   })
