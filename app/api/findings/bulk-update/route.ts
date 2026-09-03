@@ -4,6 +4,7 @@ import { getDb } from '@/lib/db-lazy'
 import { SearchService } from '@/lib/services/search-service'
 import { apiSuccess, apiError, ApiError } from '@/lib/utils/api-response'
 import { checkRBAC, RBAC_PERMISSIONS } from '@/lib/middleware/rbac'
+import { projectAccessWhere } from '@/lib/services/project-service'
 
 export const dynamic = 'force-dynamic'
 
@@ -52,6 +53,11 @@ export async function POST(request: NextRequest) {
       updatedBy: user.id,
     }
 
+    // Solo se permite actualizar findings de proyectos accesibles por el usuario
+    // (miembro del proyecto, o rol global OWNER). Un ID fuera de esos proyectos
+    // simplemente no matchea ninguna de las dos queries y termina en `failed`.
+    const accessWhere = { project: projectAccessWhere(user) }
+
     // FASE 14: Atomic transaction for consistency
     const results = await db.$transaction(async (tx) => {
       // Bulk update all findings in one operation
@@ -59,6 +65,7 @@ export async function POST(request: NextRequest) {
         where: {
           id: { in: ids },
           deletedAt: null,
+          ...accessWhere,
         },
         data: updateData,
       })
@@ -68,6 +75,7 @@ export async function POST(request: NextRequest) {
         where: {
           id: { in: ids },
           deletedAt: null,
+          ...accessWhere,
         },
         select: {
           id: true,

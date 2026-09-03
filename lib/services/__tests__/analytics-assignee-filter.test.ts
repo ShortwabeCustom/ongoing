@@ -25,9 +25,14 @@ vi.mock('@/lib/db-lazy', () => ({
   }),
 }))
 
+// Rol global OWNER: `buildWhereClause` no restringe por proyecto, así que
+// `where.project` queda como `{ id: projectId, deletedAt: null }` sin el OR
+// de membresía — igual que antes de este cambio para efectos del test.
+const ownerUser = { id: 'test-owner', role: 'OWNER' }
+
 describe('AnalyticsService assigneeId wiring', () => {
   it('includes assigneeId in the where clause used to count/group findings', async () => {
-    await AnalyticsService.getKPIs({ assigneeId: 'user-42', granularity: 'day' })
+    await AnalyticsService.getKPIs({ assigneeId: 'user-42', granularity: 'day' }, ownerUser)
 
     expect(mockFinding.count).toHaveBeenCalledWith(
       expect.objectContaining({ where: expect.objectContaining({ assigneeId: 'user-42' }) }),
@@ -36,7 +41,7 @@ describe('AnalyticsService assigneeId wiring', () => {
 
   it('omits assigneeId from the where clause when not provided (Sin asignar / no filter)', async () => {
     mockFinding.count.mockClear()
-    await AnalyticsService.getKPIs({ granularity: 'day' })
+    await AnalyticsService.getKPIs({ granularity: 'day' }, ownerUser)
 
     const [{ where }] = mockFinding.count.mock.calls.at(-1)!
     expect(where).not.toHaveProperty('assigneeId')
@@ -44,17 +49,20 @@ describe('AnalyticsService assigneeId wiring', () => {
 
   it('combines assigneeId with status and projectId without dropping either filter', async () => {
     mockFinding.count.mockClear()
-    await AnalyticsService.getKPIs({
-      assigneeId: 'user-42',
-      status: ['OPEN'],
-      projectId: 'proj-1',
-      granularity: 'day',
-    })
+    await AnalyticsService.getKPIs(
+      {
+        assigneeId: 'user-42',
+        status: ['OPEN'],
+        projectId: 'proj-1',
+        granularity: 'day',
+      },
+      ownerUser,
+    )
 
     const [{ where }] = mockFinding.count.mock.calls.at(-1)!
     expect(where).toMatchObject({
       assigneeId: 'user-42',
-      projectId: 'proj-1',
+      project: { id: 'proj-1' },
       status: { in: ['OPEN'] },
     })
   })

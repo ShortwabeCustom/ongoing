@@ -3,6 +3,7 @@ import { AuditService } from '@/lib/services/audit-service'
 import { AuditLogFilterSchema } from '@/lib/validators/workflow'
 import { apiSuccess, apiError } from '@/lib/utils/api-response'
 import { checkRBAC, RBAC_PERMISSIONS } from '@/lib/middleware/rbac'
+import { FindingService } from '@/lib/services/finding-service'
 
 function parseIntegerParam(value: string | null) {
   if (!value) return undefined
@@ -16,13 +17,15 @@ export async function GET(
 ) {
   // C-04: esta ruta no comprobaba sesión ni rol y filtraba actor, email y diffs completos.
   // Se cablea el permiso VIEW_AUDIT_LOG_ANY, definido pero sin usar hasta ahora (M-07).
-  const { valid, error } = await checkRBAC(request, {
+  const { valid, user, error } = await checkRBAC(request, {
     allowedRoles: RBAC_PERMISSIONS.VIEW_AUDIT_LOG_ANY,
   })
   if (!valid) return error
 
   try {
     const { id: findingId } = await params
+    await FindingService.assertFindingAccess(findingId, user)
+
     const { searchParams } = new URL(request.url)
 
     const filter = AuditLogFilterSchema.parse({

@@ -14,7 +14,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { LEGACY_STORAGE_KEY_PREFIX } from '@/lib/storage/storage-key'
 
-const mockFinding = vi.hoisted(() => ({ findUnique: vi.fn() }))
+const mockFinding = vi.hoisted(() => ({ findFirst: vi.fn() }))
 
 vi.mock('@/lib/db-lazy', () => ({ getDb: () => ({ finding: mockFinding }) }))
 vi.mock('@/lib/services/search-service', () => ({ SearchService: {} }))
@@ -42,13 +42,15 @@ function matches(where: any, row: Row): boolean {
 
 let evidenceWhere: any
 
+const testUser = { id: 'user-1', role: 'OWNER' }
+
 beforeEach(async () => {
   vi.clearAllMocks()
-  mockFinding.findUnique.mockImplementation(async (args: any) => {
+  mockFinding.findFirst.mockImplementation(async (args: any) => {
     evidenceWhere = args.include.evidence.where
     return null
   })
-  await FindingService.getFinding('find_1')
+  await FindingService.getFinding('find_1', testUser)
 })
 
 describe('el where de evidencia que emite getFinding', () => {
@@ -62,7 +64,7 @@ describe('el where de evidencia que emite getFinding', () => {
   })
 
   it('no filtra la storageKey al cliente', () => {
-    const select = (mockFinding.findUnique.mock.calls[0][0] as any).include.evidence.select
+    const select = (mockFinding.findFirst.mock.calls[0][0] as any).include.evidence.select
     expect(select.storageKey).toBeUndefined()
   })
 })

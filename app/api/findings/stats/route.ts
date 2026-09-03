@@ -7,12 +7,12 @@ export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   try {
-    const { valid, error } = await checkRBAC(request, {
+    const { valid, user, error } = await checkRBAC(request, {
       allowedRoles: RBAC_PERMISSIONS.VIEW_ANALYTICS,
     })
     if (!valid) return error
 
-    const stats = await FindingService.getStatistics()
+    const stats = await FindingService.getStatistics(undefined, user)
     return apiSuccess(stats)
   } catch (error) {
     return apiError(error)

@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   try {
-    const { valid, error } = await checkRBAC(request, {
+    const { valid, user, error } = await checkRBAC(request, {
       allowedRoles: RBAC_PERMISSIONS.VIEW_ALL_FINDINGS,
     })
     if (!valid) return error
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
     const filters = validationResult.data
 
     // Get findings with filters, sorting, and pagination
-    const result = await FindingService.listFindings(filters)
+    const result = await FindingService.listFindings(filters, user)
 
     return apiSuccess(result)
   } catch (error) {

@@ -11,7 +11,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const { valid, error } = await checkRBAC(request, {
+    const { valid, user, error } = await checkRBAC(request, {
       allowedRoles: RBAC_PERMISSIONS.VIEW_ALL_FINDINGS,
     })
     if (!valid) return error
@@ -23,7 +23,7 @@ export async function GET(
       throw new ApiError('INVALID_ID', 'Invalid finding ID format', undefined, 400)
     }
 
-    const finding = await FindingService.getFindingWithSignedUrls(id)
+    const finding = await FindingService.getFindingWithSignedUrls(id, user)
 
     if (!finding) {
       throw new ApiError('NOT_FOUND', 'Finding not found', undefined, 404)
@@ -90,6 +90,7 @@ export async function PATCH(
       updateData,
       currentVersion,
       user.id,
+      user,
     )
 
     return apiSuccess(updated)
@@ -117,7 +118,7 @@ export async function DELETE(
     }
 
     // Soft delete finding
-    await FindingService.deleteFinding(id, user.id)
+    await FindingService.deleteFinding(id, user.id, user)
 
     // Return 204 No Content
     return new Response(null, { status: 204 })

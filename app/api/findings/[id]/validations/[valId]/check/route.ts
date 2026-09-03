@@ -3,6 +3,7 @@ import { ValidationService } from '@/lib/services/validation-service'
 import { CheckValidationSchema } from '@/lib/validators/workflow'
 import { apiSuccess, apiError } from '@/lib/utils/api-response'
 import { checkRBAC, RBAC_PERMISSIONS } from '@/lib/middleware/rbac'
+import { FindingService } from '@/lib/services/finding-service'
 
 export async function POST(
   request: NextRequest,
@@ -15,6 +16,7 @@ export async function POST(
     if (!valid) return error
 
     const { id: findingId, valId } = await params
+    await FindingService.assertFindingAccess(findingId, user)
 
     const body = await request.json()
     const input = CheckValidationSchema.parse(body)

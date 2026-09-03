@@ -24,6 +24,9 @@ vi.mock('@/lib/middleware/rbac', () => ({
   },
 }))
 vi.mock('@/lib/services/storage-service', () => ({ StorageService: mockService }))
+vi.mock('@/lib/services/finding-service', () => ({
+  FindingService: { assertFindingAccess: vi.fn().mockResolvedValue({ id: 'find_1', projectId: 'proj_1' }) },
+}))
 
 const { POST: uploadPOST } = await import('@/app/api/evidence/upload/route')
 const { POST: findingEvidencePOST } = await import('@/app/api/findings/[id]/evidence/route')

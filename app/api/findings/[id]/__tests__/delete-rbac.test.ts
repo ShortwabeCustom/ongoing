@@ -60,7 +60,11 @@ describe('DELETE /api/findings/[id] — RBAC (DELETE_FINDING = OWNER, QA_LEAD)',
     const response = (await deleteFinding(makeRequest(), { params }))!
 
     expect(response.status).toBe(204)
-    expect(mocks.deleteFinding).toHaveBeenCalledWith(FINDING_ID, 'actor-1')
+    expect(mocks.deleteFinding).toHaveBeenCalledWith(
+      FINDING_ID,
+      'actor-1',
+      expect.objectContaining({ id: 'actor-1', role }),
+    )
   })
 
   it('propaga NOT_FOUND del servicio como 404', async () => {

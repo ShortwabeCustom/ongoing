@@ -7,7 +7,7 @@ import { apiSuccess, apiError, ApiError } from '@/lib/utils/api-response'
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
-  const { valid, error } = await checkRBAC(request, {
+  const { valid, user, error } = await checkRBAC(request, {
     allowedRoles: RBAC_PERMISSIONS.VIEW_ANALYTICS,
   })
   if (!valid) return error
@@ -32,13 +32,13 @@ export async function GET(request: NextRequest) {
     const filters = parsed.data
 
     const [kpis, statusBreakdown, priorityBreakdown, severityBreakdown, timeSeries, resolutionFunnel, validationRate] = await Promise.all([
-      AnalyticsService.getKPIs(filters),
-      AnalyticsService.getStatusBreakdown(filters),
-      AnalyticsService.getPriorityBreakdown(filters),
-      AnalyticsService.getSeverityBreakdown(filters),
-      AnalyticsService.getTimeSeries(filters, filters.granularity),
-      AnalyticsService.getResolutionFunnel(filters),
-      AnalyticsService.getValidationRate(filters),
+      AnalyticsService.getKPIs(filters, user),
+      AnalyticsService.getStatusBreakdown(filters, user),
+      AnalyticsService.getPriorityBreakdown(filters, user),
+      AnalyticsService.getSeverityBreakdown(filters, user),
+      AnalyticsService.getTimeSeries(filters, user, filters.granularity),
+      AnalyticsService.getResolutionFunnel(filters, user),
+      AnalyticsService.getValidationRate(filters, user),
     ])
 
     return apiSuccess({

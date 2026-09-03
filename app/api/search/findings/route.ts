@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { checkRBAC, RBAC_PERMISSIONS } from '@/lib/middleware/rbac'
 import { SearchQuerySchema } from '@/lib/validators/search-query'
 import { SearchService } from '@/lib/services/search-service'
+import { ProjectService } from '@/lib/services/project-service'
 import { apiSuccess, apiError, ApiError } from '@/lib/utils/api-response'
 
 export const dynamic = 'force-dynamic'
@@ -9,7 +10,7 @@ export const dynamic = 'force-dynamic'
 export async function GET(request: NextRequest) {
   // C-03: la búsqueda exige sesión. Mismo conjunto de roles que el resto de lecturas de
   // hallazgos (`GET /api/findings`, `GET /api/findings/[id]`): VIEW_ALL_FINDINGS.
-  const { valid, error } = await checkRBAC(request, {
+  const { valid, user, error } = await checkRBAC(request, {
     allowedRoles: RBAC_PERMISSIONS.VIEW_ALL_FINDINGS,
   })
   if (!valid) return error
@@ -29,7 +30,11 @@ export async function GET(request: NextRequest) {
 
     const filters = validationResult.data
 
-    const result = await SearchService.search(filters)
+    // null = sin restricción (rol global OWNER); array = IDs de proyecto
+    // accesibles por membresía, para intersectar con el filtro de proyecto.
+    const accessibleProjectIds = await ProjectService.getAccessibleProjectIds(user)
+
+    const result = await SearchService.search(filters, accessibleProjectIds)
 
     return apiSuccess(result)
   } catch (error) {

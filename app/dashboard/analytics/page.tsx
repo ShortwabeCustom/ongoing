@@ -23,8 +23,10 @@ export const dynamic = 'force-dynamic'
 
 async function AnalyticsContent({
   searchParams,
+  user,
 }: {
   searchParams: Promise<Record<string, string>>
+  user: { id: string; role?: UserRole | string }
 }) {
   const params = await searchParams
   const parsed = AnalyticsQuerySchema.safeParse(params)
@@ -32,9 +34,9 @@ async function AnalyticsContent({
   const filters: AnalyticsQuery = parsed.success ? parsed.data : { granularity: 'day' }
 
   const [kpis, statusBreakdown, timeSeries] = await Promise.all([
-    AnalyticsService.getKPIs(filters),
-    AnalyticsService.getStatusBreakdown(filters),
-    AnalyticsService.getTimeSeries(filters, filters.granularity),
+    AnalyticsService.getKPIs(filters, user),
+    AnalyticsService.getStatusBreakdown(filters, user),
+    AnalyticsService.getTimeSeries(filters, user, filters.granularity),
   ])
 
   return (
@@ -115,7 +117,7 @@ export default async function AnalyticsDashboardPage({
             </div>
           }
         >
-          <AnalyticsContent searchParams={searchParams} />
+          <AnalyticsContent searchParams={searchParams} user={session.user} />
         </Suspense>
       </div>
     </AppShell>

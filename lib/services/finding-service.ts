@@ -12,8 +12,14 @@ import { type FindingStatusTransition, type FindingCreate, type FindingUpdate } 
 import { FindingsQuery, parseSort } from '@/lib/validators/query'
 import { SearchService } from '@/lib/services/search-service'
 import { LEGACY_STORAGE_KEY_PREFIX } from '@/lib/storage/storage-key'
+import { projectAccessWhere } from '@/lib/services/project-service'
 
 type FindingPatch = Omit<FindingUpdate, 'version'>
+
+type AuthUser = {
+  id: string
+  role?: string
+}
 
 const FINDING_TRANSITIONS: Record<FindingStatus, FindingStatus[]> = {
   OPEN: ['TRIAGED', 'OPEN'],
@@ -60,10 +66,26 @@ function getCount(row: { _count?: unknown }) {
 
 export class FindingService {
   /**
+   * Verifica que el finding exista, no esté borrado y pertenezca a un proyecto
+   * accesible por el usuario (miembro del proyecto, o rol global OWNER). Lanza
+   * NOT_FOUND si no — `apiError` ya mapea ese mensaje a 404, igual que para
+   * findings/proyectos inexistentes.
+   */
+  static async assertFindingAccess(id: string, user: AuthUser) {
+    const db = getDb()
+    const finding = await db.finding.findFirst({
+      where: { id, project: projectAccessWhere(user) },
+      select: { id: true, projectId: true },
+    })
+    if (!finding) throw new Error('NOT_FOUND')
+    return finding
+  }
+
+  /**
    * Build WHERE clause from API filters. This keeps filtering in PostgreSQL
    * instead of pulling the inventory into the browser.
    */
-  static buildWhereClause(filters: Partial<FindingsQuery>): Prisma.FindingWhereInput {
+  static buildWhereClause(filters: Partial<FindingsQuery>, user: AuthUser): Prisma.FindingWhereInput {
     const where: Prisma.FindingWhereInput = {
       deletedAt: null,
     }
@@ -102,9 +124,9 @@ export class FindingService {
       where.assigneeId = filters.assigneeId
     }
 
-    if (filters.projectId) {
-      where.projectId = filters.projectId
-    }
+    // Restringe a los proyectos accesibles del usuario (o sin restricción si es OWNER).
+    // Si `filters.projectId` viene, además valida que ese proyecto sea accesible.
+    where.project = projectAccessWhere(user, filters.projectId)
 
     const testSessionId = filters.testSessionId ?? filters.session
     if (testSessionId) {
@@ -161,9 +183,9 @@ export class FindingService {
   /**
    * List findings with filters, sorting, and pagination.
    */
-  static async listFindings(filters: FindingsQuery) {
+  static async listFindings(filters: FindingsQuery, user: AuthUser) {
     const db = getDb()
-    const where = this.buildWhereClause(filters)
+    const where = this.buildWhereClause(filters, user)
     const orderBy = parseSort(filters.sort)
 
     const [items, total] = await Promise.all([
@@ -322,11 +344,11 @@ export class FindingService {
   /**
    * Get single finding with full relations for detail screens.
    */
-  static async getFinding(id: string) {
+  static async getFinding(id: string, user: AuthUser) {
     const db = getDb()
 
-    return db.finding.findUnique({
-      where: { id },
+    return db.finding.findFirst({
+      where: { id, project: projectAccessWhere(user) },
       include: {
         project: {
           select: { id: true, name: true },
@@ -621,8 +643,8 @@ export class FindingService {
   /**
    * Get finding with fresh signed URLs for evidence.
    */
-  static async getFindingWithSignedUrls(id: string) {
-    const finding = await this.getFinding(id)
+  static async getFindingWithSignedUrls(id: string, user: AuthUser) {
+    const finding = await this.getFinding(id, user)
 
     if (!finding || !finding.evidence) {
       return this.serializeFinding(finding)
@@ -658,11 +680,11 @@ export class FindingService {
   /**
    * Aggregate operational statistics from the database.
    */
-  static async getStatistics(projectId?: string) {
+  static async getStatistics(projectId: string | undefined, user: AuthUser) {
     const db = getDb()
     const where: Prisma.FindingWhereInput = {
       deletedAt: null,
-      ...(projectId ? { projectId } : {}),
+      project: projectAccessWhere(user, projectId),
     }
 
     const [
@@ -748,8 +770,11 @@ export class FindingService {
     updates: FindingPatch,
     currentVersion: number,
     updatedBy: string,
+    user: AuthUser,
     reason?: string,
   ) {
+    await this.assertFindingAccess(id, user)
+
     const db = getDb()
 
     await db.$transaction(async (tx) => {
@@ -905,7 +930,7 @@ export class FindingService {
       })
     })
 
-    const updatedFinding = await this.getFinding(id)
+    const updatedFinding = await this.getFinding(id, user)
 
     if (updatedFinding) {
       const evidenceDescriptions = (updatedFinding.evidence ?? [])
@@ -934,12 +959,14 @@ export class FindingService {
     id: string,
     input: FindingStatusTransition,
     changedBy: string,
+    user: AuthUser,
   ) {
     return this.updateFinding(
       id,
       { status: input.toStatus },
       input.version,
       changedBy,
+      user,
       input.reason,
     )
   }
@@ -962,7 +989,9 @@ export class FindingService {
     return { items, total, limit, offset }
   }
 
-  static async addComment(findingId: string, text: string, createdBy: string) {
+  static async addComment(findingId: string, text: string, createdBy: string, user: AuthUser) {
+    await this.assertFindingAccess(findingId, user)
+
     const db = getDb()
 
     const comment = await db.$transaction(async (tx) => {
@@ -1005,7 +1034,10 @@ export class FindingService {
     commentId: string,
     deletedBy: string,
     userRole: string,
+    user: AuthUser,
   ) {
+    await this.assertFindingAccess(findingId, user)
+
     const db = getDb()
 
     return db.$transaction(async (tx) => {
@@ -1038,7 +1070,9 @@ export class FindingService {
   /**
    * Soft delete finding.
    */
-  static async deleteFinding(id: string, deletedBy: string) {
+  static async deleteFinding(id: string, deletedBy: string, user: AuthUser) {
+    await this.assertFindingAccess(id, user)
+
     const db = getDb()
 
     const deletedAt = new Date()

@@ -77,6 +77,12 @@ function fakeDb() {
       if (where.id !== BASELINE.id) return null
       return { ...findingMocks.row, ...relations }
     }),
+    // Usado por FindingService.assertFindingAccess (guard de proyecto), que
+    // PATCH ejercita ahora antes de abrir la transacción de actualización.
+    findFirst: vi.fn(async ({ where }: { where: { id: string } }) => {
+      if (where.id !== BASELINE.id) return null
+      return { id: findingMocks.row.id, projectId: findingMocks.row.projectId }
+    }),
     updateMany: vi.fn(
       async ({
         where,

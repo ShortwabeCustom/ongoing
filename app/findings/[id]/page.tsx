@@ -73,7 +73,7 @@ export default async function FindingDetailPage({ params }: PageProps) {
   if (!session?.user) redirect('/login')
 
   const { id } = await params
-  const finding = await FindingService.getFindingWithSignedUrls(id)
+  const finding = await FindingService.getFindingWithSignedUrls(id, session.user)
 
   if (!finding || finding.deletedAt) {
     return <MissingFindingDetail />

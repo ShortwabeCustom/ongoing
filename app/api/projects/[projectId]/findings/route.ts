@@ -39,7 +39,7 @@ export async function GET(
       )
     }
 
-    const result = await FindingService.listFindings(parsed.data)
+    const result = await FindingService.listFindings(parsed.data, user)
     return apiSuccess(result)
   } catch (error) {
     return apiError(error)

@@ -23,7 +23,7 @@ export async function GET(
     const { projectId } = await params
     await ProjectService.assertProjectAccess(projectId, user)
 
-    const stats = await FindingService.getStatistics(projectId)
+    const stats = await FindingService.getStatistics(projectId, user)
     return apiSuccess(stats)
   } catch (error) {
     return apiError(error)

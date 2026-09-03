@@ -3,6 +3,7 @@ import { ValidationService } from '@/lib/services/validation-service'
 import { CreateValidationSchema } from '@/lib/validators/workflow'
 import { apiSuccess, apiError } from '@/lib/utils/api-response'
 import { checkRBAC, RBAC_PERMISSIONS } from '@/lib/middleware/rbac'
+import { FindingService } from '@/lib/services/finding-service'
 
 export async function POST(
   request: NextRequest,
@@ -15,6 +16,7 @@ export async function POST(
     if (!valid) return error
 
     const { id: findingId } = await params
+    await FindingService.assertFindingAccess(findingId, user)
 
     const body = await request.json()
     const input = CreateValidationSchema.parse(body)
@@ -42,12 +44,14 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const { valid, error } = await checkRBAC(request, {
+    const { valid, user, error } = await checkRBAC(request, {
       allowedRoles: RBAC_PERMISSIONS.VIEW_ALL_FINDINGS,
     })
     if (!valid) return error
 
     const { id: findingId } = await params
+    await FindingService.assertFindingAccess(findingId, user)
+
     const { searchParams } = new URL(request.url)
 
     const limit = Math.min(parseInt(searchParams.get('limit') ?? '50'), 100)

@@ -3,6 +3,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 const mocks = vi.hoisted(() => ({
   finding: {
     findUnique: vi.fn(),
+    // Usado por FindingService.assertFindingAccess (guard de proyecto).
+    findFirst: vi.fn(),
     updateMany: vi.fn(),
   },
   auditLog: { create: vi.fn() },
@@ -21,17 +23,19 @@ vi.mock('@/lib/services/search-service', () => ({
 import { FindingService } from '@/lib/services/finding-service'
 
 const activeFinding = { id: 'finding-1', deletedAt: null }
+const requestingUser = { id: 'owner-1', role: 'OWNER' }
 
 describe('FindingService.deleteFinding', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     mocks.finding.findUnique.mockResolvedValue(activeFinding)
+    mocks.finding.findFirst.mockResolvedValue({ id: 'finding-1', projectId: 'proj-1' })
     mocks.finding.updateMany.mockResolvedValue({ count: 1 })
     mocks.auditLog.create.mockResolvedValue({ id: 'audit-1' })
   })
 
   it('hace soft delete del finding activo y registra auditoría', async () => {
-    const result = await FindingService.deleteFinding('finding-1', 'owner-1')
+    const result = await FindingService.deleteFinding('finding-1', 'owner-1', requestingUser)
 
     expect(result.id).toBe('finding-1')
     expect(mocks.finding.updateMany).toHaveBeenCalledWith({
@@ -51,21 +55,27 @@ describe('FindingService.deleteFinding', () => {
   it('rechaza un finding inexistente', async () => {
     mocks.finding.findUnique.mockResolvedValue(null)
 
-    await expect(FindingService.deleteFinding('missing', 'owner-1')).rejects.toThrow('NOT_FOUND')
+    await expect(FindingService.deleteFinding('missing', 'owner-1', requestingUser)).rejects.toThrow(
+      'NOT_FOUND',
+    )
     expect(mocks.finding.updateMany).not.toHaveBeenCalled()
   })
 
   it('rechaza un finding ya eliminado', async () => {
     mocks.finding.findUnique.mockResolvedValue({ id: 'finding-1', deletedAt: new Date('2026-08-18T00:00:00.000Z') })
 
-    await expect(FindingService.deleteFinding('finding-1', 'owner-1')).rejects.toThrow('ALREADY_DELETED')
+    await expect(FindingService.deleteFinding('finding-1', 'owner-1', requestingUser)).rejects.toThrow(
+      'ALREADY_DELETED',
+    )
     expect(mocks.finding.updateMany).not.toHaveBeenCalled()
   })
 
   it('rechaza una carrera donde el finding se elimina entre el lookup y el update', async () => {
     mocks.finding.updateMany.mockResolvedValue({ count: 0 })
 
-    await expect(FindingService.deleteFinding('finding-1', 'owner-1')).rejects.toThrow('ALREADY_DELETED')
+    await expect(FindingService.deleteFinding('finding-1', 'owner-1', requestingUser)).rejects.toThrow(
+      'ALREADY_DELETED',
+    )
     expect(mocks.auditLog.create).not.toHaveBeenCalled()
   })
 })

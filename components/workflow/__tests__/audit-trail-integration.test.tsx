@@ -75,6 +75,8 @@ const db = {
       findUniqueCall += 1
       return findUniqueCall === 1 ? { ...CURRENT_ROW } : { ...AFTER_ROW }
     }),
+    // Usado por FindingService.assertFindingAccess (guard de proyecto).
+    findFirst: vi.fn(async () => ({ id: FINDING_ID, projectId: PROJECT_ID })),
     updateMany: vi.fn(async () => ({ count: 1 })),
   },
   findingIncidenceType: { deleteMany: vi.fn(), createMany: vi.fn() },
@@ -136,6 +138,7 @@ describe('C-01 · el AuditLog que produce FindingService se renderiza sin lanzar
       { observation: 'AUDIT-P1A-AUDIT-TRAIL-20260817 observacion EDITADA' },
       1,
       ACTOR_ID,
+      { id: ACTOR_ID, role: 'OWNER' },
     )
 
     const updateEntry = serviceMocks.auditEntries.find((e) => e.action === 'UPDATE')

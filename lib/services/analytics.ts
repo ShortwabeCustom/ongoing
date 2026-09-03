@@ -6,25 +6,34 @@ import { startOfDay, startOfWeek } from 'date-fns'
 
 const CLOSED_STATUSES = ['CLOSED', 'VALIDATED']
 
+type AuthUser = {
+  id: string
+  role?: string
+}
+
 export class AnalyticsService {
   private static toFindingWhere(
     filters: AnalyticsQuery,
+    user: AuthUser,
   ): Prisma.FindingWhereInput {
-    const where = FindingService.buildWhereClause({
-      status: filters.status,
-      priority: filters.priority,
-      severity: filters.severity,
-      createdAfter: filters.from,
-      createdBefore: filters.to,
-      projectId: filters.projectId,
-      assigneeId: filters.assigneeId,
-    })
+    const where = FindingService.buildWhereClause(
+      {
+        status: filters.status,
+        priority: filters.priority,
+        severity: filters.severity,
+        createdAfter: filters.from,
+        createdBefore: filters.to,
+        projectId: filters.projectId,
+        assigneeId: filters.assigneeId,
+      },
+      user,
+    )
     return where
   }
 
-  static async getKPIs(filters: AnalyticsQuery) {
+  static async getKPIs(filters: AnalyticsQuery, user: AuthUser) {
     const db = getDb()
-    const where = this.toFindingWhere(filters)
+    const where = this.toFindingWhere(filters, user)
 
     const [
       total,
@@ -116,9 +125,9 @@ export class AnalyticsService {
     }
   }
 
-  static async getStatusBreakdown(filters: AnalyticsQuery) {
+  static async getStatusBreakdown(filters: AnalyticsQuery, user: AuthUser) {
     const db = getDb()
-    const where = this.toFindingWhere(filters)
+    const where = this.toFindingWhere(filters, user)
 
     const breakdown = await db.finding.groupBy({
       by: ['status'],
@@ -131,9 +140,9 @@ export class AnalyticsService {
     )
   }
 
-  static async getPriorityBreakdown(filters: AnalyticsQuery) {
+  static async getPriorityBreakdown(filters: AnalyticsQuery, user: AuthUser) {
     const db = getDb()
-    const where = this.toFindingWhere(filters)
+    const where = this.toFindingWhere(filters, user)
 
     const breakdown = await db.finding.groupBy({
       by: ['priority'],
@@ -146,9 +155,9 @@ export class AnalyticsService {
     )
   }
 
-  static async getSeverityBreakdown(filters: AnalyticsQuery) {
+  static async getSeverityBreakdown(filters: AnalyticsQuery, user: AuthUser) {
     const db = getDb()
-    const where = this.toFindingWhere(filters)
+    const where = this.toFindingWhere(filters, user)
 
     const breakdown = await db.finding.groupBy({
       by: ['severity'],
@@ -161,9 +170,9 @@ export class AnalyticsService {
     )
   }
 
-  static async getTimeSeries(filters: AnalyticsQuery, granularity: 'day' | 'week' = 'day') {
+  static async getTimeSeries(filters: AnalyticsQuery, user: AuthUser, granularity: 'day' | 'week' = 'day') {
     const db = getDb()
-    const where = this.toFindingWhere(filters)
+    const where = this.toFindingWhere(filters, user)
 
     const created = await db.finding.findMany({
       where,
@@ -214,9 +223,9 @@ export class AnalyticsService {
     }
   }
 
-  static async getResolutionFunnel(filters: AnalyticsQuery) {
+  static async getResolutionFunnel(filters: AnalyticsQuery, user: AuthUser) {
     const db = getDb()
-    const where = this.toFindingWhere(filters)
+    const where = this.toFindingWhere(filters, user)
 
     const breakdown = await db.resolution.groupBy({
       by: ['state'],
@@ -229,9 +238,9 @@ export class AnalyticsService {
     )
   }
 
-  static async getValidationRate(filters: AnalyticsQuery) {
+  static async getValidationRate(filters: AnalyticsQuery, user: AuthUser) {
     const db = getDb()
-    const where = this.toFindingWhere(filters)
+    const where = this.toFindingWhere(filters, user)
 
     const breakdown = await db.validation.groupBy({
       by: ['result'],

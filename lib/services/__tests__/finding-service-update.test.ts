@@ -41,6 +41,8 @@ const CURRENT = {
 const db = {
   finding: {
     findUnique: vi.fn(async () => ({ ...CURRENT })),
+    // Usado por FindingService.assertFindingAccess (guard de proyecto).
+    findFirst: vi.fn(async () => ({ id: FINDING_ID, projectId: CURRENT.projectId })),
     updateMany: vi.fn(
       async ({ data }: { where: Record<string, unknown>; data: Record<string, unknown> }) => {
         serviceMocks.updateManyData.push(data)
@@ -82,6 +84,8 @@ function lastData() {
   return serviceMocks.updateManyData[serviceMocks.updateManyData.length - 1] ?? {}
 }
 
+const requestingUser = { id: 'user-1', role: 'OWNER' }
+
 describe('FindingService.updateFinding — claves presentes vs. omitidas (C-05)', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -91,7 +95,7 @@ describe('FindingService.updateFinding — claves presentes vs. omitidas (C-05)'
   })
 
   it('sólo escribe las claves recibidas más los metadatos de la actualización', async () => {
-    await FindingService.updateFinding(FINDING_ID, { priority: 'HIGH' }, 3, 'user-1')
+    await FindingService.updateFinding(FINDING_ID, { priority: 'HIGH' }, 3, 'user-1', requestingUser)
 
     expect(Object.keys(lastData()).sort()).toEqual(
       ['priority', 'updatedAt', 'updatedBy', 'version'].sort(),
@@ -112,6 +116,7 @@ describe('FindingService.updateFinding — claves presentes vs. omitidas (C-05)'
       },
       3,
       'user-1',
+      requestingUser,
     )
 
     const data = lastData()
@@ -122,13 +127,13 @@ describe('FindingService.updateFinding — claves presentes vs. omitidas (C-05)'
   })
 
   it('no emite entrada ASSIGN por un `assigneeId: undefined` explícito', async () => {
-    await FindingService.updateFinding(FINDING_ID, { assigneeId: undefined }, 3, 'user-1')
+    await FindingService.updateFinding(FINDING_ID, { assigneeId: undefined }, 3, 'user-1', requestingUser)
 
     expect(serviceMocks.auditEntries.filter((e) => e.action === 'ASSIGN')).toHaveLength(0)
   })
 
   it('`null` explícito sí limpia el campo nullable y emite ASSIGN', async () => {
-    await FindingService.updateFinding(FINDING_ID, { assigneeId: null, folio: null }, 3, 'user-1')
+    await FindingService.updateFinding(FINDING_ID, { assigneeId: null, folio: null }, 3, 'user-1', requestingUser)
 
     const data = lastData()
     expect(data.assigneeId).toBeNull()
@@ -137,7 +142,7 @@ describe('FindingService.updateFinding — claves presentes vs. omitidas (C-05)'
   })
 
   it('mantiene el incremento de versión y el bloqueo optimista por `where`', async () => {
-    await FindingService.updateFinding(FINDING_ID, { priority: 'HIGH' }, 3, 'user-1')
+    await FindingService.updateFinding(FINDING_ID, { priority: 'HIGH' }, 3, 'user-1', requestingUser)
 
     expect(lastData().version).toEqual({ increment: 1 })
     expect(db.finding.updateMany).toHaveBeenCalledTimes(1)
@@ -152,6 +157,7 @@ describe('FindingService.updateFinding — claves presentes vs. omitidas (C-05)'
       FINDING_ID,
       { toStatus: 'TRIAGED', version: 3, reason: 'Triaje' },
       'user-1',
+      requestingUser,
     )
 
     expect(Object.keys(lastData()).sort()).toEqual(
@@ -167,6 +173,7 @@ describe('FindingService.updateFinding — claves presentes vs. omitidas (C-05)'
       FINDING_ID,
       { toStatus: 'CLOSED', version: 3, reason: 'Hallazgo completado' },
       'user-1',
+      requestingUser,
     )
 
     expect(lastData().status).toBe('CLOSED')
@@ -180,7 +187,7 @@ describe('FindingService.updateFinding — claves presentes vs. omitidas (C-05)'
     db.finding.findUnique.mockResolvedValueOnce({ ...CURRENT, version: 9 })
 
     await expect(
-      FindingService.updateFinding(FINDING_ID, { priority: 'HIGH' }, 3, 'user-1'),
+      FindingService.updateFinding(FINDING_ID, { priority: 'HIGH' }, 3, 'user-1', requestingUser),
     ).rejects.toThrow('VERSION_MISMATCH')
 
     expect(db.finding.updateMany).not.toHaveBeenCalled()

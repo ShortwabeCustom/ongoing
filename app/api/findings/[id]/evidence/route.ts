@@ -5,6 +5,7 @@ import { uploadEvidenceSchema } from '@/lib/validators/evidence'
 import { STORAGE_CONFIG } from '@/lib/storage/storage-config'
 import { StorageError } from '@/lib/storage/storage-errors'
 import { checkRBAC, RBAC_PERMISSIONS } from '@/lib/middleware/rbac'
+import { FindingService } from '@/lib/services/finding-service'
 
 export const dynamic = 'force-dynamic'
 
@@ -19,6 +20,8 @@ export async function POST(
     if (!valid) return error
 
     const { id: findingId } = await params
+    await FindingService.assertFindingAccess(findingId, user)
+
     const formData = await request.formData()
     const file = formData.get('file') as File | null
     const caption = (formData.get('caption') as string | null) || undefined

@@ -4,6 +4,7 @@ import { NextRequest } from 'next/server'
 const searchMocks = vi.hoisted(() => ({
   getSession: vi.fn(),
   search: vi.fn(),
+  getAccessibleProjectIds: vi.fn(),
 }))
 
 // Se mockea SOLO la sesión (no checkRBAC): el contrato de autorización real
@@ -15,6 +16,16 @@ vi.mock('@/lib/auth/lucia', () => ({
 vi.mock('@/lib/services/search-service', () => ({
   SearchService: {
     search: searchMocks.search,
+  },
+}))
+
+// La ruta ahora intersecta con los proyectos accesibles del usuario
+// (ProjectService.getAccessibleProjectIds); se mockea a "sin restricción"
+// (null) para no tocar la base real y mantener el foco de este test en el
+// contrato de autenticación/autorización, no en el filtro de proyecto.
+vi.mock('@/lib/services/project-service', () => ({
+  ProjectService: {
+    getAccessibleProjectIds: searchMocks.getAccessibleProjectIds,
   },
 }))
 
@@ -32,6 +43,7 @@ describe('GET /api/search/findings — contrato de autenticación (C-03)', () =>
   beforeEach(() => {
     vi.clearAllMocks()
     searchMocks.search.mockResolvedValue({ total: 0, items: [], source: 'postgresql' })
+    searchMocks.getAccessibleProjectIds.mockResolvedValue(null)
   })
 
   it('devuelve 401 a un anónimo (sin cookie de sesión)', async () => {

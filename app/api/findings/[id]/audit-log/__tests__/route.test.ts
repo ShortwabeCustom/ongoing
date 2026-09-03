@@ -5,6 +5,7 @@ const auditMocks = vi.hoisted(() => ({
   getSession: vi.fn(),
   getAuditLog: vi.fn(),
   exportAuditLog: vi.fn(),
+  assertFindingAccess: vi.fn(),
 }))
 
 vi.mock('@/lib/auth/lucia', () => ({
@@ -15,6 +16,16 @@ vi.mock('@/lib/services/audit-service', () => ({
   AuditService: {
     getAuditLog: auditMocks.getAuditLog,
     exportAuditLog: auditMocks.exportAuditLog,
+  },
+}))
+
+// Ambas rutas ahora verifican membresía de proyecto vía
+// FindingService.assertFindingAccess antes de leer el audit log; se mockea
+// para no tocar la base real (el foco de este test es RBAC, no el guard de
+// proyecto, que se cubre en su propio test).
+vi.mock('@/lib/services/finding-service', () => ({
+  FindingService: {
+    assertFindingAccess: auditMocks.assertFindingAccess,
   },
 }))
 
@@ -39,6 +50,7 @@ describe('GET /api/findings/[id]/audit-log — contrato de autenticación (C-04)
   beforeEach(() => {
     vi.clearAllMocks()
     auditMocks.getAuditLog.mockResolvedValue({ items: [], total: 0 })
+    auditMocks.assertFindingAccess.mockResolvedValue({ id: FINDING_ID, projectId: 'proj-1' })
   })
 
   it('devuelve 401 a un anónimo', async () => {
@@ -82,6 +94,7 @@ describe('GET /api/findings/[id]/audit-log/export — contrato de autenticación
   beforeEach(() => {
     vi.clearAllMocks()
     auditMocks.exportAuditLog.mockResolvedValue('"Timestamp","Action","Actor","Email"\n')
+    auditMocks.assertFindingAccess.mockResolvedValue({ id: FINDING_ID, projectId: 'proj-1' })
   })
 
   it('devuelve 401 a un anónimo y no genera el CSV', async () => {

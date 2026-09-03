@@ -16,7 +16,7 @@ export async function DELETE(
     if (!valid) return error
 
     const { id, commentId } = await params
-    const result = await FindingService.deleteComment(id, commentId, user.id, user.role)
+    const result = await FindingService.deleteComment(id, commentId, user.id, user.role, user)
     return apiSuccess(result)
   } catch (error) {
     return apiError(error)

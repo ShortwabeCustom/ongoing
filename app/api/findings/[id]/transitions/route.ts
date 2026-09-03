@@ -32,7 +32,7 @@ export async function POST(
       )
     }
 
-    const finding = await FindingService.transitionFinding(id, parsed.data, user.id)
+    const finding = await FindingService.transitionFinding(id, parsed.data, user.id, user)
     return apiSuccess(finding)
   } catch (error) {
     if (error instanceof Error && error.message.startsWith('INVALID_STATUS_TRANSITION:')) {

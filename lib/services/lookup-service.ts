@@ -1,4 +1,10 @@
 import { getDb } from '@/lib/db-lazy'
+import { projectAccessWhere } from '@/lib/services/project-service'
+
+type AuthUser = {
+  id: string
+  role?: string
+}
 
 export interface AssigneeOption {
   id: string
@@ -34,34 +40,16 @@ export class LookupService {
   }
 
   /**
-   * Get all projects (optionally filter by user membership)
+   * Get projects accessible to the authenticated user (members, or all
+   * projects for the global OWNER role). Siempre se deriva del usuario de
+   * sesión — nunca de un parámetro que pueda mandar el cliente.
    */
-  static async getProjects(userId?: string): Promise<ProjectOption[]> {
+  static async getProjects(user: AuthUser): Promise<ProjectOption[]> {
     const db = getDb()
 
-    if (userId) {
-      // Get projects where user is a member
-      return db.project.findMany({
-        where: {
-          deletedAt: null,
-          members: {
-            some: {
-              userId,
-            },
-          },
-        },
-        select: {
-          id: true,
-          name: true,
-        },
-        orderBy: { name: 'asc' },
-      })
-    }
-
-    // Get all active projects
     return db.project.findMany({
       where: {
-        deletedAt: null,
+        ...projectAccessWhere(user),
       },
       select: {
         id: true,

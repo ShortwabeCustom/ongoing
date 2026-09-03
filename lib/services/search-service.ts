@@ -80,7 +80,27 @@ function toFacetRecord(rows: Array<{ [key: string]: unknown; _count: number }>, 
   return Object.fromEntries(rows.map((row) => [String(row[field]), row._count]))
 }
 
-function buildPostgresWhere(query: SearchQuery): Prisma.FindingWhereInput {
+/**
+ * Intersecta el filtro de proyecto que mandó el cliente con los proyectos
+ * accesibles del usuario. `accessibleProjectIds === null` significa "sin
+ * restricción" (rol global OWNER). Si el usuario no filtró por proyecto,
+ * se usa directamente la lista de accesibles como filtro. Si el resultado
+ * es un array vacío, la búsqueda debe devolver 0 resultados (el usuario
+ * filtró por un proyecto al que no tiene acceso).
+ */
+function resolveProjectFilter(
+  queryProject: string[] | undefined,
+  accessibleProjectIds: string[] | null,
+): string[] | undefined {
+  if (accessibleProjectIds === null) return queryProject
+  if (!queryProject?.length) return accessibleProjectIds
+  return queryProject.filter((id) => accessibleProjectIds.includes(id))
+}
+
+function buildPostgresWhere(
+  query: SearchQuery,
+  accessibleProjectIds: string[] | null,
+): Prisma.FindingWhereInput {
   const where: Prisma.FindingWhereInput = {
     deletedAt: null,
   }
@@ -102,8 +122,9 @@ function buildPostgresWhere(query: SearchQuery): Prisma.FindingWhereInput {
     where.assigneeId = { in: query.assignee }
   }
 
-  if (query.project?.length) {
-    where.projectId = { in: query.project }
+  const projectFilter = resolveProjectFilter(query.project, accessibleProjectIds)
+  if (projectFilter) {
+    where.projectId = { in: projectFilter }
   }
 
   // FASE 14.1: Date filtering by type
@@ -273,32 +294,63 @@ export class SearchService {
   /**
    * Search findings with full-text and filters
    */
-  static async search(query: SearchQuery): Promise<SearchResponse> {
+  static async search(
+    query: SearchQuery,
+    accessibleProjectIds: string[] | null,
+  ): Promise<SearchResponse> {
+    // Corto circuito: el usuario filtró por proyecto(s) fuera de su acceso.
+    // Ni Postgres ni Elasticsearch necesitan consultarse — la respuesta es 0.
+    const projectFilter = resolveProjectFilter(query.project, accessibleProjectIds)
+    if (projectFilter && projectFilter.length === 0) {
+      return {
+        total: 0,
+        items: [],
+        took_ms: 0,
+        source: isElasticsearchEnabled() ? 'elasticsearch' : 'postgresql',
+        facets: {},
+      }
+    }
+
     if (!isElasticsearchEnabled()) {
-      return this.searchPostgres(query, 'Elasticsearch disabled; using PostgreSQL fallback')
+      return this.searchPostgres(
+        query,
+        accessibleProjectIds,
+        'Elasticsearch disabled; using PostgreSQL fallback',
+      )
     }
 
     // FASE 14.1: If filtering by imported/session dates, use PostgreSQL directly
     // (Elasticsearch index doesn't have these fields)
     if (query.dateType === 'imported' || query.dateType === 'session') {
-      return this.searchPostgres(query, `Using PostgreSQL for dateType="${query.dateType}"`)
+      return this.searchPostgres(
+        query,
+        accessibleProjectIds,
+        `Using PostgreSQL for dateType="${query.dateType}"`,
+      )
     }
 
     const now = Date.now()
     if (now < elasticsearchUnavailableUntil) {
-      return this.searchPostgres(query, 'Elasticsearch temporarily unavailable')
+      return this.searchPostgres(query, accessibleProjectIds, 'Elasticsearch temporarily unavailable')
     }
 
     try {
-      return await this.searchElasticsearch(query)
+      return await this.searchElasticsearch(query, accessibleProjectIds)
     } catch (error) {
       elasticsearchUnavailableUntil = Date.now() + ELASTICSEARCH_RETRY_DELAY_MS
       console.warn('[Search] Elasticsearch unavailable; falling back to PostgreSQL:', error)
-      return this.searchPostgres(query, 'Elasticsearch unavailable; using PostgreSQL fallback')
+      return this.searchPostgres(
+        query,
+        accessibleProjectIds,
+        'Elasticsearch unavailable; using PostgreSQL fallback',
+      )
     }
   }
 
-  private static async searchElasticsearch(query: SearchQuery): Promise<SearchResponse> {
+  private static async searchElasticsearch(
+    query: SearchQuery,
+    accessibleProjectIds: string[] | null,
+  ): Promise<SearchResponse> {
     await ensureIndexExists()
 
     const client = getEsClient()
@@ -323,8 +375,10 @@ export class SearchService {
     }
 
     // FASE 14: Support both single and multiple projects
-    if (query.project?.length) {
-      filters.push({ terms: { projectId: query.project } })
+    // (the empty-array case is already short-circuited in `search()` above)
+    const esProjectFilter = resolveProjectFilter(query.project, accessibleProjectIds)
+    if (esProjectFilter?.length) {
+      filters.push({ terms: { projectId: esProjectFilter } })
     }
 
     // FASE 14.1: Date range filtering by type
@@ -469,10 +523,14 @@ export class SearchService {
     }
   }
 
-  private static async searchPostgres(query: SearchQuery, warning?: string): Promise<SearchResponse> {
+  private static async searchPostgres(
+    query: SearchQuery,
+    accessibleProjectIds: string[] | null,
+    warning?: string,
+  ): Promise<SearchResponse> {
     const db = getDb()
     const startTime = Date.now()
-    const where = buildPostgresWhere(query)
+    const where = buildPostgresWhere(query, accessibleProjectIds)
 
     const [items, total, statusFacetRows, priorityFacetRows, severityFacetRows, assigneeFacetRows, projectFacetRows] =
       await Promise.all([

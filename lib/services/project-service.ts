@@ -12,7 +12,7 @@ type AuthUser = {
   role?: UserRole | string
 }
 
-function projectAccessWhere(user: AuthUser, projectId?: string): Prisma.ProjectWhereInput {
+export function projectAccessWhere(user: AuthUser, projectId?: string): Prisma.ProjectWhereInput {
   return {
     ...(projectId ? { id: projectId } : {}),
     deletedAt: null,
@@ -25,6 +25,24 @@ function projectAccessWhere(user: AuthUser, projectId?: string): Prisma.ProjectW
           ],
         }),
   }
+}
+
+/**
+ * Devuelve los IDs de proyecto accesibles para el usuario, o `null` si no hay
+ * restricción (rol global OWNER = todos los proyectos). Se usa para pasarle una
+ * lista explícita de IDs a Elasticsearch, que no soporta el filtro relacional
+ * de Prisma sobre `members`.
+ */
+export async function getAccessibleProjectIds(user: AuthUser): Promise<string[] | null> {
+  if (user.role === 'OWNER') return null
+
+  const db = getDb()
+  const projects = await db.project.findMany({
+    where: projectAccessWhere(user),
+    select: { id: true },
+  })
+
+  return projects.map((project) => project.id)
 }
 
 export class ProjectService {
@@ -184,6 +202,10 @@ export class ProjectService {
     })
 
     if (!project) throw new Error('NOT_FOUND')
+  }
+
+  static async getAccessibleProjectIds(user: AuthUser): Promise<string[] | null> {
+    return getAccessibleProjectIds(user)
   }
 
   static async assertProjectManagementAccess(projectId: string, user: AuthUser) {

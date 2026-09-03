@@ -20,7 +20,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const { valid, error } = await checkRBAC(request, {
+    const { valid, user, error } = await checkRBAC(request, {
       allowedRoles: RBAC_PERMISSIONS.VIEW_ALL_FINDINGS,
     })
     if (!valid) return error
@@ -37,6 +37,10 @@ export async function GET(
         400,
       )
     }
+
+    // Guard de acceso: el listado de comentarios no pasa por FindingService,
+    // así que se verifica membresía de proyecto explícitamente aquí.
+    await FindingService.assertFindingAccess(id, user)
 
     const result = await FindingService.getComments(id, parsed.data.limit, parsed.data.offset)
     return apiSuccess(result)
@@ -67,7 +71,7 @@ export async function POST(
       )
     }
 
-    const comment = await FindingService.addComment(id, parsed.data.text, user.id)
+    const comment = await FindingService.addComment(id, parsed.data.text, user.id, user)
     return apiSuccess(comment, 201)
   } catch (error) {
     return apiError(error)
