@@ -15,9 +15,9 @@ function FindingsLoading() {
 }
 
 export default async function FindingsPage() {
-  await requirePageSession()
+  const user = await requirePageSession()
 
-  const stats = await getInventoryStats()
+  const stats = await getInventoryStats(user)
 
   return (
     <AppShell

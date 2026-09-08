@@ -6,9 +6,9 @@ import { requirePageSession } from '@/lib/auth/page-guard'
 export const dynamic = 'force-dynamic'
 
 export default async function SearchPage() {
-  await requirePageSession()
+  const user = await requirePageSession()
 
-  const stats = await getInventoryStats()
+  const stats = await getInventoryStats(user)
 
   return (
     <AppShell

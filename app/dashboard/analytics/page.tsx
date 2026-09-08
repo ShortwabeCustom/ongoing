@@ -78,7 +78,7 @@ export default async function AnalyticsDashboardPage({
     redirect('/app.html')
   }
 
-  const stats = await getInventoryStats()
+  const stats = await getInventoryStats(session.user)
 
   return (
     <AppShell
