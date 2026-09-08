@@ -13,11 +13,16 @@ import { ProjectService } from '../lib/services/project-service'
 
 const EMAIL = 'juan.eizaguirre@elektra.com.mx'
 const NAME = 'Juan Eizaguirre'
-// Rol global bajo (NO 'OWNER'): el rol global OWNER actúa como super-admin y
-// ve todos los proyectos de la plataforma (ver projectAccessWhere en
+// Rol global NO 'OWNER': el rol global OWNER actúa como super-admin y ve
+// todos los proyectos de la plataforma (ver projectAccessWhere en
 // lib/services/project-service.ts). Un usuario dedicado a un solo proyecto
 // debe quedar scoped a ese proyecto vía ProjectMember, no vía rol global.
-const GLOBAL_ROLE = 'VIEWER'
+// 'QA_LEAD' (no 'VIEWER') porque las rutas de escritura (crear/editar/borrar
+// hallazgos, subir evidencia) autorizan por ROL GLOBAL únicamente —
+// RBAC_PERMISSIONS en lib/middleware/rbac.ts no consulta ProjectMember.role
+// en ningún momento. Sin esto, ser 'OWNER' solo a nivel de ProjectMember no
+// concede ningún permiso de escritura real, solo visibilidad del proyecto.
+const GLOBAL_ROLE = 'QA_LEAD'
 const PROJECT_MEMBER_ROLE = 'OWNER'
 const PROJECT_NAME = 'Mi negocio'
 
