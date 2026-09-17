@@ -1,7 +1,7 @@
 'use client'
 
 import { Finding, Evidence } from '@/lib/types'
-import { MapPin, AlertTriangle, Flag, ShieldAlert, User, CalendarDays, Hash, Workflow as WorkflowIcon, Pencil } from 'lucide-react'
+import { MapPin, AlertTriangle, Flag, ShieldAlert, User, CalendarDays, CalendarClock, Hash, Workflow as WorkflowIcon, Pencil } from 'lucide-react'
 import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { useAuth } from '@/hooks/useAuth'
@@ -69,11 +69,14 @@ export function FindingDetailWithEvidence({
     )
   }
 
-  const createdDate = typeof finding.createdAt === 'string'
-    ? new Date(finding.createdAt).toLocaleDateString('es-ES')
-    : (finding.createdAt instanceof Date
-        ? finding.createdAt.toLocaleDateString('es-ES')
-        : '-')
+  const formatDate = (value: unknown) => {
+    if (typeof value === 'string') return new Date(value).toLocaleDateString('es-ES')
+    if (value instanceof Date) return value.toLocaleDateString('es-ES')
+    return '-'
+  }
+
+  const createdDate = formatDate(finding.createdAt)
+  const dueDate = formatDate(finding.dueDate)
 
   const metaFields = [
     { icon: MapPin, label: 'Área', value: area },
@@ -82,6 +85,7 @@ export function FindingDetailWithEvidence({
     { icon: ShieldAlert, label: 'Severidad', value: SEVERITY_LABELS_ES[finding.severity] ?? finding.severity },
     { icon: User, label: 'Responsable', value: assigneeName },
     { icon: CalendarDays, label: 'Creado', value: createdDate },
+    { icon: CalendarClock, label: 'Est. liberación (dev)', value: dueDate },
     { icon: Hash, label: 'Versión', value: finding.version.toString() },
     ...(finding.flowStep
       ? [{ icon: WorkflowIcon, label: 'Paso del flujo', value: finding.flowStep }]

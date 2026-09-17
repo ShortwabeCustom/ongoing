@@ -26,6 +26,13 @@ type EditFindingDialogProps = {
   onClose: () => void
 }
 
+function toDateInputValue(value: unknown) {
+  if (!value) return ''
+  const date = typeof value === 'string' ? new Date(value) : value instanceof Date ? value : null
+  if (!date || Number.isNaN(date.getTime())) return ''
+  return date.toISOString().slice(0, 10)
+}
+
 function toggleValue(values: string[], value: string) {
   return values.includes(value)
     ? values.filter((item) => item !== value)
@@ -57,6 +64,7 @@ export function EditFindingDialog({
   const [severity, setSeverity] = useState(finding.severity)
   const [flowStep, setFlowStep] = useState(finding.flowStep ?? '')
   const [assigneeId, setAssigneeId] = useState(finding.assigneeId ?? '')
+  const [dueDate, setDueDate] = useState(toDateInputValue(finding.dueDate))
   const [supportLinks, setSupportLinks] = useState<SupportLink[]>([])
 
   useEffect(() => {
@@ -67,6 +75,7 @@ export function EditFindingDialog({
     setSeverity(finding.severity)
     setFlowStep(finding.flowStep ?? '')
     setAssigneeId(finding.assigneeId ?? '')
+    setDueDate(toDateInputValue(finding.dueDate))
     setIncidenceTypes(finding.incidenceTypes?.map((item) => item.incidenceType) ?? [])
     setExperienceTags(finding.experienceTags?.map((item) => item.experienceTag) ?? [])
     setSupportLinks((finding as any).supportLinks ?? [])
@@ -100,6 +109,7 @@ export function EditFindingDialog({
           supportLinks: supportLinks.length > 0 ? supportLinks : undefined,
           flowStep: flowStep || null,
           assigneeId: assigneeId || null,
+          dueDate: dueDate || null,
         }),
       })
 
@@ -249,12 +259,22 @@ export function EditFindingDialog({
             </label>
           </div>
 
-          <div className="grid gap-4">
+          <div className="grid gap-4 md:grid-cols-2">
             <label className="space-y-2 text-sm font-semibold text-[#3d4d45]">
               Paso del flujo
               <input
                 value={flowStep}
                 onChange={(event) => setFlowStep(event.target.value)}
+                className="pm-input h-11 w-full px-3 text-sm font-normal focus:outline-none focus:ring-2 focus:ring-[#00a85a]"
+              />
+            </label>
+
+            <label className="space-y-2 text-sm font-semibold text-[#3d4d45]">
+              Est. liberación (dev)
+              <input
+                type="date"
+                value={dueDate}
+                onChange={(event) => setDueDate(event.target.value)}
                 className="pm-input h-11 w-full px-3 text-sm font-normal focus:outline-none focus:ring-2 focus:ring-[#00a85a]"
               />
             </label>
