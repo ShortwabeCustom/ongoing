@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getDb } from '@/lib/db-lazy'
-import { INCIDENCE_TYPE_LABELS_ES } from '@/lib/constants/finding-options'
+import { FINDING_TYPE_LABELS_ES, INCIDENCE_TYPE_LABELS_ES } from '@/lib/constants/finding-options'
+import { buildReportFacets, normalizeChannel, orderCategories } from '@/lib/services/report-facets'
 import { isLegacyStorageKey, LEGACY_STORAGE_KEY_PREFIX } from '@/lib/storage/storage-key'
 
 export const revalidate = 180 // 3 minutes ISR cache
@@ -56,6 +57,8 @@ export async function GET() {
           sourceRow: true,
           testSessionId: true,
           testSession: { select: { name: true } },
+          findingType: true,
+          channel: true,
           incidenceTypes: { select: { incidenceType: true } },
           evidence: {
             where: PUBLICLY_RENDERABLE_EVIDENCE,
@@ -96,9 +99,20 @@ export async function GET() {
       const copyChips = chips.filter((c) => c === 'Copy')
       const orderedChips = [...designChips, ...copyChips]
 
-      // Build metadata line: "{session name} · Fila {sourceRow} · {tags}"
-      const metaLine = [finding.testSession?.name, finding.sourceRow ? `Fila ${finding.sourceRow}` : null, orderedChips.join(' · ')]
-        .filter((p): p is string => p !== null)
+      // Categorías completas (los chips de arriba solo muestran Diseño y Copy) + tipo y canal:
+      // son los valores por los que filtra el reporte.
+      const categories = orderCategories(finding.incidenceTypes.map((it) => it.incidenceType))
+      const channel = normalizeChannel(finding.channel)
+
+      // Build metadata line: "{session name} · Fila {sourceRow} · {categorías} · {tipo} · {canal}"
+      const metaLine = [
+        finding.testSession?.name,
+        finding.sourceRow ? `Fila ${finding.sourceRow}` : null,
+        categories.map((key) => INCIDENCE_TYPE_LABELS_ES[key] ?? key).join(' · '),
+        finding.findingType ? FINDING_TYPE_LABELS_ES[finding.findingType] : null,
+        channel,
+      ]
+        .filter((p): p is string => !!p)
         .join(' · ')
 
       // Defensa en profundidad (R6): aunque el `where` ya aplica la regla,
@@ -119,6 +133,9 @@ export async function GET() {
         title: finding.observation,
         status: statusDisplay,
         tags: orderedChips,
+        categories,
+        findingType: finding.findingType,
+        channel,
         roundId: finding.testSessionId,
         metaLine,
         evidence: evidenceList,
@@ -135,6 +152,7 @@ export async function GET() {
         evidenceCount,
       },
       rounds,
+      facets: buildReportFacets(findingsList),
       findings: findingsList,
     }
 
