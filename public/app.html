@@ -259,10 +259,7 @@ footer.site{padding:26px 5vw calc(30px + env(safe-area-inset-bottom));background
 .ps-lbar i{display:block;height:100%;background:var(--c);transform-origin:left;transform:scaleX(0);transition:transform .9s var(--ease) calc(var(--k)*.1s + .3s)}
 .ps-body.is-in .ps-lbar i{transform:scaleX(var(--w))}
 .ps-none{margin:0;color:var(--ps-mut);font-size:14px}
-.ps-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 30px}
-.ps-fields div{padding:14px 16px;border:1px dashed rgba(255,255,255,.26);border-radius:16px}
-.ps-fields dt,.ps-node small{font-size:11px;letter-spacing:1.1px;text-transform:uppercase;color:var(--ps-undef)}
-.ps-fields dd{margin:4px 0 0;font-size:14px;color:var(--ps-undef)}
+.ps-node small{font-size:11px;letter-spacing:1.1px;text-transform:uppercase;color:var(--ps-undef)}
 
 /* Cadena UIX ↔ Proyecto ↔ Negocio */
 .ps-chain-t{margin:0 0 12px;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--ps-undef);font-weight:400}
@@ -299,7 +296,6 @@ footer.site{padding:26px 5vw calc(30px + env(safe-area-inset-bottom));background
   .ps-chain{grid-template-columns:1fr}
   .ps-link{width:1px;height:22px;justify-self:center;transform-origin:top;animation-name:psY}
   .ps-link--undef{border-top:0;border-left:1px dashed rgba(255,255,255,.3)}
-  .ps-fields{grid-template-columns:1fr}
 }
 @media(max-width:480px){
   .ps-unit{gap:14px;padding:14px}
@@ -453,7 +449,6 @@ footer.site{padding:26px 5vw calc(30px + env(safe-area-inset-bottom));background
     return '<div class="ps-body">'
       +'<div class="ps-d-head"><div><span class="kicker">Proyecto '+pad(index+1)+'</span><h3>'+esc(item.name)+'</h3></div><a class="ps-cta" href="/findings?project='+encodeURIComponent(item.id)+'">Ver hallazgos de este proyecto →</a></div>'
       +'<div class="ps-d-main">'+ring(item,true)+main+'</div>'
-      +'<dl class="ps-fields"><div><dt>Estado del proyecto</dt><dd>No definido</dd></div><div><dt>Avance</dt><dd>No definido</dd></div></dl>'
       +'<h4 class="ps-chain-t">UIX ↔ Proyecto ↔ Negocio</h4>'
       +'<div class="ps-chain">'
         +uixNode
