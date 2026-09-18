@@ -6,11 +6,14 @@ import type { FindingStatus } from '@/lib/generated/prisma/client'
  * Son decisiones de presentación explícitas, NO datos del registro: no modifican
  * proyectos, hallazgos ni usuarios en la base. Se indexan por id de BD (los mismos
  * de `/findings?project=<id>`); si un id no existe en otro entorno, no aplica nada.
- * Los nombres se leen del registro de usuarios; aquí solo se referencia el id.
+ * Los nombres se leen del registro de usuarios; aquí solo se referencia el id, salvo
+ * `userDisplayNames`, que fija el nombre completo a mostrar cuando el registro trae uno abreviado.
  */
 
 /** Ilse Garcia (users.email = ilse.garcia@elektra.com.mx). */
 const ILSE_GARCIA = 'cmt0bmib80000ws2sgq7uaocz'
+/** Jonathan Ramos en el registro (users.email = jonathan.ramos@elektra.com.mx). */
+const JONATHAN_RAMOS = 'cmt0bmacn0000wu2s5yp4i6xe'
 
 export type ProjectReportOverride = {
   /** Usuario a mostrar como "Owner del proyecto" en lugar del owner registrado. */
@@ -27,6 +30,8 @@ export const PROJECT_STATUS_REPORT: {
   projects: Record<string, ProjectReportOverride>
   /** Foto por usuario (ruta pública). */
   userPhotos: Record<string, string>
+  /** Nombre a mostrar cuando difiere del registrado (p. ej. nombre completo). */
+  userDisplayNames: Record<string, string>
 } = {
   hiddenProjectIds: [
     'cmtrt4hem0001p72sv0i63ot5', // Mi negocio
@@ -36,11 +41,15 @@ export const PROJECT_STATUS_REPORT: {
     // PWA 2.0
     cmsoc6p7l0000h1acb6i9uoyt: {
       ownerUserId: ILSE_GARCIA,
-      uixResponsibleUserId: ILSE_GARCIA,
+      uixResponsibleUserId: JONATHAN_RAMOS,
       hiddenStatuses: ['TRIAGED'], // "Clasificado"
     },
   },
   userPhotos: {
     [ILSE_GARCIA]: '/images/team/ilse-garcia.webp',
+    [JONATHAN_RAMOS]: '/images/team/jonathan-ramos.webp',
+  },
+  userDisplayNames: {
+    [JONATHAN_RAMOS]: 'Jonathan Daniel Ramos Segoviano',
   },
 }

@@ -279,9 +279,10 @@ footer.site{padding:26px 5vw calc(30px + env(safe-area-inset-bottom));background
 
 /* Cadena UIX ↔ Proyecto ↔ Negocio */
 .ps-chain-t{margin:0 0 12px;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--ps-undef);font-weight:400}
-.ps-chain{display:grid;grid-template-columns:1fr 34px 1.2fr 34px 1fr;align-items:stretch}
-.ps-node{display:flex;flex-direction:column;justify-content:center;gap:4px;padding:14px 16px;border-radius:18px;border:1px solid var(--ps-line);background:rgba(255,255,255,.04);min-width:0}
+.ps-chain{display:grid;grid-template-columns:minmax(0,1.2fr) 24px minmax(0,1.1fr) 24px minmax(0,1fr);align-items:stretch}
+.ps-node{display:flex;flex-direction:column;justify-content:center;gap:4px;padding:14px 13px;border-radius:18px;border:1px solid var(--ps-line);background:rgba(255,255,255,.04);min-width:0}
 .ps-node b{font-size:15px;font-weight:600;overflow-wrap:anywhere}
+.ps-node small{letter-spacing:.7px;overflow-wrap:anywhere}
 .ps-node--undef{border-style:dashed;border-color:rgba(255,255,255,.26);background:none}
 .ps-node--undef b{font-weight:500;color:var(--ps-undef)}
 .ps-node--proj{border-color:rgba(123,240,177,.55);background:rgba(123,240,177,.08)}
@@ -293,7 +294,7 @@ footer.site{padding:26px 5vw calc(30px + env(safe-area-inset-bottom));background
 .ps-node--uix{border-color:rgba(123,240,177,.55);background:rgba(123,240,177,.08)}
 .ps-node--uix .ps-who{flex-direction:column;align-items:flex-start;gap:8px;margin:6px 0 0;padding:0;border:0}
 .ps-node--uix .ps-av,.ps-node--uix .ps-who i{width:56px;height:56px;font-size:20px;box-shadow:0 0 0 2px rgba(123,240,177,.65)}
-.ps-node--uix .ps-who span{font-size:15px}
+.ps-node--uix .ps-who span{font-size:14px;line-height:1.25}
 .ps-link{align-self:center;height:1px;background:var(--ps-mint);transform-origin:left;animation:psX .7s var(--ease) .35s both}
 .ps-link--undef{background:none;border-top:1px dashed rgba(255,255,255,.3)}
 @keyframes psX{from{transform:scaleX(0)}}

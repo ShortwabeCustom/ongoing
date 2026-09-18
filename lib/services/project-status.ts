@@ -37,7 +37,7 @@ export type ProjectStatusItem = {
  */
 export async function getProjectStatus(user: StatusUser): Promise<ProjectStatusItem[]> {
   const db = getDb()
-  const { hiddenProjectIds, projects: overrides, userPhotos } = PROJECT_STATUS_REPORT
+  const { hiddenProjectIds, projects: overrides, userPhotos, userDisplayNames } = PROJECT_STATUS_REPORT
 
   const projects = await db.project.findMany({
     where: {
@@ -71,7 +71,7 @@ export async function getProjectStatus(user: StatusUser): Promise<ProjectStatusI
   const usersById = new Map(referencedUsers.map((referenced) => [referenced.id, referenced]))
   const person = (source: { id: string; name: string }): ProjectStatusPerson => ({
     id: source.id,
-    name: source.name,
+    name: userDisplayNames[source.id] ?? source.name,
     photoUrl: userPhotos[source.id] ?? null,
   })
 

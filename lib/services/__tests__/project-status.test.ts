@@ -13,6 +13,7 @@ vi.mock('@/lib/db-lazy', () => ({
 const owner = { id: 'u1', name: 'Alexis Valdez Cortez' }
 const [PWA_2_0_ID] = Object.keys(PROJECT_STATUS_REPORT.projects)
 const ilse = { id: PROJECT_STATUS_REPORT.projects[PWA_2_0_ID].ownerUserId!, name: 'Ilse Garcia' }
+const jonathan = { id: PROJECT_STATUS_REPORT.projects[PWA_2_0_ID].uixResponsibleUserId!, name: 'Jonathan Ramos' }
 
 beforeEach(() => {
   mockProject.findMany.mockReset()
@@ -74,9 +75,9 @@ describe('getProjectStatus', () => {
     expect(PROJECT_STATUS_REPORT.hiddenProjectIds).toHaveLength(2)
   })
 
-  it('PWA 2.0: owner y responsable UIX vienen del usuario configurado, con su foto, y se omite Clasificado', async () => {
+  it('PWA 2.0: owner (Ilse) y responsable UIX (Jonathan, nombre completo) vienen de la configuración, con su foto, y se omite Clasificado', async () => {
     mockProject.findMany.mockResolvedValue([{ id: PWA_2_0_ID, name: 'PWA 2.0', owner }])
-    mockUser.findMany.mockResolvedValue([ilse])
+    mockUser.findMany.mockResolvedValue([ilse, jonathan])
     mockFinding.groupBy.mockResolvedValue([
       { projectId: PWA_2_0_ID, status: 'OPEN', _count: { _all: 250 } },
       { projectId: PWA_2_0_ID, status: 'TRIAGED', _count: { _all: 4 } },
@@ -87,7 +88,12 @@ describe('getProjectStatus', () => {
     const [item] = await getProjectStatus({ id: 'u1', role: 'OWNER' })
 
     expect(item.owner).toEqual({ ...ilse, photoUrl: '/images/team/ilse-garcia.webp' })
-    expect(item.uixResponsible).toEqual({ ...ilse, photoUrl: '/images/team/ilse-garcia.webp' })
+    expect(item.uixResponsible).toEqual({
+      id: jonathan.id,
+      name: 'Jonathan Daniel Ramos Segoviano',
+      photoUrl: '/images/team/jonathan-ramos.webp',
+    })
+    expect(item.uixResponsible?.id).not.toBe(item.owner.id)
     expect(item.statuses.map((s) => s.status)).toEqual(['OPEN', 'VALIDATED', 'CLOSED'])
     expect(item.total).toBe(400)
   })
