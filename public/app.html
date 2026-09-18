@@ -289,6 +289,11 @@ footer.site{padding:26px 5vw calc(30px + env(safe-area-inset-bottom));background
 .ps-who i{flex:none;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ps-mint);color:#052b20;font:700 12px Poppins,Arial,sans-serif;font-style:normal;text-transform:uppercase}
 .ps-who span{display:block;min-width:0;font-size:12.5px;font-weight:600;line-height:1.25;overflow-wrap:anywhere}
 .ps-who small{display:block;font-weight:400}
+.ps-av{flex:none;display:block;width:26px;height:26px;border-radius:50%;object-fit:cover;background:#0e2b22}
+.ps-node--uix{border-color:rgba(123,240,177,.55);background:rgba(123,240,177,.08)}
+.ps-node--uix .ps-who{flex-direction:column;align-items:flex-start;gap:8px;margin:6px 0 0;padding:0;border:0}
+.ps-node--uix .ps-av,.ps-node--uix .ps-who i{width:56px;height:56px;font-size:20px;box-shadow:0 0 0 2px rgba(123,240,177,.65)}
+.ps-node--uix .ps-who span{font-size:15px}
 .ps-link{align-self:center;height:1px;background:var(--ps-mint);transform-origin:left;animation:psX .7s var(--ease) .35s both}
 .ps-link--undef{background:none;border-top:1px dashed rgba(255,255,255,.3)}
 @keyframes psX{from{transform:scaleX(0)}}
@@ -420,6 +425,7 @@ footer.site{padding:26px 5vw calc(30px + env(safe-area-inset-bottom));background
   function cls(k){return String(k).replace(/[^A-Z_]/g,'')}
   function start0(n){return reduced?fmt(n):'0'}
   function pad(n){return n<10?'0'+n:String(n)}
+  function avatar(p){return p.photoUrl?'<img class="ps-av" src="'+esc(p.photoUrl)+'" alt="" width="56" height="56" decoding="async">':'<i aria-hidden="true">'+esc((p.name||'?').trim().charAt(0))+'</i>'}
   function plural(n,one,many){return n+' '+(n===1?one:many)}
 
   /* ---------- Anillo: un arco por estado, longitud proporcional a su conteo ---------- */
@@ -456,15 +462,18 @@ footer.site{padding:26px 5vw calc(30px + env(safe-area-inset-bottom));background
           return '<li class="st-'+cls(s.status)+'"><i class="ps-dot"></i><span>'+esc(s.label)+'</span><b class="ps-lnum" data-count="'+s.count+'">'+start0(s.count)+'</b><span class="ps-lbar"><i style="--w:'+(s.count/item.total).toFixed(5)+';--k:'+k+'"></i></span></li>';
         }).join('')+'</ul>'
       :'<p class="ps-none">Este proyecto no tiene hallazgos registrados.</p>';
-    var initial=esc((item.owner.name||'?').trim().charAt(0));
+    var ux=item.uixResponsible;
+    var uixNode=ux
+      ?'<div class="ps-node ps-node--uix"><small>Responsable UIX</small><div class="ps-who">'+avatar(ux)+'<span>'+esc(ux.name)+'</span></div></div><i class="ps-link" aria-hidden="true"></i>'
+      :'<div class="ps-node ps-node--undef"><small>Responsable UIX</small><b>No definido</b></div><i class="ps-link ps-link--undef" aria-hidden="true"></i>';
     return '<div class="ps-body">'
       +'<div class="ps-d-head"><div><span class="kicker">Proyecto '+pad(index+1)+'</span><h3>'+esc(item.name)+'</h3></div><a class="ps-cta" href="/findings?project='+encodeURIComponent(item.id)+'">Ver hallazgos de este proyecto →</a></div>'
       +'<div class="ps-d-main">'+ring(item,true)+main+'</div>'
       +'<dl class="ps-fields"><div><dt>Estado del proyecto</dt><dd>No definido</dd></div><div><dt>Avance</dt><dd>No definido</dd></div></dl>'
       +'<h4 class="ps-chain-t">UIX ↔ Proyecto ↔ Negocio</h4>'
       +'<div class="ps-chain">'
-        +'<div class="ps-node ps-node--undef"><small>Responsable UIX</small><b>No definido</b></div><i class="ps-link ps-link--undef" aria-hidden="true"></i>'
-        +'<div class="ps-node ps-node--proj"><small>Proyecto</small><b>'+esc(item.name)+'</b><div class="ps-who"><i aria-hidden="true">'+initial+'</i><span><small>Owner del proyecto</small>'+esc(item.owner.name)+'</span></div></div><i class="ps-link ps-link--undef" aria-hidden="true"></i>'
+        +uixNode
+        +'<div class="ps-node ps-node--proj"><small>Proyecto</small><b>'+esc(item.name)+'</b><div class="ps-who">'+avatar(item.owner)+'<span><small>Owner del proyecto</small>'+esc(item.owner.name)+'</span></div></div><i class="ps-link ps-link--undef" aria-hidden="true"></i>'
         +'<div class="ps-node ps-node--undef"><small>Contraparte de Negocio</small><b>No definido</b></div>'
       +'</div></div>';
   }
@@ -577,7 +586,7 @@ footer.site{padding:26px 5vw calc(30px + env(safe-area-inset-bottom));background
     root.setAttribute('data-state','ready');root.removeAttribute('aria-busy');
     root.innerHTML='<div class="ps-stage"><svg class="ps-wire" aria-hidden="true"></svg><ol class="ps-list">'+items.map(unit).join('')+'</ol><article class="ps-detail" id="ps-detail" aria-label="Detalle del proyecto seleccionado"></article></div>';
     stage=root.firstChild;wire=stage.querySelector('.ps-wire');list=stage.querySelector('.ps-list');detail=stage.querySelector('.ps-detail');
-    if(meta)meta.textContent=plural(items.length,'proyecto','proyectos')+' · Orden alfabético';
+    if(meta)meta.textContent=plural(items.length,'proyecto','proyectos')+(items.length>1?' · Orden alfabético':'');
     bind();
     if(state.live)start();
   }
