@@ -137,7 +137,7 @@ export function LoginForm() {
               disabled={loading}
               className="flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-[#052b20] px-4 text-sm font-semibold text-white transition hover:bg-[#087244] disabled:bg-[#7d9087]"
             >
-              {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
+              {loading ? "Iniciando sesión..." : "Iniciar sesión"}
               {!loading && <ArrowRight className="h-4 w-4" />}
             </button>
             </form>

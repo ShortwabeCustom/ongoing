@@ -16,7 +16,7 @@ export function UserMenu() {
         onClick={() => router.push("/login")}
         className="h-9 rounded-full bg-white px-4 text-xs font-semibold text-[#052b20] transition hover:bg-[#7bf0b1]"
       >
-        Iniciar Sesión
+        Iniciar sesión
       </button>
     );
   }
@@ -54,7 +54,7 @@ export function UserMenu() {
             className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm text-[#17251f] transition hover:bg-[#f3f5ef]"
           >
             <UserRound className="h-4 w-4" />
-            Mi Perfil
+            Mi perfil
           </button>
 
           <button
@@ -65,7 +65,7 @@ export function UserMenu() {
             className="flex w-full items-center gap-2 border-t border-[#dbe4dd] px-4 py-2.5 text-left text-sm text-[#9b321f] transition hover:bg-[#fff0eb]"
           >
             <LogOut className="h-4 w-4" />
-            Cerrar Sesión
+            Cerrar sesión
           </button>
         </div>
       )}
