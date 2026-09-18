@@ -19,6 +19,14 @@ export const INCIDENCE_TYPE_OPTIONS = ['DESIGN', 'FUNCTIONALITY', 'BUSINESS_RULE
 
 export const EXPERIENCE_TAG_OPTIONS = ['UI', 'UX', 'COPY', 'DEV'] as const
 
+export const FINDING_TYPE_OPTIONS = ['FINDING', 'IMPROVEMENT', 'INCIDENT'] as const
+
+export const INTERFACE_MODE_OPTIONS = ['LIGHT', 'DARK'] as const
+
+// Canales conocidos del listado ONGOING. `channel` es texto libre en BD; esta
+// lista sólo alimenta sugerencias y el filtro.
+export const CHANNEL_OPTIONS = ['BAZ', 'Elektra', 'Shopinbaz', 'Transversal', 'Todos los canales'] as const
+
 // Spanish labels
 export const STATUS_LABELS_ES: Record<string, string> = {
   OPEN: 'Abierto',
@@ -52,6 +60,17 @@ export const INCIDENCE_TYPE_LABELS_ES: Record<string, string> = {
   COPY: 'Copy',
 }
 
+export const FINDING_TYPE_LABELS_ES: Record<string, string> = {
+  FINDING: 'Hallazgo',
+  IMPROVEMENT: 'Mejora',
+  INCIDENT: 'Incidencia',
+}
+
+export const INTERFACE_MODE_LABELS_ES: Record<string, string> = {
+  LIGHT: 'Claro',
+  DARK: 'Oscuro',
+}
+
 export const EXPERIENCE_TAG_LABELS_ES: Record<string, string> = {
   UI: 'UI',
   UX: 'UX',
@@ -83,4 +102,10 @@ export const SEVERITY_COLORS: Record<string, string> = {
   MINOR: 'bg-yellow-100 text-yellow-800 border-yellow-300',
   MAJOR: 'bg-orange-100 text-orange-800 border-orange-300',
   BLOCKER: 'bg-red-100 text-red-800 border-red-300',
+}
+
+export const FINDING_TYPE_COLORS: Record<string, string> = {
+  FINDING: 'bg-rose-100 text-rose-800 border-rose-300',
+  IMPROVEMENT: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+  INCIDENT: 'bg-amber-100 text-amber-800 border-amber-300',
 }

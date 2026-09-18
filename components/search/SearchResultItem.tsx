@@ -9,6 +9,8 @@ import {
   STATUS_LABELS_ES,
   SEVERITY_LABELS_ES,
   SEVERITY_COLORS,
+  FINDING_TYPE_LABELS_ES,
+  FINDING_TYPE_COLORS,
 } from '@/lib/constants/finding-options'
 import { cn } from '@/lib/utils'
 
@@ -21,6 +23,9 @@ interface SearchResultItemProps {
   severity: string
   projectId: string
   assigneeId?: string
+  findingType?: string
+  channel?: string
+  jiraId?: string
   createdAt?: string | number
   experienceTags?: Array<{ experienceTag: string }> | string[]
   incidenceTypes?: Array<{ incidenceType: string }> | string[]
@@ -84,6 +89,9 @@ export function SearchResultItem({
   severity,
   projectId,
   assigneeId,
+  findingType,
+  channel,
+  jiraId,
   createdAt,
   experienceTags,
   incidenceTypes,
@@ -146,6 +154,18 @@ export function SearchResultItem({
             {severityLabel}
           </span>
           <span className="text-xs font-semibold text-[#65766e]">{statusLabel}</span>
+          {findingType && (
+            <span
+              className={cn(
+                'inline-flex items-center rounded border px-2 py-0.5 text-xs font-semibold shrink-0',
+                FINDING_TYPE_COLORS[findingType] ?? 'bg-slate-100 text-slate-700 border-slate-200',
+              )}
+            >
+              {FINDING_TYPE_LABELS_ES[findingType] ?? findingType}
+            </span>
+          )}
+          {channel && <span className="text-xs font-medium text-[#65766e]">{channel}</span>}
+          {jiraId && <span className="font-mono text-xs text-[#65766e]">{jiraId}</span>}
         </div>
 
         {/* Row 2: Title */}

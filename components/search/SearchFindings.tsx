@@ -26,6 +26,11 @@ import { getUTCRangeForDaysBack, getUTCRangeForThisMonth, getUTCRangeForLastMont
 import {
   FINDING_STATUS_OPTIONS,
   FINDING_PRIORITY_OPTIONS,
+  FINDING_TYPE_OPTIONS,
+  FINDING_TYPE_LABELS_ES,
+  CHANNEL_OPTIONS,
+  INCIDENCE_TYPE_OPTIONS,
+  INCIDENCE_TYPE_LABELS_ES,
   PRIORITY_LABELS_ES,
   STATUS_LABELS_ES,
   SEVERITY_LABELS_ES,
@@ -69,6 +74,15 @@ function getFindingsPresetRange(key: string): [string, string] | null {
 const STATUS_FILTER_OPTIONS = FINDING_STATUS_OPTIONS.map((value) => ({
   value,
   label: STATUS_LABELS_ES[value] ?? value,
+}))
+const FINDING_TYPE_FILTER_OPTIONS = FINDING_TYPE_OPTIONS.map((value) => ({
+  value,
+  label: FINDING_TYPE_LABELS_ES[value] ?? value,
+}))
+const CHANNEL_FILTER_OPTIONS = CHANNEL_OPTIONS.map((value) => ({ value, label: value }))
+const INCIDENCE_TYPE_FILTER_OPTIONS = INCIDENCE_TYPE_OPTIONS.map((value) => ({
+  value,
+  label: INCIDENCE_TYPE_LABELS_ES[value] ?? value,
 }))
 const PRIORITY_FILTER_OPTIONS = FINDING_PRIORITY_OPTIONS.map((value) => ({
   value,
@@ -153,6 +167,9 @@ export function SearchFindings({ presentation = 'panel', showQuickFilters = true
       urlFilters.status?.length ||
       urlFilters.priority?.length ||
       urlFilters.severity?.length ||
+      urlFilters.findingType?.length ||
+      urlFilters.channel?.length ||
+      urlFilters.incidenceType?.length ||
       urlFilters.assignee?.length ||
       urlFilters.project?.length ||
       urlFilters.dateType ||
@@ -167,6 +184,9 @@ export function SearchFindings({ presentation = 'panel', showQuickFilters = true
       if (urlFilters.priority?.length) setPriorityFilter(urlFilters.priority)
       if (
         urlFilters.severity?.length ||
+        urlFilters.findingType?.length ||
+        urlFilters.channel?.length ||
+        urlFilters.incidenceType?.length ||
         urlFilters.assignee?.length ||
         urlFilters.project?.length ||
         urlFilters.dateType ||
@@ -176,6 +196,9 @@ export function SearchFindings({ presentation = 'panel', showQuickFilters = true
       ) {
         setAdvancedFilters({
           severity: urlFilters.severity,
+          findingType: urlFilters.findingType,
+          channel: urlFilters.channel,
+          incidenceType: urlFilters.incidenceType,
           assignee: urlFilters.assignee,
           project: urlFilters.project,
           dateType: urlFilters.dateType,
@@ -194,6 +217,9 @@ export function SearchFindings({ presentation = 'panel', showQuickFilters = true
       status: statusFilter.length > 0 ? statusFilter : undefined,
       priority: priorityFilter.length > 0 ? priorityFilter : undefined,
       severity: advancedFilters.severity,
+      findingType: advancedFilters.findingType,
+      channel: advancedFilters.channel,
+      incidenceType: advancedFilters.incidenceType,
       assignee: advancedFilters.assignee,
       project: advancedFilters.project,
       dateType: advancedFilters.dateType,
@@ -210,6 +236,9 @@ export function SearchFindings({ presentation = 'panel', showQuickFilters = true
       statusFilter,
       priorityFilter,
       advancedFilters.severity,
+      advancedFilters.findingType,
+      advancedFilters.channel,
+      advancedFilters.incidenceType,
       advancedFilters.assignee,
       advancedFilters.project,
       advancedFilters.dateType,
@@ -251,6 +280,9 @@ export function SearchFindings({ presentation = 'panel', showQuickFilters = true
     (statusFilter.length || 0) +
     (priorityFilter.length || 0) +
     (advancedFilters.severity?.length || 0) +
+    (advancedFilters.findingType?.length || 0) +
+    (advancedFilters.channel?.length || 0) +
+    (advancedFilters.incidenceType?.length || 0) +
     (advancedFilters.assignee?.length || 0) +
     (advancedFilters.project?.length || 0) +
     (advancedFilters.dateType && advancedFilters.dateType !== 'created' ? 1 : 0) +
@@ -275,6 +307,9 @@ export function SearchFindings({ presentation = 'panel', showQuickFilters = true
     statusFilter,
     priorityFilter,
     advancedFilters.severity,
+    advancedFilters.findingType,
+    advancedFilters.channel,
+    advancedFilters.incidenceType,
     advancedFilters.assignee,
     advancedFilters.project,
     advancedFilters.dateFrom,
@@ -658,6 +693,24 @@ export function SearchFindings({ presentation = 'panel', showQuickFilters = true
         value={priorityFilter}
         onChange={(next) => applyFilters({ priority: next })}
       />
+      <MultiSelectFilter
+        label="Tipo"
+        options={FINDING_TYPE_FILTER_OPTIONS}
+        value={advancedFilters.findingType ?? []}
+        onChange={(next) => applyFilters({ advanced: { findingType: next } })}
+      />
+      <MultiSelectFilter
+        label="Canal"
+        options={CHANNEL_FILTER_OPTIONS}
+        value={advancedFilters.channel ?? []}
+        onChange={(next) => applyFilters({ advanced: { channel: next } })}
+      />
+      <MultiSelectFilter
+        label="Categoría"
+        options={INCIDENCE_TYPE_FILTER_OPTIONS}
+        value={advancedFilters.incidenceType ?? []}
+        onChange={(next) => applyFilters({ advanced: { incidenceType: next } })}
+      />
       {/*
         FASE 6 (issue 3): Proyecto/Asignado used to pass `disabled={isFallback}`,
         making them look disabled whenever ES is down — which, in this
@@ -723,6 +776,36 @@ export function SearchFindings({ presentation = 'panel', showQuickFilters = true
             label="Prioridad"
             value={PRIORITY_LABELS_ES[priority] ?? priority}
             onRemove={() => applyFilters({ priority: priorityFilter.filter((p) => p !== priority) })}
+          />
+        ))}
+        {(advancedFilters.findingType ?? []).map((type) => (
+          <ActiveFilterChip
+            key={`findingType-${type}`}
+            label="Tipo"
+            value={FINDING_TYPE_LABELS_ES[type] ?? type}
+            onRemove={() =>
+              applyFilters({ advanced: { findingType: (advancedFilters.findingType ?? []).filter((t) => t !== type) } })
+            }
+          />
+        ))}
+        {(advancedFilters.channel ?? []).map((channel) => (
+          <ActiveFilterChip
+            key={`channel-${channel}`}
+            label="Canal"
+            value={channel}
+            onRemove={() =>
+              applyFilters({ advanced: { channel: (advancedFilters.channel ?? []).filter((c) => c !== channel) } })
+            }
+          />
+        ))}
+        {(advancedFilters.incidenceType ?? []).map((type) => (
+          <ActiveFilterChip
+            key={`incidenceType-${type}`}
+            label="Categoría"
+            value={INCIDENCE_TYPE_LABELS_ES[type] ?? type}
+            onRemove={() =>
+              applyFilters({ advanced: { incidenceType: (advancedFilters.incidenceType ?? []).filter((t) => t !== type) } })
+            }
           />
         ))}
         {(advancedFilters.project ?? []).map((id) => (

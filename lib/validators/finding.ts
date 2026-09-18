@@ -12,8 +12,12 @@ const severityEnum = z.enum(['COSMETIC', 'MINOR', 'MAJOR', 'BLOCKER'])
 const effortEnum = z.enum(['S', 'M', 'L', 'XL'])
 const incidenceTypeEnum = z.enum(['DESIGN', 'FUNCTIONALITY', 'BUSINESS_RULE', 'COPY'])
 const experienceTagEnum = z.enum(['UI', 'UX', 'COPY', 'DEV'])
+const findingTypeEnum = z.enum(['FINDING', 'IMPROVEMENT', 'INCIDENT'])
+const interfaceModeEnum = z.enum(['LIGHT', 'DARK'])
 
 const folioField = z.string().trim().max(100)
+const channelField = z.string().trim().min(1).max(60)
+const jiraIdField = z.string().trim().min(1).max(60)
 const observationField = z.string().min(5, 'Min 5 characters').max(2000, 'Max 2000 characters')
 const incidenceTypesField = z.array(incidenceTypeEnum).min(1, 'Select at least one type')
 
@@ -39,6 +43,13 @@ export const FindingCreateSchema = z.object({
   previousScreen: optionalText,
   currentScreen: optionalText,
   flowStep: optionalText,
+  findingType: findingTypeEnum.optional().nullable(),
+  channel: channelField.optional().nullable(),
+  jiraId: jiraIdField.optional().nullable(),
+  interfaceMode: interfaceModeEnum.optional().nullable(),
+  approvalInternal: z.boolean().optional().nullable(),
+  approvalBusiness: z.boolean().optional().nullable(),
+  approvalTech: z.boolean().optional().nullable(),
 })
 
 /**
@@ -82,6 +93,13 @@ export const FindingUpdateSchema = z.object({
   previousScreen: optionalText,
   currentScreen: optionalText,
   flowStep: optionalText,
+  findingType: findingTypeEnum.optional().nullable(),
+  channel: channelField.optional().nullable(),
+  jiraId: jiraIdField.optional().nullable(),
+  interfaceMode: interfaceModeEnum.optional().nullable(),
+  approvalInternal: z.boolean().optional().nullable(),
+  approvalBusiness: z.boolean().optional().nullable(),
+  approvalTech: z.boolean().optional().nullable(),
 })
 
 export const FindingStatusTransitionSchema = z.object({

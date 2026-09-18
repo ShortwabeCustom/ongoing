@@ -1,7 +1,7 @@
 'use client'
 
 import { Finding, Evidence } from '@/lib/types'
-import { MapPin, AlertTriangle, Flag, ShieldAlert, User, CalendarDays, CalendarClock, Hash, Workflow as WorkflowIcon, Pencil } from 'lucide-react'
+import { MapPin, AlertTriangle, Flag, ShieldAlert, User, CalendarDays, CalendarClock, Hash, Workflow as WorkflowIcon, Pencil, Tag, Radio, Ticket, Sun, BadgeCheck } from 'lucide-react'
 import { useState } from 'react'
 import type { ReactNode } from 'react'
 import { useAuth } from '@/hooks/useAuth'
@@ -16,6 +16,8 @@ import {
   INCIDENCE_TYPE_LABELS_ES,
   PRIORITY_LABELS_ES,
   SEVERITY_LABELS_ES,
+  FINDING_TYPE_LABELS_ES,
+  INTERFACE_MODE_LABELS_ES,
 } from '@/lib/constants/finding-options'
 
 interface FindingDetailWithEvidenceProps {
@@ -78,6 +80,13 @@ export function FindingDetailWithEvidence({
   const createdDate = formatDate(finding.createdAt)
   const dueDate = formatDate(finding.dueDate)
 
+  const yesNo = (value: boolean | null | undefined) => (value == null ? undefined : value ? 'Sí' : 'No')
+  const approvals = [
+    { label: 'Vobo. interno', value: yesNo(finding.approvalInternal) },
+    { label: 'Vobo. negocio', value: yesNo(finding.approvalBusiness) },
+    { label: 'Vobo. TI', value: yesNo(finding.approvalTech) },
+  ].filter((item): item is { label: string; value: string } => item.value !== undefined)
+
   const metaFields = [
     { icon: MapPin, label: 'Área', value: area },
     { icon: AlertTriangle, label: 'Incidencia', value: incidenceTypes },
@@ -90,6 +99,15 @@ export function FindingDetailWithEvidence({
     ...(finding.flowStep
       ? [{ icon: WorkflowIcon, label: 'Paso del flujo', value: finding.flowStep }]
       : []),
+    ...(finding.findingType
+      ? [{ icon: Tag, label: 'Tipo', value: FINDING_TYPE_LABELS_ES[finding.findingType] ?? finding.findingType }]
+      : []),
+    ...(finding.channel ? [{ icon: Radio, label: 'Canal', value: finding.channel }] : []),
+    ...(finding.jiraId ? [{ icon: Ticket, label: 'ID Jira', value: finding.jiraId }] : []),
+    ...(finding.interfaceMode
+      ? [{ icon: Sun, label: 'Modo', value: INTERFACE_MODE_LABELS_ES[finding.interfaceMode] ?? finding.interfaceMode }]
+      : []),
+    ...approvals.map(({ label, value }) => ({ icon: BadgeCheck, label, value })),
   ]
 
   return (

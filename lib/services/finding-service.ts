@@ -4,6 +4,8 @@ import {
   type FindingEffort,
   type FindingPriority,
   type FindingSeverity,
+  type FindingType,
+  type InterfaceMode,
   type FindingStatus,
   type IncidenceType,
 } from '@/lib/generated/prisma/client'
@@ -120,6 +122,14 @@ export class FindingService {
       }
     }
 
+    if (filters.findingType?.length) {
+      where.findingType = { in: filters.findingType as FindingType[] }
+    }
+
+    if (filters.channel?.length) {
+      where.channel = { in: filters.channel }
+    }
+
     if (filters.assigneeId) {
       where.assigneeId = filters.assigneeId
     }
@@ -164,6 +174,7 @@ export class FindingService {
         OR: [
           { observation: textFilter },
           { folio: textFilter },
+          { jiraId: textFilter },
           { previousScreen: textFilter },
           { currentScreen: textFilter },
           { flowStep: textFilter },
@@ -269,6 +280,13 @@ export class FindingService {
           previousScreen: input.previousScreen ?? undefined,
           currentScreen: input.currentScreen ?? undefined,
           flowStep: input.flowStep ?? undefined,
+          findingType: input.findingType ?? undefined,
+          channel: input.channel ?? undefined,
+          jiraId: input.jiraId ?? undefined,
+          interfaceMode: input.interfaceMode ?? undefined,
+          approvalInternal: input.approvalInternal ?? undefined,
+          approvalBusiness: input.approvalBusiness ?? undefined,
+          approvalTech: input.approvalTech ?? undefined,
           assigneeId: input.assigneeId ?? undefined,
           dueDate: input.dueDate ?? undefined,
           createdBy,
@@ -813,6 +831,13 @@ export class FindingService {
       if (isPresent(updates, 'previousScreen')) data.previousScreen = updates.previousScreen ?? null
       if (isPresent(updates, 'currentScreen')) data.currentScreen = updates.currentScreen ?? null
       if (isPresent(updates, 'flowStep')) data.flowStep = updates.flowStep ?? null
+      if (isPresent(updates, 'findingType')) data.findingType = (updates.findingType as FindingType | null | undefined) ?? null
+      if (isPresent(updates, 'channel')) data.channel = updates.channel ?? null
+      if (isPresent(updates, 'jiraId')) data.jiraId = updates.jiraId ?? null
+      if (isPresent(updates, 'interfaceMode')) data.interfaceMode = (updates.interfaceMode as InterfaceMode | null | undefined) ?? null
+      if (isPresent(updates, 'approvalInternal')) data.approvalInternal = updates.approvalInternal ?? null
+      if (isPresent(updates, 'approvalBusiness')) data.approvalBusiness = updates.approvalBusiness ?? null
+      if (isPresent(updates, 'approvalTech')) data.approvalTech = updates.approvalTech ?? null
       if (isPresent(updates, 'assigneeId')) data.assigneeId = updates.assigneeId ?? null
       if (isPresent(updates, 'dueDate')) data.dueDate = updates.dueDate ?? null
 

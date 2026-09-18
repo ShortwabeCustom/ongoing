@@ -18,6 +18,12 @@ import {
 } from '@/lib/constants/finding-options'
 import { cn } from '@/lib/utils'
 import { SupportLinkInput } from '@/components/ui/SupportLinkInput'
+import {
+  OngoingTrackingFields,
+  ongoingValuesFromFinding,
+  ongoingValuesToPayload,
+  type OngoingTrackingValues,
+} from '@/components/finding/OngoingTrackingFields'
 
 type EditFindingDialogProps = {
   open: boolean
@@ -66,6 +72,7 @@ export function EditFindingDialog({
   const [assigneeId, setAssigneeId] = useState(finding.assigneeId ?? '')
   const [dueDate, setDueDate] = useState(toDateInputValue(finding.dueDate))
   const [supportLinks, setSupportLinks] = useState<SupportLink[]>([])
+  const [ongoing, setOngoing] = useState<OngoingTrackingValues>(() => ongoingValuesFromFinding(finding))
 
   useEffect(() => {
     if (!open) return
@@ -79,6 +86,7 @@ export function EditFindingDialog({
     setIncidenceTypes(finding.incidenceTypes?.map((item) => item.incidenceType) ?? [])
     setExperienceTags(finding.experienceTags?.map((item) => item.experienceTag) ?? [])
     setSupportLinks((finding as any).supportLinks ?? [])
+    setOngoing(ongoingValuesFromFinding(finding))
     setError(null)
   }, [open, finding])
 
@@ -110,6 +118,7 @@ export function EditFindingDialog({
           flowStep: flowStep || null,
           assigneeId: assigneeId || null,
           dueDate: dueDate || null,
+          ...ongoingValuesToPayload(ongoing),
         }),
       })
 
@@ -279,6 +288,11 @@ export function EditFindingDialog({
               />
             </label>
           </div>
+
+          <OngoingTrackingFields
+            values={ongoing}
+            onChange={(patch) => setOngoing((current) => ({ ...current, ...patch }))}
+          />
 
           <div className="border-t-2 border-dashed border-[#dbe4dd] pt-5">
             <SupportLinkInput

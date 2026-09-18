@@ -204,6 +204,16 @@ model Finding {
   assignee   User?   @relation("FindingAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
   dueDate    DateTime?
 
+  // Ongoing tracking (listado ONGOING). Todos opcionales: los hallazgos previos
+  // quedan en NULL y no se les inventa un valor.
+  findingType      FindingType?
+  channel          String?        // BAZ, Elektra, Shopinbaz, Transversal, Todos los canales...
+  jiraId           String?
+  interfaceMode    InterfaceMode?
+  approvalInternal Boolean?       // Vobo. interno
+  approvalBusiness Boolean?       // Vobo. negocio
+  approvalTech     Boolean?       // Vobo. TI
+
   // Import Tracking
   sourceSheet  String?
   sourceRow    Int?
@@ -237,6 +247,8 @@ model Finding {
   @@index([assigneeId])
   @@index([createdAt])
   @@index([importBatchId])
+  @@index([findingType])
+  @@index([channel])
   @@index([deletedAt])
   @@index([createdAt, status])
   @@map("findings")
@@ -272,6 +284,17 @@ enum FindingEffort {
   M
   L
   XL
+}
+
+enum FindingType {
+  FINDING      // Hallazgo
+  IMPROVEMENT  // Mejora
+  INCIDENT     // Incidencia
+}
+
+enum InterfaceMode {
+  LIGHT
+  DARK
 }
 
 // ============================================================================

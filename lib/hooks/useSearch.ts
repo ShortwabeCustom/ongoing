@@ -32,6 +32,9 @@ export interface UseSearchResult {
 	      severity: string
 	      projectId: string
 	      assigneeId?: string
+	      findingType?: string
+	      channel?: string
+	      jiraId?: string
 	      experienceTags?: Array<{ experienceTag: string }> | string[]
 	      incidenceTypes?: Array<{ incidenceType: string }> | string[]
 	      createdAt?: string
@@ -72,6 +75,9 @@ export function useSearch(query: Partial<SearchQuery>): UseSearchResult {
     if (q.status?.length) params.append('status', q.status.join(','))
     if (q.priority?.length) params.append('priority', q.priority.join(','))
     if (q.severity?.length) params.append('severity', q.severity.join(','))
+    if (q.findingType?.length) params.append('findingType', q.findingType.join(','))
+    if (q.channel?.length) params.append('channel', q.channel.join(','))
+    if (q.incidenceType?.length) params.append('incidenceType', q.incidenceType.join(','))
     if (q.assigneeId) params.append('assigneeId', q.assigneeId)
     if (q.projectId) params.append('projectId', q.projectId)
     if (q.createdAfter) params.append('createdAfter', q.createdAfter)
@@ -104,6 +110,9 @@ export function useSearch(query: Partial<SearchQuery>): UseSearchResult {
       debouncedQuery.status?.length ||
       debouncedQuery.priority?.length ||
       debouncedQuery.severity?.length ||
+      debouncedQuery.findingType?.length ||
+      debouncedQuery.channel?.length ||
+      debouncedQuery.incidenceType?.length ||
       debouncedQuery.assignee?.length ||
       debouncedQuery.project?.length ||
       debouncedQuery.dateFrom ||
@@ -152,6 +161,15 @@ export function useSearch(query: Partial<SearchQuery>): UseSearchResult {
         if (debouncedQuery.severity?.length) {
           fallbackParams.append('severity', debouncedQuery.severity.join(','))
         }
+        if (debouncedQuery.findingType?.length) {
+          fallbackParams.append('findingType', debouncedQuery.findingType.join(','))
+        }
+        if (debouncedQuery.channel?.length) {
+          fallbackParams.append('channel', debouncedQuery.channel.join(','))
+        }
+        if (debouncedQuery.incidenceType?.length) {
+          fallbackParams.append('incidenceType', debouncedQuery.incidenceType.join(','))
+        }
         // FASE 14: Map advanced filters to fallback (first value only)
         if (debouncedQuery.assignee?.[0]) {
           fallbackParams.append('assigneeId', debouncedQuery.assignee[0])
@@ -191,6 +209,9 @@ export function useSearch(query: Partial<SearchQuery>): UseSearchResult {
 	            severity: item.severity,
 	            projectId: item.projectId,
 	            assigneeId: item.assigneeId,
+	            findingType: item.findingType ?? undefined,
+	            channel: item.channel ?? undefined,
+	            jiraId: item.jiraId ?? undefined,
 	            experienceTags: normalizeRelationValues(item.experienceTags, 'experienceTag'),
 	            incidenceTypes: normalizeRelationValues(item.incidenceTypes, 'incidenceType'),
 	            createdAt: item.createdAt,

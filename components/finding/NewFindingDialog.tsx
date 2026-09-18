@@ -6,6 +6,12 @@ import type { LookupOption } from '@/lib/types/search'
 import type { SupportLink } from '@/lib/validators/finding'
 import { DatePicker } from '@/components/ui/DatePicker'
 import { SupportLinkInput } from '@/components/ui/SupportLinkInput'
+import {
+  EMPTY_ONGOING_VALUES,
+  OngoingTrackingFields,
+  ongoingValuesToPayload,
+  type OngoingTrackingValues,
+} from '@/components/finding/OngoingTrackingFields'
 import { EvidenceSelector } from '@/components/evidence/EvidenceSelector'
 import { EvidenceClient } from '@/lib/api/evidence-client'
 import {
@@ -66,6 +72,7 @@ export function NewFindingDialog({
   const [flowStep, setFlowStep] = useState('')
   const [assigneeId, setAssigneeId] = useState('')
   const [supportLinks, setSupportLinks] = useState<SupportLink[]>([])
+  const [ongoing, setOngoing] = useState<OngoingTrackingValues>(EMPTY_ONGOING_VALUES)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [isUploadingEvidence, setIsUploadingEvidence] = useState(false)
   const [evidenceUploadError, setEvidenceUploadError] = useState<string | null>(null)
@@ -89,6 +96,7 @@ export function NewFindingDialog({
     setFlowStep('')
     setAssigneeId('')
     setSupportLinks([])
+    setOngoing(EMPTY_ONGOING_VALUES)
     setSelectedFile(null)
     setIsUploadingEvidence(false)
     setEvidenceUploadError(null)
@@ -124,6 +132,7 @@ export function NewFindingDialog({
         supportLinks: supportLinks.length > 0 ? supportLinks : undefined,
         flowStep: flowStep || undefined,
         assigneeId: assigneeId || undefined,
+        ...ongoingValuesToPayload(ongoing),
       }
 
       const response = await fetch(`/api/projects/${projectId}/findings`, {
@@ -352,6 +361,11 @@ export function NewFindingDialog({
               />
             </label>
           </div>
+
+          <OngoingTrackingFields
+            values={ongoing}
+            onChange={(patch) => setOngoing((current) => ({ ...current, ...patch }))}
+          />
 
           <div className="border-t-2 border-dashed border-[#dbe4dd] pt-5">
             <EvidenceSelector

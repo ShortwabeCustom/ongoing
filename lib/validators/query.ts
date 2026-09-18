@@ -71,6 +71,21 @@ export const FindingsQuerySchema = z.object({
       'Invalid experience tag value',
     ),
 
+  findingType: z
+    .string()
+    .optional()
+    .transform(commaSeparatedArray)
+    .transform((val) => val?.map((item) => item.toUpperCase()))
+    .refine(
+      (val) => !val || val.every((item) => ['FINDING', 'IMPROVEMENT', 'INCIDENT'].includes(item)),
+      'Invalid finding type value',
+    ),
+
+  channel: z
+    .string()
+    .optional()
+    .transform(commaSeparatedArray),
+
   assigneeId: idSchema,
 
   projectId: idSchema,

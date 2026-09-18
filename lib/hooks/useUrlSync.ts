@@ -53,6 +53,9 @@ export function useUrlSync(): UseUrlSyncReturn {
       status: searchParams.get('status')?.split(',').filter(Boolean) ?? undefined,
       priority: searchParams.get('priority')?.split(',').filter(Boolean) ?? undefined,
       severity: searchParams.get('severity')?.split(',').filter(Boolean) ?? undefined,
+      findingType: searchParams.get('findingType')?.split(',').filter(Boolean) ?? undefined,
+      channel: searchParams.get('channel')?.split(',').filter(Boolean) ?? undefined,
+      incidenceType: searchParams.get('incidenceType')?.split(',').filter(Boolean) ?? undefined,
       assignee: searchParams.get('assignee')?.split(',').filter(Boolean) ?? undefined,
       project: searchParams.get('project')?.split(',').filter(Boolean) ?? undefined,
       // FASE 14.1.3: Validate dateType enum
@@ -79,6 +82,9 @@ export function useUrlSync(): UseUrlSyncReturn {
 
       // Advanced filters (from AdvancedFilterValues)
       if (filters.severity?.length) params.append('severity', filters.severity.join(','))
+      if (filters.findingType?.length) params.append('findingType', filters.findingType.join(','))
+      if (filters.channel?.length) params.append('channel', filters.channel.join(','))
+      if (filters.incidenceType?.length) params.append('incidenceType', filters.incidenceType.join(','))
       if (filters.assignee?.length) params.append('assignee', filters.assignee.join(','))
       if (filters.project?.length) params.append('project', filters.project.join(','))
 

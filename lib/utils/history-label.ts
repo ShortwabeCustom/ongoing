@@ -1,5 +1,11 @@
 import type { SearchHistoryEntry } from '@/lib/types/search'
-import { STATUS_LABELS_ES, PRIORITY_LABELS_ES, SEVERITY_LABELS_ES } from '@/lib/constants/finding-options'
+import {
+  STATUS_LABELS_ES,
+  PRIORITY_LABELS_ES,
+  SEVERITY_LABELS_ES,
+  FINDING_TYPE_LABELS_ES,
+  INCIDENCE_TYPE_LABELS_ES,
+} from '@/lib/constants/finding-options'
 
 interface HistoryLabelLookups {
   projectLabels?: Record<string, string>
@@ -52,6 +58,23 @@ export function buildHistoryEntryLabel(entry: HistoryLabelEntry, lookups: Histor
   if (filters.severity?.length) {
     const label = SEVERITY_LABELS_ES[filters.severity[0]] ?? filters.severity[0]
     const extra = filters.severity.length > 1 ? ` +${filters.severity.length - 1}` : ''
+    return `${label}${extra}`
+  }
+
+  if (filters.findingType?.length) {
+    const label = FINDING_TYPE_LABELS_ES[filters.findingType[0]] ?? filters.findingType[0]
+    const extra = filters.findingType.length > 1 ? ` +${filters.findingType.length - 1}` : ''
+    return `${label}${extra}`
+  }
+
+  if (filters.channel?.length) {
+    const extra = filters.channel.length > 1 ? ` +${filters.channel.length - 1}` : ''
+    return `${filters.channel[0]}${extra}`
+  }
+
+  if (filters.incidenceType?.length) {
+    const label = INCIDENCE_TYPE_LABELS_ES[filters.incidenceType[0]] ?? filters.incidenceType[0]
+    const extra = filters.incidenceType.length > 1 ? ` +${filters.incidenceType.length - 1}` : ''
     return `${label}${extra}`
   }
 

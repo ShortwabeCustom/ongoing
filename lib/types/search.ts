@@ -7,6 +7,9 @@ export interface AdvancedFilterValues {
   assignee?: string[]
   project?: string[]
   severity?: string[]
+  findingType?: string[]
+  channel?: string[]
+  incidenceType?: string[]
   dateType?: DateFilterType
   dateFrom?: string
   dateTo?: string

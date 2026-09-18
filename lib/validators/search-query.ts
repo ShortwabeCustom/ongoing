@@ -5,6 +5,9 @@ export type SearchQuery = {
   status?: string[]
   priority?: string[]
   severity?: string[]
+  findingType?: string[]
+  channel?: string[]
+  incidenceType?: string[]
   assignee?: string[]
   assigneeId?: string
   project?: string[]
@@ -57,6 +60,29 @@ export const SearchQuerySchema = z.object({
     .refine(
       (val) => !val || val.every((s) => ['COSMETIC', 'MINOR', 'MAJOR', 'BLOCKER'].includes(s)),
       'Invalid severity value',
+    ),
+
+  findingType: z
+    .string()
+    .optional()
+    .transform(commaSeparatedArray)
+    .refine(
+      (val) => !val || val.every((t) => ['FINDING', 'IMPROVEMENT', 'INCIDENT'].includes(t)),
+      'Invalid finding type value',
+    ),
+
+  channel: z
+    .string()
+    .optional()
+    .transform(commaSeparatedArray),
+
+  incidenceType: z
+    .string()
+    .optional()
+    .transform(commaSeparatedArray)
+    .refine(
+      (val) => !val || val.every((t) => ['DESIGN', 'FUNCTIONALITY', 'BUSINESS_RULE', 'COPY'].includes(t)),
+      'Invalid incidence type value',
     ),
 
   // FASE 14: Multiple assignees support (backward compatible with assigneeId)

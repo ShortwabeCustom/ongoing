@@ -5,6 +5,8 @@ import {
   type FindingPriority,
   type FindingSeverity,
   type FindingStatus,
+  type FindingType,
+  type IncidenceType,
 } from '@/lib/generated/prisma/client'
 import { getDb } from '@/lib/db-lazy'
 import { SearchQuery } from '@/lib/validators/search-query'
@@ -18,6 +20,9 @@ export interface SearchFindingItem {
   severity: string
   assigneeId?: string
   projectId: string
+  findingType?: string
+  channel?: string
+  jiraId?: string
   experienceTags?: Array<{ experienceTag: string }>
   incidenceTypes?: Array<{ incidenceType: string }>
   createdAt: string
@@ -118,6 +123,20 @@ function buildPostgresWhere(
     where.severity = { in: query.severity as FindingSeverity[] }
   }
 
+  if (query.findingType?.length) {
+    where.findingType = { in: query.findingType as FindingType[] }
+  }
+
+  if (query.channel?.length) {
+    where.channel = { in: query.channel }
+  }
+
+  if (query.incidenceType?.length) {
+    where.incidenceTypes = {
+      some: { incidenceType: { in: query.incidenceType as IncidenceType[] } },
+    }
+  }
+
   if (query.assignee?.length) {
     where.assigneeId = { in: query.assignee }
   }
@@ -173,6 +192,7 @@ function buildPostgresWhere(
       OR: [
         { observation: textFilter },
         { folio: textFilter },
+        { jiraId: textFilter },
         { previousScreen: textFilter },
         { currentScreen: textFilter },
         { flowStep: textFilter },
@@ -316,6 +336,16 @@ export class SearchService {
         query,
         accessibleProjectIds,
         'Elasticsearch disabled; using PostgreSQL fallback',
+      )
+    }
+
+    // Tipo, Canal y Categoría no existen en el índice de Elasticsearch: si se
+    // filtra por ellos, se consulta PostgreSQL para no ignorar el filtro.
+    if (query.findingType?.length || query.channel?.length || query.incidenceType?.length) {
+      return this.searchPostgres(
+        query,
+        accessibleProjectIds,
+        'Using PostgreSQL for findingType/channel/incidenceType filters',
       )
     }
 
@@ -547,6 +577,9 @@ export class SearchService {
             severity: true,
             assigneeId: true,
             projectId: true,
+            findingType: true,
+            channel: true,
+            jiraId: true,
             experienceTags: {
               select: { experienceTag: true },
             },
@@ -594,6 +627,9 @@ export class SearchService {
         severity: item.severity,
         assigneeId: item.assigneeId ?? undefined,
         projectId: item.projectId,
+        findingType: item.findingType ?? undefined,
+        channel: item.channel ?? undefined,
+        jiraId: item.jiraId ?? undefined,
         experienceTags: item.experienceTags,
         incidenceTypes: item.incidenceTypes,
         createdAt: item.createdAt.toISOString(),
