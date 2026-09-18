@@ -1,5 +1,5 @@
-const CACHE_NAME = "pruebas-maria-shell-v6";
-const ASSET_CACHE_NAME = "pruebas-maria-assets-v6";
+const CACHE_NAME = "pruebas-maria-shell-v7";
+const ASSET_CACHE_NAME = "pruebas-maria-assets-v7";
 const DB_NAME = "pruebas-maria-offline";
 const DB_VERSION = 2;
 const OFFLINE_URL = "/offline.html";
@@ -63,9 +63,16 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Solo cachear GET
+  // Autenticación: nunca pasa por el service worker. Login/logout/session deben
+  // ir directos a la red; si fallan, el navegador reporta el error real.
+  if (url.origin === self.location.origin && url.pathname.startsWith("/api/auth/")) {
+    return;
+  }
+
+  // Solo cachear GET. Si la red falla, responder con un error legible (JSON) en
+  // vez de dejar que la promesa se rechace con un "Failed to fetch" sin contexto.
   if (request.method !== "GET") {
-    event.respondWith(fetch(request));
+    event.respondWith(nonGetStrategy(request));
     return;
   }
 
@@ -158,20 +165,26 @@ async function networkFirstStrategy(request) {
   }
 }
 
+async function nonGetStrategy(request) {
+  try {
+    return await fetch(request);
+  } catch (err) {
+    return offlineResponse("No se pudo conectar con el servidor. Revisa tu conexión e inténtalo de nuevo.");
+  }
+}
+
+function offlineResponse(message) {
+  return new Response(JSON.stringify({ error: message, message, code: "OFFLINE" }), {
+    status: 503,
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
 async function apiNetworkStrategy(request) {
   try {
     return await fetchWithTimeout(request, NETWORK_TIMEOUT_MS);
   } catch (err) {
-    return new Response(
-      JSON.stringify({
-        error: "Offline - API request requires connectivity",
-        code: "OFFLINE",
-      }),
-      {
-        status: 503,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    return offlineResponse("Sin conexión: esta acción requiere conectividad.");
   }
 }
 
