@@ -1,8 +1,10 @@
 {
   "name": "paquete-compartible-pruebas-maria-2",
-  "frozenAt": "2026-08-05",
-  "observations": 176,
-  "completed": 82,
-  "pending": 94,
-  "evidenceFiles": 173
+  "frozenAt": "2026-09-18",
+  "observations": 404,
+  "completed": 150,
+  "pending": 254,
+  "evidenceFiles": 265,
+  "rounds": 17,
+  "source": "/api/public/report"
 }
