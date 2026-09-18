@@ -21,7 +21,7 @@ beforeEach(() => {
   mockUser.findMany.mockReset().mockResolvedValue([])
 })
 
-describe('getProjectStatus', () => {
+describe('getProjectStatus (público)', () => {
   it('devuelve solo los estados con hallazgos, en orden de ciclo de vida, con los conteos tal cual', async () => {
     mockProject.findMany.mockResolvedValue([{ id: 'p1', name: 'Otro proyecto', owner }])
     mockFinding.groupBy.mockResolvedValue([
@@ -30,12 +30,12 @@ describe('getProjectStatus', () => {
       { projectId: 'p1', status: 'TRIAGED', _count: { _all: 4 } },
     ])
 
-    const [item] = await getProjectStatus({ id: 'u1', role: 'OWNER' })
+    const [item] = await getProjectStatus()
 
     expect(item).toEqual({
       id: 'p1',
       name: 'Otro proyecto',
-      owner: { ...owner, photoUrl: null },
+      owner: { name: owner.name, photoUrl: null },
       uixResponsible: null,
       total: 394,
       statuses: [
@@ -50,7 +50,7 @@ describe('getProjectStatus', () => {
     mockProject.findMany.mockResolvedValue([{ id: 'p2', name: 'Vacío', owner }])
     mockFinding.groupBy.mockResolvedValue([])
 
-    const [item] = await getProjectStatus({ id: 'u1', role: 'OWNER' })
+    const [item] = await getProjectStatus()
 
     expect(item.total).toBe(0)
     expect(item.statuses).toEqual([])
@@ -60,22 +60,22 @@ describe('getProjectStatus', () => {
     mockProject.findMany.mockResolvedValue([{ id: 'p1', name: 'X', owner }])
     mockFinding.groupBy.mockResolvedValue([])
 
-    const [item] = await getProjectStatus({ id: 'u1', role: 'OWNER' })
+    const [item] = await getProjectStatus()
 
     expect(Object.keys(item).sort()).toEqual(['id', 'name', 'owner', 'statuses', 'total', 'uixResponsible'])
   })
 
-  it('excluye de la consulta los proyectos ocultos por configuración', async () => {
+  it('solo consulta los proyectos de la lista blanca (un proyecto nuevo nunca se publica solo)', async () => {
     mockProject.findMany.mockResolvedValue([])
 
-    await getProjectStatus({ id: 'u1', role: 'OWNER' })
+    await getProjectStatus()
 
     const [{ where }] = mockProject.findMany.mock.calls[0]
-    expect(where.id).toEqual({ notIn: PROJECT_STATUS_REPORT.hiddenProjectIds })
-    expect(PROJECT_STATUS_REPORT.hiddenProjectIds).toHaveLength(2)
+    expect(where).toEqual({ deletedAt: null, id: { in: PROJECT_STATUS_REPORT.visibleProjectIds } })
+    expect(PROJECT_STATUS_REPORT.visibleProjectIds).toEqual([PWA_2_0_ID])
   })
 
-  it('PWA 2.0: owner (Ilse) y responsable UIX (Jonathan, nombre completo) vienen de la configuración, con su foto, y se omite Clasificado', async () => {
+  it('PWA 2.0: owner (Ilse) y responsable UIX (Jonathan, nombre completo) con su foto, sin Clasificado', async () => {
     mockProject.findMany.mockResolvedValue([{ id: PWA_2_0_ID, name: 'PWA 2.0', owner }])
     mockUser.findMany.mockResolvedValue([ilse, jonathan])
     mockFinding.groupBy.mockResolvedValue([
@@ -85,37 +85,36 @@ describe('getProjectStatus', () => {
       { projectId: PWA_2_0_ID, status: 'CLOSED', _count: { _all: 10 } },
     ])
 
-    const [item] = await getProjectStatus({ id: 'u1', role: 'OWNER' })
+    const [item] = await getProjectStatus()
 
-    expect(item.owner).toEqual({ ...ilse, photoUrl: '/images/team/ilse-garcia.webp' })
+    expect(item.owner).toEqual({ name: 'Ilse Garcia', photoUrl: '/images/team/ilse-garcia.webp' })
     expect(item.uixResponsible).toEqual({
-      id: jonathan.id,
       name: 'Jonathan Daniel Ramos Segoviano',
       photoUrl: '/images/team/jonathan-ramos.webp',
     })
-    expect(item.uixResponsible?.id).not.toBe(item.owner.id)
     expect(item.statuses.map((s) => s.status)).toEqual(['OPEN', 'VALIDATED', 'CLOSED'])
     expect(item.total).toBe(400)
+  })
+
+  it('la respuesta pública no contiene ids ni correos de personas', async () => {
+    mockProject.findMany.mockResolvedValue([{ id: PWA_2_0_ID, name: 'PWA 2.0', owner }])
+    mockUser.findMany.mockResolvedValue([ilse, jonathan])
+    mockFinding.groupBy.mockResolvedValue([])
+
+    const json = JSON.stringify(await getProjectStatus())
+
+    for (const secret of [ilse.id, jonathan.id, owner.id, 'elektra.com.mx', 'email']) {
+      expect(json).not.toContain(secret)
+    }
   })
 
   it('si el usuario configurado no existe, cae al owner registrado y no inventa responsable UIX', async () => {
     mockProject.findMany.mockResolvedValue([{ id: PWA_2_0_ID, name: 'PWA 2.0', owner }])
     mockFinding.groupBy.mockResolvedValue([])
 
-    const [item] = await getProjectStatus({ id: 'u1', role: 'OWNER' })
+    const [item] = await getProjectStatus()
 
-    expect(item.owner).toEqual({ ...owner, photoUrl: null })
+    expect(item.owner).toEqual({ name: owner.name, photoUrl: null })
     expect(item.uixResponsible).toBeNull()
-  })
-
-  it('limita los proyectos por acceso para roles no OWNER y no consulta hallazgos si no hay proyectos', async () => {
-    mockProject.findMany.mockResolvedValue([])
-
-    const items = await getProjectStatus({ id: 'u9', role: 'QA_LEAD' })
-
-    expect(items).toEqual([])
-    expect(mockFinding.groupBy).not.toHaveBeenCalled()
-    const [{ where }] = mockProject.findMany.mock.calls[0]
-    expect(where.OR).toEqual([{ ownerId: 'u9' }, { members: { some: { userId: 'u9' } } }])
   })
 })

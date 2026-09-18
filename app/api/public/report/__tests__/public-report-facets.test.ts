@@ -6,7 +6,7 @@
  * Diseño y Copy.
  */
 
-import { describe, expect, it, vi } from 'vitest'
+import { beforeAll, describe, expect, it, vi } from 'vitest'
 
 const ROWS = [
   {
@@ -43,7 +43,11 @@ vi.mock('@/lib/db-lazy', () => ({
   }),
 }))
 
-const { GET } = await import('@/app/api/public/report/route')
+let GET: typeof import('@/app/api/public/report/route').GET
+
+beforeAll(async () => {
+  ;({ GET } = await import('@/app/api/public/report/route'))
+})
 
 describe('GET /api/public/report — campos categóricos', () => {
   it('expone categorías, tipo y canal por hallazgo, sin inventar valores para los que no tienen', async () => {

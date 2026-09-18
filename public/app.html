@@ -244,6 +244,9 @@ footer.site{padding:26px 5vw calc(30px + env(safe-area-inset-bottom));background
 .ps-d-head h3{color:#fff;margin:4px 0 0;font-size:clamp(28px,3.6vw,44px);line-height:1.02;letter-spacing:-.04em;font-weight:700;overflow-wrap:anywhere}
 .ps-cta{color:var(--ps-mint);font-size:12.5px;font-weight:600;text-decoration:none;border-bottom:1px solid rgba(123,240,177,.5);padding:2px 0;margin-top:6px}
 .ps-cta:hover{color:#fff;border-color:#fff}
+/* /findings exige sesión: el enlace solo se muestra a usuarios autenticados */
+.ps-cta{display:none}
+#site-nav[data-auth="authenticated"]~.ps .ps-cta{display:inline-block}
 .ps-d-main{display:grid;grid-template-columns:auto 1fr;gap:clamp(24px,4vw,48px);align-items:center;margin-bottom:30px}
 .ps-detail .ps-ring{width:200px;height:200px}
 .ps-detail .ps-ring-c b{font-size:46px}
@@ -387,7 +390,7 @@ footer.site{padding:26px 5vw calc(30px + env(safe-area-inset-bottom));background
 })();
 </script><section class="hero" id="portada"><span class="kicker">Decisión ejecutiva · Primero lenguaje, después sistema</span><h1>Del hallazgo<br><span>a la acción.</span></h1><p>Inventario integral de cuatro rondas de pruebas, listo para consulta y presentación sin conexión.</p></section><section class="insights" id="insights"><div class="insights-head"><div><span class="kicker">Insights · Corte consolidado</span><h2>Datos y estatus<br>de las pruebas.</h2></div><small>30 JUL — 05 AGO · 4 rondas</small></div><div class="insight-grid"><article class="insight"><strong>176</strong><b>Observaciones</b><small>Inventario integrado · 100%</small></article><article class="insight"><strong>82</strong><b>Completadas</b><small>47% del inventario</small></article><article class="insight"><strong>94</strong><b>Pendientes</b><small>53% del inventario</small></article><article class="insight"><strong>173</strong><b>Evidencias</b><small>Archivos disponibles</small></article></div></section><section class="ps" id="estado-proyectos" aria-labelledby="ps-title"><div class="ps-in"><header class="ps-head"><span class="kicker" data-reveal style="--r:0">Project Status · Registro de hallazgos</span><h2 id="ps-title" data-reveal style="--r:1">Project Status<br><span>Estado de proyectos.</span></h2><p class="ps-lede" data-reveal style="--r:2">Cada unidad es un proyecto tal como está registrado. El anillo reparte sus hallazgos por estado; lo que no existe en el registro se muestra como “No definido”.</p><small class="ps-meta" id="ps-meta" data-reveal style="--r:3"></small></header><div id="ps-root" data-state="loading" aria-busy="true"><div class="ps-note" data-reveal style="--r:3"><b>Cargando estado de proyectos…</b></div></div><p class="ps-sr" id="ps-sr" role="status"></p></div></section><script>
 /* Project Status / Estado de proyectos.
-   Fuente única: GET /api/projects/status (mismos ids que el filtro Proyecto de /findings).
+   Fuente única: GET /api/public/project-status (pública; mismos ids de proyecto que /findings?project=<id>).
    No calcula avance ni porcentajes: sólo dibuja los conteos que entrega el registro. */
 (function(){
   var section=document.getElementById('estado-proyectos');
@@ -563,7 +566,7 @@ footer.site{padding:26px 5vw calc(30px + env(safe-area-inset-bottom));background
 
   function build(items){
     state.items=items;state.byId={};items.forEach(function(it){state.byId[it.id]=it});
-    if(!items.length){note('empty','<b>Sin proyectos registrados</b><p>Todavía no hay proyectos a los que tengas acceso.</p>');return}
+    if(!items.length){note('empty','<b>Sin proyectos registrados</b><p>Todavía no hay proyectos para mostrar.</p>');return}
     root.setAttribute('data-state','ready');root.removeAttribute('aria-busy');
     root.innerHTML='<div class="ps-stage"><svg class="ps-wire" aria-hidden="true"></svg><ol class="ps-list">'+items.map(unit).join('')+'</ol><article class="ps-detail" id="ps-detail" aria-label="Detalle del proyecto seleccionado"></article></div>';
     stage=root.firstChild;wire=stage.querySelector('.ps-wire');list=stage.querySelector('.ps-list');detail=stage.querySelector('.ps-detail');
@@ -581,10 +584,8 @@ footer.site{padding:26px 5vw calc(30px + env(safe-area-inset-bottom));background
 
   function load(){
     root.setAttribute('aria-busy','true');
-    fetch('/api/projects/status',{credentials:'same-origin',cache:'no-store',headers:{Accept:'application/json'}})
+    fetch('/api/public/project-status',{credentials:'same-origin',cache:'no-store',headers:{Accept:'application/json'}})
       .then(function(res){
-        if(res.status===401)return note('anon','<b>Disponible con sesión iniciada</b><p>El estado de proyectos muestra información del registro de hallazgos. Inicia sesión para verlo.</p><a class="ps-btn" href="/login">Iniciar sesión</a>');
-        if(res.status===403)return note('forbidden','<b>Sin acceso a esta sección</b><p>Tu rol actual no puede ver el estado de proyectos.</p>');
         if(!res.ok)throw new Error(res.status);
         return res.json().then(function(data){build(Array.isArray(data&&data.items)?data.items:[])});
       })

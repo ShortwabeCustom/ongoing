@@ -1,15 +1,9 @@
 import { getDb } from '@/lib/db-lazy'
 import { FINDING_STATUS_OPTIONS, STATUS_LABELS_ES } from '@/lib/constants/finding-options'
 import { PROJECT_STATUS_REPORT } from '@/lib/config/project-status-report'
-import { projectAccessWhere } from '@/lib/services/project-service'
 
-type StatusUser = {
-  id: string
-  role?: string
-}
-
+/** Persona tal como se publica: sin ids ni correo, solo nombre y foto. */
 export type ProjectStatusPerson = {
-  id: string
   name: string
   photoUrl: string | null
 }
@@ -28,22 +22,20 @@ export type ProjectStatusItem = {
 }
 
 /**
- * Estado de proyectos para el reporte ejecutivo.
+ * Estado de proyectos para el reporte ejecutivo (PÚBLICO).
  *
  * Expone lo que existe en la base (nombre, owner, hallazgos por estado) más la
- * curación explícita de `PROJECT_STATUS_REPORT` (proyectos y estados ocultos,
- * owner / responsable UIX indicados). No calcula avance ni porcentajes.
- * El alcance respeta `projectAccessWhere`, igual que /findings.
+ * curación explícita de `PROJECT_STATUS_REPORT`: solo los proyectos de la lista
+ * blanca, con el owner / responsable UIX indicados y los estados ocultos que
+ * correspondan. No calcula avance ni porcentajes.
  */
-export async function getProjectStatus(user: StatusUser): Promise<ProjectStatusItem[]> {
+export async function getProjectStatus(): Promise<ProjectStatusItem[]> {
   const db = getDb()
-  const { hiddenProjectIds, projects: overrides, userPhotos, userDisplayNames } = PROJECT_STATUS_REPORT
+  const { visibleProjectIds, projects: overrides, userPhotos, userDisplayNames } = PROJECT_STATUS_REPORT
+  if (visibleProjectIds.length === 0) return []
 
   const projects = await db.project.findMany({
-    where: {
-      ...projectAccessWhere(user),
-      ...(hiddenProjectIds.length ? { id: { notIn: hiddenProjectIds } } : {}),
-    },
+    where: { deletedAt: null, id: { in: visibleProjectIds } },
     orderBy: { name: 'asc' },
     select: { id: true, name: true, owner: { select: { id: true, name: true } } },
   })
@@ -70,7 +62,6 @@ export async function getProjectStatus(user: StatusUser): Promise<ProjectStatusI
 
   const usersById = new Map(referencedUsers.map((referenced) => [referenced.id, referenced]))
   const person = (source: { id: string; name: string }): ProjectStatusPerson => ({
-    id: source.id,
     name: userDisplayNames[source.id] ?? source.name,
     photoUrl: userPhotos[source.id] ?? null,
   })

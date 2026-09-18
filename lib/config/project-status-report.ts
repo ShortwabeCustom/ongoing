@@ -25,17 +25,19 @@ export type ProjectReportOverride = {
 }
 
 export const PROJECT_STATUS_REPORT: {
-  /** Proyectos que, por ahora, no se muestran en el reporte. */
-  hiddenProjectIds: string[]
+  /**
+   * Únicos proyectos que se publican en el reporte (público). Es una lista blanca:
+   * un proyecto nuevo o no listado aquí nunca aparece.
+   */
+  visibleProjectIds: string[]
   projects: Record<string, ProjectReportOverride>
   /** Foto por usuario (ruta pública). */
   userPhotos: Record<string, string>
   /** Nombre a mostrar cuando difiere del registrado (p. ej. nombre completo). */
   userDisplayNames: Record<string, string>
 } = {
-  hiddenProjectIds: [
-    'cmtrt4hem0001p72sv0i63ot5', // Mi negocio
-    'cmtm2ivw70001352sy60wae64', // PWA del Asesor
+  visibleProjectIds: [
+    'cmsoc6p7l0000h1acb6i9uoyt', // PWA 2.0 (Mi negocio y PWA del Asesor quedan fuera, por ahora)
   ],
   projects: {
     // PWA 2.0
