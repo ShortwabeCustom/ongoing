@@ -22,12 +22,37 @@ export type ProjectStatusItem = {
 }
 
 /**
+ * Clave estable (solo A-Z, 0-9 y _) para un estatus del archivo fuente: "On hold" -> "ON_HOLD".
+ * El navegador la usa para elegir el color de la leyenda.
+ */
+export function sourceStatusKey(label: string): string {
+  const key = label
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase()
+    .replace(/[^A-Z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+  return key || 'SIN_ESTATUS'
+}
+
+/** Estatus del archivo fuente: primero los del orden configurado, luego el resto alfabéticamente. */
+function orderSourceStatuses<T extends { label: string }>(items: T[], order: string[] = []): T[] {
+  const rank = (label: string) => {
+    const index = order.findIndex((known) => known.toLowerCase() === label.toLowerCase())
+    return index === -1 ? order.length : index
+  }
+  return [...items].sort((a, b) => rank(a.label) - rank(b.label) || a.label.localeCompare(b.label, 'es'))
+}
+
+/**
  * Estado de proyectos para el reporte ejecutivo (PÚBLICO).
  *
  * Expone lo que existe en la base (nombre, owner, hallazgos por estado) más la
  * curación explícita de `PROJECT_STATUS_REPORT`: solo los proyectos de la lista
- * blanca, con el owner / responsable UIX indicados y los estados ocultos que
- * correspondan. No calcula avance ni porcentajes.
+ * blanca, en el orden configurado, con el owner / responsable UIX indicados y los
+ * estados ocultos que correspondan. Un proyecto puede mostrar los estatus literales
+ * de su archivo fuente (`sourceStatus`) en lugar del estado del sistema.
+ * No calcula avance ni porcentajes.
  */
 export async function getProjectStatus(): Promise<ProjectStatusItem[]> {
   const db = getDb()
@@ -36,10 +61,12 @@ export async function getProjectStatus(): Promise<ProjectStatusItem[]> {
 
   const projects = await db.project.findMany({
     where: { deletedAt: null, id: { in: visibleProjectIds } },
-    orderBy: { name: 'asc' },
     select: { id: true, name: true, owner: { select: { id: true, name: true } } },
   })
   if (projects.length === 0) return []
+  // Orden de presentación = orden de la lista blanca (no alfabético)
+  projects.sort((a, b) => visibleProjectIds.indexOf(a.id) - visibleProjectIds.indexOf(b.id))
+  const usesSource = (projectId: string) => overrides[projectId]?.statusSource === 'source'
 
   const referencedUserIds = [
     ...new Set(
@@ -49,12 +76,23 @@ export async function getProjectStatus(): Promise<ProjectStatusItem[]> {
       }),
     ),
   ]
-  const [grouped, referencedUsers] = await Promise.all([
-    db.finding.groupBy({
-      by: ['projectId', 'status'],
-      where: { deletedAt: null, projectId: { in: projects.map((project) => project.id) } },
-      _count: { _all: true },
-    }),
+  const workflowIds = projects.filter((project) => !usesSource(project.id)).map((project) => project.id)
+  const sourceIds = projects.filter((project) => usesSource(project.id)).map((project) => project.id)
+  const [grouped, groupedSource, referencedUsers] = await Promise.all([
+    workflowIds.length
+      ? db.finding.groupBy({
+          by: ['projectId', 'status'],
+          where: { deletedAt: null, projectId: { in: workflowIds } },
+          _count: { _all: true },
+        })
+      : Promise.resolve([]),
+    sourceIds.length
+      ? db.finding.groupBy({
+          by: ['projectId', 'sourceStatus'],
+          where: { deletedAt: null, projectId: { in: sourceIds }, sourceStatus: { not: null } },
+          _count: { _all: true },
+        })
+      : Promise.resolve([]),
     referencedUserIds.length
       ? db.user.findMany({ where: { id: { in: referencedUserIds }, deletedAt: null }, select: { id: true, name: true } })
       : Promise.resolve([] as Array<{ id: string; name: string }>),
@@ -73,13 +111,29 @@ export async function getProjectStatus(): Promise<ProjectStatusItem[]> {
     countsByProject.set(row.projectId, counts)
   }
 
+  const sourceCountsByProject = new Map<string, Array<{ label: string; count: number }>>()
+  for (const row of groupedSource) {
+    if (!row.sourceStatus) continue
+    const list = sourceCountsByProject.get(row.projectId) ?? []
+    list.push({ label: row.sourceStatus, count: row._count._all })
+    sourceCountsByProject.set(row.projectId, list)
+  }
+
   return projects.map((project) => {
     const override = overrides[project.id]
     const counts = countsByProject.get(project.id) ?? new Map<string, number>()
     const hidden = new Set<string>(override?.hiddenStatuses ?? [])
-    const statuses = FINDING_STATUS_OPTIONS.filter((status) => !hidden.has(status) && (counts.get(status) ?? 0) > 0).map(
-      (status) => ({ status, label: STATUS_LABELS_ES[status] ?? status, count: counts.get(status) ?? 0 }),
-    )
+    const statuses = usesSource(project.id)
+      ? orderSourceStatuses(sourceCountsByProject.get(project.id) ?? [], override?.sourceStatusOrder).map((item) => ({
+          status: sourceStatusKey(item.label),
+          label: item.label,
+          count: item.count,
+        }))
+      : FINDING_STATUS_OPTIONS.filter((status) => !hidden.has(status) && (counts.get(status) ?? 0) > 0).map((status) => ({
+          status,
+          label: STATUS_LABELS_ES[status] ?? status,
+          count: counts.get(status) ?? 0,
+        }))
 
     // Si el usuario indicado no existe, se cae al registro: nunca se inventa una persona.
     const owner = usersById.get(override?.ownerUserId ?? '') ?? project.owner

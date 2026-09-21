@@ -217,6 +217,7 @@ model Finding {
   // Import Tracking
   sourceSheet  String?
   sourceRow    Int?
+  sourceStatus String?  // Estatus tal como viene en el archivo fuente (listado ONGOING: On hold, Refinamiento, Liberado, Cancelado). `status` es la traducción al flujo del sistema y pierde matices.
   sourceFingerprint String? @unique
   importBatchId String?
   importBatch  ImportBatch? @relation(fields: [importBatchId], references: [id], onDelete: SetNull)

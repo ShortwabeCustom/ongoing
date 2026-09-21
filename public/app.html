@@ -176,7 +176,10 @@ footer.site{padding:26px 5vw calc(30px + env(safe-area-inset-bottom));background
 .ps-meta{display:block;margin-top:18px;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--ps-undef)}
 
 /* Color por estado (presentación; los estados y sus etiquetas vienen del registro) */
+:where(.seg,.ps-bar i,.ps-legend li){--c:#c9d6cf}
 .st-OPEN{--c:#f6c65b}.st-TRIAGED{--c:#8cc8ff}.st-IN_PROGRESS{--c:#b9a6ff}.st-READY_FOR_VALIDATION{--c:#5fd8d0}.st-VALIDATED{--c:#7bf0b1}.st-CLOSED{--c:#dbe5df}.st-BLOCKED{--c:#ff8a72}.st-REOPENED{--c:#ff9fc0}
+/* Estatus literales del archivo fuente (listado ONGOING) */
+.st-ON_HOLD{--c:#f6c65b}.st-REFINAMIENTO{--c:#8cc8ff}.st-LIBERADO{--c:#7bf0b1}.st-CANCELADO{--c:#ff8a72}
 
 /* Entrada: sólo se oculta si JS está activo (mejora progresiva) */
 .ps.ps-js [data-reveal]{opacity:0;transform:translateY(16px);transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:calc(var(--r,0)*110ms)}
@@ -565,7 +568,7 @@ footer.site{padding:26px 5vw calc(30px + env(safe-area-inset-bottom));background
     root.setAttribute('data-state','ready');root.removeAttribute('aria-busy');
     root.innerHTML='<div class="ps-stage"><svg class="ps-wire" aria-hidden="true"></svg><ol class="ps-list">'+items.map(unit).join('')+'</ol><article class="ps-detail" id="ps-detail" aria-label="Detalle del proyecto seleccionado"></article></div>';
     stage=root.firstChild;wire=stage.querySelector('.ps-wire');list=stage.querySelector('.ps-list');detail=stage.querySelector('.ps-detail');
-    if(meta)meta.textContent=plural(items.length,'proyecto','proyectos')+(items.length>1?' · Orden alfabético':'');
+    if(meta)meta.textContent=plural(items.length,'proyecto','proyectos');
     bind();
     if(state.live)start();
   }
