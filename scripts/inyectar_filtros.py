@@ -89,20 +89,20 @@ h = h.replace("/* ---- Logo en el header ---- */", css + "/* ---- Logo en el hea
 
 # ------------------------------------------------------------------ 3. markup
 opciones_ronda = "".join(
-    f'<option value="{s}">{etiqueta} ({stats_r[s]})</option>' for _, s, etiqueta in RONDAS
+    f'<option value="{s}">{etiqueta}</option>' for _, s, etiqueta in RONDAS
 )
 
 filtros = (
     '<div class="filters">'
     '<div class="field"><label for="f-status">Estatus</label>'
     '<select id="f-status">'
-    f'<option value="">Todos ({n})</option>'
-    f'<option value="completado">Completado ({stats_s["completado"]})</option>'
-    f'<option value="pendiente">Pendiente ({stats_s["pendiente"]})</option>'
+    '<option value="">Todos</option>'
+    '<option value="completado">Completado</option>'
+    '<option value="pendiente">Pendiente</option>'
     "</select></div>"
     '<div class="field"><label for="f-ronda">Ronda de pruebas</label>'
     '<select id="f-ronda">'
-    f'<option value="">Todas las rondas ({n})</option>'
+    '<option value="">Todas las rondas</option>'
     f"{opciones_ronda}"
     "</select></div>"
     '<button id="reset" type="button">Limpiar filtros</button>'
