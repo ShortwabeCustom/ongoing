@@ -52,7 +52,7 @@ export const PROJECT_STATUS_REPORT: {
     cmsoc6p7l0000h1acb6i9uoyt: {
       ownerUserId: ILSE_GARCIA,
       uixResponsibleUserId: JONATHAN_RAMOS,
-      hiddenStatuses: ['TRIAGED'], // "Clasificado"
+      hiddenStatuses: ['TRIAGED', 'CLOSED'], // "Clasificado" y "Cerrado" quedan fuera del gráfico y del total.
     },
     // PWA 1.0: mismos responsables; estados = los del Excel del listado ONGOING
     cmublhk9x0000ck2s3hcvcdim: {

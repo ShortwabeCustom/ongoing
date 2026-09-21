@@ -75,14 +75,14 @@ describe('getProjectStatus (público)', () => {
     expect(PROJECT_STATUS_REPORT.visibleProjectIds).toEqual([PWA_2_0_ID, PWA_1_0_ID])
   })
 
-  it('PWA 2.0: owner (Ilse) y responsable UIX (Jonathan, nombre completo) con su foto, sin Clasificado', async () => {
+  it('PWA 2.0: owner (Ilse) y responsable UIX (Jonathan, nombre completo) con su foto, sin Clasificado ni Cerrado', async () => {
     mockProject.findMany.mockResolvedValue([{ id: PWA_2_0_ID, name: 'PWA 2.0', owner }])
     mockUser.findMany.mockResolvedValue([ilse, jonathan])
     mockFinding.groupBy.mockResolvedValue([
-      { projectId: PWA_2_0_ID, status: 'OPEN', _count: { _all: 250 } },
+      { projectId: PWA_2_0_ID, status: 'OPEN', _count: { _all: 105 } },
       { projectId: PWA_2_0_ID, status: 'TRIAGED', _count: { _all: 4 } },
       { projectId: PWA_2_0_ID, status: 'VALIDATED', _count: { _all: 140 } },
-      { projectId: PWA_2_0_ID, status: 'CLOSED', _count: { _all: 10 } },
+      { projectId: PWA_2_0_ID, status: 'CLOSED', _count: { _all: 1 } },
     ])
 
     const [item] = await getProjectStatus()
@@ -92,8 +92,11 @@ describe('getProjectStatus (público)', () => {
       name: 'Jonathan Daniel Ramos Segoviano',
       photoUrl: '/images/team/jonathan-ramos.webp',
     })
-    expect(item.statuses.map((s) => s.status)).toEqual(['OPEN', 'VALIDATED', 'CLOSED'])
-    expect(item.total).toBe(400)
+    expect(item.statuses).toEqual([
+      { status: 'OPEN', label: 'Abierto', count: 105 },
+      { status: 'VALIDATED', label: 'Validado', count: 140 },
+    ])
+    expect(item.total).toBe(245)
   })
 
   it('la respuesta pública no contiene ids ni correos de personas', async () => {
