@@ -9,6 +9,7 @@
 
 - Escritorio: `/tmp/pwa2-report-desktop.png` (1440 × 1481 px; sección completa, CSS viewport 1440 px, device scale factor 1).
 - Móvil: `/tmp/pwa2-report-mobile.png` (390 × 1437 px; sección completa, device scale factor 1).
+- Acceso anónimo con CTA público: /tmp/pwa2-report-anonymous-cta.png (1440 × 1481 px; sección completa, device scale factor 1).
 - Comparación normalizada: `/tmp/pwa2-report-comparison.png` (1800 × 980 px). Ambos lados se normalizaron a cajas de 900 × 926 px con `contain`.
 
 **State**
@@ -35,7 +36,8 @@ No fue necesaria una segunda región recortada: la comparación normalizada cons
 
 **Comparison history**
 
-- Iteración 1: sin hallazgos P0/P1/P2. No se requirieron correcciones posteriores.
+- Iteración 1: sin hallazgos P0/P1/P2 en la tarjeta enfocada.
+- Iteración 2: se detectó que el CTA dependía de autenticación y apuntaba a una ruta privada. Se hizo visible para usuarios anónimos y se dirigió a #hallazgos, la lista pública de la misma página. La captura posterior confirma el CTA visible, el salto al destino y 0 errores de consola.
 
 **Implementation Checklist**
 
@@ -45,6 +47,7 @@ No fue necesaria una segunda región recortada: la comparación normalizada cons
 - [x] Verificar cifras, responsables y estados con la API.
 - [x] Comprobar escritorio y móvil.
 - [x] Comprobar ausencia de errores de consola.
+- [x] Verificar que el CTA sea visible y navegable sin sesión.
 
 **Follow-up Polish**
 

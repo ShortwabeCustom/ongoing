@@ -248,11 +248,9 @@ footer.site{padding:26px 5vw calc(30px + env(safe-area-inset-bottom));background
 @keyframes psIn{from{opacity:0;transform:translateY(8px)}}
 .ps-d-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap;margin-bottom:28px}
 .ps-d-head h3{color:#fff;margin:4px 0 0;font-size:clamp(44px,6vw,76px);line-height:.96;letter-spacing:-.05em;font-weight:700;overflow-wrap:anywhere}
-.ps-cta{color:var(--ps-mint);font-size:12.5px;font-weight:600;text-decoration:none;border-bottom:1px solid rgba(123,240,177,.5);padding:2px 0;margin-top:6px}
+.ps-cta{display:inline-block;color:var(--ps-mint);font-size:12.5px;font-weight:600;text-decoration:none;border-bottom:1px solid rgba(123,240,177,.5);padding:2px 0;margin-top:6px}
 .ps-cta:hover{color:#fff;border-color:#fff}
-/* /findings exige sesión: el enlace solo se muestra a usuarios autenticados */
-.ps-cta{display:none}
-#site-nav[data-auth="authenticated"]~.ps .ps-cta{display:inline-block}
+/* El inventario de esta misma página es público y usa solo la API pública. */
 .ps-d-main{display:grid;grid-template-columns:minmax(260px,360px) minmax(0,1fr);gap:clamp(42px,7vw,96px);align-items:center;margin:clamp(30px,4vw,52px) 0 clamp(44px,6vw,72px)}
 .ps-detail .ps-ring{width:clamp(250px,27vw,340px);height:clamp(250px,27vw,340px)}
 .ps-detail .ps-ring-c b{font-size:clamp(58px,6vw,78px)}
@@ -456,7 +454,7 @@ footer.site{padding:26px 5vw calc(30px + env(safe-area-inset-bottom));background
       ?'<div class="ps-node ps-node--uix"><small>Responsable UIX</small><div class="ps-who">'+avatar(ux)+'<span>'+esc(ux.name)+'</span></div></div><i class="ps-link" aria-hidden="true"></i>'
       :'<div class="ps-node ps-node--undef"><small>Responsable UIX</small><b>No definido</b></div><i class="ps-link ps-link--undef" aria-hidden="true"></i>';
     return '<div class="ps-body">'
-      +'<div class="ps-d-head"><div><span class="kicker">Proyecto '+pad(index+1)+'</span><h3>'+esc(item.name)+'</h3></div><a class="ps-cta" href="/findings?project='+encodeURIComponent(item.id)+'">Ver hallazgos de este proyecto →</a></div>'
+      +'<div class="ps-d-head"><div><span class="kicker">Proyecto '+pad(index+1)+'</span><h3>'+esc(item.name)+'</h3></div><a class="ps-cta" href="#hallazgos">Ver hallazgos de este proyecto →</a></div>'
       +'<div class="ps-d-main">'+ring(item,true)+main+'</div>'
       +'<h4 class="ps-chain-t">UIX ↔ Proyecto ↔ Negocio</h4>'
       +'<div class="ps-chain">'
