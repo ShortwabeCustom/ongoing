@@ -6,6 +6,8 @@ import { isLegacyStorageKey, LEGACY_STORAGE_KEY_PREFIX } from '@/lib/storage/sto
 
 export const revalidate = 180 // 3 minutes ISR cache
 
+const PUBLIC_REPORT_PROJECT_ID = 'cmsoc6p7l0000h1acb6i9uoyt'
+
 /**
  * Definición única de "públicamente renderizable" (ADR-001 D8.1 + D12). La
  * lista y `evidenceCount` DEBEN aplicar exactamente esta regla, sin
@@ -38,18 +40,22 @@ export async function GET() {
   try {
     const db = getDb()
 
-    // Fetch all data in parallel
+    // Fetch PWA 2.0 data in parallel
     const [total, completed, pending, evidenceCount, sessions, findings] = await Promise.all([
-      db.finding.count({ where: { deletedAt: null } }),
-      db.finding.count({ where: { deletedAt: null, status: { in: ['VALIDATED', 'CLOSED'] } } }),
-      db.finding.count({ where: { deletedAt: null, status: { in: ['OPEN', 'TRIAGED', 'IN_PROGRESS', 'READY_FOR_VALIDATION', 'BLOCKED', 'REOPENED'] } } }),
-      db.evidence.count({ where: { ...PUBLICLY_RENDERABLE_EVIDENCE, finding: { deletedAt: null } } }),
+      db.finding.count({ where: { deletedAt: null, projectId: PUBLIC_REPORT_PROJECT_ID } }),
+      db.finding.count({ where: { deletedAt: null, projectId: PUBLIC_REPORT_PROJECT_ID, status: { in: ['VALIDATED', 'CLOSED'] } } }),
+      db.finding.count({ where: { deletedAt: null, projectId: PUBLIC_REPORT_PROJECT_ID, status: { in: ['OPEN', 'TRIAGED', 'IN_PROGRESS', 'READY_FOR_VALIDATION', 'BLOCKED', 'REOPENED'] } } }),
+      db.evidence.count({ where: { ...PUBLICLY_RENDERABLE_EVIDENCE, finding: { deletedAt: null, projectId: PUBLIC_REPORT_PROJECT_ID } } }),
       db.testSession.findMany({
+        where: {
+          projectId: PUBLIC_REPORT_PROJECT_ID,
+          findings: { some: { deletedAt: null } },
+        },
         select: { id: true, name: true, date: true, _count: { select: { findings: { where: { deletedAt: null } } } } },
         orderBy: { date: 'asc' },
       }),
       db.finding.findMany({
-        where: { deletedAt: null },
+        where: { deletedAt: null, projectId: PUBLIC_REPORT_PROJECT_ID },
         select: {
           id: true,
           observation: true,

@@ -11,7 +11,7 @@ vi.mock('@/lib/db-lazy', () => ({
 }))
 
 const owner = { id: 'u1', name: 'Alexis Valdez Cortez' }
-const [PWA_2_0_ID, PWA_1_0_ID] = PROJECT_STATUS_REPORT.visibleProjectIds
+const [PWA_2_0_ID] = PROJECT_STATUS_REPORT.visibleProjectIds
 const ilse = { id: PROJECT_STATUS_REPORT.projects[PWA_2_0_ID].ownerUserId!, name: 'Ilse Garcia' }
 const jonathan = { id: PROJECT_STATUS_REPORT.projects[PWA_2_0_ID].uixResponsibleUserId!, name: 'Jonathan Ramos' }
 
@@ -72,7 +72,7 @@ describe('getProjectStatus (público)', () => {
 
     const [{ where }] = mockProject.findMany.mock.calls[0]
     expect(where).toEqual({ deletedAt: null, id: { in: PROJECT_STATUS_REPORT.visibleProjectIds } })
-    expect(PROJECT_STATUS_REPORT.visibleProjectIds).toEqual([PWA_2_0_ID, PWA_1_0_ID])
+    expect(PROJECT_STATUS_REPORT.visibleProjectIds).toEqual([PWA_2_0_ID])
   })
 
   it('PWA 2.0: owner (Ilse) y responsable UIX (Jonathan, nombre completo) con su foto, sin Clasificado ni Cerrado', async () => {
@@ -111,65 +111,6 @@ describe('getProjectStatus (público)', () => {
     }
   })
 
-  it('PWA 1.0 muestra los estatus literales del Excel, en el orden configurado, con los mismos responsables', async () => {
-    mockProject.findMany.mockResolvedValue([{ id: PWA_1_0_ID, name: 'PWA 1.0', owner }])
-    mockUser.findMany.mockResolvedValue([ilse, jonathan])
-    mockFinding.groupBy.mockImplementation(async (args: { by: string[] }) =>
-      args.by.includes('sourceStatus')
-        ? [
-            { projectId: PWA_1_0_ID, sourceStatus: 'Cancelado', _count: { _all: 5 } },
-            { projectId: PWA_1_0_ID, sourceStatus: 'On hold', _count: { _all: 145 } },
-            { projectId: PWA_1_0_ID, sourceStatus: 'Liberado', _count: { _all: 4 } },
-            { projectId: PWA_1_0_ID, sourceStatus: 'Refinamiento', _count: { _all: 1 } },
-          ]
-        : [],
-    )
-
-    const [item] = await getProjectStatus()
-
-    expect(item.statuses).toEqual([
-      { status: 'ON_HOLD', label: 'On hold', count: 145 },
-      { status: 'REFINAMIENTO', label: 'Refinamiento', count: 1 },
-      { status: 'LIBERADO', label: 'Liberado', count: 4 },
-      { status: 'CANCELADO', label: 'Cancelado', count: 5 },
-    ])
-    expect(item.total).toBe(155)
-    expect(item.owner.name).toBe('Ilse Garcia')
-    expect(item.uixResponsible?.name).toBe('Jonathan Daniel Ramos Segoviano')
-    // Un proyecto con estatus fuente no consulta el estado del sistema, y los NULL no se cuentan
-    const calls = mockFinding.groupBy.mock.calls.map(([a]) => a)
-    expect(calls).toHaveLength(1)
-    expect(calls[0].where.sourceStatus).toEqual({ not: null })
-  })
-
-  it('estatus fuente fuera del orden configurado van después, alfabéticamente (no se ocultan ni se renombran)', async () => {
-    mockProject.findMany.mockResolvedValue([{ id: PWA_1_0_ID, name: 'PWA 1.0', owner }])
-    mockFinding.groupBy.mockImplementation(async (args: { by: string[] }) =>
-      args.by.includes('sourceStatus')
-        ? [
-            { projectId: PWA_1_0_ID, sourceStatus: 'Zeta', _count: { _all: 1 } },
-            { projectId: PWA_1_0_ID, sourceStatus: 'liberado', _count: { _all: 2 } },
-            { projectId: PWA_1_0_ID, sourceStatus: 'Alfa', _count: { _all: 3 } },
-          ]
-        : [],
-    )
-
-    const [item] = await getProjectStatus()
-
-    expect(item.statuses.map((s) => s.label)).toEqual(['liberado', 'Alfa', 'Zeta'])
-  })
-
-  it('presenta los proyectos en el orden de la lista blanca, no en el que devuelve la base ni alfabético', async () => {
-    mockProject.findMany.mockResolvedValue([
-      { id: PWA_1_0_ID, name: 'PWA 1.0', owner },
-      { id: PWA_2_0_ID, name: 'PWA 2.0', owner },
-    ])
-    mockFinding.groupBy.mockResolvedValue([])
-
-    const items = await getProjectStatus()
-
-    expect(items.map((i) => i.name)).toEqual(['PWA 2.0', 'PWA 1.0'])
-  })
 
   it('sourceStatusKey genera claves estables para el color de la leyenda', () => {
     expect(sourceStatusKey('On hold')).toBe('ON_HOLD')

@@ -88,7 +88,7 @@ describe('regla única de renderizabilidad pública (D8.1 + D12)', () => {
       url: { not: null },
       NOT: { url: '' },
       OR: [{ storageKey: { startsWith: LEGACY_STORAGE_KEY_PREFIX } }, { visibility: 'PUBLIC_REPORT' }],
-      finding: { deletedAt: null },
+      finding: { deletedAt: null, projectId: 'cmsoc6p7l0000h1acb6i9uoyt' },
     })
 
     // La lista es la MISMA regla; la query padre (`db.finding.findMany`) ya
@@ -121,12 +121,18 @@ describe('regla única de renderizabilidad pública (D8.1 + D12)', () => {
 
   it('la query padre de findings ya restringe a findings activos', async () => {
     await GET()
-    expect((calls.findingFindMany[0] as any).where).toMatchObject({ deletedAt: null })
+    expect((calls.findingFindMany[0] as any).where).toMatchObject({
+      deletedAt: null,
+      projectId: 'cmsoc6p7l0000h1acb6i9uoyt',
+    })
   })
 
   it('el contador exige explícitamente finding activo (no depende de una query padre)', async () => {
     await GET()
-    expect(countWhere().finding).toEqual({ deletedAt: null })
+    expect(countWhere().finding).toEqual({
+      deletedAt: null,
+      projectId: 'cmsoc6p7l0000h1acb6i9uoyt',
+    })
   })
 
   it('selecciona storageKey y visibility solo para la defensa en profundidad, no para exponerlos', async () => {

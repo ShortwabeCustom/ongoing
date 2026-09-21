@@ -44,8 +44,7 @@ export const PROJECT_STATUS_REPORT: {
   userDisplayNames: Record<string, string>
 } = {
   visibleProjectIds: [
-    'cmsoc6p7l0000h1acb6i9uoyt', // 01 · PWA 2.0 (Mi negocio y PWA del Asesor quedan fuera, por ahora)
-    'cmublhk9x0000ck2s3hcvcdim', // 02 · PWA 1.0 (listado ONGOING; se creó el 2026-09-21)
+    'cmsoc6p7l0000h1acb6i9uoyt', // PWA 2.0
   ],
   projects: {
     // PWA 2.0
@@ -53,13 +52,6 @@ export const PROJECT_STATUS_REPORT: {
       ownerUserId: ILSE_GARCIA,
       uixResponsibleUserId: JONATHAN_RAMOS,
       hiddenStatuses: ['TRIAGED', 'CLOSED'], // "Clasificado" y "Cerrado" quedan fuera del gráfico y del total.
-    },
-    // PWA 1.0: mismos responsables; estados = los del Excel del listado ONGOING
-    cmublhk9x0000ck2s3hcvcdim: {
-      ownerUserId: ILSE_GARCIA,
-      uixResponsibleUserId: JONATHAN_RAMOS,
-      statusSource: 'source',
-      sourceStatusOrder: ['On hold', 'Refinamiento', 'Liberado', 'Cancelado'],
     },
   },
   userPhotos: {
