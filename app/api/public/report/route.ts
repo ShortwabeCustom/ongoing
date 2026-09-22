@@ -143,6 +143,7 @@ export async function GET() {
         findingType: finding.findingType,
         channel,
         roundId: finding.testSessionId,
+        projectId: PUBLIC_REPORT_PROJECT_ID,
         metaLine,
         evidence: evidenceList,
       }
@@ -158,7 +159,12 @@ export async function GET() {
         evidenceCount,
       },
       rounds,
-      facets: buildReportFacets(findingsList),
+      facets: {
+        ...buildReportFacets(findingsList),
+        projects: [
+          { value: PUBLIC_REPORT_PROJECT_ID, label: 'PWA 2.0', count: total },
+        ],
+      },
       findings: findingsList,
     }
 

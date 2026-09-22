@@ -1,4 +1,4 @@
-const CACHE_NAME = "pruebas-maria-shell-v9";
+const CACHE_NAME = "pruebas-maria-shell-v10";
 const ASSET_CACHE_NAME = "pruebas-maria-assets-v7";
 const DB_NAME = "pruebas-maria-offline";
 const DB_VERSION = 2;
