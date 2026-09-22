@@ -2049,7 +2049,8 @@ function initFindingsFilters(){
 
   if('serviceWorker' in navigator){
     window.addEventListener('load',function(){
-      navigator.serviceWorker.register('/sw.js',{scope:'/'}).then(function(reg){
+      navigator.serviceWorker.register('/sw.js',{scope:'/',updateViaCache:'none'}).then(function(reg){
+        reg.update().catch(function(){});
         console.log('[v0] service worker listo:',reg.scope);
         reg.addEventListener('updatefound',function(){
           var sw=reg.installing;
