@@ -150,6 +150,32 @@ body.evidence-viewer-open{overflow:hidden}
 @media print{#evidence-viewer{display:none!important}}
 
 section[id],details{scroll-margin-top:76px}
+/* ---- Barra de filtros integral del reporte público ---- */
+.report-filters{max-width:1200px;margin:0 auto 22px;display:grid;gap:12px}
+.report-filter-search{display:flex;align-items:center;gap:10px}
+.report-filter-search input{width:100%;min-height:48px;border:1px solid #9fb3a7;border-radius:12px;background:#fff;color:var(--d);font:500 14px Poppins,Arial,sans-serif;padding:12px 16px}
+.report-filter-search input:focus-visible,.report-filter-bar button:focus-visible,.report-filter-bar select:focus-visible{outline:2px solid var(--g);outline-offset:2px}
+.report-filter-bar{display:flex;align-items:flex-end;gap:9px;flex-wrap:wrap}
+.report-filter-bar .field{min-width:138px;flex:1 1 138px}
+.report-filter-bar .field select{width:100%}
+.report-filter-bar button,.report-view-select{min-height:44px;border:1px solid #9fb3a7;border-radius:12px;background:#fff;color:var(--d);font:600 11px Poppins,Arial,sans-serif;padding:10px 14px;cursor:pointer}
+.report-filter-bar button[aria-pressed="true"],.report-filter-bar button[aria-expanded="true"]{border-color:var(--g);background:#e6f7ed;color:#052b20}
+.report-filter-bar button:disabled{opacity:.45;cursor:default}
+.report-more{display:grid;grid-template-columns:repeat(2,minmax(160px,240px));gap:10px;padding:14px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.72)}
+.report-more[hidden]{display:none}
+.report-filter-footer{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.report-filter-footer .count{margin-left:auto;font-size:11px;color:#4b5f56;white-space:nowrap}
+.report-filter-footer .count b{color:var(--d);font-size:14px}
+.active-report-filters{display:flex;gap:7px;flex-wrap:wrap;min-height:28px}
+.active-report-filters:empty{display:none}
+.active-report-filters button{min-height:28px;border:1px solid #b9cbc0;border-radius:999px;background:#fff;color:#315047;padding:5px 10px;font:600 10px Poppins,Arial,sans-serif;cursor:pointer}
+.active-report-filters button:hover{border-color:var(--g);background:#edf8f1}
+.active-report-filters button::after{content:' ×';font-size:13px}
+.report-filter-hint{margin:0;color:#65766e;font-size:11px}
+@media(max-width:700px){
+  .report-filter-search{display:block}.report-filter-bar{display:grid;grid-template-columns:1fr 1fr}.report-filter-bar .field{width:auto;min-width:0}.report-filter-bar .quick-wide{grid-column:1/-1}.report-more{grid-template-columns:1fr}.report-filter-footer .count{width:100%;margin-left:0}.report-filter-bar button{width:100%}
+}
+@media print{.report-filters{display:none!important}}
 /* ---- Documentos incluidos ---- */
 .docs{padding:80px 5vw 100px;background:#071f18;color:#fff;padding-left:max(5vw,env(safe-area-inset-left));padding-right:max(5vw,env(safe-area-inset-right))}
 .docs-in{max-width:1200px;margin:auto}
@@ -1918,7 +1944,8 @@ function initFindingsFilters(){
   document.getElementById('expand').onclick=function(){visibles().forEach(function(d){d.open=true})};
   document.getElementById('collapse').onclick=function(){visibles().forEach(function(d){d.open=false})};
 }(function(){function escAttr(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}function renderFacets(facets){[['f-project','Todos los proyectos',facets&&facets.projects],['f-cat','Todas',facets&&facets.categories],['f-tipo','Todos',facets&&facets.types],['f-canal','Todos',facets&&facets.channels]].forEach(function(cfg){var sel=document.getElementById(cfg[0]);if(!sel)return;var field=sel.closest('.field'),opts=cfg[2]||[];if(!opts.length){field.hidden=false;sel.disabled=true;sel.innerHTML='<option value="">Sin datos registrados</option>';return}field.hidden=false;sel.disabled=false;sel.innerHTML='<option value="">'+cfg[1]+'</option>'+opts.map(function(o){return'<option value="'+escAttr(o.value)+'">'+escAttr(o.label)+'</option>'}).join('');field.hidden=false})}function renderReport(data){if(!data||!data.stats||!data.findings)return false;const{stats:stats,rounds:rounds,findings:findings}=data;const insightGridEl=document.querySelector('.insight-grid');if(insightGridEl){insightGridEl.innerHTML=`\n        <article class="insight"><strong>${stats.observations}</strong><b>Observaciones</b><small>Inventario integrado · 100%</small></article>\n        <article class="insight"><strong>${stats.completed}</strong><b>Completadas</b><small>${stats.completedPercent}% del inventario</small></article>\n        <article class="insight"><strong>${stats.pending}</strong><b>Pendientes</b><small>${stats.pendingPercent}% del inventario</small></article>\n        <article class="insight"><strong>${stats.evidenceCount}</strong><b>Evidencias</b><small>Archivos disponibles</small></article>\n      `;}const insightsHeadSmall=document.querySelector('.insights-head small');if(insightsHeadSmall&&rounds.length>0){const firstRound=rounds[0];const lastRound=rounds[rounds.length-1];const dateRange=firstRound.label+(rounds.length>1?' — '+lastRound.label:'');insightsHeadSmall.textContent=`${dateRange} · ${rounds.length} ronda${rounds.length!==1?'s':''}`;}const frondaSelect=document.getElementById('f-ronda');if(frondaSelect){let options=`<option value="">Todas las rondas</option>`;rounds.forEach((r)=>{options+=`<option value="${r.id}">${r.label}</option>`;});frondaSelect.innerHTML=options;}const fstatusSelect=document.getElementById('f-status');if(fstatusSelect){fstatusSelect.innerHTML=`\n        <option value="">Todos</option>\n        <option value="completado">Completado</option>\n        <option value="pendiente">Pendiente</option>\n      `;}renderFacets(data.facets);const listEl=document.querySelector('.list');if(listEl){const findingsHtml=findings.map((f)=>{const chipsHtml=f.tags.map(tag=>{const chipClass=tag==='Diseño'?'tag-d':'tag-c';return`<i class="tag ${chipClass}">${tag}</i>`;}).join('');const statusClass=f.status==='completado'?'done':'pending';const statusText=f.status==='completado'?'Completado':'Pendiente';const evidenceHtml=f.evidence.length>0?`<div class="evidence">${f.evidence.map((ev,idx)=>`<a href="${ev.url}"><img loading="lazy" decoding="async" src="${ev.url}" alt="Evidencia ${idx+1}"><span>${ev.filename}</span></a>`).join('')}</div>`:'';return`<details data-status="${f.status}" data-ronda="${f.roundId}" data-cat="${escAttr((f.categories||[]).join(' '))}" data-tipo="${escAttr(f.findingType||'')}" data-canal="${escAttr(f.channel||'')}" data-project="${escAttr(f.projectId||'')}">\n  <summary><b>${f.number}</b><span>${f.title}</span><span class="chips">${chipsHtml}<i class="${statusClass}">${statusText}</i></span></summary>\n  <div class="detail"><small>${f.metaLine}</small>\n  ${evidenceHtml}</div>\n</details>`;}).join('');listEl.innerHTML=findingsHtml;}const shownEl=document.getElementById('shown');if(shownEl){shownEl.textContent=stats.observations;const countParent=shownEl.closest('.count');if(countParent){countParent.innerHTML=`<b id="shown">${stats.observations}</b> de ${stats.observations} hallazgos`;}}return true;}function init(){fetch('/api/public/report',{cache:'default'}).then(res=>res.ok?res.json():Promise.reject(new Error(res.statusText))).then(data=>{if(renderReport(data)){initFindingsFilters();}else{initFindingsFilters();}}).catch(error=>{console.warn('[PUBLIC REPORT] Fetch/render failed, using static data:',error);initFindingsFilters();});}if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}})();
-</script><section class="docs" id="documentos"><div class="docs-in">
+</script><script src="/report-filters.js"></script>
+<section class="docs" id="documentos"><div class="docs-in">
 <span class="kicker">Documentos incluidos</span>
 <h2>Archivos de consulta.</h2>
 <div class="docs-grid">

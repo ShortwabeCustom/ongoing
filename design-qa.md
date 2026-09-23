@@ -53,4 +53,30 @@ No fue necesaria una segunda región recortada: la comparación normalizada cons
 
 Sin pendientes.
 
-final result: passed
+## Iteración actual — barra integral de filtros
+
+**Source visual truth path**
+
+- Capturas adjuntas por el usuario: barra original de “Hallazgos y evidencia” y barra integral de filtros de UIX.
+
+**Implementation screenshot path**
+
+- No disponible para esta iteración: el navegador visual no está expuesto en el entorno actual.
+
+**Viewport and normalization**
+
+- Objetivo: escritorio ancho de las capturas de referencia y adaptación móvil bajo 700 px.
+- Origen: 2456 × 468 px y 2412 × 310 px antes del redimensionado del chat.
+- CSS viewport, deviceScaleFactor y normalización de la implementación: no capturables en este entorno.
+
+**Full-view and focused comparison evidence**
+
+- Bloqueada: falta una captura renderizada actual de la barra y de su estado “Más filtros” abierto.
+
+**Findings**
+
+- [P2] No se pudo confirmar visualmente densidad, wrapping ni alineación de la barra nueva contra las capturas. La sintaxis, el build, 33 pruebas del reporte y el reflow CSS sí fueron validados.
+
+**Comparison history**
+
+- Iteración de filtros 1: implementación funcional completada; comparación visual bloqueada por falta de navegador.

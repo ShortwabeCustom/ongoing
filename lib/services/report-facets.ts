@@ -2,22 +2,36 @@ import {
   CHANNEL_OPTIONS,
   FINDING_TYPE_LABELS_ES,
   FINDING_TYPE_OPTIONS,
+  FINDING_PRIORITY_OPTIONS,
+  FINDING_SEVERITY_OPTIONS,
+  FINDING_STATUS_OPTIONS,
   INCIDENCE_TYPE_LABELS_ES,
   INCIDENCE_TYPE_OPTIONS,
+  PRIORITY_LABELS_ES,
+  SEVERITY_LABELS_ES,
+  STATUS_LABELS_ES,
 } from '@/lib/constants/finding-options'
 
 export type ReportFacetOption = { value: string; label: string; count: number }
 
 export type ReportFacets = {
+  statuses: ReportFacetOption[]
+  priorities: ReportFacetOption[]
+  severities: ReportFacetOption[]
   categories: ReportFacetOption[]
   types: ReportFacetOption[]
   channels: ReportFacetOption[]
+  assignment: ReportFacetOption[]
 }
 
 export type ReportFacetInput = {
   categories: string[]
   findingType: string | null
   channel: string | null
+  workflowStatus?: string | null
+  priority?: string | null
+  severity?: string | null
+  assignmentState?: 'assigned' | 'unassigned'
 }
 
 /** Categorías conocidas del hallazgo, sin duplicados y en el orden del catálogo. */
@@ -41,12 +55,20 @@ export function buildReportFacets(findings: ReportFacetInput[]): ReportFacets {
   const categoryCounts = new Map<string, number>()
   const typeCounts = new Map<string, number>()
   const channelCounts = new Map<string, number>()
+  const statusCounts = new Map<string, number>()
+  const priorityCounts = new Map<string, number>()
+  const severityCounts = new Map<string, number>()
+  const assignmentCounts = new Map<string, number>()
   const bump = (map: Map<string, number>, key: string) => map.set(key, (map.get(key) ?? 0) + 1)
 
   for (const finding of findings) {
     finding.categories.forEach((category) => bump(categoryCounts, category))
     if (finding.findingType) bump(typeCounts, finding.findingType)
     if (finding.channel) bump(channelCounts, finding.channel)
+    if (finding.workflowStatus) bump(statusCounts, finding.workflowStatus)
+    if (finding.priority) bump(priorityCounts, finding.priority)
+    if (finding.severity) bump(severityCounts, finding.severity)
+    if (finding.assignmentState) bump(assignmentCounts, finding.assignmentState)
   }
 
   const known = (order: readonly string[], counts: Map<string, number>, labels: Record<string, string>) =>
@@ -60,6 +82,9 @@ export function buildReportFacets(findings: ReportFacetInput[]): ReportFacets {
     .sort((a, b) => a.localeCompare(b, 'es'))
 
   return {
+    statuses: known(FINDING_STATUS_OPTIONS, statusCounts, STATUS_LABELS_ES),
+    priorities: known(FINDING_PRIORITY_OPTIONS, priorityCounts, PRIORITY_LABELS_ES),
+    severities: known(FINDING_SEVERITY_OPTIONS, severityCounts, SEVERITY_LABELS_ES),
     categories: known(INCIDENCE_TYPE_OPTIONS, categoryCounts, INCIDENCE_TYPE_LABELS_ES),
     types: known(FINDING_TYPE_OPTIONS, typeCounts, FINDING_TYPE_LABELS_ES),
     channels: [...knownChannels, ...otherChannels].map((channel) => ({
@@ -67,5 +92,9 @@ export function buildReportFacets(findings: ReportFacetInput[]): ReportFacets {
       label: channel,
       count: channelCounts.get(channel) ?? 0,
     })),
+    assignment: [
+      { value: 'assigned', label: 'Con responsable', count: assignmentCounts.get('assigned') ?? 0 },
+      { value: 'unassigned', label: 'Sin responsable', count: assignmentCounts.get('unassigned') ?? 0 },
+    ].filter((item) => item.count > 0),
   }
 }

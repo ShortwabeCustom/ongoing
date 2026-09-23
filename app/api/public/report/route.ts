@@ -7,6 +7,8 @@ import { isLegacyStorageKey, LEGACY_STORAGE_KEY_PREFIX } from '@/lib/storage/sto
 export const revalidate = 180 // 3 minutes ISR cache
 
 const PUBLIC_REPORT_PROJECT_ID = 'cmsoc6p7l0000h1acb6i9uoyt'
+const REPORT_TIMEZONE = 'America/Mexico_City'
+const REPORT_DATE_FORMATTER = new Intl.DateTimeFormat('en-CA', { timeZone: REPORT_TIMEZONE })
 
 /**
  * Definición única de "públicamente renderizable" (ADR-001 D8.1 + D12). La
@@ -60,9 +62,13 @@ export async function GET() {
           id: true,
           observation: true,
           status: true,
+          priority: true,
+          severity: true,
           sourceRow: true,
+          createdAt: true,
           testSessionId: true,
           testSession: { select: { name: true } },
+          assigneeId: true,
           findingType: true,
           channel: true,
           incidenceTypes: { select: { incidenceType: true } },
@@ -88,12 +94,15 @@ export async function GET() {
     }))
 
     // Build findings array with proper structure
+    const today = REPORT_DATE_FORMATTER.format(new Date())
     const findingsList = findings.map((finding, index) => {
       // Sequential display number (1-padded to 3 digits)
       const number = String(index + 1).padStart(3, '0')
 
       // Map status to display value
       const statusDisplay = ['VALIDATED', 'CLOSED'].includes(finding.status) ? 'completado' : 'pendiente'
+      const createdToday = finding.createdAt instanceof Date && REPORT_DATE_FORMATTER.format(finding.createdAt) === today
+      const assignmentState = finding.assigneeId ? 'assigned' as const : 'unassigned' as const
 
       // Get incidence types and map to chip labels
       const chips = finding.incidenceTypes
@@ -138,6 +147,11 @@ export async function GET() {
         number,
         title: finding.observation,
         status: statusDisplay,
+        workflowStatus: finding.status,
+        priority: finding.priority ?? null,
+        severity: finding.severity ?? null,
+        assignmentState,
+        createdToday,
         tags: orderedChips,
         categories,
         findingType: finding.findingType,
@@ -146,6 +160,7 @@ export async function GET() {
         projectId: PUBLIC_REPORT_PROJECT_ID,
         metaLine,
         evidence: evidenceList,
+        hasEvidence: evidenceList.length > 0,
       }
     })
 

@@ -28,7 +28,15 @@ describe('report facets', () => {
   it('no crea opciones para valores que no existen', () => {
     const facets = buildReportFacets([{ categories: [], findingType: null, channel: null }])
 
-    expect(facets).toEqual({ categories: [], types: [], channels: [] })
+    expect(facets).toEqual({
+      statuses: [],
+      priorities: [],
+      severities: [],
+      categories: [],
+      types: [],
+      channels: [],
+      assignment: [],
+    })
   })
 
   it('canales fuera del catálogo se conservan tal cual, después de los conocidos', () => {
@@ -53,5 +61,23 @@ describe('report facets', () => {
     expect(normalizeChannel('  BAZ ')).toBe('BAZ')
     expect(normalizeChannel('   ')).toBeNull()
     expect(normalizeChannel(null)).toBeNull()
+  })
+
+  it('ordena estado, prioridad y severidad, y cuenta la asignación sin exponer nombres', () => {
+    const facets = buildReportFacets([
+      {
+        categories: [], findingType: null, channel: null, workflowStatus: 'CLOSED',
+        priority: 'HIGH', severity: 'BLOCKER', assignmentState: 'assigned',
+      },
+      {
+        categories: [], findingType: null, channel: null, workflowStatus: 'OPEN',
+        priority: 'LOW', severity: 'MINOR', assignmentState: 'unassigned',
+      },
+    ])
+
+    expect(facets.statuses.map((item) => item.value)).toEqual(['OPEN', 'CLOSED'])
+    expect(facets.priorities.map((item) => item.value)).toEqual(['LOW', 'HIGH'])
+    expect(facets.severities.map((item) => item.value)).toEqual(['MINOR', 'BLOCKER'])
+    expect(facets.assignment.map((item) => item.label)).toEqual(['Con responsable', 'Sin responsable'])
   })
 })
