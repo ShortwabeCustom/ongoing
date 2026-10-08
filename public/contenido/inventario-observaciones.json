@@ -1,11 +1,13 @@
 [
   {
     "id": 2,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 2,
     "observation": "Punto final en el segundo slide",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -19,12 +21,14 @@
     ]
   },
   {
-    "id": 27,
+    "id": 23,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 3,
     "observation": "Degadadado de fondo: background: var(--Color-Fill-Gradient-Button, linear-gradient(92deg, var(--Semantic-Colors-Fill-Button-Button-Gradient-Strong, #10553D) 3.93%, var(--Semantic-Colors-Fill-Button-Button-Gradient-Light, #14875A) 98.12%));",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -36,12 +40,14 @@
     ]
   },
   {
-    "id": 49,
+    "id": 39,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 4,
     "observation": "Mantener la proporción entre REMS",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -53,12 +59,14 @@
     ]
   },
   {
-    "id": 71,
+    "id": 54,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 5,
     "observation": "La tipografía de las categorías se muestra en 14 pt y debe de estár en 16 pts",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -70,12 +78,14 @@
     ]
   },
   {
-    "id": 91,
+    "id": 67,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 6,
     "observation": "Paddings entre categorías debe de ser de 16 px y agregar shadows",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -87,12 +97,14 @@
     ]
   },
   {
-    "id": 109,
+    "id": 77,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 7,
     "observation": "La imagen está en una proporción de 40x40px",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -104,12 +116,14 @@
     ]
   },
   {
-    "id": 126,
+    "id": 86,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 8,
     "observation": "La profundidad de la caja de subcategoría esta en 80 px y la tenemos en 68 px",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -123,12 +137,14 @@
     ]
   },
   {
-    "id": 141,
+    "id": 93,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 9,
     "observation": "Se repite la categoría de \"Efectivo\" se debe de ocultar",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -136,12 +152,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 156,
+    "id": 100,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 10,
     "observation": "Darle un salto de parrafo a la dirección",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -153,12 +171,14 @@
     ]
   },
   {
-    "id": 169,
+    "id": 106,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 11,
     "observation": "La URL debe quedar del mismo tono de la tipografía",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -170,12 +190,14 @@
     ]
   },
   {
-    "id": 182,
+    "id": 112,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 12,
     "observation": "\"Ver información legal\" debe ir en tipografía regular, sin el subrayado y la palabra \"Legal\" va en minúscula",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -187,12 +209,14 @@
     ]
   },
   {
-    "id": 193,
+    "id": 117,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 13,
     "observation": "\"Crédito sujeto aprobación\" no va subrayado",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -206,12 +230,14 @@
     ]
   },
   {
-    "id": 203,
+    "id": 121,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 14,
     "observation": "Se va a cambiar la tipografía de títulos y subtítulos por Sora y Satoshi",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -219,12 +245,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 213,
+    "id": 125,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 15,
     "observation": "Agregar el padding entre \"Lo soñaste\" y \"Ahora cuéntanos...\" de 12 px",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -236,12 +264,14 @@
     ]
   },
   {
-    "id": 222,
+    "id": 129,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 16,
     "observation": "Ahora cuéntanos, ¿cuánto dinero necesitas? el \"cuánto\" va en minúsculas",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -253,12 +283,14 @@
     ]
   },
   {
-    "id": 231,
+    "id": 133,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 17,
     "observation": "Mascará en el blur del button sheet logo de Banco Azteca - semanalidades (estilo general)",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -272,12 +304,14 @@
     ]
   },
   {
-    "id": 239,
+    "id": 137,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 18,
     "observation": "Tipografía del catalogo de semanalidades",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -285,12 +319,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 247,
+    "id": 141,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 19,
     "observation": "Ordenar las semanas de mayor a menor, de 128 semanas a 4 semanas",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -302,12 +338,14 @@
     ]
   },
   {
-    "id": 254,
+    "id": 144,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 20,
     "observation": "Revisar el padding del selector de semanalidad debe de estár en 12 px",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -319,12 +357,14 @@
     ]
   },
   {
-    "id": 260,
+    "id": 146,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 21,
     "observation": "Tipografía del título debe de estár en 24 px en Sora",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -336,12 +376,14 @@
     ]
   },
   {
-    "id": 265,
+    "id": 148,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 22,
     "observation": "Ajusar el tamaño de 48 px a 54 px en la cifra del cotizador",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -353,12 +395,14 @@
     ]
   },
   {
-    "id": 270,
+    "id": 150,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 23,
     "observation": "Agregar el punto final a \"Ingresa los datos para iniciar tu solicitud.\"",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -372,12 +416,14 @@
     ]
   },
   {
-    "id": 275,
+    "id": 152,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 24,
     "observation": "Gap entre título y subtítulo de 12 px",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -385,12 +431,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 279,
+    "id": 154,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 25,
     "observation": "Cambiar el hexadecimal del verde en los avisos legales por #106949",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -404,12 +452,14 @@
     ]
   },
   {
-    "id": 282,
+    "id": 156,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 26,
     "observation": "Labels quedan como Body2 en Satoshi",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -417,12 +467,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 285,
+    "id": 158,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 27,
     "observation": "Input Body1 en Satoshi",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -434,12 +486,14 @@
     ]
   },
   {
-    "id": 288,
+    "id": 160,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 28,
     "observation": "Los errores no llevan punto final",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -453,12 +507,14 @@
     ]
   },
   {
-    "id": 291,
+    "id": 162,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 29,
     "observation": "Se omite el autocomplete del la pantalla de nickname",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -474,12 +530,14 @@
     ]
   },
   {
-    "id": 294,
+    "id": 164,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 30,
     "observation": "Falta agregar la URL de Información laboral y separar el texto",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -487,12 +545,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 297,
+    "id": 166,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 31,
     "observation": "Ajustar el icono del lapiz",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -504,12 +564,14 @@
     ]
   },
   {
-    "id": 300,
+    "id": 168,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 32,
     "observation": "Revisar paddings y gaps en figma tenemos 32px. Revisar la funcionalidad para que el keyboard \"suba\" y se vean los números que ingresa al usuario del OTP",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -521,12 +583,14 @@
     ]
   },
   {
-    "id": 303,
+    "id": 170,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 33,
     "observation": "Agregar el stroke de 1px",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -538,12 +602,14 @@
     ]
   },
   {
-    "id": 306,
+    "id": 172,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 34,
     "observation": "Revisar los paddigns de los inputs (estilo general)",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -557,12 +623,14 @@
     ]
   },
   {
-    "id": 309,
+    "id": 174,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 35,
     "observation": "Revisar el estilo de la tipografía en el número telefonico en figma la tenemos en H3 (24/30)",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -570,12 +638,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 312,
+    "id": 176,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 36,
     "observation": "Revisar la validación cuando un numero telefonico es editado, no esta haciendo la redirección de mensaje SMS al nuevo número ingresado",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -587,12 +657,14 @@
     ]
   },
   {
-    "id": 315,
+    "id": 178,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 37,
     "observation": "agregar el Swipe-to-Dismiss del bottom sheet",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -604,12 +676,14 @@
     ]
   },
   {
-    "id": 318,
+    "id": 180,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 38,
     "observation": "Revisar el peso de la tipografía del CTA esta en 700 y debe ser 500 (cambio general)",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -621,12 +695,14 @@
     ]
   },
   {
-    "id": 321,
+    "id": 182,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 39,
     "observation": "Revisar escenario de numero de intentos para que redirija a la pantalla correcta y no al error general",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -634,12 +710,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 324,
+    "id": 184,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 40,
     "observation": "Dejar las imagenes en un tamaño estandar de 250x250px y generar un tamaño proporcional para responsive. Crear un contenedor con padding de 16px por lado",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -653,12 +731,14 @@
     ]
   },
   {
-    "id": 327,
+    "id": 186,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 41,
     "observation": "El componente de radio button queda sin fondo y se va a crear una variante de este componente para tener con y sin background",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -672,12 +752,14 @@
     ]
   },
   {
-    "id": 330,
+    "id": 188,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 42,
     "observation": "Centrar el text label del input, también aplica en el escenario de error",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -689,12 +771,14 @@
     ]
   },
   {
-    "id": 332,
+    "id": 190,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 43,
     "observation": "El placeholder debe ser una cifra númerica como en el figma tenemos \"123456789\"",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -706,12 +790,14 @@
     ]
   },
   {
-    "id": 334,
+    "id": 192,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 44,
     "observation": "Revisar la validación en el escenario cuando un usuario regresa al input de número de empleado. Verificar que se vuelva a validar y el CTA quede deshabilitado",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -723,12 +809,14 @@
     ]
   },
   {
-    "id": 336,
+    "id": 194,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 45,
     "observation": "Ajustar el tamaño del icono a 24 px",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -740,12 +828,14 @@
     ]
   },
   {
-    "id": 338,
+    "id": 196,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 46,
     "observation": "Ajustar el bullet al top (ajuste general)",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -757,12 +847,14 @@
     ]
   },
   {
-    "id": 340,
+    "id": 198,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 47,
     "observation": "Se quita el scroll de la card y se ajusta el contenido al contenedor. Solo queda un scroll general",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -774,12 +866,14 @@
     ]
   },
   {
-    "id": 342,
+    "id": 200,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 48,
     "observation": "Quitar la s a \"gorras\" dejarlo en singular",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -791,12 +885,14 @@
     ]
   },
   {
-    "id": 344,
+    "id": 202,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 49,
     "observation": "Ajustar el corner radius de la card a 24px",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -808,12 +904,14 @@
     ]
   },
   {
-    "id": 346,
+    "id": 204,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 50,
     "observation": "Se elimina el pading entre la card y la imagen solo queda el padding del contenedor de la imagen",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -825,12 +923,14 @@
     ]
   },
   {
-    "id": 348,
+    "id": 206,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 51,
     "observation": "Cambiar el estilo de la tipografía del loader, debe ser Diaplay 48/59",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -842,12 +942,14 @@
     ]
   },
   {
-    "id": 350,
+    "id": 208,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 52,
     "observation": "Cambiar el peso de la tipo 500",
-    "status": "Pendiente",
+    "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -861,12 +963,14 @@
     ]
   },
   {
-    "id": 352,
+    "id": 210,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 53,
     "observation": "Agregar la línea antes del signo de interrogación",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -878,12 +982,14 @@
     ]
   },
   {
-    "id": 353,
+    "id": 211,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 54,
     "observation": "Agregar el copy de la justificación de la respuesta de la trivia",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -891,12 +997,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 354,
+    "id": 212,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 55,
     "observation": "Capitalizar los textos para que los nombres queden siempre en mayúsculas y minúsculas",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -908,12 +1016,14 @@
     ]
   },
   {
-    "id": 355,
+    "id": 213,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 56,
     "observation": "\"Edítala\" falta acento en la í",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -925,12 +1035,14 @@
     ]
   },
   {
-    "id": 356,
+    "id": 214,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 57,
     "observation": "Eliminar stroke y agregar sombreado en la card de domicilio, revisar el color de los textos y capitalizar los nombres",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -942,12 +1054,14 @@
     ]
   },
   {
-    "id": 357,
+    "id": 215,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 58,
     "observation": "En la card de edición debe respetarse el diseño de en cuanto a la caja del container con fondo blanco, los inputs deben de estár prellenados con la información del usuarios",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -959,12 +1073,14 @@
     ]
   },
   {
-    "id": 358,
+    "id": 216,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 59,
     "observation": "Cambiar por componente correcto - Solo ajustar la alineación a la izquierda, la tipografía y el color del label",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -976,12 +1092,14 @@
     ]
   },
   {
-    "id": 359,
+    "id": 217,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 60,
     "observation": "Revisar el estilo del button sheet, revisar paddigs, estilo de la tipografía del título  \"Selecciona un estado civil\" y agregar en todos el drag handle",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -993,12 +1111,14 @@
     ]
   },
   {
-    "id": 360,
+    "id": 218,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 61,
     "observation": "El CTA debe de permanecer deshabilitado hasta que el usuario seleccione la opción",
-    "status": "Pendiente",
+    "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1010,12 +1130,14 @@
     ]
   },
   {
-    "id": 361,
+    "id": 219,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 62,
     "observation": "Revisar paddings de este componente",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1027,12 +1149,14 @@
     ]
   },
   {
-    "id": 362,
+    "id": 220,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 63,
     "observation": "Revisar el estilo del button sheet, revisar paddigs, estilo de la tipografía del título \"Selecciona una ocupación\" y agregar en todos el drag handle",
-    "status": "Pendiente",
+    "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1044,12 +1168,14 @@
     ]
   },
   {
-    "id": 363,
+    "id": 221,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 64,
     "observation": "El CTA debe de permanecer deshabilitado hasta que el usuario seleccione la opción",
-    "status": "Pendiente",
+    "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1063,12 +1189,14 @@
     ]
   },
   {
-    "id": 364,
+    "id": 222,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 65,
     "observation": "Ordenar alfabeticamente todos los catálogos (cambio general). Validar si va con back o frontend",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1076,12 +1204,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 365,
+    "id": 223,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 66,
     "observation": "Ajustar tipografía que debe ser Display 48/59 y verifacir padding entre logo y texto",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1095,12 +1225,14 @@
     ]
   },
   {
-    "id": 366,
+    "id": 224,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 68,
     "observation": "Ajustar el stepper al ancho del contenedor y revisar sombra",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1114,12 +1246,14 @@
     ]
   },
   {
-    "id": 367,
+    "id": 225,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 69,
     "observation": "Capitalizar nombre del usuario",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1133,12 +1267,14 @@
     ]
   },
   {
-    "id": 368,
+    "id": 226,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 70,
     "observation": "Ajustar el estilo del radio button con el circulo al centro blanco. Se ajusta por componente correcto",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1146,12 +1282,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 369,
+    "id": 227,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 71,
     "observation": "Ajuste general de inputs, peso y tipografía",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1163,12 +1301,14 @@
     ]
   },
   {
-    "id": 370,
+    "id": 228,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 72,
     "observation": "Agregar \"opcional\" en el número interior",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1180,12 +1320,14 @@
     ]
   },
   {
-    "id": 371,
+    "id": 229,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 73,
     "observation": "Ajustar validación de datos incompletos en pantalla",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1197,12 +1339,14 @@
     ]
   },
   {
-    "id": 372,
+    "id": 230,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 74,
     "observation": "Ajustar stepper al ancho del contenedor, capitalizar el nombre del usuario",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1214,12 +1358,14 @@
     ]
   },
   {
-    "id": 373,
+    "id": 231,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 75,
     "observation": "Dejar el stepper en el ajustado al contenedor.\nTítulo ajustado al contenedor.\nRevisar el estilo de la animación de instrucciones.\nRevisar el mapa porque el API no está actualizada.",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1233,12 +1379,14 @@
     ]
   },
   {
-    "id": 374,
+    "id": 232,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 76,
     "observation": "Dejar el stepper en el ajustado al contenedor.\nTítulo ajustado al contenedor.\nSubtítulo ajustado al contenedor.\nAgregar el button sheet como contenedor para los CTA, sin interacción",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1246,12 +1394,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 375,
+    "id": 233,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 77,
     "observation": "Banner content con el color de la segmentación",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1267,12 +1417,14 @@
     ]
   },
   {
-    "id": 376,
+    "id": 234,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 78,
     "observation": "Revisar el tamaño de la imagen de ofertas para tomar de referencia 250px",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1280,12 +1432,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 377,
+    "id": 235,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 79,
     "observation": "Ajustar le padding entre \"¡Tú decides cómo usarlo!\" y entre el \"O llévate:\" y el carrusel son 16px",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1299,12 +1453,14 @@
     ]
   },
   {
-    "id": 378,
+    "id": 236,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 80,
     "observation": "El carrusel debe abarcar todo el espacio a la derecha y ajustar el stroke de acuerdo al canal  y ocultar los dont´s",
-    "status": "Pendiente",
+    "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1312,12 +1468,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 379,
+    "id": 237,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 81,
     "observation": "Cambiar la fuente y el peso de *Sujeto a aprobación",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1329,12 +1487,14 @@
     ]
   },
   {
-    "id": 380,
+    "id": 238,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 82,
     "observation": "Ajuste de H2 general, bullets alineados al top, tomar la medida de 250px de base para los dispospositivos más grandes",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1346,12 +1506,14 @@
     ]
   },
   {
-    "id": 381,
+    "id": 239,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 83,
     "observation": "El tamaño del logo queda en 50px de profundidad",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1363,12 +1525,14 @@
     ]
   },
   {
-    "id": 382,
+    "id": 240,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 84,
     "observation": "Centrar el chip del día \"Domingo\"",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1380,12 +1544,14 @@
     ]
   },
   {
-    "id": 383,
+    "id": 241,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 85,
     "observation": "Falta la sombra en todos los chips no seleccionados y el stroke en el activo",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1397,12 +1563,14 @@
     ]
   },
   {
-    "id": 384,
+    "id": 242,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 86,
     "observation": "La url a donde nos debe dirigir es: Pendiente\nY pintar el punto final en verde",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1414,12 +1582,14 @@
     ]
   },
   {
-    "id": 385,
+    "id": 243,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 87,
     "observation": "Ajustar el tamaño de la tipografía a 11pts, en el design system tenemos un atributo específico",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1433,12 +1603,14 @@
     ]
   },
   {
-    "id": 386,
+    "id": 244,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 88,
     "observation": "Ajustar contenido de la card al 50% y que el margen entre el chip y el texto \"Al continuar, aceptas el Contrato de préstamo.\" quede automatico y proporcional de acuerdo al dispositivo",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1450,12 +1622,14 @@
     ]
   },
   {
-    "id": 387,
+    "id": 245,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 89,
     "observation": "Revisar si las chips pueden adaptarse proporcionalmente al dispositivo, solo respetando el padding entre ellas",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1463,12 +1637,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 388,
+    "id": 246,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 90,
     "observation": "Ajustar contenido de la card al 50%, revisar tipografías y estilos, agregar la sombra de las chips cuando están en default",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1480,12 +1656,14 @@
     ]
   },
   {
-    "id": 389,
+    "id": 247,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 91,
     "observation": "Cambiar la tipografía por el estilo correcto, cambiar el icono del calendario por el reloj de figma y verificar que el verde del fondo sea el hexadecimal #E3EDEA y el stroke #14875A",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1497,12 +1675,14 @@
     ]
   },
   {
-    "id": 390,
+    "id": 248,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 92,
     "observation": "El CTA debe decir \"Confirmar\"",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1514,12 +1694,14 @@
     ]
   },
   {
-    "id": 391,
+    "id": 249,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 93,
     "observation": "En el estado de active cuando se selecciona el día, agregar un padding para que no se corte la sombra de la selección, y verificar el color del stroke debe ser #14875A",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1531,12 +1713,14 @@
     ]
   },
   {
-    "id": 392,
+    "id": 250,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 94,
     "observation": "En el estado de active cuando se selecciona la hora agregar el stroke #14875A",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1548,12 +1732,14 @@
     ]
   },
   {
-    "id": 393,
+    "id": 251,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 95,
     "observation": "Revisar si las chips pueden adaptarse proporcionalmente al dispositivo, solo respetando el padding entre ellas",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1565,12 +1751,14 @@
     ]
   },
   {
-    "id": 394,
+    "id": 252,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 96,
-    "observation": "Revisar la linea del header entre el logo y el título\nAgregrar el formato de a.m. o p.m. de acuerdo a la hora agendada \nRevisar el hexadecimal del color verde que debe ser #106949\nPadding entre título y bullets debe de ser 24 px, quitar el margen extra del contenedor de los bullets",
+    "observation": "Revisar la linea del header entre el logo y el título\nAgregrar el formato de a.m. o p.m. de acuerdo a la hora agendada\nRevisar el hexadecimal del color verde que debe ser #106949\nPadding entre título y bullets debe de ser 24 px, quitar el margen extra del contenedor de los bullets",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1584,12 +1772,14 @@
     ]
   },
   {
-    "id": 395,
+    "id": 253,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 97,
     "observation": "Cambiar el icono",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1601,12 +1791,14 @@
     ]
   },
   {
-    "id": 396,
+    "id": 254,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 98,
     "observation": "La variable de tiempo sobre la duración de la vista cambia de acuerdo al perfil de cliente: 15 minutos clientes verdes, 30 minutos clientes amarillos y 35 minutos clientes rojos",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1618,12 +1810,14 @@
     ]
   },
   {
-    "id": 397,
+    "id": 255,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 99,
     "observation": "Revisar los estilos del título y subtítulo\nQuitar los signos de exclamación del título\nRevisar la tipografía del CTA de whatsapp\nAgregar la gradiente dentro del CTA de whatsapp",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1635,12 +1829,14 @@
     ]
   },
   {
-    "id": 398,
+    "id": 256,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 100,
     "observation": "Agregar la línea del color del canal en la card del carrusel y ocultar los dont´s",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1652,12 +1848,14 @@
     ]
   },
   {
-    "id": 399,
+    "id": 257,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 101,
     "observation": "Agregar la URL al sitio de Banco Azteca",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1669,12 +1867,14 @@
     ]
   },
   {
-    "id": 400,
+    "id": 258,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 102,
     "observation": "Eliminar el padding que tenemos en el componente del CTA de \"Responder\"",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1686,12 +1886,14 @@
     ]
   },
   {
-    "id": 401,
+    "id": 259,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 103,
     "observation": "Cambiar el input por textarea de la pregunta",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1703,12 +1905,14 @@
     ]
   },
   {
-    "id": 402,
+    "id": 260,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 104,
     "observation": "Agregar la regla de al menos 3 caracteres para poder actrivar el CTA",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1720,12 +1924,14 @@
     ]
   },
   {
-    "id": 403,
+    "id": 261,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 105,
     "observation": "Revisar las fuentes tipografías\nRevisar el padding entre el Buscador y el subtítulo\nRevisar el padding ente el mapa y Buscador\nRevisar el tema del pin de BAZ en el mapa\nFalta el título de \"Elegir sucursal\"\nDejar en altas y bajas el nombre de la sucursal y la dirección\nQuitar los decimales de la unidad de KM\nAgregar el CTA dentro de la card blanca de sucursal\nEliminar el textlink de \"No encuentro mi domicilio\"",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1737,12 +1943,14 @@
     ]
   },
   {
-    "id": 404,
+    "id": 262,
+    "project": "PWA 2.0",
     "round": "Pruebas 30 de julio",
     "roundOrder": 1,
     "sourceRow": 106,
     "observation": "Ajuste de copy en la pantalla de salida para \"Busqueda de sucursal\"",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1755,11 +1963,13 @@
   },
   {
     "id": 1,
+    "project": "PWA 2.0",
     "round": "Mod 31 Jul",
     "roundOrder": 2,
     "sourceRow": 2,
     "observation": "Se reemplazó la promesa de tiempo por un beneficio real del flujo. El nuevo mensaje prepara al usuario para personalizar su préstamo (monto y plazo), generando expectativas alineadas con los siguientes pasos de la experiencia.",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1773,12 +1983,14 @@
     ]
   },
   {
-    "id": 26,
+    "id": 22,
+    "project": "PWA 2.0",
     "round": "Mod 31 Jul",
     "roundOrder": 2,
     "sourceRow": 3,
     "observation": "Hogar:\nEngloba mejor esta y otras subcategorías. Con este ajuste la nomenclatura queda más clara, escalable y consistente.\n\nCambio de imagenes en iconos",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1792,12 +2004,14 @@
     ]
   },
   {
-    "id": 48,
+    "id": 38,
+    "project": "PWA 2.0",
     "round": "Mod 31 Jul",
     "roundOrder": 2,
     "sourceRow": 4,
     "observation": "\"Hagámoslo posible\" funciona tanto para: una moto; una emergencia; un negocio; pagar una deuda; comprar un refrigerador. Es una consecuencia natural de la pantalla anterior.",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1811,12 +2025,14 @@
     ]
   },
   {
-    "id": 70,
+    "id": 53,
+    "project": "PWA 2.0",
     "round": "Mod 31 Jul",
     "roundOrder": 2,
     "sourceRow": 5,
-    "observation": "Se adaptó el subhead más orientado al tono y voz de la OU, este nuevo texto: \n- Reconoce que el usuario ya avanzó.\n- Reduce la carga del formulario.\n- No dice que la solicitud \"empieza.",
+    "observation": "Se adaptó el subhead más orientado al tono y voz de la OU, este nuevo texto:\n- Reconoce que el usuario ya avanzó.\n- Reduce la carga del formulario.\n- No dice que la solicitud \"empieza.",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1830,12 +2046,14 @@
     ]
   },
   {
-    "id": 90,
+    "id": 66,
+    "project": "PWA 2.0",
     "round": "Mod 31 Jul",
     "roundOrder": 2,
     "sourceRow": 6,
     "observation": "Se eliminó \"Tómate tu tiempo\" por no aportar a la tarea principal. El nuevo copy prioriza una instrucción clara y reduce la carga cognitiva.",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1849,12 +2067,14 @@
     ]
   },
   {
-    "id": 108,
+    "id": 76,
+    "project": "PWA 2.0",
     "round": "Mod 31 Jul",
     "roundOrder": 2,
     "sourceRow": 7,
     "observation": "Se reemplazaron headline y subhead por una redacción más neutral que comunica la misma situación sin atribuir el error directamente al usuario.",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1868,12 +2088,14 @@
     ]
   },
   {
-    "id": 125,
+    "id": 85,
+    "project": "PWA 2.0",
     "round": "Mod 31 Jul",
     "roundOrder": 2,
     "sourceRow": 8,
     "observation": "Se sustituyó ‘’el’’ por ‘’su’’, para interpretar naturalmente que el número es del asesor.\n\nCambié ‘’Rectifícalo’’ por ‘Verifícalo’: se escuchaba muy técnico y no tenía coma o punto para separar las dos ideas.",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1887,12 +2109,14 @@
     ]
   },
   {
-    "id": 140,
+    "id": 92,
+    "project": "PWA 2.0",
     "round": "Mod 31 Jul",
     "roundOrder": 2,
     "sourceRow": 9,
     "observation": "‘’Empezamos’’ rompe la continuidad porque da la sensación de que hasta ahora inicia el proceso.\nCambiamos ''Selfie'' por ''Foto''\n‘’Gorras’’ por ‘’Gorra’’: Nos estamos dirigiendo a una sola persona.\nDamos una breve explicación en el subhead del por qué necesitamos la foto del usuario.",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1906,12 +2130,14 @@
     ]
   },
   {
-    "id": 155,
+    "id": 99,
+    "project": "PWA 2.0",
     "round": "Mod 31 Jul",
     "roundOrder": 2,
     "sourceRow": 10,
     "observation": "Se ajustó el copy para que se sienta más natural y directo. Al eliminar \"con nosotros\", el mensaje se enfoca en el beneficio para el usuario y mantiene la misma sensación de confianza.",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1925,12 +2151,14 @@
     ]
   },
   {
-    "id": 168,
+    "id": 105,
+    "project": "PWA 2.0",
     "round": "Mod 31 Jul",
     "roundOrder": 2,
     "sourceRow": 11,
     "observation": "‘’A mí como usuario me genera fricción si veo que algo llamado Solicitud Única quiere acceder a mi ubicación’’ - Ivar\n\nSe verá la posibilidad de cambiarlo por Banco Azteca.",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1944,12 +2172,14 @@
     ]
   },
   {
-    "id": 181,
+    "id": 111,
+    "project": "PWA 2.0",
     "round": "Mod 31 Jul",
     "roundOrder": 2,
     "sourceRow": 12,
     "observation": "Propuesta de Ivar. El usuario debe enfocar/ubicar la fachada de su domicilio.",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1963,12 +2193,14 @@
     ]
   },
   {
-    "id": 192,
+    "id": 116,
+    "project": "PWA 2.0",
     "round": "Mod 31 Jul",
     "roundOrder": 2,
     "sourceRow": 13,
     "observation": "Loader optimizado (de Botón de Pago, se adaptó a la OU). Propuesta de Mike.",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -1982,12 +2214,14 @@
     ]
   },
   {
-    "id": 202,
+    "id": 120,
+    "project": "PWA 2.0",
     "round": "Mod 31 Jul",
     "roundOrder": 2,
     "sourceRow": 14,
     "observation": "Transforma un requisito en un beneficio. En lugar de pedir al usuario que agende una visita, comunica que el asesor irá a su domicilio y explica de forma más clara el siguiente paso, reduciendo la percepción de fricción.\n(Propuesta de Mike mejorar el copy)",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -2001,12 +2235,14 @@
     ]
   },
   {
-    "id": 212,
+    "id": 124,
+    "project": "PWA 2.0",
     "round": "Mod 31 Jul",
     "roundOrder": 2,
     "sourceRow": 15,
     "observation": "Se adaptó el headline y subhead de Botón de Pago a la pantalla de agendamiento en OU.",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -2020,12 +2256,14 @@
     ]
   },
   {
-    "id": 221,
+    "id": 128,
+    "project": "PWA 2.0",
     "round": "Mod 31 Jul",
     "roundOrder": 2,
     "sourceRow": 16,
     "observation": "Se adaptó el headline y subhead de Botón de Pago a la pantalla de agendamiento en OU.",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -2041,12 +2279,14 @@
     ]
   },
   {
-    "id": 230,
+    "id": 132,
+    "project": "PWA 2.0",
     "round": "Mod 31 Jul",
     "roundOrder": 2,
     "sourceRow": 17,
     "observation": "Línea Blanca por Hogar (Propuesta de Mike).\nEl copy que se encuentra debajo de las categorías es para Incentivar al usuario a que se dirija a la App de Banco Azteca.\n\nSe evitó cerrar la experiencia únicamente con el fin del trámite (\"Completaste tu solicitud\") y se dio continuidad a la relación con el usuario, reforzando el seguimiento por WhatsApp y los beneficios disponibles.",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -2058,12 +2298,14 @@
     ]
   },
   {
-    "id": 238,
+    "id": 136,
+    "project": "PWA 2.0",
     "round": "Mod 31 Jul",
     "roundOrder": 2,
     "sourceRow": 18,
     "observation": "Cambio de copy en la pantalla de RENAPO. \"María, algunos de tus datos presentan inconsistencias. Para retomar tu solicitud, te recomendamos actualizar primero tu información en el Registro Nacional de Población (RENAPO).\"",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -2077,12 +2319,14 @@
     ]
   },
   {
-    "id": 246,
+    "id": 140,
+    "project": "PWA 2.0",
     "round": "Mod 31 Jul",
     "roundOrder": 2,
     "sourceRow": 19,
     "observation": "¡Tu INE se capturó con éxito!",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -2097,11 +2341,13 @@
   },
   {
     "id": 3,
+    "project": "PWA 2.0",
     "round": "Pruebas 3 agosto",
     "roundOrder": 3,
     "sourceRow": 2,
     "observation": "Se agregan los loaders para validación de datos",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -2116,11 +2362,13 @@
   },
   {
     "id": 4,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 2,
     "observation": "Revisar con negocio si el año debe de ser variable o fijo. Osea cambiar año con año o no",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Definición de negocio"
     ],
@@ -2134,12 +2382,14 @@
     ]
   },
   {
-    "id": 28,
+    "id": 24,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 3,
     "observation": "Falta el ajuste de Olvia en cuanto a tamaño",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -2153,12 +2403,14 @@
     ]
   },
   {
-    "id": 50,
+    "id": 40,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 4,
     "observation": "Revisar la sombra de la card de productos",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -2172,12 +2424,14 @@
     ]
   },
   {
-    "id": 72,
+    "id": 55,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 5,
     "observation": "Orden de la categoría como en figma, se valida con backend",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Funcionalidad"
     ],
@@ -2191,12 +2445,14 @@
     ]
   },
   {
-    "id": 92,
+    "id": 68,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 6,
     "observation": "Backend se lleva el ajuste del orden de mayor a menor en el catálogo de semanas",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Funcionalidad"
     ],
@@ -2210,12 +2466,14 @@
     ]
   },
   {
-    "id": 110,
+    "id": 78,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 7,
     "observation": "Se ajusta el formato de edición de cantidad y se agrega la coma de cifra",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Funcionalidad"
     ],
@@ -2229,12 +2487,14 @@
     ]
   },
   {
-    "id": 127,
+    "id": 87,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 8,
     "observation": "Negocio nos tiene que compartir la URL del link de \"Información laboral\"",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Definición de negocio"
     ],
@@ -2248,12 +2508,14 @@
     ]
   },
   {
-    "id": 142,
+    "id": 94,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 9,
     "observation": "Se omite el autocomplete del la pantalla de nickname",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Funcionalidad"
     ],
@@ -2267,12 +2529,14 @@
     ]
   },
   {
-    "id": 157,
+    "id": 101,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 10,
     "observation": "Ajustar el CTA en la parte inferior, se va a revisar en los formularios para poder ajustarlo",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Funcionalidad"
     ],
@@ -2286,12 +2550,14 @@
     ]
   },
   {
-    "id": 170,
+    "id": 107,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 11,
     "observation": "Se va agregar el componente de loader entre la pantalla de nickname y OTP",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Funcionalidad"
     ],
@@ -2305,12 +2571,14 @@
     ]
   },
   {
-    "id": 183,
+    "id": 113,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 12,
     "observation": "Falta migrar el catálogo de iconos",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Diseño"
     ],
@@ -2324,12 +2592,14 @@
     ]
   },
   {
-    "id": 194,
+    "id": 118,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 13,
     "observation": "Revisar la funcionalidad para que el keyboard \"suba\" y se vea el código cuando el usuario lo ingrese",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Funcionalidad"
     ],
@@ -2343,12 +2613,14 @@
     ]
   },
   {
-    "id": 204,
+    "id": 122,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 14,
     "observation": "Agregar el stroke de 1px",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -2362,12 +2634,14 @@
     ]
   },
   {
-    "id": 214,
+    "id": 126,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 15,
     "observation": "Agregar el loader entre la verificación y la pantalla de éxito",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Funcionalidad"
     ],
@@ -2381,12 +2655,14 @@
     ]
   },
   {
-    "id": 223,
+    "id": 130,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 16,
     "observation": "Revisión de reenvio de OTP - Backend y front - Carlos lo válido y nos comenta que se debe de revisar con alta única",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Funcionalidad"
     ],
@@ -2400,12 +2676,14 @@
     ]
   },
   {
-    "id": 232,
+    "id": 134,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 17,
     "observation": "agregar el Swipe-to-Dismiss del bottom sheet",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Funcionalidad"
     ],
@@ -2419,12 +2697,14 @@
     ]
   },
   {
-    "id": 240,
+    "id": 138,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 18,
     "observation": "Revisar escenario de numero de intentos para que redirija a la pantalla correcta y no al error general - Código de error C14 en el excel, revisar el C13 y confirmar",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Definición de negocio"
     ],
@@ -2434,12 +2714,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 248,
+    "id": 142,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 19,
     "observation": "Revisar la redirección del CTA al sitio de BAZ",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Funcionalidad"
     ],
@@ -2453,12 +2735,14 @@
     ]
   },
   {
-    "id": 255,
+    "id": 145,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 20,
     "observation": "Revisar el escenario cuando el usuario selecciona que si lo esta ayudando un asesor para que habilite el CTA hasta agregue el número de empleado",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Funcionalidad"
     ],
@@ -2472,12 +2756,14 @@
     ]
   },
   {
-    "id": 261,
+    "id": 147,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 21,
     "observation": "Agregar el loader de validación de número de empleado",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Funcionalidad"
     ],
@@ -2487,12 +2773,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 266,
+    "id": 149,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 22,
     "observation": "Cambiar el icono de guardar en la pantalla de edición de datos",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -2506,12 +2794,14 @@
     ]
   },
   {
-    "id": 271,
+    "id": 151,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 23,
     "observation": "Revisar con negocio si se agrega \"ama de casa\"",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Definición de negocio"
     ],
@@ -2527,12 +2817,14 @@
     ]
   },
   {
-    "id": 276,
+    "id": 153,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 24,
     "observation": "Revisar el estilo de las shadows cuando no esta activado para que no se corte, y la tipo de am y pm para que quede en una linea",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -2542,12 +2834,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 280,
+    "id": 155,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 25,
     "observation": "Ajustar los horarios cada hora, ya no se dan opción de cada media hora",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Funcionalidad"
     ],
@@ -2561,12 +2855,14 @@
     ]
   },
   {
-    "id": 283,
+    "id": 157,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 26,
     "observation": "Ajuste manual en el carrusel para que quede en el borde",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Funcionalidad"
     ],
@@ -2580,12 +2876,14 @@
     ]
   },
   {
-    "id": 286,
+    "id": 159,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 27,
     "observation": "Revisar el ajuste de tipografía en chips",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -2599,12 +2897,14 @@
     ]
   },
   {
-    "id": 289,
+    "id": 161,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 28,
     "observation": "En el estado de active cuando se selecciona la hora agregar el stroke #14875A",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -2618,12 +2918,14 @@
     ]
   },
   {
-    "id": 292,
+    "id": 163,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 29,
     "observation": "La url a donde nos debe dirigir es: Pendiente\nY pintar el punto final en verde",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Definición de negocio"
     ],
@@ -2637,12 +2939,14 @@
     ]
   },
   {
-    "id": 295,
+    "id": 165,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 30,
     "observation": "Agregrar el formato de a.m. o p.m. de acuerdo a la hora agendada",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Funcionalidad"
     ],
@@ -2658,12 +2962,14 @@
     ]
   },
   {
-    "id": 298,
+    "id": 167,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 31,
     "observation": "La variable de tiempo sobre la duración de la vista cambia de acuerdo al perfil de cliente: 15 minutos clientes verdes, 30 minutos clientes amarillos y 35 minutos clientes rojos",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Funcionalidad"
     ],
@@ -2679,12 +2985,14 @@
     ]
   },
   {
-    "id": 301,
+    "id": 169,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 32,
     "observation": "Cambiar el input por textarea de la pregunta",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Funcionalidad"
     ],
@@ -2698,12 +3006,14 @@
     ]
   },
   {
-    "id": 304,
+    "id": 171,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 33,
     "observation": "Capitalizar texto porque vienen en altas y bajas\nAgregar emogis",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Funcionalidad"
     ],
@@ -2713,12 +3023,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 307,
+    "id": 173,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 34,
     "observation": "Agregar el acento a \"Cómo\" y \"préstamo\"",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Copy"
     ],
@@ -2732,12 +3044,14 @@
     ]
   },
   {
-    "id": 310,
+    "id": 175,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 35,
     "observation": "Cambiar el input por textarea de la pregunta",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Funcionalidad"
     ],
@@ -2751,12 +3065,14 @@
     ]
   },
   {
-    "id": 313,
+    "id": 177,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 36,
     "observation": "Agregar la regla de al menos 3 caracteres para poder actrivar el CTA",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Funcionalidad"
     ],
@@ -2772,12 +3088,14 @@
     ]
   },
   {
-    "id": 316,
+    "id": 179,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 37,
     "observation": "Revisar las fuentes tipografías\nRevisar el padding entre el Buscador y el subtítulo\nRevisar el padding ente el mapa y Buscador\nRevisar el tema del pin de BAZ en el mapa\nFalta el título de \"Elegir sucursal\"\nDejar en altas y bajas el nombre de la sucursal y la dirección\nQuitar los decimales de la unidad de KM\nAgregar el CTA dentro de la card blanca de sucursal\nEliminar el textlink de \"No encuentro mi domicilio\"",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Diseño"
     ],
@@ -2787,12 +3105,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 319,
+    "id": 181,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 38,
     "observation": "Ajuste de copy en la pantalla de salida para \"Busqueda de sucursal\"",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Copy"
     ],
@@ -2806,12 +3126,14 @@
     ]
   },
   {
-    "id": 322,
+    "id": 183,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 39,
     "observation": "Listo ajustres entre pading izquierdo y derecho y mejoro desbordamiento",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -2827,12 +3149,14 @@
     ]
   },
   {
-    "id": 325,
+    "id": 185,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 40,
     "observation": "hay que pasarle el banco de preguntas y respuestas a Carlos Wilverth con su respuesta correcta e incorrecta. (pendiente de mandar del lado de UIX) / Duda de Jose, Mini Juego (caundo se aplica el loader del mini juego) hay que definir el loader normal o el minijuego.",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Copy"
     ],
@@ -2846,12 +3170,14 @@
     ]
   },
   {
-    "id": 328,
+    "id": 187,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 41,
-    "observation": "Mejoramos el componente de imput dropdawnd buttom se sentia descompensado",
+    "observation": "Mejoramos el componente de input dropdawnd buttom se sentia descompensado",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -2865,12 +3191,14 @@
     ]
   },
   {
-    "id": 331,
+    "id": 189,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 42,
     "observation": "Confirmar catalogo de opciones con organizacion de opciones (confirmacion del lado de UIX con negocio) en productivo los botones tienen sobmbra en la UI es plano el boton",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -2884,12 +3212,14 @@
     ]
   },
   {
-    "id": 333,
+    "id": 191,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 43,
     "observation": "Contemplar boton \"Guardar\" boton en UI",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -2903,12 +3233,14 @@
     ]
   },
   {
-    "id": 335,
+    "id": 193,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 44,
     "observation": "Listo ajustres entre pading izquierdo y derecho y mejoro desbordamiento",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -2922,12 +3254,14 @@
     ]
   },
   {
-    "id": 337,
+    "id": 195,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 45,
     "observation": "Se quito copy que no estaba contemplado en la UI, ajustamos los Gaps",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -2941,12 +3275,14 @@
     ]
   },
   {
-    "id": 339,
+    "id": 197,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 46,
     "observation": "Pendeinte revision de gap entre radio buttoms",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -2964,12 +3300,14 @@
     ]
   },
   {
-    "id": 341,
+    "id": 199,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 47,
     "observation": "Falta motor de interacción de la Geocerca",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Funcionalidad"
     ],
@@ -2979,12 +3317,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 343,
+    "id": 201,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 48,
     "observation": "Primera iconografia no carga, segunda icnografia carga, los iconos no se logran ver por lo que aconsejamos cambiar de lineas a rellenos en UI, la transparencia de esta capa es mas oscura, cambiar icono greografico.",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Funcionalidad"
     ],
@@ -3000,12 +3340,14 @@
     ]
   },
   {
-    "id": 345,
+    "id": 203,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 49,
     "observation": "Cambiamos los radios del top card en botones y radio top card de streetview",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -3021,12 +3363,14 @@
     ]
   },
   {
-    "id": 347,
+    "id": 205,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 50,
     "observation": "Aplicación de este copy con el salto de parrafo en \"Vamos\"",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Copy"
     ],
@@ -3040,12 +3384,14 @@
     ]
   },
   {
-    "id": 349,
+    "id": 207,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 51,
     "observation": "Linea de borde del perfil y linea de los items y el margen que los corta",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -3063,12 +3409,14 @@
     ]
   },
   {
-    "id": 351,
+    "id": 209,
+    "project": "PWA 2.0",
     "round": "Pruebas 4 - 5 agosto",
     "roundOrder": 4,
     "sourceRow": 52,
     "observation": "Cambio de color en el titulo sobre la variable \"Nombre\"",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -3083,11 +3431,13 @@
   },
   {
     "id": 5,
+    "project": "PWA 2.0",
     "round": "Pruebas 6 - 7 de agosto",
     "roundOrder": 5,
     "sourceRow": 2,
     "observation": "El nombre no cambio, revisar la variable",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Funcionalidad"
     ],
@@ -3101,12 +3451,14 @@
     ]
   },
   {
-    "id": 29,
+    "id": 25,
+    "project": "PWA 2.0",
     "round": "Pruebas 6 - 7 de agosto",
     "roundOrder": 5,
     "sourceRow": 3,
     "observation": "Revisión de carga de iconos",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Funcionalidad"
     ],
@@ -3120,15 +3472,16 @@
     ]
   },
   {
-    "id": 51,
+    "id": 41,
+    "project": "PWA 2.0",
     "round": "Pruebas 6 - 7 de agosto",
     "roundOrder": 5,
     "sourceRow": 4,
     "observation": "Pantalla de expiración de tiempo",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
-      "Diseño",
-      "Definición de negocio"
+      "Diseño"
     ],
     "type": null,
     "channel": null,
@@ -3141,11 +3494,13 @@
   },
   {
     "id": 6,
+    "project": "PWA 2.0",
     "round": "Pruebas 10 de agosto",
     "roundOrder": 6,
     "sourceRow": 2,
     "observation": "No se visualiza la imagen",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -3159,12 +3514,14 @@
     ]
   },
   {
-    "id": 30,
+    "id": 26,
+    "project": "PWA 2.0",
     "round": "Pruebas 10 de agosto",
     "roundOrder": 6,
     "sourceRow": 3,
     "observation": "Revisar el título debe ser H2 y estar alineado a la izquierda",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Diseño"
     ],
@@ -3178,12 +3535,14 @@
     ]
   },
   {
-    "id": 52,
+    "id": 42,
+    "project": "PWA 2.0",
     "round": "Pruebas 10 de agosto",
     "roundOrder": 6,
     "sourceRow": 4,
     "observation": "Revisar estilo de dropdown",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -3197,12 +3556,14 @@
     ]
   },
   {
-    "id": 73,
+    "id": 56,
+    "project": "PWA 2.0",
     "round": "Pruebas 10 de agosto",
     "roundOrder": 6,
     "sourceRow": 5,
     "observation": "Revisar \"Empleado\" dice \"Empalado\"",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Copy"
     ],
@@ -3216,12 +3577,14 @@
     ]
   },
   {
-    "id": 93,
+    "id": 69,
+    "project": "PWA 2.0",
     "round": "Pruebas 10 de agosto",
     "roundOrder": 6,
     "sourceRow": 6,
     "observation": "Revisar el estilo del título y debe de estár centrado a la izquierda",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Diseño"
     ],
@@ -3235,12 +3598,14 @@
     ]
   },
   {
-    "id": 111,
+    "id": 79,
+    "project": "PWA 2.0",
     "round": "Pruebas 10 de agosto",
     "roundOrder": 6,
     "sourceRow": 7,
     "observation": "Cambiar el CTA a \"Finalizar\" porque no tenemos reintentos en ese escenario",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Funcionalidad"
     ],
@@ -3254,12 +3619,14 @@
     ]
   },
   {
-    "id": 128,
+    "id": 88,
+    "project": "PWA 2.0",
     "round": "Pruebas 10 de agosto",
     "roundOrder": 6,
     "sourceRow": 8,
     "observation": "Revisar estilo de dropdown",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -3273,12 +3640,14 @@
     ]
   },
   {
-    "id": 143,
+    "id": 95,
+    "project": "PWA 2.0",
     "round": "Pruebas 10 de agosto",
     "roundOrder": 6,
     "sourceRow": 9,
     "observation": "Los CTA no se ven proporcionales a los que se tienen en móvil, y el nickname deja agregar números",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -3292,12 +3661,14 @@
     ]
   },
   {
-    "id": 158,
+    "id": 102,
+    "project": "PWA 2.0",
     "round": "Pruebas 10 de agosto",
     "roundOrder": 6,
     "sourceRow": 10,
     "observation": "Revisar el estilo del botón",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -3309,12 +3680,14 @@
     ]
   },
   {
-    "id": 171,
+    "id": 108,
+    "project": "PWA 2.0",
     "round": "Pruebas 10 de agosto",
     "roundOrder": 6,
     "sourceRow": 11,
     "observation": "Revisar y ajustar los legales, el nickname deja agregar números y el estilo tipografico se ve desajustado",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -3326,12 +3699,14 @@
     ]
   },
   {
-    "id": 184,
+    "id": 114,
+    "project": "PWA 2.0",
     "round": "Pruebas 10 de agosto",
     "roundOrder": 6,
     "sourceRow": 12,
     "observation": "Ese no es el copy que se tiene en figma",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Diseño",
       "Copy"
@@ -3342,15 +3717,16 @@
     "evidenceFilenames": []
   },
   {
-    "id": 195,
+    "id": 119,
+    "project": "PWA 2.0",
     "round": "Pruebas 10 de agosto",
     "roundOrder": 6,
     "sourceRow": 13,
     "observation": "El estilo de la pantalla no se carga correctamente",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
-      "Diseño",
-      "Funcionalidad"
+      "Diseño"
     ],
     "type": null,
     "channel": null,
@@ -3364,12 +3740,14 @@
     ]
   },
   {
-    "id": 205,
+    "id": 123,
+    "project": "PWA 2.0",
     "round": "Pruebas 10 de agosto",
     "roundOrder": 6,
     "sourceRow": 14,
     "observation": "Las pantallas de verificación de reco facial no coinciden con el figma",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Diseño",
       "Copy"
@@ -3384,12 +3762,14 @@
     ]
   },
   {
-    "id": 215,
+    "id": 127,
+    "project": "PWA 2.0",
     "round": "Pruebas 10 de agosto",
     "roundOrder": 6,
     "sourceRow": 15,
     "observation": "Revisar estilos de dropdown",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -3403,12 +3783,14 @@
     ]
   },
   {
-    "id": 224,
+    "id": 131,
+    "project": "PWA 2.0",
     "round": "Pruebas 10 de agosto",
     "roundOrder": 6,
     "sourceRow": 16,
     "observation": "La card blanca no se ajusta a la parte de abajo dejando el fondo verde como una línea",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -3418,12 +3800,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 233,
+    "id": 135,
+    "project": "PWA 2.0",
     "round": "Pruebas 10 de agosto",
     "roundOrder": 6,
     "sourceRow": 17,
     "observation": "No aparece el lapiz de edición y dice dolares",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -3437,15 +3821,16 @@
     ]
   },
   {
-    "id": 241,
+    "id": 139,
+    "project": "PWA 2.0",
     "round": "Pruebas 10 de agosto",
     "roundOrder": 6,
     "sourceRow": 18,
     "observation": "el plazo tiene que ir de mayor a menor y si cambio la cantidad no se borra el plazo",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
-      "Diseño",
-      "Funcionalidad"
+      "Diseño"
     ],
     "type": null,
     "channel": null,
@@ -3457,12 +3842,14 @@
     ]
   },
   {
-    "id": 249,
+    "id": 143,
+    "project": "PWA 2.0",
     "round": "Pruebas 10 de agosto",
     "roundOrder": 6,
     "sourceRow": 19,
     "observation": "Si doy tap a \"Ir a Banco Azteca\" me sale la pantalla de error",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Funcionalidad"
     ],
@@ -3479,11 +3866,13 @@
   },
   {
     "id": 7,
+    "project": "PWA 2.0",
     "round": "Pruebas 11 de agosto",
     "roundOrder": 7,
     "sourceRow": 2,
     "observation": "Esta pantalla no corresponde al escenario de negación de producto, consultar el figma. https://www.figma.com/design/UchZSf5TEKlm88h1cJTyRG/Originaci%C3%B3n-%C3%9Anica-2.0---Cliente?node-id=7747-112797&t=xVpCbgnPteYFJCce-4",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Diseño"
     ],
@@ -3497,12 +3886,14 @@
     ]
   },
   {
-    "id": 31,
+    "id": 27,
+    "project": "PWA 2.0",
     "round": "Pruebas 11 de agosto",
     "roundOrder": 7,
     "sourceRow": 3,
     "observation": "Ya no tenemos la categoría de \"Productos del hogar\" se cambio por \"Línea blanca\"",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Copy"
     ],
@@ -3516,15 +3907,16 @@
     ]
   },
   {
-    "id": 53,
+    "id": 43,
+    "project": "PWA 2.0",
     "round": "Pruebas 11 de agosto",
     "roundOrder": 7,
     "sourceRow": 4,
     "observation": "La información legal siempre debe de aparecer el botón debe de funcionar como ancla a la información pero siempre es visible",
-    "status": "Pendiente",
+    "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
-      "Diseño",
-      "Funcionalidad"
+      "Diseño"
     ],
     "type": null,
     "channel": null,
@@ -3536,12 +3928,14 @@
     ]
   },
   {
-    "id": 74,
+    "id": 57,
+    "project": "PWA 2.0",
     "round": "Pruebas 11 de agosto",
     "roundOrder": 7,
     "sourceRow": 5,
     "observation": "La pantalla de permisos no cumple con el diseño propuesto en figma https://www.figma.com/design/UchZSf5TEKlm88h1cJTyRG/Originaci%C3%B3n-%C3%9Anica-2.0---Cliente?node-id=8331-64846&t=xVpCbgnPteYFJCce-4",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Diseño"
     ],
@@ -3555,12 +3949,14 @@
     ]
   },
   {
-    "id": 94,
+    "id": 70,
+    "project": "PWA 2.0",
     "round": "Pruebas 11 de agosto",
     "roundOrder": 7,
     "sourceRow": 6,
     "observation": "El copy que me llega en el mensaje de OTP es incorrecto, hace referencia al asesor",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Copy"
     ],
@@ -3574,12 +3970,14 @@
     ]
   },
   {
-    "id": 112,
+    "id": 80,
+    "project": "PWA 2.0",
     "round": "Pruebas 11 de agosto",
     "roundOrder": 7,
     "sourceRow": 7,
     "observation": "Revisar la pleca verde, debe corresponder al producto\nRevisar el copy porque está incorrecto\nEl nombre del usuario no está cambiando de color\nLa cantidad no está separada por coma",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Diseño",
       "Copy"
@@ -3594,12 +3992,14 @@
     ]
   },
   {
-    "id": 129,
+    "id": 89,
+    "project": "PWA 2.0",
     "round": "Pruebas 11 de agosto",
     "roundOrder": 7,
     "sourceRow": 8,
     "observation": "Revisar paddings entre el título \"Referencia 1\" y el input nombre completo.\nRevisar padding generales",
-    "status": "Pendiente",
+    "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -3613,12 +4013,14 @@
     ]
   },
   {
-    "id": 144,
+    "id": 96,
+    "project": "PWA 2.0",
     "round": "Pruebas 11 de agosto",
     "roundOrder": 7,
     "sourceRow": 9,
     "observation": "Revisar el título debe de estár en H2 - 30/40 pts",
-    "status": "Pendiente",
+    "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -3632,12 +4034,14 @@
     ]
   },
   {
-    "id": 159,
+    "id": 103,
+    "project": "PWA 2.0",
     "round": "Pruebas 11 de agosto",
     "roundOrder": 7,
     "sourceRow": 10,
     "observation": "No está segmentando los inputs de domicilio",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Funcionalidad"
     ],
@@ -3651,15 +4055,16 @@
     ]
   },
   {
-    "id": 172,
+    "id": 109,
+    "project": "PWA 2.0",
     "round": "Pruebas 11 de agosto",
     "roundOrder": 7,
     "sourceRow": 11,
     "observation": "El QR para redirección debe de llevar el L&F del producto al que estoy haciendo la originación, si es EKT debe de ser rojo etc",
-    "status": "Pendiente",
+    "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
-      "Diseño",
-      "Funcionalidad"
+      "Diseño"
     ],
     "type": null,
     "channel": null,
@@ -3667,12 +4072,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 185,
+    "id": 115,
+    "project": "PWA 2.0",
     "round": "Pruebas 11 de agosto",
     "roundOrder": 7,
     "sourceRow": 12,
     "observation": "La encuesta está mandando error",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Funcionalidad"
     ],
@@ -3683,11 +4090,13 @@
   },
   {
     "id": 8,
+    "project": "PWA 2.0",
     "round": "Pruebas 12 de agosto",
     "roundOrder": 8,
     "sourceRow": 2,
     "observation": "El dropdown no se ajusta al ancho del dispositivo",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -3701,12 +4110,14 @@
     ]
   },
   {
-    "id": 32,
+    "id": 28,
+    "project": "PWA 2.0",
     "round": "Pruebas 12 de agosto",
     "roundOrder": 8,
     "sourceRow": 3,
     "observation": "Los datos de INE se están agregando en el input de calle y no distingue entre el número interior o exterior",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Funcionalidad"
     ],
@@ -3720,12 +4131,14 @@
     ]
   },
   {
-    "id": 54,
+    "id": 44,
+    "project": "PWA 2.0",
     "round": "Pruebas 12 de agosto",
     "roundOrder": 8,
     "sourceRow": 4,
     "observation": "Agregar el título en el button sheet de colonia, consultar referencia en figma: https://www.figma.com/design/UchZSf5TEKlm88h1cJTyRG/Originaci%C3%B3n-%C3%9Anica-2.0---Cliente?node-id=25059-190510&t=xVpCbgnPteYFJCce-4",
-    "status": "Pendiente",
+    "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -3739,12 +4152,14 @@
     ]
   },
   {
-    "id": 75,
+    "id": 58,
+    "project": "PWA 2.0",
     "round": "Pruebas 12 de agosto",
     "roundOrder": 8,
     "sourceRow": 5,
     "observation": "Esta dejando un espacio entre el nombre del usuario y la ,",
-    "status": "Pendiente",
+    "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Copy"
     ],
@@ -3760,12 +4175,14 @@
     ]
   },
   {
-    "id": 95,
+    "id": 71,
+    "project": "PWA 2.0",
     "round": "Pruebas 12 de agosto",
     "roundOrder": 8,
     "sourceRow": 6,
-    "observation": "Dinero reservado par imprevistos está mal escrito",
+    "observation": "Dinero reservado para imprevistos está mal escrito",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Copy"
     ],
@@ -3775,12 +4192,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 113,
+    "id": 81,
+    "project": "PWA 2.0",
     "round": "Pruebas 12 de agosto",
     "roundOrder": 8,
     "sourceRow": 7,
     "observation": "El minijuego se quedo trabado, no pude seguir y no me indicaba el progreso del loader correctamente",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Funcionalidad"
     ],
@@ -3796,12 +4215,14 @@
     ]
   },
   {
-    "id": 130,
+    "id": 90,
+    "project": "PWA 2.0",
     "round": "Pruebas 12 de agosto",
     "roundOrder": 8,
     "sourceRow": 8,
     "observation": "El nombre que agrego el usuario cambia por el del INE, no se si ese comportamiento es el correcto.",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Definición de negocio"
     ],
@@ -3811,12 +4232,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 145,
+    "id": 97,
+    "project": "PWA 2.0",
     "round": "Pruebas 12 de agosto",
     "roundOrder": 8,
     "sourceRow": 9,
     "observation": "Darle un poco más de peso a la tipografía del botón porque quedo muy delgada, validar y poner de 100 a 200 más de peso",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Diseño"
     ],
@@ -3832,12 +4255,14 @@
     ]
   },
   {
-    "id": 160,
+    "id": 104,
+    "project": "PWA 2.0",
     "round": "Pruebas 12 de agosto",
     "roundOrder": 8,
     "sourceRow": 10,
     "observation": "Actualizar el copy \"Ahora capturemos el frente\" porque ya fue capturado tendría que ser \"Ahora vamos a capturar la parte de atrás\"",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Copy"
     ],
@@ -3853,12 +4278,14 @@
     ]
   },
   {
-    "id": 173,
+    "id": 110,
+    "project": "PWA 2.0",
     "round": "Pruebas 12 de agosto",
     "roundOrder": 8,
     "sourceRow": 11,
     "observation": "No se visualiza el primer icono, referencia https://www.figma.com/design/UchZSf5TEKlm88h1cJTyRG/Originaci%C3%B3n-%C3%9Anica-2.0---Cliente?node-id=7723-326724&t=xVpCbgnPteYFJCce-4",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -3869,14 +4296,15 @@
   },
   {
     "id": 9,
+    "project": "PWA 2.0",
     "round": "Pruebas 13 de agosto",
     "roundOrder": 9,
     "sourceRow": 2,
     "observation": "Revisar el estado activo en OTP para el caso de que no aparezca el código para que el usuario de tap y tenga que ingresarlo manual. Al dar Tap, la primera casilla vacía debe cambiar a Estado Activo pintando su borde (stroke) con el color de enfoque del sistema.",
-    "status": "Pendiente",
+    "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
-      "Diseño",
-      "Funcionalidad"
+      "Diseño"
     ],
     "type": null,
     "channel": null,
@@ -3888,12 +4316,14 @@
     ]
   },
   {
-    "id": 33,
+    "id": 29,
+    "project": "PWA 2.0",
     "round": "Pruebas 13 de agosto",
     "roundOrder": 9,
     "sourceRow": 3,
     "observation": "Cambio de copy de acuerdo al figma y revisar el estilo del título debe ser H2",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Copy"
     ],
@@ -3907,12 +4337,14 @@
     ]
   },
   {
-    "id": 55,
+    "id": 45,
+    "project": "PWA 2.0",
     "round": "Pruebas 13 de agosto",
     "roundOrder": 9,
     "sourceRow": 4,
     "observation": "No se ve el background del botón de editar",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Diseño"
     ],
@@ -3926,12 +4358,14 @@
     ]
   },
   {
-    "id": 76,
+    "id": 59,
+    "project": "PWA 2.0",
     "round": "Pruebas 13 de agosto",
     "roundOrder": 9,
     "sourceRow": 5,
     "observation": "La tipografía del catalogo de direcciones puede quedar con el estilo de body 1 para que no se vea todo en bold",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Diseño"
     ],
@@ -3945,12 +4379,14 @@
     ]
   },
   {
-    "id": 96,
+    "id": 72,
+    "project": "PWA 2.0",
     "round": "Pruebas 13 de agosto",
     "roundOrder": 9,
     "sourceRow": 6,
     "observation": "La dirección de la sucursal puede quedar en altas y bajas para que no quede todo en mayúsculas",
-    "status": "Completado",
+    "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Diseño"
     ],
@@ -3964,12 +4400,14 @@
     ]
   },
   {
-    "id": 114,
+    "id": 82,
+    "project": "PWA 2.0",
     "round": "Pruebas 13 de agosto",
     "roundOrder": 9,
     "sourceRow": 7,
     "observation": "No se ve el background del botón de editar y esta cambiando la palabra por \"Editor\"",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Diseño"
     ],
@@ -3984,11 +4422,13 @@
   },
   {
     "id": 10,
+    "project": "PWA 2.0",
     "round": "Pruebas 14 de agosto",
     "roundOrder": 10,
     "sourceRow": 2,
     "observation": "Verificar el backgraund de la pantalla de escritorio de código QR y homologar los estilos de títulos, subtítulos y el color de loader de acuerdo al canal.\nCambiar copys",
-    "status": "Pendiente",
+    "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño",
       "Copy"
@@ -4004,11 +4444,13 @@
   },
   {
     "id": 11,
+    "project": "PWA 2.0",
     "round": "Pruebas 17 de agosto",
     "roundOrder": 11,
     "sourceRow": 2,
     "observation": "Se va agregar una restricción para que no se deje poner como valor 0",
-    "status": "Pendiente",
+    "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Funcionalidad"
     ],
@@ -4022,12 +4464,14 @@
     ]
   },
   {
-    "id": 34,
+    "id": 30,
+    "project": "PWA 2.0",
     "round": "Pruebas 17 de agosto",
     "roundOrder": 11,
     "sourceRow": 3,
     "observation": "El numero telefónico y el botón de editar no están centrados.\nRevisar el tono del verde debe ser #106949",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [],
     "type": null,
     "channel": null,
@@ -4039,12 +4483,14 @@
     ]
   },
   {
-    "id": 56,
+    "id": 46,
+    "project": "PWA 2.0",
     "round": "Pruebas 17 de agosto",
     "roundOrder": 11,
     "sourceRow": 4,
     "observation": "Revisar el tono del verde debe ser #106949",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -4056,12 +4502,14 @@
     ]
   },
   {
-    "id": 77,
+    "id": 60,
+    "project": "PWA 2.0",
     "round": "Pruebas 17 de agosto",
     "roundOrder": 11,
     "sourceRow": 5,
-    "observation": "Verificar el peso del título y el botón",
+    "observation": "Verificar el peso del título H2 30/40 y el botón",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -4073,12 +4521,14 @@
     ]
   },
   {
-    "id": 97,
+    "id": 73,
+    "project": "PWA 2.0",
     "round": "Pruebas 17 de agosto",
     "roundOrder": 11,
     "sourceRow": 6,
     "observation": "- La imagen no coincide con la de figma https://www.figma.com/design/UchZSf5TEKlm88h1cJTyRG/Originaci%C3%B3n-%C3%9Anica-2.0---Cliente?node-id=9843-71813&t=kFMDY6OzNIDbNNE3-4\n- El nombre del usuario debe de quedar en verde primario #106949",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -4090,12 +4540,14 @@
     ]
   },
   {
-    "id": 115,
+    "id": 83,
+    "project": "PWA 2.0",
     "round": "Pruebas 17 de agosto",
     "roundOrder": 11,
     "sourceRow": 7,
     "observation": "El carrusel debe quedar del ancho completo de la pantalla https://www.figma.com/design/UchZSf5TEKlm88h1cJTyRG/Originaci%C3%B3n-%C3%9Anica-2.0---Cliente?node-id=7723-327172&t=kFMDY6OzNIDbNNE3-4",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -4107,12 +4559,14 @@
     ]
   },
   {
-    "id": 131,
+    "id": 91,
+    "project": "PWA 2.0",
     "round": "Pruebas 17 de agosto",
     "roundOrder": 11,
     "sourceRow": 8,
     "observation": "Revisar que el input de buscar tenga el estilo de Body 1",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -4124,12 +4578,14 @@
     ]
   },
   {
-    "id": 146,
+    "id": 98,
+    "project": "PWA 2.0",
     "round": "Pruebas 17 de agosto",
     "roundOrder": 11,
     "sourceRow": 9,
     "observation": "Homologar GAP a 24px entre componentes",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -4142,11 +4598,13 @@
   },
   {
     "id": 12,
+    "project": "PWA 2.0",
     "round": "Pruebas 18 de agosto",
     "roundOrder": 12,
     "sourceRow": 2,
     "observation": "- En la versión escritorio adjunto la versión de referencia https://www.figma.com/design/hobCaeOhsFj8VOfZMhgcl2/PWA-del-Asesor-Flujos?node-id=40006209-187145&t=wbotKeC0Fx1S4rnT-4\n- No se visualiza la imagen",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [],
     "type": null,
     "channel": null,
@@ -4158,12 +4616,14 @@
     ]
   },
   {
-    "id": 35,
+    "id": 31,
+    "project": "PWA 2.0",
     "round": "Pruebas 18 de agosto",
     "roundOrder": 12,
     "sourceRow": 3,
     "observation": "Ajustar el texto a la parte superior",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -4179,12 +4639,14 @@
     ]
   },
   {
-    "id": 57,
+    "id": 47,
+    "project": "PWA 2.0",
     "round": "Pruebas 18 de agosto",
     "roundOrder": 12,
     "sourceRow": 4,
     "observation": "Revisar el estilo del título del dropdown porque se ve muy grande",
-    "status": "Completado",
+    "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Diseño"
     ],
@@ -4195,11 +4657,13 @@
   },
   {
     "id": 13,
+    "project": "PWA 2.0",
     "round": "Pruebas 20 de agosto",
     "roundOrder": 13,
     "sourceRow": 2,
     "observation": "En la versión escritorio redondear los bordes de la card contenedora a 24px",
     "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -4209,12 +4673,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 36,
+    "id": 32,
+    "project": "PWA 2.0",
     "round": "Pruebas 20 de agosto",
     "roundOrder": 13,
     "sourceRow": 3,
     "observation": "Revisar el título que corresponda al estilo H2 30/40 porque se ve con un peso inferior",
-    "status": "Pendiente",
+    "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -4224,12 +4690,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 58,
+    "id": 48,
+    "project": "PWA 2.0",
     "round": "Pruebas 20 de agosto",
     "roundOrder": 13,
     "sourceRow": 4,
     "observation": "Revisar que la imagen corresponda al tamaño que acordamos porque se ve muy grande 250x250px",
-    "status": "Pendiente",
+    "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -4239,12 +4707,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 78,
+    "id": 61,
+    "project": "PWA 2.0",
     "round": "Pruebas 20 de agosto",
     "roundOrder": 13,
     "sourceRow": 5,
     "observation": "La duración de la visita es dínamica de acuerdo al perfil",
-    "status": "Pendiente",
+    "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Copy"
     ],
@@ -4255,11 +4725,13 @@
   },
   {
     "id": 14,
+    "project": "PWA 2.0",
     "round": "Pruebas 26 agosto",
     "roundOrder": 14,
     "sourceRow": 2,
-    "observation": "Ajustar el texto a la izquierda\r\nNo se ve la imagen\r\nhttps://www.figma.com/design/UchZSf5TEKlm88h1cJTyRG/Originaci%C3%B3n-%C3%9Anica-2.0---Cliente?node-id=10255-141230&t=xCVXYht92tV2nKNN-4\r\nRevisar el peso de la tipografía, ya que se ve muy bold, debe ser H2 - 30/40",
+    "observation": "Ajustar el texto a la izquierda\nNo se ve la imagen\nhttps://www.figma.com/design/UchZSf5TEKlm88h1cJTyRG/Originaci%C3%B3n-%C3%9Anica-2.0---Cliente?node-id=10255-141230&t=xCVXYht92tV2nKNN-4\nRevisar el peso de la tipografía, ya que se ve muy bold, debe ser H2 - 30/40",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Diseño"
     ],
@@ -4270,11 +4742,13 @@
   },
   {
     "id": 15,
+    "project": "PWA 2.0",
     "round": "Pruebas 7  sep - Mi negocio",
     "roundOrder": 15,
     "sourceRow": 2,
     "observation": "No se visualiza la cantidad del carrusel",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Funcionalidad"
     ],
@@ -4284,12 +4758,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 37,
+    "id": 33,
+    "project": "PWA 2.0",
     "round": "Pruebas 7  sep - Mi negocio",
     "roundOrder": 15,
     "sourceRow": 3,
     "observation": "La imagen no corresponde y validad el color de la segmentación  https://www.figma.com/design/VfKFagT2heluNDPWPLI6rz/%F0%9F%9F%A3-Originaci%C3%B3n-%C3%9Anica-2.0---Producto?node-id=7883-53086&t=or3AZj02i1aZU7V7-4",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Diseño"
     ],
@@ -4299,12 +4775,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 59,
+    "id": 49,
+    "project": "PWA 2.0",
     "round": "Pruebas 7  sep - Mi negocio",
     "roundOrder": 15,
     "sourceRow": 4,
     "observation": "Revisar los paddings entre inputs",
-    "status": "Pendiente",
+    "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -4314,12 +4792,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 79,
+    "id": 62,
+    "project": "PWA 2.0",
     "round": "Pruebas 7  sep - Mi negocio",
     "roundOrder": 15,
     "sourceRow": 5,
     "observation": "eliminar los legales y ajustar los copys",
-    "status": "Pendiente",
+    "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Copy"
     ],
@@ -4329,12 +4809,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 98,
+    "id": 74,
+    "project": "PWA 2.0",
     "round": "Pruebas 7  sep - Mi negocio",
     "roundOrder": 15,
     "sourceRow": 6,
     "observation": "Revisar el dropdown de plazos para \"Mi negocio\"",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Funcionalidad"
     ],
@@ -4344,12 +4826,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 116,
+    "id": 84,
+    "project": "PWA 2.0",
     "round": "Pruebas 7  sep - Mi negocio",
     "roundOrder": 15,
     "sourceRow": 7,
     "observation": "Revisar el estilo de la tipografìa debe ser body 2",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Diseño"
     ],
@@ -4360,11 +4844,13 @@
   },
   {
     "id": 16,
+    "project": "PWA 2.0",
     "round": "Pruebas 8 sep - Mi negocio",
     "roundOrder": 16,
     "sourceRow": 2,
     "observation": "Copy estaba desactualizado , debe ser: ¡María, te podemos prestar hasta $150,000* para impulsar tu Negocio!",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Diseño"
     ],
@@ -4374,12 +4860,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 38,
+    "id": 34,
+    "project": "PWA 2.0",
     "round": "Pruebas 8 sep - Mi negocio",
     "roundOrder": 16,
     "sourceRow": 3,
-    "observation": "No deberia ir mensaje , Al continuar, aceptas que contactemos a tus referencias vía WhatsApp para validar tu información.",
-    "status": "Pendiente",
+    "observation": "No deberia ir mensaje , Al continuar, aceptas que contactemos a tus referencias vía WhatsApp para validar tu información. Y ajustar el copy",
+    "status": "Completado",
+    "workflowStatus": "VALIDATED",
     "categories": [
       "Diseño"
     ],
@@ -4389,12 +4877,14 @@
     "evidenceFilenames": []
   },
   {
-    "id": 60,
+    "id": 50,
+    "project": "PWA 2.0",
     "round": "Pruebas 8 sep - Mi negocio",
     "roundOrder": 16,
     "sourceRow": 4,
     "observation": "Diseño de pantalla \"vamos por tu prestamo\" se actualizo a minijuego",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Diseño"
     ],
@@ -4404,14 +4894,204 @@
     "evidenceFilenames": []
   },
   {
-    "id": 80,
+    "id": 63,
+    "project": "PWA 2.0",
     "round": "Pruebas 8 sep - Mi negocio",
     "roundOrder": 16,
     "sourceRow": 5,
     "observation": "Al selecionar la ocupacion faltan mas categorias",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Diseño"
+    ],
+    "type": null,
+    "channel": null,
+    "evidence": [],
+    "evidenceFilenames": []
+  },
+  {
+    "id": 18,
+    "project": "PWA 2.0",
+    "round": "Pruebas 9 sep - Mi negocio",
+    "roundOrder": 17,
+    "sourceRow": 2,
+    "observation": "Revisar el escenario \"Linea blanca\" para \"Mi negocio\" y el resto de categorías",
+    "status": "Pendiente",
+    "workflowStatus": "OPEN",
+    "categories": [],
+    "type": null,
+    "channel": null,
+    "evidence": [],
+    "evidenceFilenames": []
+  },
+  {
+    "id": 19,
+    "project": "PWA 2.0",
+    "round": "Pruebas 10 sep - Autos",
+    "roundOrder": 18,
+    "sourceRow": 2,
+    "observation": "Ajuste de copy en el flujo de autos, no coincide con el figma",
+    "status": "Pendiente",
+    "workflowStatus": "OPEN",
+    "categories": [
+      "Copy"
+    ],
+    "type": null,
+    "channel": null,
+    "evidence": [],
+    "evidenceFilenames": []
+  },
+  {
+    "id": 36,
+    "project": "PWA 2.0",
+    "round": "Pruebas 10 sep - Autos",
+    "roundOrder": 18,
+    "sourceRow": 3,
+    "observation": "Revisar los paddigns de esta pantalla porque se ve muy grande y verificar que la imagen quede proporcionada al tamaño de 250 x 250 px",
+    "status": "Pendiente",
+    "workflowStatus": "OPEN",
+    "categories": [
+      "Diseño"
+    ],
+    "type": null,
+    "channel": null,
+    "evidence": [],
+    "evidenceFilenames": []
+  },
+  {
+    "id": 52,
+    "project": "PWA 2.0",
+    "round": "Pruebas 10 sep - Autos",
+    "roundOrder": 18,
+    "sourceRow": 4,
+    "observation": "Cambio de copy en la pantalla de referencias por el que viene en el documento de figma \"Solo necesitamos algunos datos para continuar.\"",
+    "status": "Completado",
+    "workflowStatus": "VALIDATED",
+    "categories": [],
+    "type": null,
+    "channel": null,
+    "evidence": [],
+    "evidenceFilenames": []
+  },
+  {
+    "id": 64,
+    "project": "PWA 2.0",
+    "round": "Pruebas 10 sep - Autos",
+    "roundOrder": 18,
+    "sourceRow": 5,
+    "observation": "Falta mostrar la pantalla de validación de préstamos antes de mandarlo a descargar la app",
+    "status": "Pendiente",
+    "workflowStatus": "OPEN",
+    "categories": [],
+    "type": null,
+    "channel": null,
+    "evidence": [],
+    "evidenceFilenames": []
+  },
+  {
+    "id": 21,
+    "project": "PWA 2.0",
+    "round": "Pruebas 14 sep - Más Salud",
+    "roundOrder": 19,
+    "sourceRow": 2,
+    "observation": "No se ve el icono ni el fondo del botón \"editar\"",
+    "status": "Pendiente",
+    "workflowStatus": "OPEN",
+    "categories": [],
+    "type": null,
+    "channel": null,
+    "evidence": [],
+    "evidenceFilenames": []
+  },
+  {
+    "id": 37,
+    "project": "PWA 2.0",
+    "round": "Pruebas 14 sep - Más Salud",
+    "roundOrder": 19,
+    "sourceRow": 3,
+    "observation": "La pantalla de oferta de más salud no coincide con el figma revisar referencia https://www.figma.com/design/ovPHwzxWCHDCcw4LF1pWzj/Originaci%C3%B3n-%C3%9Anica-2.0---Canales?node-id=7897-288541&t=mDKJCiqL1XU9Bpro-4",
+    "status": "Pendiente",
+    "workflowStatus": "OPEN",
+    "categories": [],
+    "type": null,
+    "channel": null,
+    "evidence": [],
+    "evidenceFilenames": []
+  },
+  {
+    "id": 51,
+    "project": "PWA 2.0",
+    "round": "Pruebas 14 sep - Más Salud",
+    "roundOrder": 19,
+    "sourceRow": 4,
+    "observation": "Faltan dos pantallas del flujo preseleccionado https://www.figma.com/design/ovPHwzxWCHDCcw4LF1pWzj/Originaci%C3%B3n-%C3%9Anica-2.0---Canales?node-id=7741-436505&t=mDKJCiqL1XU9Bpro-4",
+    "status": "Pendiente",
+    "workflowStatus": "OPEN",
+    "categories": [],
+    "type": null,
+    "channel": null,
+    "evidence": [],
+    "evidenceFilenames": []
+  },
+  {
+    "id": 65,
+    "project": "PWA 2.0",
+    "round": "Pruebas 14 sep - Más Salud",
+    "roundOrder": 19,
+    "sourceRow": 5,
+    "observation": "Los catalogos de los dropdowns no están pintando los títulos",
+    "status": "Pendiente",
+    "workflowStatus": "OPEN",
+    "categories": [],
+    "type": null,
+    "channel": null,
+    "evidence": [],
+    "evidenceFilenames": []
+  },
+  {
+    "id": 75,
+    "project": "PWA 2.0",
+    "round": "Pruebas 14 sep - Más Salud",
+    "roundOrder": 19,
+    "sourceRow": 6,
+    "observation": "El nombre del usuario no está cambiando de color. Escenario \"Listas negras\"",
+    "status": "Pendiente",
+    "workflowStatus": "OPEN",
+    "categories": [],
+    "type": null,
+    "channel": null,
+    "evidence": [],
+    "evidenceFilenames": []
+  },
+  {
+    "id": 20,
+    "project": "PWA 2.0",
+    "round": "Pruebas 15 sep",
+    "roundOrder": 20,
+    "sourceRow": 2,
+    "observation": "El cotizador no corresponde al producto. El que se muestra es el de producto de \"Autos\"",
+    "status": "Pendiente",
+    "workflowStatus": "OPEN",
+    "categories": [
+      "Funcionalidad"
+    ],
+    "type": null,
+    "channel": null,
+    "evidence": [],
+    "evidenceFilenames": []
+  },
+  {
+    "id": 35,
+    "project": "PWA 2.0",
+    "round": "Pruebas 15 sep",
+    "roundOrder": 20,
+    "sourceRow": 3,
+    "observation": "El cotizador no corresponde al producto. El que se muestra es el de producto de \"Autos\"",
+    "status": "Pendiente",
+    "workflowStatus": "OPEN",
+    "categories": [
+      "Funcionalidad"
     ],
     "type": null,
     "channel": null,
@@ -4420,2320 +5100,18 @@
   },
   {
     "id": 17,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
+    "project": "PWA 2.0",
+    "round": "Pruebas 17 sep",
+    "roundOrder": 21,
     "sourceRow": 2,
-    "observation": "Ajustar el copy para mejorar claridad, tono y consistencia. Revisar el tamaño de la tipografía “Sujeto a aprobación” debe estar a 14px.",
+    "observation": "No se visualiza el aviso de privacidad y consulta de buro",
     "status": "Pendiente",
+    "workflowStatus": "OPEN",
     "categories": [
       "Funcionalidad"
     ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 18,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 2,
-    "observation": "El usuario da tap varias veces en el CTA de iniciar solicitud y no avanza. No cargan los iconos",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 19,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 2,
-    "observation": "Se identificaron dos usuarios que no pueden continuar con su proceso de OU. Al intentar avanzar, se muestra el error “No pudimos abrir la página”. El usuario da tap varias veces en el botón “Reintentar”, pero la acción no responde y el flujo no permite continuar.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
+    "type": null,
     "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 20,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 2,
-    "observation": "Cambiar la imagen de este error.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Mejora",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 21,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 2,
-    "observation": "En la plataforma (iP=9 sub 12) Elektra.mx / youtube, el usuario realiza 574 clics mientras que la pantalla se visualiza en blanco.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 22,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 2,
-    "observation": "Revisar y cambiar el color del título debe ser el Hexadecimal #278252. Se esta confundiendo el tono del modo dark y light. Adjunto link de referencia: https://www.figma.com/ URL: www.bazsolicitudunica.com.mx/pages/cotizador",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 23,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 2,
-    "observation": "Hallazgo Los usuarios podrían abandonar esta pantalla porque el CTA \"Buscar sucursales\" no ofrece una respuesta clara ni dirige de forma consistente al buscador de sucursales, generando incertidumbre sobre si la acción se ejecutó correctamente o si el flujo terminó. Recomendación Configurar el CTA para que siempre redirija a una pantalla de búsqueda de sucursales.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 24,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 2,
-    "observation": "Tipo de error de pantalla: “Error que regresa a la pantalla anterior.”: https://www.bazsolicitudunica.com.mx/pages/regresa-pantalla Encontramos un patrón de recarga de pantalla en 55 usuarios estos últimos 7 días, la mayoría de estos usuarios se caen debido a la frustración por recarga que solicita el flujo, en casos no tan severos aparece al menos 4 veces a lo largo del flujo.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "Transversal",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 25,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 2,
-    "observation": "Identificamos que los usuarios abandonan el proceso al no otorgar permisos de geolocalización. Esto impide continuar con la validación de identidad y limita el avance hacia una identificación exitosa.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 39,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 3,
-    "observation": "Actualmente el usuario es dirigido a sucursal para continuar el proceso. Se propone evaluar si es posible ofrecer la opción de surtido a través de comercios electrónicos, con el objetivo de reducir fricción, evitar desplazamientos y mejorar la experiencia digital.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Mejora",
-    "channel": "Todos los canales",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 40,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 3,
-    "observation": "El usuario da tap en el input de “Cuánto necesitas” no puede avanzar",
-    "status": "Completado",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 41,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 3,
-    "observation": "Se identificaron dos usuarios que no pueden continuar con su proceso de OU. Al intentar avanzar, se muestra el error “No pudimos abrir la página”. El usuario da tap varias veces en el botón “Reintentar”, pero la acción no responde y el flujo no permite continuar.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 42,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 3,
-    "observation": "Cambiar copy",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Mejora",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 43,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 3,
-    "observation": "En la plataforma (iP=9) Elektra.mx, el usuario realiza 477 clics mientras que la pantalla se visualiza en blanco.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 44,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 3,
-    "observation": "\"Revisar y cambiar el color del título debe ser el Hexadecimal #278252. Se esta confundiendo el tono del modo dark y light. Adjunto link de referencia: https://www.figma.com/ URL: www.bazsolicitudunica.com.mx/pages/cotizador\"",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 45,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 3,
-    "observation": "Hallazgo El CTA \"Continuar\" no es consistente con el mensaje de la pantalla, ya que el usuario espera avanzar en el flujo digital cuando la acción real es buscar una sucursal para actualizar su información. Recomendación Cambiar el texto del CTA por uno más descriptivo, como \"Buscar sucursal\", para alinear la expectativa del usuario con la acción que se ejecutará y reducir la confusión.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 46,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 3,
-    "observation": "El GIF es cuadrado en figma 164px x 164px. En productivo el GIF es de 165 x 150px lo que hace que se vea aplastado en lo ancho. La distancia entre el icono y el H1 es de 32px.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 47,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 3,
-    "observation": "Hallazgo técnico: Error bloqueante posterior a la verificación de teléfono. En los últimos 7 días se detectaron 19 casos con el mensaje “No pudimos registrar tu número”. 17 casos (89%) ocurren después de validar el teléfono, principalmente al finalizar Datos Personales o antes de iniciar la captura de INE. El error impide continuar el flujo y no ofrece una recuperación efectiva. Esto provoca que el usuario reinicie la solicitud, generando reintentos/idempotencia, o abandone el proceso. Validar: respuesta del servicio posterior a la verificación del teléfono, persistencia del estado del usuario y posibles errores en la transición hacia Datos Personales/INE.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 61,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 4,
-    "observation": "Centrar el botón en la version desktop",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 62,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 4,
-    "observation": "Agregar el día de pago seleccionado en el mensaje de Whatsapp - Cliente morado preseleccionado",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Mejora",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 63,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 4,
-    "observation": "Los inputs del OTP no se activan al ingresar a la pantalla. El usuario debe dar varios taps sobre el campo para poder empezar a escribir el código. Comportamiento esperado: El campo de OTP debería activarse inmediatamente al entrar a la pantalla o con un solo tap, permitiendo ingresar el código sin fricción.",
-    "status": "Completado",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 64,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 4,
-    "observation": "Ajustar el copy con base en los resultados de la prueba.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Mejora",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 65,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 4,
-    "observation": "En la plataforma (iP=9) Elektra.mx, el usuario no avanza al dar clic en el botón “Tomar foto”.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 66,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 4,
-    "observation": "Revisar y cambiar el color del título debe ser el Hexadecimal #278252. Se esta confundiendo el tono del modo dark y light. Adjunto link de referencia: https://www.figma.com/ URL: www.bazsolicitudunica.com.mx/pages/cotizador",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 67,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 4,
-    "observation": "Hallazgo Cuando el usuario debe acudir a una sucursal, el CTA no facilita de forma clara el siguiente paso para localizar la sucursal más cercana. Recomendación Revisar y validar que el CTA para que redirija al buscador de sucursales.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 68,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 4,
-    "observation": "El encabezado explica la tarea: Ingresa el código que te enviamos al número… “Ingresa código” es demasiado genérico y no especifica que se esperan seis dígitos.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Mejora",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 69,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 4,
-    "observation": "Se identificaron 505 casos con error en la etapa de Identificación. Al presentarse la incidencia, el usuario debe regresar a la pantalla anterior y volver a intentar para continuar con el flujo. En los casos donde el error persiste o el reintento no es exitoso, se observa abandono del proceso. Impacto: El error interrumpe la continuidad del journey, genera reintentos innecesarios y aumenta el riesgo de abandono en una etapa crítica del flujo. Validar con Desarrollo: Revisar la causa del error en la pantalla de Identificación, el manejo del reintento y la persistencia del estado del usuario para evitar que tenga que repetir pasos ya completados.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 81,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 5,
-    "observation": "Este usuario registró 15,039 clics, lo cual excede el comportamiento esperado. Revisar logs, origen del tráfico y posible actividad automatizada.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Incidencia",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 82,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 5,
-    "observation": "Al usuario se le muestra primero un mensaje indicando que no se desconecte y que verifique su conexión a internet. Posteriormente, aparece un segundo mensaje genérico de “Algo salió mal”. Una vez que se restablece la conexión, el sistema lo redirige al inicio de la originación, aun cuando ya se encontraba en la sección de firma de contrato.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 83,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 5,
-    "observation": "La imagen en la pantalla no se muestra centrada, lo que genera un desajuste visual en el layout. Actualmente se está mostrando una pantalla de error que ya no debería utilizarse. Debe reemplazarse por la nueva pantalla de error, la cual: Permite al usuario reintentar la acción. Explica la razón de la falla.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 84,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 5,
-    "observation": "Optimizar el flujo desde el cotizador: si el usuario ya inició la configuración en la página, no debería reiniciar el proceso desde cero.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Mejora",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 85,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 5,
-    "observation": "Revisar si se subió alguna actualización o validación de geolocalización porque a varios usuarios les esta apareciendo. Revisar que se muestre el modal nativo. Propuesta de mejora Folio PROD0513",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 86,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 5,
-    "observation": "En la versión escritorio a la hora de tomar la foto de la INE no te redirige al celular, se tiene que hacer mediante la cámara de la computadora y esto dificulta mucho la toma, y no paso la validación del proceso. Lo idea sería que concluya el flujo en el teléfono y siga en desktop.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 87,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 5,
-    "observation": "Hallazgo Los usuarios no identifican qué campo contiene el error de captura o validación, por lo que realizan intentos repetitivos en distintos campos. Además, el botón \"Continuar\" permanece habilitado, generando la expectativa de que pueden avanzar aunque existan datos pendientes o inválidos. Recomendación Resaltar de forma clara el campo con error mediante mensajes de validación y estados visuales. Mantener el botón \"Continuar\" deshabilitado hasta que toda la información requerida sea válida, para evitar confusión y reducir la frustración.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 88,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 5,
-    "observation": "Comportamiento en Figma: El área visual entre las posiciones tiene una separación aproximada de 40px. Comportamiento en Prod/Navegador: El espacio se reduce drásticamente, comprimiendo el diseño. Resultado esperado: Modificar los estilos (márgenes/paddings) en web para replicar la separación de 40px definida en Figma.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Mejora",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 89,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 5,
-    "observation": "Se identificaron casos de idempotencia provocados por un error bloqueante que aparece después de completar Datos Personales o antes de la captura de INE. Al presentarse, algunos usuarios reinician el flujo desde el inicio, generando reintentos, mientras que otros abandonan el proceso.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 99,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 6,
-    "observation": "El usuario realiza múltiples clics consecutivos debido a que la pantalla no presenta respuesta visible o feedback inmediato.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 100,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 6,
-    "observation": "El componente de OTP se está visualizando en dos filas.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 101,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 6,
-    "observation": "Validar con negocio que es correcto que en Italika nos redirija al flujo de BAZ",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 102,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 6,
-    "observation": "Nere intenta ingresar su domicilio en varias ocasiones; aunque podría ser correcto, lo modifica repetidamente, lo que sugiere que el flujo la orilla a alterar la información.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 103,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 6,
-    "observation": "Se detectó nuevamente que varios usuarios están dando muchos clics en zonas de la pantalla donde no sucede ninguna acción. El comportamiento sigue un patrón similar en todos los casos y los usuarios provienen de anuncios o enlaces de YouTube.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Incidencia",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 104,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 6,
-    "observation": "La tipografía no se ve en versión dark el color debe ser #2E3032",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 105,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 6,
-    "observation": "Identificamos que los usuarios abandonan el proceso al no otorgar permisos de geolocalización. Esto impide continuar con la validación de identidad y limita el avance hacia una identificación exitosa.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Mejora",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 106,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 6,
-    "observation": "Problema: El estado activo actual no permite distinguir claramente cuál de las seis posiciones tiene el foco. Mostrar solo el cursor o un cambio leve en la línea base es insuficiente. Impacto: Afecta críticamente a usuarios que navegan con teclado, tienen baja visión o utilizan herramientas de ampliación de pantalla. Acción requerida: Reforzar el indicador visual del foco en la posición actual para garantizar que sea altamente visible e identificable.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Mejora",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 107,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 6,
-    "observation": "Hallazgo técnico: Se están detectando problemas técnicos en la fase final del flujo. Específicamente, tras ingresar el correo electrónico del contrato, el sistema muestra un mensaje de error que interrumpe el proceso. Esto impide que los usuarios visualicen la pantalla de surtimiento, provocando el abandono de la compra.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Incidencia",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 117,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 7,
-    "observation": "La oferta negativa no se muestra correctamente y el texto aparece incompleto.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Mejora",
-    "channel": "Todos los canales",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 118,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 7,
-    "observation": "No carga la información de la pantalla de oferta.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 119,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 7,
-    "observation": "La pantalla tarda 9s en cargar el usuario no ve nada y abandona. IP 39 /Tik tok",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 120,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 7,
-    "observation": "A pesar de recibir un error, Eustaquia utiliza el botón del navegador para regresar e intenta corregir sus datos en múltiples ocasiones. Agregar el CTA de “Salir” Cambiar copy para que se entienda mejor",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 121,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 7,
-    "observation": "Se sigue detectando que varios usuarios realizan muchos clics en zonas de la pantalla donde no hay interacción disponible. Todos los casos presentan un comportamiento similar y provienen desde una IP9.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Incidencia",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 122,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 7,
-    "observation": "Revisar la regla de Investigación. Deben mostrarse los días como: hoy + 6 días = 7 días, no más Actualmente estamos mostrando 7 días máximo sin comenzar a contar estrictamente a partir del día de hoy.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "Transversal",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 123,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 7,
-    "observation": "Se detectó un error visual: cuando la aplicación está en modo Light y el usuario presiona en '¿Tienes preguntas?', el bottom sheet se despliega incorrectamente en modo Dark. Revisar que el título este en Avenir Next Demi Bold en 20pts.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 124,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 7,
-    "observation": "El área Legal revisó la pantalla de confirmación de INE y solicitó un cambio obligatorio en los textos. Por normatividad y temas legales, no está permitido usar la palabra \"validar\" en este flujo.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 132,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 8,
-    "observation": "El nombre aparece como Null. El funcionamiento del PIN no resulta intuitivo, lo que genera confusión durante el proceso. El usuario reintenta múltiples veces sin obtener una respuesta concreta, solo le dice que presentamos un error y vuelve a intentar, incrementando fricción y frustración.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 133,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 8,
-    "observation": "No carga la información de la pantalla de oferta. Revisar el estilo del texto en los botones. El usuario da tap a “Ir a Banco Azteca” pero no funciona el link. Comparto la URL para dirigir al usuario https://www.bancoazteca.com.mx/",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 134,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 8,
-    "observation": "Falta el punto final después de “solicitud.”",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 135,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 8,
-    "observation": "Isaac recibe múltiples ofertas y el texto de la primera aparece incompleto.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 136,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 8,
-    "observation": "El área interactiva es muy pequeña e inconsistente, lo que dificulta su uso. Esto puede generar confusión y frustración en los usuarios, además de aumentar el riesgo de que abandonen el proceso.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 137,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 8,
-    "observation": "Se mapearon las pantallas de oferta de diferentes productos y detectamos inconsistencias en los tamaños de la tipografía. Validar que todas tengan el mismo formato que es “Avenir next” en formato regular y bold para remarcar oferta y tipo de producto a 26px",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Mejora",
-    "channel": "Transversal",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 138,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 8,
-    "observation": "Hallazgo Las líneas de texto deben tener una separación limpia de 27 puntos para asegurar la legibilidad. Font Size: 20px / 20pt Line Height: 27px / 27pt Revisar el signo de exclamación de ¡Espéranos! Revisar “Aún” no tiene acento",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 139,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 8,
-    "observation": "El progressbar llega al 100% cuando aun faltan las siguinetes pantallas por completar: Después de la oferta tienes: Agenda Inicio Zonificación Referencias de domicilio Fecha Agenda Día de pago Correo Información de cita Final Lo que da una sensación de abandonar, en cuanto el usuario llega a la pantalla de Oferta 10 sesiones en promedio abandonan al día el flujo por lo que no podemos deducir si asistirá a sucursal o entendió que debe de cerrar el flujo continuando con la visita en su domicilio.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 147,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 9,
-    "observation": "Validar que el fondo tenga un degradado lineal vertical de #E7E7E7 a #FEFEFE",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 148,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 9,
-    "observation": "Solicita y valida el OTP al inicio del flujo y posteriormente vuelve a solicitar una validación adicional durante la originación.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 149,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 9,
-    "observation": "Encontré varios usuarios esta semana con la misma falla, les dice que no encuentran el domicilio que agregaron.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 150,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 9,
-    "observation": "Color rojo por color morado.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "Shopinbaz",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 151,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 9,
-    "observation": "Los íconos no corresponden a la plataforma mencionada, lo que puede generar confusión en el usuario. La acción de copiar y pegar el enlace en un navegador resulta poco intuitiva y compleja para el usuario, lo que puede generar fricción y provocar el abandono del flujo. El flujo no pudo completarse, impidiendo que el usuario continuara con el proceso. No redirige al usuario para que pueda seguir con la originación.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 152,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 9,
-    "observation": "Cambiar en el flujo de carrito a “Altas y bajas” el nombre del usuario en el flujo con carrito.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "Shopinbaz",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 153,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 9,
-    "observation": "Se detectó inestabilidad en el flujo de la app después de que el usuario presiona el botón “Continuar” en la pantalla de validación de domicilio. Revisar si tenemos alguna falla en el servicio.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 154,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 9,
-    "observation": "Encontramos varios casos de usuarios que se quedaron atorados y abandonaron en “https://www.bazsolicitudunica.com.mx/pages/datosPersonales” Al parecer tuvieron problemas con el dropdawn de algunos campos",
-    "status": "Pendiente",
-    "categories": [],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 161,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 10,
-    "observation": "La sección “Estado de mi solicitud” no redirecciona al tracker correspondiente. Al intentar retomar la solicitud, el usuario es enviado al inicio del proceso, recorriendo nuevamente todos los pasos, aun cuando ya había avanzado previamente. Adicionalmente, la redirección se está realizando hacia BAZ, cuando el usuario inició su originación en Elektra.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 162,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 10,
-    "observation": "La oferta no se muestra debido a un error. El sistema redirige al usuario al inicio del proceso, solicitando nuevamente el ingreso de todos los datos.",
-    "status": "Completado",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 163,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 10,
-    "observation": "Este usurario viene de tiktok, no puede pasar del input de nombre.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 164,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 10,
-    "observation": "Las instrucciones no son claras, lo que puede generar confusión en el usuario durante el proceso. El CTA no tiene el color correcto debe ser #059E4D y la tipografía #2E3032",
-    "status": "Completado",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 165,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 10,
-    "observation": "No todos los casos corresponden a idempotencia. El hallazgo principal es una falta de clasificación y trazabilidad de estados dentro de una misma URL. La idempotencia aplica principalmente cuando un usuario repite el flujo y el sistema no distingue entre una solicitud nueva, un reintento o una solicitud ya procesada.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Mejora",
-    "channel": "Transversal",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 166,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 10,
-    "observation": "Se registra un error desconocido al acceder a la vista de seguimiento, aunque el tracking. Esto está provocando fricción: los usuarios no ven su estatus y, por frustración, intentan repetir la solicitud de crédito. Comportamiento Esperado: Redireccionar automáticamente al usuario a la vista de tracking cuando intente entrar a esta pantalla para evitar duplicidades.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 167,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 10,
-    "observation": "Los clicks de enfado muestran conductas atípicas que posiblemente son pruebas de estrés sobre función o producto",
-    "status": "Pendiente",
-    "categories": [],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 174,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 11,
-    "observation": "Revisar la lógica de los entry points cuando no hay sesión iniciada y confirmar si este comportamiento es esperado o debe ajustarse, ya que en algunos flujos se muestran y en otros no.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "Shopinbaz",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 175,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 11,
-    "observation": "No se muestra contenido en la pantalla de multioferta.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 176,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 11,
-    "observation": "Se requiere actualizar la redacción del punto 1 y de los CTA. El cambio consiste en ajustar la escritura del nombre Banco Azteca y App para que se muestren con mayúsculas, de acuerdo con la nomenclatura correcta de la marca.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Mejora",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 177,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 11,
-    "observation": "Detectamos un patrón en usuarios provenientes de campañas de Meta realizan múltiples clics en áreas donde no existe ninguna interacción.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 178,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 11,
-    "observation": "No se aprovecha correctamente el ancho de la cámara, lo que reduce la calidad y definición de la imagen capturada.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 179,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 11,
-    "observation": "Al entrar directo a https://www.bazsolicitudunica.com.mx/ (en cualquier dispositivo o navegador), da pantalla de error. Solución Asignar un canal por defecto a la petición y redireccionar al flujo correcto.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 180,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 11,
-    "observation": "Se identifica una posible fricción en la etapa de Identificación, donde algunos usuarios no continúan con la captura de su INE.",
-    "status": "Pendiente",
-    "categories": [],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 186,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 12,
-    "observation": "Revisar porque se esta repitiendo el onboarding y se muestra un diseño distinto.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "Shopinbaz",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 187,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 12,
-    "observation": "Al colocar los números los inputs cambiaban de lugar",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 188,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 12,
-    "observation": "Se muestra la pantalla de ubicación en el mapa, pero el botón no se habilita. El cursor se mueve junto con la pantalla en lugar de permanecer fijo. Se visualizan dos ofertas diferentes.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 189,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 12,
-    "observation": "El CTA no responde, se traba y no deja avanzar al usuario.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Incidencia",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 190,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 12,
-    "observation": "El usuario mostró frustración debido a que la pantalla no respondía a sus acciones, impidiendo continuar con el flujo.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 191,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 12,
-    "observation": "Márgenes asimétricos: Los márgenes laterales y el ancho útil del contenido no coinciden con el diseño. Tamaño del H1: La tipografía del título principal está en 28px y debe ajustarse a 30px. Color de enlace: El enlace del texto legal cambia de tratamiento, ya que está oscuro en Figma pero se muestra verde en productivo. Desalineación del legal: El texto legal se encuentra fuera del margen establecido.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 196,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 13,
-    "observation": "La imagen no tiene la mascarilla circular aplicada.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "Shopinbaz",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 197,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 13,
-    "observation": "Ajustar el copy para mejorar claridad, tono y consistencia.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Mejora",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 198,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 13,
-    "observation": "La oferta no se muestra debido a un error. El sistema redirige al usuario al inicio del proceso, solicitando nuevamente el ingreso de todos los datos.",
-    "status": "Completado",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 199,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 13,
-    "observation": "Origen: asesor. El usuario realiza hasta 109 clics sin lograr avanzar en el flujo. Se sugiere condicionar este comportamiento y redirigirlo al inicio para evitar fricción y mejorar la continuidad de la experiencia.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 200,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 13,
-    "observation": "Se hace referencia al mismo documento con distintos nombres, lo que puede generar confusión en el usuario durante el proceso.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 201,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 13,
-    "observation": "Inconsistencia de color: El título en producción tiene el código #059e4d, pero debe actualizarse a #278252 para coincidir con Figma.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 206,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 14,
-    "observation": "Validar la implementación del texto dinámico del producto en shopinbaz. Ajustar el copy de la respuesta negativa para mejorar claridad y comprensión.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "Shopinbaz",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 207,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 14,
-    "observation": "Se debe revisar el escenario de producto porque el usuario está iniciando una solicitud de préstamo para negocio, pero el sistema está mostrando una pantalla de oferta que no corresponde a ese tipo de producto.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 208,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 14,
-    "observation": "El usuario no puede seguir por que se reporta un problema técnico al agregar sus datos.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 209,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 14,
-    "observation": "Este usuario, proveniente de una campaña de Totalplay, realiza múltiples taps en la pantalla sin lograr activar el input.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 210,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 14,
-    "observation": "Aunque Krys confirma que vive en la misma dirección que aparece en su INE, debe volver a capturar la información. Esto aumenta el tiempo de llenado y puede generar la percepción de que está repitiendo pasos innecesariamente.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 211,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 14,
-    "observation": "Duda sobre año del legal: El texto de derechos reservados en producción muestra 2024, pero ¿debe actualizarse a 2026 para el año en curso, o es correcto mantener el valor actual?",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 216,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 15,
-    "observation": "Validar que el rango sea de 150 m y definir cuándo se realiza el ajuste. El usuario sigue presentando problemas para mover el pin.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "Shopinbaz",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 217,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 15,
-    "observation": "El campo de Fecha de nacimiento muestra un estado visual como si ya estuviera completado, aunque el usuario no ha seleccionado ninguna fecha.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 218,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 15,
-    "observation": "Ya tenía una oferta y le apareció este error. Revisar el estilo de tipografía y paddings Título: Avenir next 28px Body: Avenir next 18px CTA: Avenir next 16px Paddings 24px",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Mejora",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 219,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 15,
-    "observation": "El usuario realiza múltiples taps sobre el CTA sin lograr avanzar en el flujo.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 220,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 15,
-    "observation": "Homologar el CTA con producción, ya que actualmente se muestra como “Confirmar y continuar” y únicamente debería mostrarse como “Continuar”.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 225,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 16,
-    "observation": "En la pantalla de resumen de compra, se le muestra al usuario el mensaje de que tiene su capacidad de pago al límite, aun cuando el usuario no haya podido hacer su dispersión. Al intentar realizar una compra con préstamo, salta un error, se menciona que se debe acudir a sucursal, pero en sucursal no pudieron brindar la ayuda necesaria.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "Shopinbaz",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 226,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 16,
-    "observation": "Lilia no pudo completar la validación de OTP. Adicionalmente, el problema relacionado con los inputs persiste.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 227,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 16,
-    "observation": "Se está mostrando la pantalla de gracias antigua.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 228,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 16,
-    "observation": "El usuario no puede visualizar el flujo de originación se ve la pantalla en blanco.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 229,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 16,
-    "observation": "Revisar que las columnas del horario se muestren correctamente",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 234,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 17,
-    "observation": "Se están enviando mensajes duplicados que generan confusión. Al concluir la visita, el usuario recibe tres mensajes: el primero indica que debe acudir a sucursal para concluir el proceso, mientras que el segundo y tercero confirman que el préstamo ya fue aprobado y que puede usarse en shopinbaz.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "Shopinbaz",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 235,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 17,
-    "observation": "Se presentan pantallas sobrepuestas y múltiples regreso.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 236,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 17,
-    "observation": "Los usuarios no están dando persmisos de geolocalización y el copy no es claro.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Mejora",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 237,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 17,
-    "observation": "Revisar en que escenario se muestra esta pantalla porque no lo tenemos mapeado en figma. Subir el CTA para que el usuario no tenga que dar scroll.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Mejora",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 242,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 18,
-    "observation": "La URL debería de aparecer con un text link no completa. El mensaje de que el asesor está en camino le llego al usuario y 10:05 y a las 10:06 se aviso que ya estaba fuera de su domicilio.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "Shopinbaz",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 243,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 18,
-    "observation": "Se presenta un error cuando el usuario ingresa su domicilio: primero visualiza la pantalla “No pudimos ubicar la dirección en el mapa” y posteriormente es dirigido a una pantalla de error.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 244,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 18,
-    "observation": "No se muestra el texto completo de la pantalla de error.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 245,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 18,
-    "observation": "Se sigue detectando que varios usuarios realizan muchos clics en zonas de la pantalla donde no hay interacción disponible. Todos los casos presentan un comportamiento similar y provienen desde una IP9.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 250,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 19,
-    "observation": "La oferta de crédito recibida por correo puede resultar confusa, ya que a simple vista parece que el usuario ya utilizó su línea de préstamo y tiene un monto a pagar. Otro requisito que se le solicito al usuario fue el comprobante de nómina pero ese requisito no es necesario para el préstamo.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "Shopinbaz",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 251,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 19,
-    "observation": "Se le muestra una oferta al usuario; tras seleccionar “No me interesa”, vuelve a ingresar con la intención de obtener una nueva oferta. Sin embargo, el mensaje no es claro.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Mejora",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 252,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 19,
-    "observation": "El color del texto debería ser blanco - hexadecimal #ffffff y no se ve el tool tip cuando el usuario da tap en “Ver más” Agregar un espacio entre el punto y el “Ver más”",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 253,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 19,
-    "observation": "En presta prenda salió este error y quería saber si nosotros tenemos un caso igual o que lo detone. Para saber si tenemos que agregar esa pantalla la OU 1.0",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 256,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 20,
-    "observation": "En Mi Negocio, al llenar los campos y dar clic a “¿Quieres saber cuánto podrías pagar?”, se muestra un loader que no permite que el usuario continue.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "Shopinbaz",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 257,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 20,
-    "observation": "El usuario parece utilizar el mapa para ubicar y registrar las calles cercanas a su domicilio y a las referencias.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Mejora",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 258,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 20,
-    "observation": "El recuadro no esta alineado al CTA",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "Transversal",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 259,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 20,
-    "observation": "Revisar esta anomalía parece estar relacionada con usuarios de pruebas de estrés del canal IP39 “QR”. Se detecta un comportamiento orientado a validar posibles rupturas o vulnerabilidades dentro del flujo.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 262,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 21,
-    "observation": "Íconos no visibles en la interfaz. Múltiples clics sin respuesta ni avance en el flujo. Otro requisito que se le solicito al usuario fue el comprobante de nómina pero ese requisito no es necesario para el préstamo.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 263,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 21,
-    "observation": "Se muestran dos pantallas de oferta: el usuario recibe una primera oferta, continúa a la pantalla “Vamos a conocernos” y posteriormente se le vuelve a presentar la oferta.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 264,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 21,
-    "observation": "En usuarios con inconsistencias de datos, se detectaron intentos de refrescar páginas y avanzar forzadamente en el flujo, lo que podría estar relacionado con comportamientos fraudulentos. Como propuesta, se recomienda identificar el input con inconsistencia mediante una alerta o mensaje inline que indique al usuario qué dato debe corregir antes de continuar. Color hexadecimal: Dark- #FF6681 Ligth- #FC0C1B",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 267,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 22,
-    "observation": "Se observa un patrón recurrente: múltiples usuarios realizan taps repetidos en una zona no accionable.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 268,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 22,
-    "observation": "Ajustar el copy para mejorar claridad, tono y consistencia.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Mejora",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 269,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 22,
-    "observation": "Se detectó fricción en el componente de fotografía, donde algunos usuarios deben repetir el proceso de captura. Además, el componente de Autentificación de Identidad continúa generando errores en consola; aunque no siempre bloquea el flujo, la incidencia persiste. (IP 39) Como mejora, se propone brindar mayor contexto al usuario sobre las posibles causas del error, reforzando las instrucciones y validaciones durante la captura.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Mejora",
-    "channel": "Transversal",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 272,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 23,
-    "observation": "Se detecta un patrón recurrente: múltiples usuarios realizan taps repetidos en la parte inferior derecha de la pantalla, sin que exista una acción asociada.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 273,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 23,
-    "observation": "Ajustar el copy para mejorar claridad, tono y consistencia.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Mejora",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 274,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 23,
-    "observation": "Caso atípico en IP9: el usuario quedó bloqueado en el componente de captura de INE. La consola registra errores en scripts que podrían afectar la carga del componente. Se ajusta el copy para mayor entendimiento del usuario y actualiza imagen para dar más contexto del error. Quedó pendiente si se podía agregar el CTA para mandar al usuario a la configuración de sus permisos.",
-    "status": "Pendiente",
-    "categories": [
-      "Funcionalidad"
-    ],
-    "type": "Mejora",
-    "channel": "Transversal",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 277,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 24,
-    "observation": "Se detecta un patrón recurrente: múltiples usuarios realizan taps repetidos en la parte inferior derecha de la pantalla, sin que exista una acción asociada.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 278,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 24,
-    "observation": "Problema identificado El comportamiento actual genera confusión para usuarios, ya que la pantalla se percibe como un error dentro del proceso. Propuesta de mejora Eliminar los múltiples intentos de búsqueda. Si la dirección se encuentra en Google, continuar normalmente. Si no se encuentra desde el primer intento, utilizar directamente el servicio interno de mapas y continuar con el flujo hacia la oferta.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Mejora",
-    "channel": null,
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 281,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 25,
-    "observation": "Ajustar el copy para informar la limitación y habilitar una opción de búsqueda manual de sucursal o redirección a ajustes para activar el permiso.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Mejora",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 284,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 26,
-    "observation": "Se ingresa un número ya asociado a una cuenta. El número no se limpia por completo del input al intentar corregirlo. Al volver a interactuar, el sistema sigue evaluando el valor previo y muestra la leyenda “este número está asignado a otro cliente”. El error persiste aunque el usuario intente cambiar el número, generando bloqueo y confusión.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 287,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 27,
-    "observation": "El usuario inicia el flujo desde BAZ y, una vez que captura su INE, la interfaz actualiza su estado visual, cambiando el color del botón principal y los elementos clave a morado.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 290,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 28,
-    "observation": "Tras la captura de documentos, al avanzar hacia la pantalla de oferta y confirmación de éxito, se identificaron cuatro errores registrados en Hotjar, los cuales impactan el comportamiento y la continuidad del flujo del usuario. Estos errores corresponden a: ReferenceError: Can't find variable: mostrarRecoApps (recurrente en /tu-foto-tips) TypeError: pixel.innerHTML is not a function (en /oferta-exito)",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 293,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 29,
-    "observation": "Se identificó un loop en el flujo de domicilio donde, tras completar el formulario, el sistema solicita acudir a sucursal pero redirige nuevamente al formulario de domicilio.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 296,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 30,
-    "observation": "El usuario es enviado nuevamente al inicio del proceso de originación, mostrando múltiples errores (12), lo que genera confusión en el flujo.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 299,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 31,
-    "observation": "El usuario no puede avanzar del reconocimiento facial, presenta dos eerores en el servicio.",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 302,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 32,
-    "observation": "3 errores de servicio en validación facial",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 305,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 33,
-    "observation": "Los círculos se ven en un tono muy oscuro",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "Elektra",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 308,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 34,
-    "observation": "Color diferente en los círculos correspondientes al segmento. Actualizar copy a: \"¡María, te apoyamos con un préstamo de hasta $00,000* para impulsar tu Negocio!\"",
-    "status": "Completado",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 311,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 35,
-    "observation": "Los círculos en los productos de consumo no deben verse afectados por el color de la segmentación, las imágenes del producto no tienen la proporción del figma.",
-    "status": "Completado",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 314,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 36,
-    "observation": "Actualización de copy en pantalla de rechazo Los círculos alrededor de la ilustración no deben verse afrectados en color. Tiene el color correspondiente al segmento básico)",
-    "status": "Completado",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 317,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 37,
-    "observation": "Stepper dice: Agendar visita Para los verdes no hay inmediatamente agendar visita, el stepper debe decir: Datos adicionales",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 320,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 38,
-    "observation": "Cliente con score fraude Actualmente no se lee el parámetro/motivo del porqué fue rechazado el cliente y se muestra una pantalla genérica (la del hallazgo). Si vuelven a ingresar los clientes ya se puede leer su solicitud. Con el nuevo req se estaría leyendo el porqué del rechazo",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 323,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 39,
-    "observation": "Pantalla previa a la oferta cuando preguntamos si vive en esa dirección, el stepper debe decir: \"Tu domicilio\"",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 326,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 40,
-    "observation": "No se le puede dar el producto que pidió Los círculos alrededor de la ilustración no deben verse afectados en color.",
-    "status": "Completado",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
-    "evidence": [],
-    "evidenceFilenames": []
-  },
-  {
-    "id": 329,
-    "round": "Listado ONGOING PWA 2026",
-    "roundOrder": 17,
-    "sourceRow": 41,
-    "observation": "No se ve el monto ni producto liberado",
-    "status": "Pendiente",
-    "categories": [
-      "Diseño"
-    ],
-    "type": "Hallazgo",
-    "channel": "BAZ",
     "evidence": [],
     "evidenceFilenames": []
   }

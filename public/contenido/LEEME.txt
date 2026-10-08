@@ -1,11 +1,22 @@
-PAQUETE COMPARTIBLE · PRUEBAS MARÍA 2.0
-Corte: 5 de agosto de 2026
+ARCHIVOS DE CONSULTA — PRUEBAS MARÍA 2.0
 
-Abra index.html para consultar el inventario y sus evidencias sin conexión.
+Corte: 2026-10-08
+Proyecto publicado: PWA 2.0
+Fuente única: /api/public/report
 
-Estructura:
-- index.html (experiencia navegable)
-- images/ (173 evidencias e imagen de portada)
-- contenido/ (PDF, inventarios, manifiesto y archivos de consulta)
+Contenido del corte:
+- 262 observaciones
+- 160 completadas
+- 102 pendientes
+- 265 evidencias públicas
+- 21 rondas
 
-Resumen: 176 observaciones, 82 completadas y 94 pendientes.
+Archivos:
+- fuentes-originales/Pruebas Maria 2.0.pdf: documento fuente, cinco pantallas originales y registro actualizado.
+- resumen-ejecutivo-con-pantallas-originales.pdf: síntesis ejecutiva, backlog integral y anexo original.
+- inventario-observaciones.csv: inventario tabular compatible con hojas de cálculo.
+- inventario-observaciones.json: inventario estructurado con enlaces públicos a evidencia.
+- MANIFIESTO.json: fecha, alcance y cifras de control del corte.
+
+Los documentos se generan únicamente con datos disponibles en /api/public/report.
+No incluyen comentarios, storageKey ni rutas privadas de evidencia.

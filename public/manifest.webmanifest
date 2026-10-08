@@ -2,17 +2,24 @@
   "id": "/",
   "name": "Pruebas María 2.0 · Reporte ejecutivo",
   "short_name": "Pruebas María",
-  "description": "Inventario integral de cuatro rondas de pruebas con 176 observaciones y 173 evidencias, disponible sin conexión.",
+  "description": "Inventario público de PWA 2.0: 262 observaciones, 160 completadas, 102 pendientes y 265 evidencias en 21 rondas.",
   "lang": "es",
   "dir": "ltr",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui", "browser"],
+  "display_override": [
+    "standalone",
+    "minimal-ui",
+    "browser"
+  ],
   "orientation": "portrait-primary",
   "background_color": "#052b20",
   "theme_color": "#052b20",
-  "categories": ["productivity", "business"],
+  "categories": [
+    "productivity",
+    "business"
+  ],
   "icons": [
     {
       "src": "/icons/icon-192.png",

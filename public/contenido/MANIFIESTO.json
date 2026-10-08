@@ -1,10 +1,12 @@
 {
   "name": "paquete-compartible-pruebas-maria-2",
-  "frozenAt": "2026-09-18",
-  "observations": 404,
-  "completed": 150,
-  "pending": 254,
+  "project": "PWA 2.0",
+  "frozenAt": "2026-10-08",
+  "observations": 262,
+  "completed": 160,
+  "pending": 102,
   "evidenceFiles": 265,
-  "rounds": 17,
-  "source": "/api/public/report"
+  "rounds": 21,
+  "source": "/api/public/report",
+  "schemaVersion": 2
 }
