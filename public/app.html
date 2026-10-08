@@ -189,6 +189,45 @@ section[id],details{scroll-margin-top:76px}
 footer.site{padding:26px 5vw calc(30px + env(safe-area-inset-bottom));background:#052b20;color:#7f9a90;font-size:11px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 @media(max-width:800px){summary i{justify-self:start}.docs{padding-top:60px}}
 @media print{.docs,footer.site{display:none}}
+
+/* ---- Contención responsive del inventario público ---- */
+.list{grid-template-columns:minmax(0,1fr)}
+.list>details,.list summary,.list summary>span,.list .detail{min-width:0;max-width:100%}
+.list summary{grid-template-columns:54px minmax(0,1fr) auto}
+.list summary>span:not(.chips),.list .detail small{overflow-wrap:anywhere;word-break:break-word}
+.list .evidence{min-width:0;max-width:100%}
+.list .evidence a{min-width:150px;max-width:150px}
+.list .evidence a span{display:block;max-width:150px;overflow-wrap:anywhere;word-break:break-word}
+
+nav .brand,nav .doc-link,nav .login-link,.ps-cta{min-height:44px}
+nav .doc-link,.ps-cta{display:inline-flex;align-items:center}
+.active-report-filters button{min-height:44px}
+
+@media(max-width:700px){
+  nav{padding-top:max(10px,env(safe-area-inset-top));padding-bottom:10px;row-gap:4px}
+  nav .login-link{min-width:112px}
+  section[id],details{scroll-margin-top:120px}
+  .list summary{grid-template-columns:40px minmax(0,1fr)}
+  .report-filter-bar .field:has(#f-priority),
+  .report-filter-bar .field:has(#f-tipo),
+  .report-filter-bar .field:has(#f-canal),
+  .report-filter-bar .field:has(#f-cat),
+  .report-filter-bar .field:has(#f-project),
+  .report-filter-bar .field:has(#f-assignment),
+  .report-filter-bar .field:has(#f-round){display:none}
+  .report-filter-bar:has(#f-more[aria-expanded="true"]) .field:has(#f-priority),
+  .report-filter-bar:has(#f-more[aria-expanded="true"]) .field:has(#f-tipo),
+  .report-filter-bar:has(#f-more[aria-expanded="true"]) .field:has(#f-canal),
+  .report-filter-bar:has(#f-more[aria-expanded="true"]) .field:has(#f-cat),
+  .report-filter-bar:has(#f-more[aria-expanded="true"]) .field:has(#f-project),
+  .report-filter-bar:has(#f-more[aria-expanded="true"]) .field:has(#f-assignment),
+  .report-filter-bar:has(#f-more[aria-expanded="true"]) .field:has(#f-round){display:flex}
+}
+@media(max-width:360px){
+  nav .doc-meta{font-size:0}
+  nav .doc-link{font-size:10px}
+  .report-filter-bar select{font-size:10px;padding-left:10px;padding-right:28px}
+}
 /* ---- Project Status / Estado de proyectos ---- */
 .ps{--ps-bg:#04170f;--ps-ink:#fff;--ps-mut:#b4c6bc;--ps-undef:#9fb5aa;--ps-line:rgba(255,255,255,.12);--ps-mint:#7bf0b1;--ease:cubic-bezier(.22,.7,.2,1);position:relative;isolation:isolate;overflow:hidden;background:var(--ps-bg);color:var(--ps-ink);padding:clamp(72px,10vw,120px) max(5vw,env(safe-area-inset-right)) clamp(80px,10vw,124px) max(5vw,env(safe-area-inset-left))}
 .ps:before{content:"";position:absolute;inset:0;z-index:-2;background:radial-gradient(56% 46% at 82% 14%,rgba(0,168,90,.26),transparent 72%),radial-gradient(42% 38% at 6% 92%,rgba(123,240,177,.11),transparent 72%)}
